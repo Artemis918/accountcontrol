@@ -1,0 +1,24 @@
+[2018-09-08 12:43:37.391] [exthost1] [info] extension host started
+[2018-09-08 12:43:37.411] [exthost1] [info] ExtensionService#_doActivateExtension vscode.emmet {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:37.411] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/emmet/out/extension
+[2018-09-08 12:43:37.796] [exthost1] [info] ExtensionService#_doActivateExtension vscode.git {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:37.796] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/git/out/main
+[2018-09-08 12:43:38.692] [exthost1] [info] ExtensionService#_doActivateExtension vscode.merge-conflict {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:38.692] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/merge-conflict/out/extension
+[2018-09-08 12:43:38.774] [exthost1] [info] ExtensionService#_doActivateExtension vscode.search-rg {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:38.774] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/search-rg/out/extension
+[2018-09-08 12:43:38.823] [exthost1] [info] ExtensionService#_doActivateExtension christian-kohler.path-intellisense {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:38.823] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.vscode/extensions/christian-kohler.path-intellisense-1.4.2/out/src/extension
+[2018-09-08 12:43:38.944] [exthost1] [info] ExtensionService#_doActivateExtension dbaeumer.vscode-eslint {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:38.944] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.vscode/extensions/dbaeumer.vscode-eslint-1.4.10/client/out/extension
+[2018-09-08 12:43:39.313] [exthost1] [info] ExtensionService#_doActivateExtension formulahendry.auto-close-tag {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:39.313] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.vscode/extensions/formulahendry.auto-close-tag-0.5.6/out/src/extension
+[2018-09-08 12:43:39.331] [exthost1] [info] ExtensionService#_doActivateExtension HookyQR.beautify {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:39.331] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.vscode/extensions/hookyqr.beautify-1.3.0/extension
+[2018-09-08 12:43:39.590] [exthost1] [info] ExtensionService#_doActivateExtension Zignd.html-css-class-completion {"startup":true,"activationEvent":"*"}
+[2018-09-08 12:43:39.590] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.vscode/extensions/zignd.html-css-class-completion-1.17.1/out/src/extension
+[2018-09-08 12:43:41.647] [exthost1] [info] eager extensions activated
+[2018-09-08 12:43:41.647] [exthost1] [info] ExtensionService#_doActivateExtension vscode.configuration-editing {"startup":false,"activationEvent":"onLanguage:jsonc"}
+[2018-09-08 12:43:41.647] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/configuration-editing/out/extension
+[2018-09-08 12:43:41.709] [exthost1] [info] ExtensionService#_doActivateExtension vscode.json-language-features {"startup":false,"activationEvent":"onLanguage:jsonc"}
+[2018-09-08 12:43:41.709] [exthost1] [info] ExtensionService#loadCommonJSModule /home/serv/dieter/.codemix/engine/resources/app/extensions/json-language-features/client/out/jsonMain

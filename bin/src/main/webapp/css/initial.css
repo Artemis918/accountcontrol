@@ -1,0 +1,26 @@
+
+.ksbutton {
+    background-color: darkgrey; 
+    border: 1px solid black;
+    color: white;
+    height: 100px;
+    width: 200px;
+    align: center;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    border-radius: 20px 10px
+}
+
+.maintable {
+	width: 100%;
+}
+
+.maincell {
+	align: center;
+	horizontal-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	background-color: green; 
+}

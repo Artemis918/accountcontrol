@@ -1,0 +1,18 @@
+{
+    "folders": [
+        {
+            "path": ".plugins/com.genuitec.eclipse.code.core/com.genuitec.eclipse.code.core.tmp-project"
+        }
+    ],
+    "settings": {
+        "htmlhint.options": {
+            "attr-value-double-quotes": true,
+            "attr-no-duplication": true,
+            "tag-pair": true,
+            "spec-char-escape": true,
+            "id-unique": false,
+            "src-not-empty": true,
+            "title-require": true
+        }
+    }
+}
