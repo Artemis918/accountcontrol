@@ -34,7 +34,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
- 	compile('org.projectlombok:lombok')
+ 	compile('org.projectlombok:lombok:1.18.2')
     compile("org.postgresql:postgresql")
     compile 'com.opencsv:opencsv:4.2'
 
@@ -43,7 +43,7 @@ dependencies {
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'com.h2database:h2:1.4.197'    
 
-	annotationProcessor "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok:1.18.2"
 }
 
 task webpack(type: NodeTask, dependsOn: 'npmInstall') {
@@ -58,4 +58,5 @@ jar {
     baseName = 'kontospring'
     version =  '0.1.0'
 }
+
 

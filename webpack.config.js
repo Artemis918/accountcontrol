@@ -13,6 +13,7 @@ module.exports = {
 	  modules: [
 		  "node_modules",
 		  path.resolve(ROOT, 'javascript'),
+		  path.resolve(ROOT, 'javascript/utils'),
 		  path.resolve(ROOT, 'css')
 	  ]
   },

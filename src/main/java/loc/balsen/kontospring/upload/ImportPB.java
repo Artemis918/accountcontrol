@@ -54,41 +54,86 @@ public class ImportPB extends Importbase {
 	static DateFormat dateformater = new SimpleDateFormat("dd.MM.yyyy");
 
 	private Beleg parseLine(String fields[]) throws ParseException {
-		int len = fields.length;
 
 		Beleg bubel = new Beleg();
 		bubel.setEingang(new Date());
 		bubel.setBeleg(dateformater.parse(fields[0]));
 		bubel.setWertstellung(dateformater.parse(fields[1]));
-		bubel.setAbsender(fields[len - 4]);
-		bubel.setEmpfaenger(fields[len - 3]);
 
+		Beleg.Art art = belegArt.get(fields[2].trim());
+		if (art == null) {
+			throw new ParseException("Unknown belegart " + fields[2], 0);
+		}
+		bubel.setArt(art);
+
+		parseDetails(fields[3], bubel);
+
+		bubel.setAbsender(fields[4]);
+		bubel.setEmpfaenger(fields[5]);
+		
 		char euroLatin9 = 0xA4;
 
 		// Value interpretieren
-		String value = fields[len - 2];
+		String value = fields[6];
 		value = value.replaceAll("\\.", "");
 		value = value.replaceAll(",", "");
 		value = value.replaceAll(" €", "");
 		value = value.replaceAll(euroLatin9 + " ", "");
 		bubel.setWert(Integer.parseInt(value));
 
-		Beleg.Art art = belegArt.get(fields[2].trim());
-		if (art == null) {
-			throw new ParseException("Unknown belegart " + fields[2], 0);
-		}
+		return bubel;
+	}
 
-		bubel.setArt(belegArt.get(fields[2]));
-
+	private void parseDetails(String detailsAll, Beleg bubel) {
 		String details = new String();
-		for (int i = 3; i < len - 4; i++) {
+		
+		String fields[] = detailsAll.split(" ");
+		int len = fields.length;		
+
+		int i = parseReferences(bubel, fields);
+
+		while (i<len) {
 			if (details.length() > 0)
-				details += "\t";
-			details = fields[i];
+				details += " ";
+			details+=fields[i++];
 		}
 		bubel.setDetails(details);
+	}
 
-		return bubel;
+	private int parseReferences(Beleg bubel, String[] fields) {
+		int i = 0;
+		if (fields[0].equals("Referenz")) {
+			i++;
+			String referenz = fields[i++];
+			while (i<fields.length && !fields[i].equals("Mandat") && !fields[i].equals("Verwendungszweck")) {
+				referenz += " "+ fields[i++];
+			}
+			bubel.setReferenz(referenz);
+			
+			if (checkField(fields, i, "Mandat")) {
+				i++;
+				String mandat;
+				mandat = fields[i++];
+				while (i<fields.length && !fields[i].equals("Einreicher-ID")) {
+					mandat += " " + fields[i++];
+				}
+				bubel.setMandat(mandat);
+			}
+			
+			if (checkField(fields, i,"Einreicher-ID")) {
+				i++;
+				bubel.setEinreicherID(fields[i++]);
+			}
+			
+			if (checkField(fields, i,"Verwendungszweck")) {
+				i++;
+			}
+		}
+		return i;
+	}
+
+	private boolean checkField(String[] fields, int i,String label) {
+		return i<fields.length && fields[i].equals(label);
 	}
 
 	private static final Map<String, Beleg.Art> belegArt;

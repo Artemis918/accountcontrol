@@ -47,6 +47,9 @@ public class Plan {
 	@JoinColumn(name = "konto")
 	private Konto konto;
 
+	public Plan() {
+	}
+	
 	public Plan(Template templ, Date date) {
 
 		creationdate = new Date();

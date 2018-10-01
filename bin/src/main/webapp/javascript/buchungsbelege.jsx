@@ -25,11 +25,11 @@ class Uploader extends React.Component {
     }
 
     onDrop(accepted) {
-        this.setState({ accepted: this.state.accepted.concat(accepted) });
+        this.setState({ accepted: this.state.accepted.concat(accepted), fileok: [], fileerr: []});
     }
 
     loadOK(response) {
-        if (response.data.status==1)
+        if (response.data.status == 1)
             this.setState({ fileok: this.state.fileok.concat(response.data.message) });
         else
             this.setState({ fileerr: this.state.fileerr.concat(response.data.message) });
@@ -50,35 +50,56 @@ class Uploader extends React.Component {
                 .then(this.loadOK)
                 .catch(this.loadError)
         });
+        this.setState({ accepted: [] })
     }
 
     render() {
         return (
             <section>
-                <div className="dropzone">
-                    <Dropzone
-                        accept="text/*"
-                        onDrop={this.onDrop}
-                    >
-                        <ul>
-                            {
-                                this.state.accepted.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                            }
-                        </ul>
-                    </Dropzone>
-                </div>
-                <ul>
-                    {
-                        this.state.fileerr.map(f => <li> fail: {f} </li>)
-                    }
-                    {
-                        this.state.fileok.map(f => <li> ok: {f} </li>)
-                    }
-                </ul>
-                <aside>
-                    <button className="button" onClick={(e) => this.buttonClear()}> Clear </button>
-                    <button className="button" onClick={(e) => this.uploadit()}> Upload </button>
-                </aside>
+                <table>
+                    <col style={{ width: '80%' }} />
+                    <col style={{ width: '20%' }} />
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style={{ textalign: 'center' }}>
+                                    <ul>
+                                        {
+                                            this.state.accepted.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                                        }
+                                        <hrule />
+                                        {
+                                            this.state.fileerr.map(f => <li> fail: {f} </li>)
+                                        }
+                                        {
+                                            this.state.fileok.map(f => <li> ok: {f} </li>)
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                            <td>
+                                <div className="dropzone">
+                                    <Dropzone
+                                        accept="text/*"
+                                        onDrop={this.onDrop}
+                                    >
+                                        <div style={{ textAlign: 'center' }}>
+                                            <p>Drop file here</p>
+                                            <p>or</p>
+                                            <p>Press to select</p>
+                                        </div>
+                                    </Dropzone>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button className="button" onClick={(e) => this.buttonClear()}> Clear </button>
+                                <button className="button" onClick={(e) => this.uploadit()}> Upload </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
         );
     }
@@ -86,7 +107,7 @@ class Uploader extends React.Component {
 
 
 
-export default class Header extends React.Component {
+export default class BuchungsBelege extends React.Component {
     render() {
         return (<div> <table width='100%' > <tr> <td></td><td> <Uploader /> </td> </tr> </table> </div>);
     }

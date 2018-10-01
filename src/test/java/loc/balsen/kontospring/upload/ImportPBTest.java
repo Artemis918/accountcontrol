@@ -1,7 +1,6 @@
 package loc.balsen.kontospring.upload;
 
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -13,7 +12,6 @@ import static org.mockito.Mockito.eq;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.text.ParseException;
@@ -35,9 +33,16 @@ public class ImportPBTest {
 
 	static String HEADER = "\n\n";
 	
-	static String TESTDATA = "\"30.08.2018\";\"31.08.2018\";\"Gutschrift\";"
-			+ "\"Referenz 982432516641 \";\"AGNUS BALSEN DOROTHEA BALSE\";"
-			+ "\"Marion Balsen Dieter Balsen\";\"1.500,00 €\";\"12.157,00 €\"";
+	static String TESTDATA = "\"30.08.2018\";\"31.08.2018\";\""
+			+ "Lastschrift\";"
+			+ "\"Referenz Zahlbeleg 355807144738 "
+			+ "Mandat DE00020110020000000000000000 6587039 "
+			+ "Einreicher-ID DE93ZZZ00000078611 "
+			+ "Festnetz Vertragskonto 4883341542 RG 5172931128/22.08.2018 \";"
+			+ "\"Marion Balsen Dieter Balsen\";"
+			+ "\"Telekom Deutschland GmbH\";"
+			+ "\"-42,80 €\";"
+			+ "\"10.657,00 €\"";
 
 	@Mock
 	BelegRepository belegRepository;
@@ -68,11 +73,14 @@ public class ImportPBTest {
 		assertTrue(!eingang.before(start) && !eingang.after(Calendar.getInstance().getTime()));
 		assertEquals(formatter.parse("30.08.2018"),beleg.getBeleg());
 		assertEquals(formatter.parse("31.08.2018"),beleg.getWertstellung());
-		assertEquals(Beleg.Art.GUTSCHRIFT,beleg.getArt());
-		assertEquals("AGNUS BALSEN DOROTHEA BALSE",beleg.getAbsender());
-		assertEquals("Marion Balsen Dieter Balsen",beleg.getEmpfaenger());
-		assertEquals(150000,beleg.getWert());
-		assertEquals("Referenz 982432516641 ",beleg.getDetails());
+		assertEquals(Beleg.Art.LASTSCHRIFT,beleg.getArt());
+		assertEquals("Marion Balsen Dieter Balsen",beleg.getAbsender());
+		assertEquals("Telekom Deutschland GmbH",beleg.getEmpfaenger());
+		assertEquals(-4280,beleg.getWert());
+		assertEquals("Festnetz Vertragskonto 4883341542 RG 5172931128/22.08.2018",beleg.getDetails());
+		assertEquals("Zahlbeleg 355807144738", beleg.getReferenz());
+		assertEquals("DE00020110020000000000000000 6587039", beleg.getMandat());
+		assertEquals("DE93ZZZ00000078611", beleg.getEinreicherID());
 	}
 	
 	@Test
@@ -91,9 +99,9 @@ public class ImportPBTest {
 
 		List<Beleg> belegList = new ArrayList<>();
 		belegList.add(new Beleg());
-		when(belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(eq(150000), any(Date.class), any(String.class), any(String.class))).thenReturn(belegList );
+		when(belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(eq(-4280), any(Date.class), any(String.class), any(String.class))).thenReturn(belegList );
 
-		String testData2 = new String(TESTDATA).replace("1.500,00","1.400,00");
+		String testData2 = new String(TESTDATA).replace("-42,80","-42,90");
 		ByteArrayInputStream input =  new ByteArrayInputStream((HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2).getBytes("UTF-8"));		
 		importer.ImportFile("test.csv", input);
 		
@@ -101,8 +109,8 @@ public class ImportPBTest {
 		verify(belegRepository,times(2)).save(argcap.capture());
 		List<Beleg> res = argcap.getAllValues();
 		
-		assertEquals(140000, res.get(0).getWert());
-		assertEquals(140000, res.get(1).getWert());
+		assertEquals(-4290, res.get(0).getWert());
+		assertEquals(-4290, res.get(1).getWert());
 	}
 
 }

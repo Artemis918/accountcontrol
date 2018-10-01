@@ -87,18 +87,6 @@ public class Template {
 		this.konto= t.konto;
 	}
 
-
-	public Double getEuroWert() {
-		double res = getWert();
-		res /= 100;
-		return res;
-	}
-
-	public void setEuroWert(Double val) {
-		val *= 100;
-		setWert(val.intValue());
-	}
-
 	public Date incrementDate(Date nextDate) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(nextDate);

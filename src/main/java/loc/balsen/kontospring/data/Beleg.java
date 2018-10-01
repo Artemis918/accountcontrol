@@ -28,7 +28,8 @@ public class Beleg {
 	public static int LEN_DETAIL = 512;
 	public static int LEN_ABSENDER = 80;
 	public static int LEN_EMPFAENGER = 80;
-
+	public static int LEN_DETAILS = 50;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_buchungsbeleg_name")
 	@SequenceGenerator(name = "seq_buchungsbeleg_name", sequenceName = "seq_buchungsbeleg", allocationSize = 1)
@@ -42,12 +43,8 @@ public class Beleg {
 	private String empfaenger;
 	private int wert;
 	private String details;
+	private String einreicherID;
+	private String mandat;
+	private String Referenz;
 	
-
-	public String getShortDetails() {
-		if (details.length() <= 60)
-			return details;
-		else
-			return details.substring(0, 57) + "...";
-	}
 }

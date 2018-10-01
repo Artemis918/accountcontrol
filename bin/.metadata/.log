@@ -33,3 +33,29 @@ Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp
 bash: cannot set terminal process group (-1): Inappropriate ioctl for device
 bash: no job control in this shell
 
+!SESSION 2018-09-10 15:00:02.130 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180330-0640
+java.version=1.8.0_171
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY com.genuitec.eclipse.code 1 0 2018-09-10 15:00:13.092
+!MESSAGE [CodeMix] Detected minor change in system fingerprint, impacted if
+
+!ENTRY com.genuitec.eclipse.code.core 4 0 2018-09-10 15:00:14.959
+!MESSAGE CodeMix Engine Process has ended unexpectedly [137]: [90m[main 3:00:09 PM][0m update#ctor - updates are disabled
+bash: cannot set terminal process group (-1): Inappropriate ioctl for device
+bash: no job control in this shell
+
+!SESSION 2018-09-17 22:15:22.348 -----------------------------------------------
+eclipse.buildId=4.7.3.M20180330-0640
+java.version=1.8.0_171
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY com.genuitec.eclipse.code 1 0 2018-09-17 22:15:36.681
+!MESSAGE [CodeMix] Detected minor change in system fingerprint, impacted if
