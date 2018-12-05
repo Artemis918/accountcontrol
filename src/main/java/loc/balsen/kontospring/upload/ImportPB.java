@@ -122,7 +122,7 @@ public class ImportPB extends Importbase {
 			
 			if (checkField(fields, i,"Einreicher-ID")) {
 				i++;
-				bubel.setEinreicherID(fields[i++]);
+				bubel.setEinreicherId(fields[i++]);
 			}
 			
 			if (checkField(fields, i,"Verwendungszweck")) {

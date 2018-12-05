@@ -7,7 +7,10 @@ import lombok.Data;
 
 @Data
 public class TemplateSmallDTO {
+
+	static private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");
 	
+	private int id;
 	private String gueltigVon;
 	private String gueltigBis;
 	private String rhythm;
@@ -16,11 +19,10 @@ public class TemplateSmallDTO {
 	
 	public TemplateSmallDTO(Template template) {
 		
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");
-		
+		id =  template.getId();
 		gueltigVon = dateFormatter.format(template.getGueltigVon());
-		gueltigBis = dateFormatter.format(template.getGueltigBis());
-		shortdescription = template.getShortdescription();
+		gueltigBis = template.getGueltigBis()==null ? null :dateFormatter.format(template.getGueltigBis());
+		shortdescription = template.getShortDescription();
 		betrag = template.getWert();
 		
 		rhythm = template.getRythmus().toString() + " (" + template.getAnzahlRythmus() + ")";

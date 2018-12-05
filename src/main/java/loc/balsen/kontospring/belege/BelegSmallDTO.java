@@ -25,6 +25,7 @@ public class BelegSmallDTO {
 			partner = beleg.getEmpfaenger();
 		}
 
+		
 		details = beleg.getDetails();
 		date =  dateFormatter.format(beleg.getWertstellung());
 	}

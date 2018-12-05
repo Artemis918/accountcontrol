@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import loc.balsen.kontospring.data.Template;
 
-public interface TemplateRepository extends JpaRepository<Template, Long>{
+public interface TemplateRepository extends JpaRepository<Template, Integer>{
 
 }

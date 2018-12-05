@@ -82,6 +82,11 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/gradle/gradle.balsen/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.6/6f14738ec2e9dd0011e343717fa624a10f8aab64/jdom2-2.0.6.jar" sourcepath="/home/gradle/gradle.balsen/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.6/3dcf8ba7582eeac3b67ed5155ee3659e16c8dadc/jdom2-2.0.6-sources.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/home/gradle/gradle.balsen/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/2.0.4.RELEASE/c7afabf0d7c85db178da4ce0634e3bd2ddb0eb71/spring-boot-starter-json-2.0.4.RELEASE.jar" sourcepath="/home/gradle/gradle.balsen/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/2.0.4.RELEASE/d79d4fd0a2b75fbeb8f02fb68cd3cd7a6daefe76/spring-boot-starter-json-2.0.4.RELEASE-sources.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>

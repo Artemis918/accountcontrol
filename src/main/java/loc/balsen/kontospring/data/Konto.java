@@ -23,12 +23,12 @@ public class Konto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_konto_name")
 	@SequenceGenerator(name = "seq_konto_name", sequenceName = "seq_konto", allocationSize = 1)
-	private int id;
+	private Long id;
 	private String shortdescription;
 	private String description;
 	private int art; 
 	
 	@ManyToOne
 	@JoinColumn(name = "id_gruppe")
-	private KontoGruppe kontoGruppe;
+	private Kontogruppe kontoGruppe;
 }

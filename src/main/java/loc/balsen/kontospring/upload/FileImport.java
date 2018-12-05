@@ -20,6 +20,9 @@ public class FileImport {
 	
 	@Autowired
 	ImportPBcsv importPBcsv;
+
+	@Autowired
+	ImportXML importXML;
 	
 	public FileImport()
 	{
@@ -30,6 +33,7 @@ public class FileImport {
 	private void initImporter() {
 		importer.add(importPBtxt);
 		importer.add(importPBcsv);
+		importer.add(importXML);
 	}
 	
 	public void importFile(String fileName,  InputStream data) throws ParseException, IOException 

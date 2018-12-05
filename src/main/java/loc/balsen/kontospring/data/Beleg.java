@@ -19,9 +19,12 @@ public class Beleg {
 	public enum Art {
 		GUTSCHRIFT ,
 		LASTSCHRIFT ,
+		LASTSCHRIFTKARTE ,
 		UEBERWEISUNG ,
 		KARTE,
 		ENTGELT,
+		AUSZAHLUNG,
+		DAUERAUFTRAG,
 		MANUELL
 	}
 	
@@ -43,7 +46,7 @@ public class Beleg {
 	private String empfaenger;
 	private int wert;
 	private String details;
-	private String einreicherID;
+	private String einreicherId;
 	private String mandat;
 	private String Referenz;
 	

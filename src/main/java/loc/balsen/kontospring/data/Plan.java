@@ -17,7 +17,7 @@ import lombok.Data;
 @Entity
 public class Plan {
 
-	public enum Art {
+	public enum MatchStyle {
 		EXACT,  /// Der Wert des Belegs muß identisch sein
 		MAX,    /// Der Wert des Belegs darf nicht höher sein
 		SUMMAX, /// Der Wert wird nur in der Summe berücksichtigt
@@ -28,16 +28,16 @@ public class Plan {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_plan_name")
 	@SequenceGenerator(name = "seq_plan_name", sequenceName = "seq_plan", allocationSize = 1)
 	private int id;
-	private Date creationdate;
-	private Date startdate;
-	private Date plandate;
-	private Date enddate;
+	private Date creationDate;
+	private Date startDate;
+	private Date planDate;
+	private Date endDate;
 	private int position;
 	private int wert;
 	private String pattern;
-	private String shortdescription;
+	private String shortDescription;
 	private String description;
-	private Art planArt;
+	private MatchStyle matchStyle;
 	
 	@ManyToOne
 	@JoinColumn(name = "template")
@@ -52,9 +52,9 @@ public class Plan {
 	
 	public Plan(Template templ, Date date) {
 
-		creationdate = new Date();
+		creationDate = new Date();
 
-		plandate = date;
+		planDate = date;
 
 		setPeriod(templ);
 
@@ -62,9 +62,9 @@ public class Plan {
 		position = templ.getPosition();
 		wert = templ.getWert();
 		pattern = templ.getPattern();
-		shortdescription = templ.getShortdescription();
+		shortDescription = templ.getShortDescription();
 		description = templ.getDescription();
-		planArt = templ.getPlanArt();
+		matchStyle = templ.getMatchStyle();
 		template = templ;
 	}
 
@@ -72,12 +72,12 @@ public class Plan {
 
 		Calendar cal = Calendar.getInstance();
 
-		cal.setTime(plandate);
+		cal.setTime(planDate);
 		cal.add(Calendar.DATE, templ.getVardays());
-		enddate = cal.getTime();
+		endDate = cal.getTime();
 
-		cal.setTime(plandate);
+		cal.setTime(planDate);
 		cal.add(Calendar.DATE, -1 * templ.getVardays());
-		startdate = cal.getTime();
+		startDate = cal.getTime();
 	}
 }

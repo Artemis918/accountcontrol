@@ -80,7 +80,7 @@ public class ImportPBTest {
 		assertEquals("Festnetz Vertragskonto 4883341542 RG 5172931128/22.08.2018",beleg.getDetails());
 		assertEquals("Zahlbeleg 355807144738", beleg.getReferenz());
 		assertEquals("DE00020110020000000000000000 6587039", beleg.getMandat());
-		assertEquals("DE93ZZZ00000078611", beleg.getEinreicherID());
+		assertEquals("DE93ZZZ00000078611", beleg.getEinreicherId());
 	}
 	
 	@Test

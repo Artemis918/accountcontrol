@@ -5,16 +5,30 @@ export default class DropdownService extends React.Component {
     super(props);
     this.state = {data: []};
     this.handleChange = this.handleChange.bind(this);
-  }
+    this.setparam = this.setparam.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    }
   
   handleChange(event) {
       this.props.onChange(event.target.value);
   }
   
   componentWillMount() {
-          fetch('http://localhost:8080/'+ this.props.url)
-              .then(response => response.json())
-              .then(data => { this.setState({data: data})} )
+      this.fetchData(this.props.param);
+  }
+  
+  fetchData(value) {
+      var url = this.props.url;
+      if (value != undefined) {
+          url = url + '/' + value;
+      }
+      fetch(url)
+          .then(response => response.json())
+          .then(data => { this.setState({data: data})} )
+  }
+  
+  setparam(value) {
+      this.fetchData(value);
   }
   
   render() {

@@ -18,8 +18,9 @@ export default class TaskSelector extends React.Component {
                 <table>
                     <tbody>
                         <tr style={{ height: '30px', verticalAlign: 'bottom' }}>
-                            {this.props.tasks.map(( t, i ) => <td style={{ width: '100px' }}>
-                                <button className='tabButton'
+                            {this.props.tasks.map(( t, i ) => <td style={{ width: '100px' }} key={"tab_" + t.name} >
+                                <button className='tabButton' 
+                                    key={"tabBut_" + t.name}
                                     onClick={( e ) => this.selectTask( i )}
                                     style={{ width: '90%', background: this.state.currentTask == i ? 'white' : null }} > {t.name}
                                 </button>

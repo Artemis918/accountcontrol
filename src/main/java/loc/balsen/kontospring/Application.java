@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @Configuration
-@PropertySource("database.properties")
+@PropertySource("classpath:database.properties")
 @EnableJpaRepositories(basePackages = "loc.balsen.kontospring.repositories")
 @EntityScan("loc.balsen.kontospring.data")
 @EnableAutoConfiguration

@@ -11,7 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import loc.balsen.kontospring.data.Plan.Art;
+import loc.balsen.kontospring.data.Plan.MatchStyle;
+import loc.balsen.kontospring.templates.PatternDTO;
 import lombok.Data;
 
 @Data
@@ -36,10 +37,10 @@ public class Template {
 	private int position;
 	private int wert;
 	private String pattern;
-	private String shortdescription;
-	private Plan.Art planArt;
+	private String shortDescription;
+	private Plan.MatchStyle matchStyle;
 	private int next;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "konto")
 	private Konto konto;
@@ -56,8 +57,8 @@ public class Template {
 		this.position= 0;
 		this.wert= 0;
 		this.pattern= null;
-		this.shortdescription= null;
-		this.planArt= Art.EXACT;
+		this.shortDescription= null;
+		this.matchStyle= MatchStyle.EXACT;
 		this.next=0;
 		this.konto=null;		
 	}
@@ -81,8 +82,8 @@ public class Template {
 		this.position= t.position;
 		this.wert= t.wert;
 		this.pattern= t.pattern;
-		this.shortdescription= t.shortdescription;
-		this.planArt= t.planArt;
+		this.shortDescription= t.shortDescription;
+		this.matchStyle= t.matchStyle;
 		this.next= t.next;
 		this.konto= t.konto;
 	}

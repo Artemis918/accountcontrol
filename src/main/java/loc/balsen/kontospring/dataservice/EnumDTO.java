@@ -1,12 +1,21 @@
 package loc.balsen.kontospring.dataservice;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class EnumDTO {
 
+	EnumDTO(String t, Long val ) {
+		text=t;
+		value=val;
+	}
+
+	EnumDTO(String t, int val ) {
+		text=t;
+		value=(long)val;
+	}
+
+	
 	private String text;
-	private int value;
+	private Long value;
 }
