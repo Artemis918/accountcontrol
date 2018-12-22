@@ -2,6 +2,6 @@ build
 bin
 .metadata
 .gradle
+.classpath
 
-/.classpath
 /.settings/
