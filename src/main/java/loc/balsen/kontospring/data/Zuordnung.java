@@ -31,7 +31,7 @@ public class Zuordnung {
 	
 	@OneToOne
 	@JoinColumn(name = "buchungsbeleg")
-	private Beleg buchungsbeleg;
+	private BuchungsBeleg buchungsbeleg;
 	
 	@ManyToOne
 	@JoinColumn(name = "konto")	

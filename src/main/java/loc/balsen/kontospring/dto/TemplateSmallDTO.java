@@ -1,6 +1,7 @@
-package loc.balsen.kontospring.templates;
+package loc.balsen.kontospring.dto;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import loc.balsen.kontospring.data.Template;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.Data;
 @Data
 public class TemplateSmallDTO {
 
-	static private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");
+	static private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
 	
 	private int id;
 	private String gueltigVon;
@@ -20,8 +21,8 @@ public class TemplateSmallDTO {
 	public TemplateSmallDTO(Template template) {
 		
 		id =  template.getId();
-		gueltigVon = dateFormatter.format(template.getGueltigVon());
-		gueltigBis = template.getGueltigBis()==null ? null :dateFormatter.format(template.getGueltigBis());
+		gueltigVon = template.getGueltigVon().format(dateFormatter);
+		gueltigBis = template.getGueltigBis()==null ? null :template.getGueltigBis().format(dateFormatter);
 		shortdescription = template.getShortDescription();
 		betrag = template.getWert();
 		

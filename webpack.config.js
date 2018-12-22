@@ -6,6 +6,7 @@ var DEST = path.resolve( ROOT, 'dist');
 
 module.exports = {
   devtool: 'source-map',
+  mode: 'development',
   entry: {
      app: SRC + '/index.jsx',
   },
@@ -15,7 +16,8 @@ module.exports = {
 		  path.resolve(ROOT, 'javascript'),
 		  path.resolve(ROOT, 'javascript/utils'),
 		  path.resolve(ROOT, 'css')
-	  ]
+	  ],
+      extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
   output: {
     path: DEST,
@@ -33,12 +35,14 @@ module.exports = {
 		}
       },
 
+      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
       {test: /\.css$/, loader: 'style-loader!css-loader'},
       {test: /\.less$/, loader: 'style!css!less'},
       {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=application/font-woff'},
       {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=application/octet-stream'},
       {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=image/svg+xml'}
+      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=image/svg+xml'},
+      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
   }
 };

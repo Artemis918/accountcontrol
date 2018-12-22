@@ -5,6 +5,7 @@ import Header from 'header.jsx'
 import TaskSelector from 'taskselector.jsx'
 import Buchungsbelege from 'buchungsbelege.jsx'
 import Templates from 'templates.jsx'
+import Planen from 'planen.jsx'
 import Buchen from 'buchen.jsx'
 
 import 'index.css'
@@ -22,11 +23,11 @@ class Main extends React.Component {
         this.setState({ value: val });
     }
 
+
     render() {
         if (this.state.value == 2) {
             var tasks = [
-                { name: 'Laden', comp: (<Buchungsbelege />) },
-                { name: 'Laden2', comp: (<Buchungsbelege />) }
+                { name: 'Laden', comp: (<Buchungsbelege sendmessage= {this.sendMessage }/>) },
             ];
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Buchungsbelege" />
@@ -43,9 +44,8 @@ class Main extends React.Component {
         }
         else if (this.state.value == 1) {
             var tasks = [
-                { name: 'Vorlagen', comp: (<Templates/>) },
-                { name: 'Erstellen', comp: (<h1>Erstellen</h1>) },
-                { name: 'Verwalten', comp: (<h1>Verwalten</h1>) }
+                { name: 'Vorlagen', comp: (<Templates sendmessage={this.sendMessage }/>) },
+                { name: 'Planen', comp: (<Planen sendmessage={this.sendMessage }/>) },
             ];
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Planen" />

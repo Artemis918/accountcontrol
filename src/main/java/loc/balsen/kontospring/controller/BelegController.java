@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.belege;
+package loc.balsen.kontospring.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import loc.balsen.kontospring.repositories.BelegRepository;
+import loc.balsen.kontospring.dto.BelegSmallDTO;
+import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 @Controller
 @RequestMapping("/belege")
 public class BelegController {
 	
 	@Autowired
-	BelegRepository belegRepository;
+	BuchungsBelegRepository belegRepository;
 	
 	@GetMapping("/unassigned")
 	@ResponseBody

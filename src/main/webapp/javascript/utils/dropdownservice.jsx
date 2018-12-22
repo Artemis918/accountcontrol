@@ -37,7 +37,7 @@ export default class DropdownService extends React.Component {
         <div>
           <form>
             <select value={this.props.value} onChange={this.handleChange}>
-              //{enumdata.map(( t )=> <option value={t[this.props.valuefield]}>{t[this.props.textfield]}</option>)}
+              {enumdata.map(( t )=> <option key={t[this.props.valuefield]} value={t[this.props.valuefield]}>{t[this.props.textfield]}</option>)}
             </select>
           </form>
         </div>

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import java.util.Map;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 
-import loc.balsen.kontospring.data.Beleg;
+import loc.balsen.kontospring.data.BuchungsBeleg;
 
 public class ImportPB extends Importbase {
 
@@ -51,16 +53,16 @@ public class ImportPB extends Importbase {
 		return true;
 	}
 
-	static DateFormat dateformater = new SimpleDateFormat("dd.MM.yyyy");
+	static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-	private Beleg parseLine(String fields[]) throws ParseException {
+	private BuchungsBeleg parseLine(String fields[]) throws ParseException {
 
-		Beleg bubel = new Beleg();
-		bubel.setEingang(new Date());
-		bubel.setBeleg(dateformater.parse(fields[0]));
-		bubel.setWertstellung(dateformater.parse(fields[1]));
+		BuchungsBeleg bubel = new BuchungsBeleg();
+		bubel.setEingang(LocalDate.now());
+		bubel.setBeleg(LocalDate.parse(fields[0],dateformater));
+		bubel.setWertstellung(LocalDate.parse(fields[1],dateformater));
 
-		Beleg.Art art = belegArt.get(fields[2].trim());
+		BuchungsBeleg.Art art = belegArt.get(fields[2].trim());
 		if (art == null) {
 			throw new ParseException("Unknown belegart " + fields[2], 0);
 		}
@@ -84,7 +86,7 @@ public class ImportPB extends Importbase {
 		return bubel;
 	}
 
-	private void parseDetails(String detailsAll, Beleg bubel) {
+	private void parseDetails(String detailsAll, BuchungsBeleg bubel) {
 		String details = new String();
 		
 		String fields[] = detailsAll.split(" ");
@@ -100,7 +102,7 @@ public class ImportPB extends Importbase {
 		bubel.setDetails(details);
 	}
 
-	private int parseReferences(Beleg bubel, String[] fields) {
+	private int parseReferences(BuchungsBeleg bubel, String[] fields) {
 		int i = 0;
 		if (fields[0].equals("Referenz")) {
 			i++;
@@ -136,32 +138,32 @@ public class ImportPB extends Importbase {
 		return i<fields.length && fields[i].equals(label);
 	}
 
-	private static final Map<String, Beleg.Art> belegArt;
+	private static final Map<String, BuchungsBeleg.Art> belegArt;
 	static {
-		Map<String, Beleg.Art> aMap = new HashMap<String, Beleg.Art>(30);
-		aMap.put("Gutschrift", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Einzahlung", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Dauer Gutschrift", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Dauergutschrift", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Gehalt/Rente", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Lastschrift", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Auslandsauftrag", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Kreditkartenumsatz", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Dauer Lastschrift", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Überweisung", Beleg.Art.UEBERWEISUNG);
-		aMap.put("Überweisung giropay", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Kartenverfügung", Beleg.Art.KARTE);
-		aMap.put("Auszahlung", Beleg.Art.KARTE);
-		aMap.put("Zinsen/Entgelt", Beleg.Art.ENTGELT);
-		aMap.put("Entgelt", Beleg.Art.ENTGELT);
-		aMap.put("Scheckeinreichung", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Gutschr.SEPA", Beleg.Art.GUTSCHRIFT);
-		aMap.put("SEPA Überw.", Beleg.Art.UEBERWEISUNG);
-		aMap.put("SDD Lastschr", Beleg.Art.LASTSCHRIFT);
-		aMap.put("Storno", Beleg.Art.GUTSCHRIFT);
-		aMap.put("Dauerauftrag", Beleg.Art.UEBERWEISUNG);
-		aMap.put("Kartenzahlung", Beleg.Art.KARTE);
-		aMap.put("Auszahlung Geldautomat", Beleg.Art.KARTE);
+		Map<String, BuchungsBeleg.Art> aMap = new HashMap<String, BuchungsBeleg.Art>(30);
+		aMap.put("Gutschrift", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Einzahlung", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Dauer Gutschrift", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Dauergutschrift", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Gehalt/Rente", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Lastschrift", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Auslandsauftrag", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Kreditkartenumsatz", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Dauer Lastschrift", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Überweisung", BuchungsBeleg.Art.UEBERWEISUNG);
+		aMap.put("Überweisung giropay", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Kartenverfügung", BuchungsBeleg.Art.KARTE);
+		aMap.put("Auszahlung", BuchungsBeleg.Art.KARTE);
+		aMap.put("Zinsen/Entgelt", BuchungsBeleg.Art.ENTGELT);
+		aMap.put("Entgelt", BuchungsBeleg.Art.ENTGELT);
+		aMap.put("Scheckeinreichung", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Gutschr.SEPA", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("SEPA Überw.", BuchungsBeleg.Art.UEBERWEISUNG);
+		aMap.put("SDD Lastschr", BuchungsBeleg.Art.LASTSCHRIFT);
+		aMap.put("Storno", BuchungsBeleg.Art.GUTSCHRIFT);
+		aMap.put("Dauerauftrag", BuchungsBeleg.Art.UEBERWEISUNG);
+		aMap.put("Kartenzahlung", BuchungsBeleg.Art.KARTE);
+		aMap.put("Auszahlung Geldautomat", BuchungsBeleg.Art.KARTE);
 		belegArt = Collections.unmodifiableMap(aMap);
 
 	}

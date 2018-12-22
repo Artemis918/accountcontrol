@@ -1,12 +1,9 @@
-package loc.balsen.kontospring.templates;
+package loc.balsen.kontospring.dto;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
@@ -17,13 +14,13 @@ import lombok.Data;
 @Data
 public class TemplateDTO {
 	private int id;
-	private Date gueltigVon;
-	private Date gueltigBis;
-	private Date start;
+	private LocalDate gueltigVon;
+	private LocalDate gueltigBis;
+	private LocalDate start;
 	private int vardays;
 	private int anzahlRythmus;
 	private int rythmus;
-	private Long konto;
+	private int konto;
 	private int kontogroup;
 	private String description;
 	private int position;
@@ -34,7 +31,7 @@ public class TemplateDTO {
 	private int previous;	
 
 	static private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");	
-	static private final ObjectMapper mapper =  new ObjectMapper();
+
 
 	public TemplateDTO() {
 	}
@@ -53,7 +50,7 @@ public class TemplateDTO {
 		this.konto=template.getKonto().getId();		
 		this.kontogroup=template.getKonto().getKontoGruppe().getId();
 		this.wert = template.getWert();
-		this.pattern = toPatternDTO(template.getPattern());
+		this.pattern = new PatternDTO(template.getPatternObject());
 		this.shortdescription = template.getShortDescription();
 		this.matchStyle = template.getMatchStyle().ordinal();
 		this.previous = template.getNext();
@@ -63,9 +60,9 @@ public class TemplateDTO {
 		Template template = new Template();
 
 		template.setId(this.getId());
-		template.setGueltigVon(this.gueltigVon == null ? new Date(): this.gueltigVon);
+		template.setGueltigVon(this.gueltigVon == null ? LocalDate.now(): this.gueltigVon);
 		template.setGueltigBis(this.gueltigBis);
-		template.setStart(this.start == null ? new Date(): this.start);
+		template.setStart(this.start == null ? LocalDate.now() : this.start);
 		template.setVardays(this.getVardays());
 		template.setAnzahlRythmus(this.getAnzahlRythmus());
 		template.setRythmus(Rythmus.values()[this.rythmus]);
@@ -73,7 +70,7 @@ public class TemplateDTO {
 		template.setPosition(this.getPosition());
 		template.setWert(this.getWert());
 		template.setKonto(kontoRepository.getOne(this.konto));
-		template.setPattern(toJson(this.getPattern()));
+		template.setPattern(pattern.toPattern());
 		template.setShortDescription(this.getShortdescription());
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchStyle]);
 		template.setNext(this.getPrevious());
@@ -81,28 +78,5 @@ public class TemplateDTO {
 		return template;
 	}
 	
-	public String toJson(PatternDTO patterndto) {
-		try {
-			return mapper.writeValueAsString(patterndto);
-		} catch (JsonProcessingException e) {
-			// TODO create some log
-			e.printStackTrace();
-		}
-		return "";
-	}
-	
-	public PatternDTO toPatternDTO(String patternjson) {
-		try {
-			return mapper.readValue(patternjson, PatternDTO.class);
-		} catch (JsonProcessingException e) {
-			// TODO create some log
-			e.printStackTrace();
-		}
-		catch(IOException e) {
-			// TODO create some log
-			e.printStackTrace();
-		}
-		return new PatternDTO();
-	}
 
 }

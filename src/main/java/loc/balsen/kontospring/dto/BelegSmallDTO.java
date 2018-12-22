@@ -1,8 +1,9 @@
-package loc.balsen.kontospring.belege;
+package loc.balsen.kontospring.dto;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
-import loc.balsen.kontospring.data.Beleg;
+import loc.balsen.kontospring.data.BuchungsBeleg;
 import lombok.Data;
 
 @Data
@@ -13,9 +14,8 @@ public class BelegSmallDTO {
 	private String date;
 	private String partner;
 	
-	public BelegSmallDTO(Beleg beleg) {
+	public BelegSmallDTO(BuchungsBeleg beleg) {
 		
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");
 		betrag = beleg.getWert();
 		
 		if ( beleg.getWert() > 0) {
@@ -27,6 +27,7 @@ public class BelegSmallDTO {
 
 		
 		details = beleg.getDetails();
-		date =  dateFormatter.format(beleg.getWertstellung());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		date =  beleg.getWertstellung().format(formatter );
 	}
 }

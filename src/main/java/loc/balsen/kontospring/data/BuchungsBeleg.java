@@ -1,5 +1,6 @@
 package loc.balsen.kontospring.data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="buchungsbeleg")
-public class Beleg {
+public class BuchungsBeleg {
 
 	public enum Art {
 		GUTSCHRIFT ,
@@ -38,9 +39,9 @@ public class Beleg {
 	@SequenceGenerator(name = "seq_buchungsbeleg_name", sequenceName = "seq_buchungsbeleg", allocationSize = 1)
 	private int id;
 	
-	private Date eingang;
-	private Date beleg;
-	private Date wertstellung;
+	private LocalDate eingang;
+	private LocalDate beleg;
+	private LocalDate wertstellung;
 	private Art art;
 	private String absender;
 	private String empfaenger;

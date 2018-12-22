@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import loc.balsen.kontospring.data.Beleg;
-import loc.balsen.kontospring.repositories.BelegRepository;
+import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 /**
  * @author balsen
@@ -21,14 +21,14 @@ import loc.balsen.kontospring.repositories.BelegRepository;
 public abstract class Importbase {
 
 	@Autowired
-	protected BelegRepository belegRepository;
+	protected BuchungsBelegRepository belegRepository;
 
 	abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
 
 	public Importbase() {
 	}
 
-	public boolean save(Beleg beleg) {
+	public boolean save(BuchungsBeleg beleg) {
 		if (beleg == null ||exists(beleg)) 
 			return false;
 
@@ -36,8 +36,8 @@ public abstract class Importbase {
 		return true;
 	}
 
-	private boolean exists(Beleg beleg) {
-		List<Beleg> same = belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(beleg.getWert(), beleg.getBeleg(),
+	private boolean exists(BuchungsBeleg beleg) {
+		List<BuchungsBeleg> same = belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(beleg.getWert(), beleg.getBeleg(),
 				beleg.getAbsender(), beleg.getEmpfaenger());
 
 		return !same.isEmpty();

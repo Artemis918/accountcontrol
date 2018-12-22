@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.kontospring.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,13 @@ import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Kontogruppe;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.dto.EnumDTO;
 import loc.balsen.kontospring.repositories.KontoGruppeRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
 
 @Component
 @RequestMapping("/collections")
-public class CollectionsService {
+public class CollectionsController {
 	
 	@Autowired
 	KontoGruppeRepository kontogruppeRepository;

@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,17 +18,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
+import org.springframework.format.datetime.joda.LocalDateTimeParser;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-import loc.balsen.kontospring.data.Beleg;
-import loc.balsen.kontospring.data.Beleg.Art;
+import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.BuchungsBeleg.Art;
 import loc.balsen.kontospring.upload.Importbase;
 
 @Component
 public class ImportXML extends Importbase {
 
-	static DateFormat dateformater = new SimpleDateFormat("yyyy-MM-dd");
+	static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	static private final HashMap<String, Art> belegArtenMap = new HashMap<String, Art>() {
 		private static final long serialVersionUID = 1L;
@@ -79,8 +82,8 @@ public class ImportXML extends Importbase {
 		return true;
 	}
 
-	private Beleg createBeleg(Element entry) throws ParseException {
-		Beleg beleg = new Beleg();
+	private BuchungsBeleg createBeleg(Element entry) throws ParseException {
+		BuchungsBeleg beleg = new BuchungsBeleg();
 
 		int amount = (int) (Double.parseDouble(getChild(entry, "Amt").getValue()) * 100);
 
@@ -90,10 +93,10 @@ public class ImportXML extends Importbase {
 			amount *= -1;
 		else if (!cdtDbtInd.equals("CRDT"))
 			throw new ParseException("Unknown Indicator :" + cdtDbtInd, 0);
-
+		
 		beleg.setWert(amount);
-		beleg.setBeleg(dateformater.parse(getChild(entry, "BookgDt").getChildText("Dt")));
-		beleg.setWertstellung(dateformater.parse(getChild(entry, "ValDt").getChildText("Dt")));
+		beleg.setBeleg(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt"),dateformater));
+		beleg.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt"),dateformater));
 
 		Element details = getChild(entry, "NtryDtls").getChild("TxDtls");
 
@@ -120,7 +123,7 @@ public class ImportXML extends Importbase {
 		beleg.setDetails(infotxt);
 
 		beleg.setArt(getArt(details));
-		beleg.setEingang(new Date());
+		beleg.setEingang(LocalDate.now());
 		return beleg;
 	}
 

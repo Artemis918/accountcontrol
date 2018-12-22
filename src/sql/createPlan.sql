@@ -7,14 +7,15 @@ create table Plan
     start_date        date,
     plan_date         date,
     end_date          date,
-    konto		     int,
-	position         int,
-	description      varchar(512),
+    deactivate_date   date,
+    konto		      int,
+	position          int,
+	description       varchar(512),
     short_description varchar(80),
-	pattern          varchar(256),
-	wert             int,
+	pattern           varchar(256),
+	wert              int,
 	plan_art          int,
-	template         int,
+	template          int,
 	primary key (id)
 );
 

@@ -1,7 +1,6 @@
 package loc.balsen.kontospring.data;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.templates.PatternDTO;
 import lombok.Data;
 
 @Data
@@ -27,9 +25,9 @@ public class Template {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_template_name")
 	@SequenceGenerator(name = "seq_template_name", sequenceName = "seq_template", allocationSize = 1)
 	private int id;
-	private Date gueltigVon;
-	private Date gueltigBis;
-	private Date start;
+	private LocalDate gueltigVon;
+	private LocalDate gueltigBis;
+	private LocalDate start;
 	private int vardays;
 	private int anzahlRythmus;
 	private Rythmus rythmus;
@@ -88,30 +86,27 @@ public class Template {
 		this.konto= t.konto;
 	}
 
-	public Date incrementDate(Date nextDate) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(nextDate);
-		switch (rythmus) {
-		case WEEK: {
-			cal.add(Calendar.WEEK_OF_YEAR, anzahlRythmus);
-			break;
+	public LocalDate increaseDate(LocalDate last) {
+		if (last != null) {
+			switch (rythmus) {
+			case DAY:
+				return last.plusDays(anzahlRythmus);
+			case MONTH:
+				return last.plusMonths(anzahlRythmus);
+			case WEEK:
+				return last.plusWeeks(anzahlRythmus);
+			case YEAR:
+				return last.plusYears(anzahlRythmus);
+			}
 		}
-		case DAY: {
-			cal.add(Calendar.DAY_OF_MONTH, anzahlRythmus);
-			break;
-		}
-		case MONTH: {
-			cal.add(Calendar.MONTH, anzahlRythmus);
-			break;
-		}
-		case YEAR: {
-			cal.add(Calendar.YEAR, anzahlRythmus);
-			break;
-		}
+		return start;			
+	}
+	
+	public Pattern getPatternObject() {
+		return new Pattern(pattern);
+	}
 
-		default:
-			break;
-		}
-		return cal.getTime();
+	public void setPattern(Pattern p) {
+		pattern = p.toJson();
 	}
 }

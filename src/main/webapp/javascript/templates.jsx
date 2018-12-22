@@ -1,9 +1,11 @@
 import React from 'react'
-import TemplateEditor from 'templateeditor.jsx'
-import TemplateList from 'templatelist.jsx'
+import TemplateEditor from './templateeditor'
+import SingleSelectLister from './singleselectlister.jsx'
 
 export default class Templates extends React.Component {
 
+
+    
     constructor( props ) {
         super( props );
         this.state = { changed: false };
@@ -11,6 +13,36 @@ export default class Templates extends React.Component {
         this.refresheditor = this.refresheditor.bind( this );
         this.templateList = undefined;
         this.templateEditor = undefined;
+        this.templatecolumns = [{
+            Header: 'Gültig von',
+            accessor: 'gueltigVon',
+            width: '100px'
+        }, {
+            Header: 'Gültig bis',
+            accessor: 'gueltigBis',
+            width: '100px'
+        }, {
+            Header: 'Rhythmus',
+            accessor: 'rhythm',
+            width: '100px'
+        }, {
+            Header: 'Beschreibung',
+            accessor: 'shortdescription',
+            width: '50%'
+        }, {
+            Header: 'Betrag',
+            accessor: 'betrag',
+            width: '100px',
+            Cell: row => (
+
+                <div style={{
+                    color: row.value >= 0 ? 'green' : 'red',
+                    textAlign: 'right'
+                }}>
+                    {( row.value / 100 ).toFixed( 2 )}
+                </div>
+            )
+        }]
     }
 
     refreshlist() {
@@ -30,7 +62,10 @@ export default class Templates extends React.Component {
                             <TemplateEditor ref={( refEditor ) => { this.templateEditor = refEditor; }} onChange={() => this.refreshlist()} />
                         </td>
                         <td style={{ width: '80%' }}>
-                            <TemplateList ref={( refList ) => { this.templateList = refList; }} handleChange={(id) => this.refresheditor(id)} />
+                            <SingleSelectLister ref={( refList ) => { this.templateList = refList; }} 
+                                                handleChange={(id) => this.refresheditor(id)}
+                                                url = 'http://localhost:8080/templates/list'
+                                                columns = {this.templatecolumns}/>
                         </td>
                     </tr>
                 </tbody>

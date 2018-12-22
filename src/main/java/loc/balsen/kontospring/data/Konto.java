@@ -23,7 +23,7 @@ public class Konto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_konto_name")
 	@SequenceGenerator(name = "seq_konto_name", sequenceName = "seq_konto", allocationSize = 1)
-	private Long id;
+	private int id;
 	private String shortdescription;
 	private String description;
 	private int art; 

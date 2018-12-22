@@ -1,9 +1,14 @@
-import React from 'react'
+/*
+ * 
+ */
+
+import React from 'react';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 
-export default class TemplateList extends React.Component {
+export default class SingleSelectLister extends React.Component {
+    
     constructor( props ) {
         super( props );
         this.state = { data: [], selected: undefined };
@@ -11,13 +16,13 @@ export default class TemplateList extends React.Component {
         this.changeSelected = this.changeSelected.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.reload();
     }
 
     reload() {
         var self = this;
-        fetch( 'http://localhost:8080/templates/list' )
+        fetch( this.props.url )
             .then( response => response.json() )
             .then( (d) => self.setState( { data : d, selected: undefined } ) );
     }
@@ -43,41 +48,11 @@ export default class TemplateList extends React.Component {
     }
 
     render() {
-        var columns = [{
-            Header: 'Gültig von',
-            accessor: 'gueltigVon',
-            width: '100px'
-        }, {
-            Header: 'Gültig bis',
-            accessor: 'gueltigBis',
-            width: '100px'
-        }, {
-            Header: 'Rhythmus',
-            accessor: 'rhythm',
-            width: '100px'
-        }, {
-            Header: 'Beschreibung',
-            accessor: 'shortdescription',
-            width: '50%'
-        }, {
-            Header: 'Betrag',
-            accessor: 'betrag',
-            width: '100px',
-            Cell: row => (
-
-                <div style={{
-                    color: row.value >= 0 ? 'green' : 'red',
-                    textAlign: 'right'
-                }}>
-                    {( row.value / 100 ).toFixed( 2 )}
-                </div>
-            )
-        }]
-
-        return ( <ReactTable
+        return (
+            <ReactTable
             getTrProps={(state, rowInfo, column, instance) => this.getTrProps( rowInfo )}
             defaultPageSize={10}
             data={this.state.data}
-            columns={columns} /> );
+            columns={this.props.columns} />); 
     }
 }

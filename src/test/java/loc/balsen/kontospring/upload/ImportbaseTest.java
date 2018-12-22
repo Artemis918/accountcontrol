@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,26 +14,30 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-import loc.balsen.kontospring.data.Beleg;
-import loc.balsen.kontospring.repositories.BelegRepository;
+import loc.balsen.kontospring.Application;
+import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Configuration
-@EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = "loc.balsen.kontospring.repositories")
-@EntityScan("loc.balsen.kontospring.data")
-@ComponentScan
-@PropertySource("database-test.properties")
+@AutoConfigureMockMvc
+@ContextConfiguration(classes = Application.class)
+@TestPropertySource("classpath:/h2database.properties")
+@WebAppConfiguration
 public class ImportbaseTest {
 	
 	@Autowired
-	private BelegRepository belegRepository;
+	private BuchungsBelegRepository belegRepository;
 	
 	@Autowired
 	private ImportTest importer;
@@ -40,13 +45,13 @@ public class ImportbaseTest {
 	@Test
 	public void testSave() {
 
-		List<Beleg> result = null;
+		List<BuchungsBeleg> result = null;
 		
-		Date now = new Date();
-		Date later = new Date(now.getTime()+5);
+		LocalDate now = LocalDate.now();
+		LocalDate later = now.plusDays(5);
 
-		Beleg beleg1 = createBeleg ("ich", "du", now, 100);
-		Beleg beleg2 = createBeleg ("ich", "du", now, 100);
+		BuchungsBeleg beleg1 = createBeleg ("ich", "du", now, 100);
+		BuchungsBeleg beleg2 = createBeleg ("ich", "du", now, 100);
 
 		
 		assertTrue(importer.save(beleg1));
@@ -68,8 +73,8 @@ public class ImportbaseTest {
 		
 	}
 
-	private Beleg createBeleg(String absender, String empfaenger, Date beleg, int wert) {
-		Beleg res  =  new Beleg();
+	private BuchungsBeleg createBeleg(String absender, String empfaenger, LocalDate beleg, int wert) {
+		BuchungsBeleg res  =  new BuchungsBeleg();
 		res.setAbsender(absender);
 		res.setEmpfaenger(empfaenger);
 		res.setWert(wert);

@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.templates;
+package loc.balsen.kontospring.controller;
 
 import java.text.ParseException;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.dataservice.EnumDTO;
-import loc.balsen.kontospring.repositories.BelegRepository;
+import loc.balsen.kontospring.dto.TemplateDTO;
+import loc.balsen.kontospring.dto.TemplateSmallDTO;
 import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
@@ -41,15 +41,15 @@ public class TemplateController {
 	
 	@PostMapping("/save")
 	@ResponseBody
-	TemplateResult saveTemplate(@RequestBody TemplateDTO template) {
+	KontoSpringResult saveTemplate(@RequestBody TemplateDTO template) {
 		try {
 			templateRepository.save(template.toTemplate(kontoRepository));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new TemplateResult(false,"Fehler beim Speichern");
+			return new KontoSpringResult(false,"Fehler beim Speichern");
 		}
-		return new TemplateResult(false,"Gespeichert");
+		return new KontoSpringResult(false,"Gespeichert");
 	}
 	
 	@GetMapping("/id/{id}")
@@ -66,8 +66,8 @@ public class TemplateController {
 	
 	@GetMapping("/delete/{id}")
 	@ResponseBody
-	TemplateResult deleteTemplate(@PathVariable Integer id) {
+	KontoSpringResult deleteTemplate(@PathVariable Integer id) {
 		templateRepository.deleteById(id);
-		return new TemplateResult(false,"gelöscht");
+		return new KontoSpringResult(false,"gelöscht");
 	}
 }

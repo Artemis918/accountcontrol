@@ -4,20 +4,21 @@ package loc.balsen.kontospring.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.eq;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +27,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import loc.balsen.kontospring.data.Beleg;
-import loc.balsen.kontospring.repositories.BelegRepository;
+import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 public class ImportPBTest {
 
@@ -45,7 +46,7 @@ public class ImportPBTest {
 			+ "\"10.657,00 €\"";
 
 	@Mock
-	BelegRepository belegRepository;
+	BuchungsBelegRepository belegRepository;
 
 	@InjectMocks
 	ImportPB importer = new ImportPB(".csv", "UTF-8", ';', 2);
@@ -58,22 +59,20 @@ public class ImportPBTest {
 	@Test
 	public void testImport() throws ParseException, IOException {
 
-		Date start = Calendar.getInstance().getTime();				
+		LocalDate start = LocalDate.now();				
 		
 		ByteArrayInputStream input =  new ByteArrayInputStream((HEADER + TESTDATA).getBytes("UTF-8"));		
 		importer.ImportFile("test.csv", input);
 		
-		ArgumentCaptor<Beleg> argcap =  ArgumentCaptor.forClass(Beleg.class);
+		ArgumentCaptor<BuchungsBeleg> argcap =  ArgumentCaptor.forClass(BuchungsBeleg.class);
 		verify(belegRepository).save(argcap.capture());
-		Beleg beleg = argcap.getValue();
+		BuchungsBeleg beleg = argcap.getValue();
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-		
-		Date eingang = beleg.getEingang();
-		assertTrue(!eingang.before(start) && !eingang.after(Calendar.getInstance().getTime()));
-		assertEquals(formatter.parse("30.08.2018"),beleg.getBeleg());
-		assertEquals(formatter.parse("31.08.2018"),beleg.getWertstellung());
-		assertEquals(Beleg.Art.LASTSCHRIFT,beleg.getArt());
+		LocalDate eingang = beleg.getEingang();
+		assertTrue(!eingang.isBefore(start) && !eingang.isAfter(LocalDate.now()));
+		assertEquals(LocalDate.parse("2018-08-30"),beleg.getBeleg());
+		assertEquals(LocalDate.parse("2018-08-31"),beleg.getWertstellung());
+		assertEquals(BuchungsBeleg.Art.LASTSCHRIFT,beleg.getArt());
 		assertEquals("Marion Balsen Dieter Balsen",beleg.getAbsender());
 		assertEquals("Telekom Deutschland GmbH",beleg.getEmpfaenger());
 		assertEquals(-4280,beleg.getWert());
@@ -97,17 +96,17 @@ public class ImportPBTest {
 	@Test
 	public void testInsertTwice() throws ParseException, IOException {
 
-		List<Beleg> belegList = new ArrayList<>();
-		belegList.add(new Beleg());
-		when(belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(eq(-4280), any(Date.class), any(String.class), any(String.class))).thenReturn(belegList );
+		List<BuchungsBeleg> belegList = new ArrayList<>();
+		belegList.add(new BuchungsBeleg());
+		when(belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(eq(-4280), any(LocalDate.class), any(String.class), any(String.class))).thenReturn(belegList );
 
 		String testData2 = new String(TESTDATA).replace("-42,80","-42,90");
 		ByteArrayInputStream input =  new ByteArrayInputStream((HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2).getBytes("UTF-8"));		
 		importer.ImportFile("test.csv", input);
 		
-		ArgumentCaptor<Beleg> argcap =  ArgumentCaptor.forClass(Beleg.class);
+		ArgumentCaptor<BuchungsBeleg> argcap =  ArgumentCaptor.forClass(BuchungsBeleg.class);
 		verify(belegRepository,times(2)).save(argcap.capture());
-		List<Beleg> res = argcap.getAllValues();
+		List<BuchungsBeleg> res = argcap.getAllValues();
 		
 		assertEquals(-4290, res.get(0).getWert());
 		assertEquals(-4290, res.get(1).getWert());

@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.templates;
+package loc.balsen.kontospring.controller;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -85,7 +85,7 @@ public class TemplateControllerTest {
 		assertEquals(1,templates.size());
 		Template template = templates.get(0);
 		assertEquals(100, template.getWert());
-		assertEquals(konto2, template.getKonto());
+		assertEquals(2, template.getKonto().getId());
 		
 		mvc.perform(get("/templates/list"))
 		   .andExpect(jsonPath("$.[*]", hasSize(1)))
