@@ -1,9 +1,7 @@
 package loc.balsen.kontospring.dto;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
@@ -29,9 +27,6 @@ public class TemplateDTO {
 	private String shortdescription;
 	private int matchStyle;
 	private int previous;	
-
-	static private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.YYYY");	
-
 
 	public TemplateDTO() {
 	}

@@ -2,12 +2,9 @@ package loc.balsen.kontospring.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,13 +15,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
-import org.springframework.format.datetime.joda.LocalDateTimeParser;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.BuchungsBeleg.Art;
-import loc.balsen.kontospring.upload.Importbase;
 
 @Component
 public class ImportXML extends Importbase {

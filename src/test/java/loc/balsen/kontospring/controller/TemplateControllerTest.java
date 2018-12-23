@@ -1,14 +1,13 @@
 package loc.balsen.kontospring.controller;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,26 +15,19 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import loc.balsen.kontospring.Application;
 import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Kontogruppe;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.KontoGruppeRepository;
-import loc.balsen.kontospring.repositories.KontoRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
+import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource("classpath:/h2database.properties")
 @WebAppConfiguration
-public class TemplateControllerTest {
+public class TemplateControllerTest extends TestContext {
 
 	static private String templatejson = "{  " + 
 			"\"gueltigVon\": \"2018-12-03T11:00:00.000Z\", " +
@@ -59,22 +51,9 @@ public class TemplateControllerTest {
             "  \"mandat\":  \"\" " +
 			"}" +
 			"}";
-	
-//	"{\"offset\":0,\"vardays\":4,\"anzahl\":1,\"rythmus\":1,\"description\":\"Neue Vorlage\",\"kontogroup\":1,\"konto\":1,\"position\":1,\"wert\":0,\"pattern\":{\"sender\":\"\",\"receiver\":\"\",\"referenceID\":\"\",\"details\":\"\",\"mandat\":\"\"},\"shortdescription\":\"neu\",\"art\":0,\"previous\":0}"
-
-	@Autowired 
-	KontoGruppeRepository kontogruppeRepository;
-	
-	@Autowired
-	KontoRepository kontoRepository;
-	
-	@Autowired
-	TemplateRepository templateRepository;
-	
+		
 	@Autowired
 	MockMvc mvc;
-
-	private Konto konto2;
 
 	@Test
 	public void testSaveAndList() throws Exception {
@@ -107,7 +86,6 @@ public class TemplateControllerTest {
 		
 		kontoRepository.save(k1);
 		kontoRepository.save(k2);
-		konto2 = k2;
 	}
 
 }

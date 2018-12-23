@@ -1,6 +1,6 @@
 package loc.balsen.kontospring.dataservice;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,35 +11,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import loc.balsen.kontospring.Application;
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.testutil.TestContext;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource("classpath:/h2database.properties")
-public class ZuordnungServiceTest {
-
-	@Autowired
-	PlanRepository planRepository;
+@RunWith(SpringRunner.class)
+public class ZuordnungServiceTest extends TestContext {
 	
 	@Autowired
 	ZuordnungService zuordnungService;
-	
-	@Autowired
-	ZuordnungRepository zuordnungRepository;
-	
-	@Autowired
-	BuchungsBelegRepository buchungsbelegRepository;
 	
 	List<Plan> plans; 
 	

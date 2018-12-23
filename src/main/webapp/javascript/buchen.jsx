@@ -5,8 +5,8 @@ import "react-table/react-table.css";
 
 export default class Buchen extends React.Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.handleSelect = this.handleSelect.bind(this);
         this.state = { data: [], selected1: undefined, selected2: undefined, selectedHi: undefined, selectedLo: undefined }
     }
@@ -41,6 +41,15 @@ export default class Buchen extends React.Component {
         fetch('http://localhost:8080/belege/unassigned')
             .then(response => response.json())
             .then(data => this.setState({ data }));
+    }
+    
+    createPlan() {
+        if (this.state.selectedHi != this.state.selectedLo) {
+            props.sendMessage("es darf nur ein Belge selektiert sein");
+        }
+        else  {
+            
+        }
     }
 
     render() {
@@ -98,6 +107,7 @@ export default class Buchen extends React.Component {
                                 <tbody>
                                     <tr> <td> <button className="button" onClick={(e) => this.assignAuto()}> Automatisch </button> </td></tr>
                                     <tr> <td> <button className="button" onClick={(e) => this.assignManuel()}> Manuell </button></td></tr>
+                                    <tr> <td> <button className="button" onClick={(e) => this.createPlan()}> Planen </button></td></tr>
                                 </tbody>
                             </table>
                         </td>

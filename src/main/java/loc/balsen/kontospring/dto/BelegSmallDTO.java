@@ -1,6 +1,6 @@
 package loc.balsen.kontospring.dto;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
@@ -28,6 +28,9 @@ public class BelegSmallDTO {
 		
 		details = beleg.getDetails();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		LocalDate wertstellung = beleg.getWertstellung();
+		if (wertstellung == null )
+			wertstellung = beleg.getBeleg();
 		date =  beleg.getWertstellung().format(formatter );
 	}
 }

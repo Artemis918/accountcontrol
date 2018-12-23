@@ -8,28 +8,16 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import loc.balsen.kontospring.Application;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
+import loc.balsen.kontospring.testutil.TestContext;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
-@TestPropertySource("classpath:/h2database.properties")
-public class PlanServiceTest {
-
-	@Autowired
-	TemplateRepository templateRepository;
-
-	@Autowired
-	PlanRepository planRepository;
+@RunWith(SpringRunner.class)
+@WebAppConfiguration
+public class PlanServiceTest extends TestContext {
 
 	@Autowired
 	PlanService planService;

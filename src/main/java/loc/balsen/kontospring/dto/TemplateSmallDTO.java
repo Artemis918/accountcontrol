@@ -1,6 +1,5 @@
 package loc.balsen.kontospring.dto;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 
 import loc.balsen.kontospring.data.Template;

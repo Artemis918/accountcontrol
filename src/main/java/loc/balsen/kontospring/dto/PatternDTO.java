@@ -1,7 +1,5 @@
 package loc.balsen.kontospring.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import loc.balsen.kontospring.data.Pattern;
 import lombok.Data;
 
@@ -15,8 +13,6 @@ public class PatternDTO {
 	private String senderID;
 	private String details;
 	private String mandat;
-
-	static private final ObjectMapper mapper =  new ObjectMapper();
 	
 	public PatternDTO() {
 	}

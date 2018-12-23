@@ -2,14 +2,10 @@ package loc.balsen.kontospring.dataservice;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.spring5.ISpringTemplateEngine;
-
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
