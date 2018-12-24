@@ -1,5 +1,4 @@
 import React from 'react'
-import Footer from 'footer'
 
 export default class TaskSelector extends React.Component {
 
@@ -7,16 +6,10 @@ export default class TaskSelector extends React.Component {
         super( props );
         this.state = { currentTask: 0 };
         this.selectTask = this.selectTask.bind( this );
-        this.sendMessage =  this.sendMessage.bind(this);
-        this.footer=undefined;
     }
 
     selectTask( i ) {
         this.setState( { currentTask: i } )
-    }
-    
-    sendMessage(msg) {
-        footer.setmessage(msg);
     }
 
     render() {
@@ -41,7 +34,6 @@ export default class TaskSelector extends React.Component {
                 <div>
                     {this.props.tasks[this.state.currentTask].comp}
                 </div>
-                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div>   
         )
     }

@@ -21,18 +21,9 @@ export default class Footer extends React.PureComponent<any, CState> {
     
   render() {
     return (
-      <table>
-            <tbody>
-            <tr>
-            <td>
-            {this.state.message}
-            </td>
-            <td>
-                copyright
-            </td>
-            </tr>
-            </tbody>
-      </table>
+      <div>
+             <label> status: </label> {this.state.message}
+      </div>
     );
   }
 }

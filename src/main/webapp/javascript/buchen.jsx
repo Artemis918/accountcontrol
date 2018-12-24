@@ -45,7 +45,7 @@ export default class Buchen extends React.Component {
     
     createPlan() {
         if (this.state.selectedHi != this.state.selectedLo) {
-            props.sendMessage("es darf nur ein Belge selektiert sein");
+            this.props.sendmessage("es darf nur ein Beleg selektiert sein", true);
         }
         else  {
             

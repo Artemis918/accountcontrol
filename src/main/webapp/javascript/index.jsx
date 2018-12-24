@@ -7,6 +7,7 @@ import Buchungsbelege from 'buchungsbelege.jsx'
 import Templates from 'templates.jsx'
 import Planen from 'planen.jsx'
 import Buchen from 'buchen.jsx'
+import Footer from 'footer'
 
 import 'index.css'
 
@@ -16,13 +17,18 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = { value: 0 };
+        this.footer=undefined;
         this.changeValue = this.changeValue.bind(this);
+        this.sendMessage =  this.sendMessage.bind(this);
     }
 
     changeValue(val) {
         this.setState({ value: val });
     }
-
+    
+    sendMessage(msg) {
+        this.footer.setmessage(msg);
+    }
 
     render() {
         if (this.state.value == 2) {
@@ -32,13 +38,15 @@ class Main extends React.Component {
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Buchungsbelege" />
                 <TaskSelector tasks={tasks} />
-            </div>
+                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+                </div>
             );
         }
         else if (this.state.value == 3) {
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Buchen" />
-                <Buchen />
+                <Buchen sendmessage= {this.sendMessage }/>
+                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div>
             );
         }
@@ -50,12 +58,17 @@ class Main extends React.Component {
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Planen" />
                 <TaskSelector tasks={tasks} />
+                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div>
             );
         }
         else {
-            return (<InitialPage changeValue={this.changeValue} />);
+            return (<div>
+                    <InitialPage changeValue={this.changeValue} />
+                    <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+                    </div>);
         }
+        
 
     }
 }
