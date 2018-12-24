@@ -1,12 +1,10 @@
 package loc.balsen.kontospring.controller;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +15,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -33,25 +33,36 @@ public class BelegControllerTest extends TestContext {
 		mvc.perform(get("/belege/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(0)));
 
-		BuchungsBeleg beleg = createBelege();
+		BuchungsBeleg beleg = createBeleg("beleg");
+		
+		mvc.perform(get("/belege/unassigned"))
+		   .andExpect(jsonPath("$.[*]", hasSize(1)));
+
+		createBeleg("beleg1");
+		mvc.perform(get("/belege/unassigned"))
+		   .andExpect(jsonPath("$.[*]", hasSize(2)));
+		
 		createZuordnung(beleg);
-		
 		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(0)));
-		
-		BuchungsBeleg beleg1 = createBelege();
-		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(0)));
+		   .andExpect(jsonPath("$.[*]", hasSize(1)))
+		   .andExpect(jsonPath("$.[0].details").value( "beleg1"));
 }
 
 	private void createZuordnung(BuchungsBeleg beleg) {
-		// TODO Auto-generated method stub
-		
+		Plan plan =  new Plan();
+		planRepository.save(plan);
+		Zuordnung zuordnung = new Zuordnung();
+		zuordnung.setBuchungsbeleg(beleg);
+		zuordnung.setPlan(plan);
+		zuordnungRepository.save(zuordnung);
 	}
 
-	private BuchungsBeleg createBelege() {
-		// TODO Auto-generated method stub
-		return null;
+	private BuchungsBeleg createBeleg(String description) {
+		BuchungsBeleg result =  new BuchungsBeleg();
+		result.setDetails(description);
+		result.setWertstellung(LocalDate.now());
+		buchungsbelegRepository.save(result);
+		return result;
 	}
 
 }
