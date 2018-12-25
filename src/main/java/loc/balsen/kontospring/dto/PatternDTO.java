@@ -16,7 +16,7 @@ public class PatternDTO {
 	
 	public PatternDTO() {
 	}
-	
+
 	public PatternDTO(Pattern pattern) {
 		this.sender = pattern.getSender();
 		this.receiver = pattern.getReceiver();

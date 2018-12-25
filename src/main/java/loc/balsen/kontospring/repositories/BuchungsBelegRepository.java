@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 
-public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, Long> {
+public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, Integer> {
 
 	public List<BuchungsBeleg> findByWertAndBelegAndAbsenderAndEmpfaenger(int wert, LocalDate beleg, String absender, String empfaenger);
 	

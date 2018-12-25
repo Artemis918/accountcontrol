@@ -16,7 +16,7 @@ public class TemplateDTO {
 	private LocalDate gueltigBis;
 	private LocalDate start;
 	private int vardays;
-	private int anzahlRythmus;
+	private int anzahl;
 	private int rythmus;
 	private int konto;
 	private int kontogroup;
@@ -38,7 +38,7 @@ public class TemplateDTO {
 		this.gueltigBis = template.getGueltigBis();
 		this.start = template.getStart();
 		this.vardays=template.getVardays();
-		this.anzahlRythmus = template.getAnzahlRythmus();
+		this.anzahl = template.getAnzahlRythmus();
 		this.rythmus = template.getRythmus().ordinal();
 		this.description = template.getDescription();
 		this.position= template.getPosition();
@@ -59,7 +59,7 @@ public class TemplateDTO {
 		template.setGueltigBis(this.gueltigBis);
 		template.setStart(this.start == null ? LocalDate.now() : this.start);
 		template.setVardays(this.getVardays());
-		template.setAnzahlRythmus(this.getAnzahlRythmus());
+		template.setAnzahlRythmus(this.getAnzahl());
 		template.setRythmus(Rythmus.values()[this.rythmus]);
 		template.setDescription(this.getDescription());
 		template.setPosition(this.getPosition());

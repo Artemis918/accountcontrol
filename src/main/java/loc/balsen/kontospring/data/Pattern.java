@@ -49,6 +49,15 @@ public class Pattern {
 		}
 	}
 	
+	public Pattern(BuchungsBeleg buchungsBeleg) {
+		this.sender = buchungsBeleg.getAbsender();
+		this.receiver = buchungsBeleg.getEmpfaenger();
+		this.referenceID = buchungsBeleg.getReferenz();
+		this.senderID = buchungsBeleg.getEinreicherId();
+		this.details = buchungsBeleg.getDetails();
+		this.mandat = buchungsBeleg.getMandat();
+	}
+
 	public String toJson() {
 		try {
 			return mapper.writeValueAsString(this);

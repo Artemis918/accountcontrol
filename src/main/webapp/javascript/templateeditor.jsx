@@ -23,14 +23,22 @@ export default class TemplateEditor extends React.Component {
     }
 
     componentWillMount() {
-        this.state.template = this.createNewTemplate();
+        if ( this.props.beleg == undefined ) {
+            this.state.template = this.createNewTemplate();
+        }
+        else {
+            var self = this;
+            fetch( 'http://localhost:8080/templates/beleg/' + this.props.beleg )
+                .then( response => response.json() )
+                .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
+        }
     }
 
     setTemplate( id ) {
         var self = this;
         fetch( 'http://localhost:8080/templates/id/' + id )
             .then( response => response.json() )
-            .then( t => { self.copyTemplate(t) ;self.setState( { reset: this.state.reset }) } ) ;
+            .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
     }
 
     createNewTemplate() {
@@ -137,6 +145,27 @@ export default class TemplateEditor extends React.Component {
         return undefined;
     }
 
+    renderButton() {
+        if ( this.props.beleg == undefined ) {
+            return (
+                <div>
+                    <button onClick={this.save.bind( this )}>Save</button>
+                    <button onClick={this.clear}>New</button>
+                    <button onClick={this.copy}>Copy</button>
+                    <button onClick={this.delete}>Delete</button>
+                </div>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <button onClick={this.save.bind( this )}>Save</button>
+                    <button onClick={this.clear}>Back</button>
+                </div>
+            );
+        }
+    }
+
     render() {
         const FORMAT = "dd.MM.YYYY";
         if ( this.state.reset ) {
@@ -182,7 +211,7 @@ export default class TemplateEditor extends React.Component {
                             <td><DayPickerInput
                                 onDayChange={( d ) => this.setValue( 'start', d )}
                                 formatDate={this.formatDate}
-                                value={this.state.template.gueltigBis}
+                                value={this.state.template.start}
                                 format={FORMAT}
                                 parseDate={this.parseDate} /></td>
                         </tr>
@@ -249,10 +278,8 @@ export default class TemplateEditor extends React.Component {
                             <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
                         </tr>
 
-                        <tr><td><button onClick={this.save.bind( this )}>Save</button></td>
-                            <td><button onClick={this.clear}>New</button></td>
-                            <td><button onClick={this.copy}>Copy</button></td>
-                            <td><button onClick={this.delete}>Delete</button></td>
+                        <tr>
+                            <td> {this.renderButton()} </td>
                         </tr>
                     </tbody>
                 </table>

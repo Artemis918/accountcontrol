@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import loc.balsen.kontospring.data.Kontogruppe;
 
-public interface KontoGruppeRepository extends JpaRepository<Kontogruppe, Long>{
+public interface KontoGruppeRepository extends JpaRepository<Kontogruppe, Integer>{
 
 }

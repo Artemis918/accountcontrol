@@ -61,8 +61,23 @@ public class Template {
 		this.konto=null;		
 	}
 	
-	public Template (Template t) {
-		set(t);		
+	public Template (BuchungsBeleg buchungsBeleg) {
+		LocalDate plandate = buchungsBeleg.getWertstellung(); 
+		this.id = 0;
+		this.gueltigVon = plandate;
+		this.gueltigBis= null;
+		this.start= plandate;
+		this.vardays= 4;
+		this.anzahlRythmus= 0;
+		this.rythmus= Rythmus.MONTH;
+		this.description= null;
+		this.position= 0;
+		this.wert= buchungsBeleg.getWert();
+		this.pattern= (new Pattern(buchungsBeleg)).toJson();
+		this.shortDescription= null;
+		this.matchStyle= MatchStyle.EXACT;
+		this.next=0;
+		this.konto=null;	
 	}
 
 	/**

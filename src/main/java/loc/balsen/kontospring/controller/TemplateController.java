@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.TemplateDTO;
 import loc.balsen.kontospring.dto.TemplateSmallDTO;
 import loc.balsen.kontospring.repositories.KontoRepository;
@@ -30,6 +31,9 @@ public class TemplateController {
 	@Autowired
 	KontoRepository kontoRepository;
 	
+	@Autowired
+	TemplateService templateService;
+	
 	@GetMapping("/list")
 	@ResponseBody
 	List<TemplateSmallDTO> findTemplates() {
@@ -43,7 +47,7 @@ public class TemplateController {
 	@ResponseBody
 	KontoSpringResult saveTemplate(@RequestBody TemplateDTO template) {
 		try {
-			templateRepository.save(template.toTemplate(kontoRepository));
+			templateService.saveTemplate(template.toTemplate(kontoRepository));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,4 +74,12 @@ public class TemplateController {
 		templateRepository.deleteById(id);
 		return new KontoSpringResult(false,"gelöscht");
 	}
+
+	@GetMapping("/beleg/{id}")
+	@ResponseBody
+	TemplateDTO createTemplateFromBeleg(@PathVariable Integer id) {
+		return new TemplateDTO(templateService.createFromBeleg(id));
+	}
+
+	
 }

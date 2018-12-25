@@ -14,10 +14,10 @@ create table Template
 	position         int,
 	description      varchar(512),
     short_description varchar(80),
-	pattern          varchar(256),
+	pattern          varchar(1024),
 	wert             int,
-	plan_art			 int,
-	next			 int,
+	match_style	 int,
+	next		 int,
 	primary key (id)
 );
 

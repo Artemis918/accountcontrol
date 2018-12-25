@@ -37,11 +37,12 @@ export default class PatternEditor extends React.Component {
                 }}>
                     <table>
                         <tbody>
-                        <tr> <td>Referenzid</td> <td> <input value={this.state.pattern.referenceID} type='text' onChange={( e ) => this.setValue( 'referenceID', e )}  /></td></tr>
                         <tr> <td>Absender</td> <td> <input value={this.state.pattern.sender} type='text' onChange={( e ) => this.setValue( 'sender', e )}  /></td></tr>
                         <tr> <td>Empfänger</td> <td> <input value={this.state.pattern.receiver} type='text' onChange={( e ) => this.setValue( 'receiver', e )}  /></td></tr>
-                        <tr> <td>Details</td> <td> <input value={this.state.pattern.details} type='text' onChange={( e ) => this.setValue( 'details', e )}  /></td></tr>
+                        <tr> <td>Referenzid</td> <td> <input value={this.state.pattern.referenceID} type='text' onChange={( e ) => this.setValue( 'referenceID', e )}  /></td></tr>
                         <tr> <td>Mandat</td> <td> <input value={this.state.pattern.mandat} type='text' onChange={( e ) => this.setValue( 'mandat', e )}  /></td></tr>
+                        <tr> <td>Einreicher</td> <td> <input value={this.state.pattern.senderID} type='text' onChange={( e ) => this.setValue( 'senderID', e )}  /></td></tr>
+                        <tr> <td>Details</td> <td> <input value={this.state.pattern.details} type='text' onChange={( e ) => this.setValue( 'details', e )}  /></td></tr>
                         </tbody>
                     </table>
                     <button onClick={() => this.sendPattern()}> OK</button>

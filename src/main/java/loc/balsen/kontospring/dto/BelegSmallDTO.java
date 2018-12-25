@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class BelegSmallDTO {
 
+	private int id;
 	private String details;
 	private Integer betrag;
 	private String date;
@@ -17,7 +18,7 @@ public class BelegSmallDTO {
 	public BelegSmallDTO(BuchungsBeleg beleg) {
 		
 		betrag = beleg.getWert();
-		
+		id = beleg.getId();
 		if ( beleg.getWert() > 0) {
 			partner = beleg.getAbsender(); 
 		}

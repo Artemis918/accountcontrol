@@ -12,9 +12,9 @@ create table Plan
 	position          int,
 	description       varchar(512),
     short_description varchar(80),
-	pattern           varchar(256),
+	pattern           varchar(1024),
 	wert              int,
-	plan_art          int,
+	match_style       int,
 	template          int,
 	primary key (id)
 );

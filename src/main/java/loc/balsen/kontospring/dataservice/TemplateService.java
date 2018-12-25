@@ -2,28 +2,40 @@ package loc.balsen.kontospring.dataservice;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Component
 public class TemplateService {
+
+	private static final int KONTO_DEFAULT = 1;
 
 	@Autowired
 	PlanService planService;
 	
 	@Autowired
 	TemplateRepository templateRepository;
+
+	@Autowired
+	BuchungsBelegRepository buchungsBelegRepository;
+	
+	@Autowired
+	KontoRepository kontoRepository;
 	
 	@Autowired
 	ZuordnungService zuordnungService;
 	
-	void saveTemplate(Template template) {
+	public void saveTemplate(Template template) {
 		
 		if (template.getId() == 0  ) {
 			templateRepository.save(template);
@@ -75,5 +87,16 @@ public class TemplateService {
 			return true;
 		else
 			return gueltigBis.isBefore(gueltigBisOrig);
+	}
+
+	public Template createFromBeleg(Integer id) {
+		Optional<BuchungsBeleg> beleg = buchungsBelegRepository.findById(id);
+		if (beleg.isPresent()) {
+			Konto konto =  kontoRepository.findById(KONTO_DEFAULT).get();
+			Template template = new Template(beleg.get());
+			template.setKonto(konto);
+			return  template;
+		}
+		return new Template();
 	}
 }

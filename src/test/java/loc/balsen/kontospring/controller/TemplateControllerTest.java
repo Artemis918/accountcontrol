@@ -1,6 +1,5 @@
 package loc.balsen.kontospring.controller;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Test;
@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Kontogruppe;
 import loc.balsen.kontospring.data.Template;
@@ -68,7 +69,7 @@ public class TemplateControllerTest extends TestContext {
 		
 		mvc.perform(get("/templates/list"))
 		   .andExpect(jsonPath("$.[*]", hasSize(1)))
-		   .andExpect(jsonPath("$.[0].shortdescription", is("Kurz")));
+		   .andExpect(jsonPath("$.[0].shortdescription").value("Kurz"));
 		
 	}
 	
@@ -88,4 +89,38 @@ public class TemplateControllerTest extends TestContext {
 		kontoRepository.save(k2);
 	}
 
+	
+	@Test
+	public void testCreateFromBeleg() throws Exception {
+		BuchungsBeleg beleg =  new BuchungsBeleg();
+		beleg.setAbsender("hallo");
+		beleg.setBeleg(LocalDate.of(1998, 4, 2));
+		beleg.setDetails("whatever you will");
+		beleg.setEinreicherId("einreicherID");
+		beleg.setEmpfaenger("empfänger");
+		beleg.setMandat("mandat");
+		beleg.setReferenz("refernzID");
+		beleg.setWert(200);
+		beleg.setWertstellung(LocalDate.of(2000, 4, 2));
+		buchungsbelegRepository.save(beleg);
+		
+		Kontogruppe kontogruppe = new Kontogruppe();
+		kontogruppeRepository.save(kontogruppe);
+		
+		Konto konto = new Konto();
+		konto.setId(1);
+		konto.setKontoGruppe(kontogruppe);
+		kontoRepository.save(konto);
+		
+		mvc.perform(get("/templates/beleg/" + beleg.getId()))
+		   .andExpect(jsonPath("$.pattern.sender").value("hallo"))
+		   .andExpect(jsonPath("$.pattern.details").value("whatever you will"))
+		   .andExpect(jsonPath("$.pattern.senderID").value("einreicherID"))
+		   .andExpect(jsonPath("$.pattern.receiver").value("empfänger"))
+		   .andExpect(jsonPath("$.pattern.mandat").value("mandat"))
+		   .andExpect(jsonPath("$.pattern.referenceID").value("refernzID"))
+		   .andExpect(jsonPath("$.wert").value("200"))
+		   .andExpect(jsonPath("$.start").value("2000-04-02"))
+		   ;
+	}
 }
