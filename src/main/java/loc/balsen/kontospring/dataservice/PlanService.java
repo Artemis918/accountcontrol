@@ -28,6 +28,8 @@ public class PlanService {
 	public void createPlansfromTemplatesUntil(int month, int year) {
 
 		LocalDate last = planRepository.findMaxPlanDate();
+		if (last == null) 
+			last = LocalDate.now();
 
 		if (last.getMonth().getValue() == month && last.getYear() == year)
 			return;
@@ -54,7 +56,11 @@ public class PlanService {
 
 	private void createPlans(Template template) {
 		LocalDate nextDate = planRepository.findMaxPlanDateByTemplate(template.getId());
-		nextDate = template.increaseDate(nextDate);
+		
+		if (nextDate == null)
+			nextDate = template.getStart();
+		else
+			nextDate = template.increaseDate(nextDate);
 
 		while (!nextDate.isAfter(end)) {
 
@@ -74,12 +80,17 @@ public class PlanService {
 		plans.stream().filter((p) -> {
 			return p.getPlanDate().isAfter(endDate);
 		}).forEach((p) -> {
-			p.setDeactivateDate(LocalDate.now());
-			planRepository.save(p);
+			deactivatePlan(p);
 			result.add(p);
 		});
 		return result;
 	}
+
+	public void deactivatePlan(Plan p) {
+		p.setDeactivateDate(LocalDate.now());
+		planRepository.save(p);
+	}
+	
 
 	private boolean isTemplateRange(Template template) {
 		if (template.getGueltigVon().isBefore(start)

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.TemplateDTO;
-import loc.balsen.kontospring.dto.TemplateSmallDTO;
 import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
@@ -36,10 +35,10 @@ public class TemplateController {
 	
 	@GetMapping("/list")
 	@ResponseBody
-	List<TemplateSmallDTO> findTemplates() {
+	List<TemplateDTO> findTemplates() {
 		return templateRepository.findAll()
 				.stream()
-				.map((template) -> {return new TemplateSmallDTO(template);})
+				.map((template) -> {return new TemplateDTO(template);})
 				.collect(Collectors.toList());
 	}
 	

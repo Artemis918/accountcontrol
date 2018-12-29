@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.Template;
 
 public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	
@@ -24,4 +25,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 			       " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and end_date >= ?2))" +
 			       " and id not in ( select z.plan from zuordnung z)",nativeQuery=true)
 	List<Plan> findByPeriod(LocalDate mindate, LocalDate maxdate);
+
+	List<Plan> findByTemplate(Template template);
+
 }

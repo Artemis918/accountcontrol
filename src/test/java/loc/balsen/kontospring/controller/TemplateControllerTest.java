@@ -31,11 +31,11 @@ import loc.balsen.kontospring.testutil.TestContext;
 public class TemplateControllerTest extends TestContext {
 
 	static private String templatejson = "{  " + 
-			"\"gueltigVon\": \"2018-12-03T11:00:00.000Z\", " +
-			"\"gueltigBis\": \"2018-11-03T11:00:00.000Z\", " +
-			"\"start\": \"2018-10-03T11:00:00.000Z\", " +
+			"\"gueltigVon\": \"2018-12-03\", " +
+			"\"gueltigBis\": \"2018-11-03\", " +
+			"\"start\": \"2018-10-03\", " +
 			"\"vardays\": 5, " +
-			"\"anzahlRythmus\": 1," +
+			"\"anzahl\": 1," +
 			"\"rythmus\": 2, " +
 			"\"konto\": 2, " +
 			"\"kontogroup\": 1, "+

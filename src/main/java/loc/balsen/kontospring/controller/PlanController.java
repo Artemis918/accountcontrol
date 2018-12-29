@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.dataservice.PlanService;
 import loc.balsen.kontospring.dto.PlanDTO;
+import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
+import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Controller
 @RequestMapping("/plans")
@@ -25,6 +27,12 @@ public class PlanController {
 	@Autowired
 	private PlanRepository planRepository;
 
+	@Autowired
+	private KontoRepository kontoRepository;
+	
+	@Autowired
+	private TemplateRepository templateRepository;
+	
 	@Autowired
 	private PlanService planService;
 	
@@ -40,7 +48,7 @@ public class PlanController {
 	@PostMapping("/save")
 	@ResponseBody
 	KontoSpringResult savePlan(@RequestBody PlanDTO plan) {
-		planRepository.save(plan.toPlan());
+		planRepository.save(plan.toPlan(templateRepository,kontoRepository));
 		return new KontoSpringResult(false,"Gespeichert");
 	}
 	
@@ -59,7 +67,8 @@ public class PlanController {
 	@GetMapping("/delete/{id}")
 	@ResponseBody
 	KontoSpringResult deletePlan(@PathVariable Integer id) {
-		planRepository.deleteById(id);
+		Plan plan = planRepository.findById(id).get();
+		planService.deactivatePlan(plan);
 		return new KontoSpringResult(false,"gelöscht");
 	}
 	
