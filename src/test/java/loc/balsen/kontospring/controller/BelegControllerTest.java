@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -27,29 +29,37 @@ public class BelegControllerTest extends TestContext {
 	@Autowired
 	MockMvc mvc;
 	
+	@Before
+	public void setup() {
+		createKontoData();
+	}
+	
 	@Test
 	public void test() throws Exception {
+		int startSize = buchungsbelegRepository.findUnresolvedBeleg().size();
 		
 		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(0)));
+		   .andExpect(jsonPath("$.[*]", hasSize(startSize)));
 
 		BuchungsBeleg beleg = createBeleg("beleg");
 		
 		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(1)));
+		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 1)));
 
 		createBeleg("beleg1");
 		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(2)));
+		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 2)));
 		
 		createZuordnung(beleg);
 		mvc.perform(get("/belege/unassigned"))
-		   .andExpect(jsonPath("$.[*]", hasSize(1)))
-		   .andExpect(jsonPath("$.[0].details").value( "beleg1"));
+		   .andExpect(jsonPath("$.[*]", hasSize(startSize + 1)))
+		   .andExpect(jsonPath("$.[" + startSize + "].details").value( "beleg1"));
 }
 
 	private void createZuordnung(BuchungsBeleg beleg) {
 		Plan plan =  new Plan();
+		plan.setPattern(new Pattern("\"sender\": \"help\""));
+		plan.setKonto(konto1);
 		planRepository.save(plan);
 		Zuordnung zuordnung = new Zuordnung();
 		zuordnung.setBuchungsbeleg(beleg);

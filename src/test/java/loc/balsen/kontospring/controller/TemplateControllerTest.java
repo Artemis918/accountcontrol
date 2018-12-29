@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Konto;
-import loc.balsen.kontospring.data.Kontogruppe;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.testutil.TestContext;
 
@@ -37,7 +36,7 @@ public class TemplateControllerTest extends TestContext {
 			"\"vardays\": 5, " +
 			"\"anzahl\": 1," +
 			"\"rythmus\": 2, " +
-			"\"konto\": 2, " +
+			"\"konto\": KONTO, " +
 			"\"kontogroup\": 1, "+
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
@@ -56,38 +55,34 @@ public class TemplateControllerTest extends TestContext {
 	@Autowired
 	MockMvc mvc;
 
-	@Test
-	public void testSaveAndList() throws Exception {
+	@Before
+	public void setup() {
 		createKontoData();
-		mvc.perform(post("/templates/save").content(templatejson).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-		
-		List<Template> templates =templateRepository.findAll();
-		assertEquals(1,templates.size());
-		Template template = templates.get(0);
-		assertEquals(100, template.getWert());
-		assertEquals(2, template.getKonto().getId());
-		
-		mvc.perform(get("/templates/list"))
-		   .andExpect(jsonPath("$.[*]", hasSize(1)))
-		   .andExpect(jsonPath("$.[0].shortdescription").value("Kurz"));
-		
 	}
 	
-	private void createKontoData() {
-		Kontogruppe kg1 =  new Kontogruppe();
-		kg1.setShortdescription("KontoG1");
-		kontogruppeRepository.save(kg1);
+	@Test
+	public void testSaveAndList() throws Exception {
 		
-		Konto k1 = new Konto();
-		Konto k2 = new Konto();
-		k1.setShortdescription("k1shortDesc");
-		k2.setShortdescription("k2shortDesc");
-		k1.setKontoGruppe(kg1);
-		k2.setKontoGruppe(kg1);
+		int sizeBefore = templateRepository.findAll().size();
 		
-		kontoRepository.save(k1);
-		kontoRepository.save(k2);
+		String tempjson1 = templatejson.replace("KONTO", Integer.toString(konto1.getId()));
+		
+		mvc.perform(post("/templates/save").content(tempjson1).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		
+		List<Template> templates =templateRepository.findAll();
+		assertEquals(sizeBefore+1,templates.size());
+		Template template = templates.get(sizeBefore);
+		assertEquals(100, template.getWert());
+		assertEquals(konto1.getId(), template.getKonto().getId());
+		
+		mvc.perform(get("/templates/list"))
+		   .andExpect(jsonPath("$.[*]", hasSize(sizeBefore+1)));
+		
+		mvc.perform(get("/templates/id/" + (sizeBefore + 1)))
+		   .andExpect(jsonPath("$.shortdescription").value("Kurz"));
+		
 	}
+
 
 	
 	@Test
@@ -103,14 +98,6 @@ public class TemplateControllerTest extends TestContext {
 		beleg.setWert(200);
 		beleg.setWertstellung(LocalDate.of(2000, 4, 2));
 		buchungsbelegRepository.save(beleg);
-		
-		Kontogruppe kontogruppe = new Kontogruppe();
-		kontogruppeRepository.save(kontogruppe);
-		
-		Konto konto = new Konto();
-		konto.setId(1);
-		konto.setKontoGruppe(kontogruppe);
-		kontoRepository.save(konto);
 		
 		mvc.perform(get("/templates/beleg/" + beleg.getId()))
 		   .andExpect(jsonPath("$.pattern.sender").value("hallo"))

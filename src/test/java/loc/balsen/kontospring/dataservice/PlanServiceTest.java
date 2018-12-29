@@ -5,12 +5,14 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -22,12 +24,19 @@ public class PlanServiceTest extends TestContext {
 	@Autowired
 	PlanService planService;
 
+	@Before
+	public void setup() {
+		createKontoData();
+	}
+	
 	@Test
 	public void testcreatePlansfromTemplate() {
 
 		Plan plan = new Plan();
 		plan.setPlanDate(LocalDate.of(1997, 5, 14));
 		plan.setDescription("templatetest");
+		plan.setPattern(new Pattern("\"sender\": \"gulli0\""));
+		plan.setKonto(konto1);
 		planRepository.save(plan);
 
 		Template template = new Template();
@@ -37,6 +46,8 @@ public class PlanServiceTest extends TestContext {
 		template.setVardays(5);
 		template.setGueltigVon(LocalDate.of(1999, 1, 3));
 		template.setStart(LocalDate.of(1998, 5, 2));
+		template.setPattern(new Pattern("\"sender\": \"gulli1\""));
+		template.setKonto(konto2);
 		templateRepository.save(template);
 
 		Template template2 = new Template();
@@ -46,6 +57,8 @@ public class PlanServiceTest extends TestContext {
 		template2.setVardays(5);
 		template2.setGueltigVon(LocalDate.of(1999, 1, 3));
 		template2.setStart(LocalDate.of(1998, 5, 2));
+		template2.setPattern(new Pattern("\"sender\": \"gulli2\""));
+		template2.setKonto(konto5);
 		templateRepository.save(template2);
 
 		

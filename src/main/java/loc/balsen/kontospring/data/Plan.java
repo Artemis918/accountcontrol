@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -35,16 +36,19 @@ public class Plan {
 	private LocalDate deactivateDate;
 	private int position;
 	private int wert;
-	private String pattern;
 	private String shortDescription;
 	private String description;
 	private MatchStyle matchStyle;
 
+	@NotNull
+	private String pattern;
+	
 	@ManyToOne
 	@JoinColumn(name = "template")
 	private Template template;
 
 	@ManyToOne
+	@NotNull
 	@JoinColumn(name = "konto")
 	private Konto konto;
 

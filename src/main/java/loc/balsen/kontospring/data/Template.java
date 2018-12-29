@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import lombok.Data;
@@ -34,12 +35,15 @@ public class Template {
 	private String description;
 	private int position;
 	private int wert;
-	private String pattern;
 	private String shortDescription;
 	private Plan.MatchStyle matchStyle;
 	private int next;
 	
+	@NotNull
+	private String pattern;
+	
 	@ManyToOne
+	@NotNull
 	@JoinColumn(name = "konto")
 	private Konto konto;
 

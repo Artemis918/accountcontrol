@@ -25,11 +25,12 @@ public class ZuordnungServiceTest extends TestContext {
 	@Autowired
 	ZuordnungService zuordnungService;
 	
-	List<Plan> plans; 
+	List<Plan> plans;
 	
 	@Before
 	public void setup() {
 		plans =  new ArrayList<>();
+		createKontoData();
 	}
 	
 	@Test
@@ -85,7 +86,7 @@ public class ZuordnungServiceTest extends TestContext {
 		buchungsbelegRepository.save(beleg);
 		return beleg;
 	}
-
+	
 	private void createPlans() {
 		createplan("2018-01-01", "2018-01-07", "{\"mandat\": \"1234\"}");
 		createplan("2018-01-04", "2018-01-12", "{\"mandat\": \"2345\"}");
@@ -102,6 +103,7 @@ public class ZuordnungServiceTest extends TestContext {
 		plan.setEndDate(LocalDate.parse(end));
 		plan.setPattern(new Pattern(pattern));
 		plan.setWert(25);
+		plan.setKonto(konto1);
 		planRepository.save(plan);
 		plans.add(plan);
 	}

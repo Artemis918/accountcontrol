@@ -1,7 +1,8 @@
 package loc.balsen.kontospring.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import loc.balsen.kontospring.data.Konto;
-import loc.balsen.kontospring.data.Kontogruppe;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Template.Rythmus;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.dto.PatternDTO;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -40,7 +39,7 @@ public class PlanControllerTest extends TestContext {
 			"\"startdate\": \"2018-10-03\", " +
 			"\"plandate\": \"2018-10-03\", " +
 			"\"enddate\": \"2018-10-03\", " +
-			"\"idkonto\": 1, " +
+			"\"idkonto\": KONTO, " +
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
@@ -58,24 +57,29 @@ public class PlanControllerTest extends TestContext {
 	@Autowired
 	MockMvc mvc;
 
-	private Konto konto;
+	@Before
+	public void setup() {
+		createKontoData();
+	}
 
 	private Template template;
 
 	@Test
 	public void testSaveAndList() throws Exception {
-		createKontoData();
-		mvc.perform(post("/plans/save").content(planjson).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		
+		int sizeBefore = planRepository.findAll().size();
+		String planjsonk = planjson.replace("KONTO", Integer.toString(konto1.getId()));
+		mvc.perform(post("/plans/save").content(planjsonk).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
 		List<Plan> plans =planRepository.findAll();
-		assertEquals(1,plans.size());
-		Plan plan  = plans.get(0);
+		assertEquals(sizeBefore+1,plans.size());
+		Plan plan  = plans.get(sizeBefore);
 		assertEquals(100, plan.getWert());
-		assertEquals(1, plan.getKonto().getId());
+		assertEquals(konto1.getId(), plan.getKonto().getId());
 		
 		mvc.perform(get("/plans/list"))
-		   .andExpect(jsonPath("$.[*]", hasSize(1)))
-		   .andExpect(jsonPath("$.[0].shortdescription").value("Kurz"));
+		   .andExpect(jsonPath("$.[*]", hasSize(sizeBefore +1)))
+		   .andExpect(jsonPath("$.[" + sizeBefore + "].shortdescription").value("Kurz"));
 		
 		mvc.perform(get("/plans/delete/" + plan.getId()))
 		   .andExpect(status().isOk());
@@ -84,19 +88,7 @@ public class PlanControllerTest extends TestContext {
 		assertNotNull(plan.getDeactivateDate());
 	
 	}
-	
-	private void createKontoData() {
-		Kontogruppe kg1 =  new Kontogruppe();
-		kg1.setShortdescription("KontoG1");
-		kontogruppeRepository.save(kg1);
 		
-		konto = new Konto();
-		konto.setShortdescription("k1shortDesc");
-		konto.setKontoGruppe(kg1);
-		
-		kontoRepository.save(konto);
-	}
-	
 	@Test
 	public void testCreateFromTemplate() throws Exception {
 		int year = LocalDate.now().getYear() +1 ;
@@ -119,9 +111,9 @@ public class PlanControllerTest extends TestContext {
 		template.setVardays(5);
 		template.setAnzahlRythmus(1);
 		template.setRythmus(Rythmus.MONTH);
-		template.setKonto(konto);
+		template.setKonto(konto1);
 		template.setDescription("Beschreibung");
-		template.setShortDescription("Kurz");
+		template.setShortDescription("Kurz1234");
 		template.setWert(100);
 		template.setPosition(4);
 		template.setMatchStyle(MatchStyle.EXACT);

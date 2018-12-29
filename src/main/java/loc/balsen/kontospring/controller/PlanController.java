@@ -38,7 +38,7 @@ public class PlanController {
 	
 	@GetMapping("/list")
 	@ResponseBody
-	List<PlanDTO> findTemplates() {
+	List<PlanDTO> findPlans() {
 		return planRepository.findAll()
 				.stream()
 				.map((plan) -> {return new PlanDTO(plan);})
