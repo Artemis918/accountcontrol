@@ -14,7 +14,7 @@ export default class TemplateEditor extends React.Component {
 
     constructor( props ) {
         super( props );
-        this.state = { template: undefined, message: '', reset: true };
+        this.state = { template: {}, message: '', reset: true };
         this.clear = this.clear.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
@@ -58,6 +58,7 @@ export default class TemplateEditor extends React.Component {
             wert: 0,
             pattern: {
                 sender: '',
+                senderID: '',
                 receiver: '',
                 referenceID: '',
                 details: '',

@@ -10,8 +10,8 @@ export default class Footer extends React.PureComponent<any, CState> {
 
     readonly state = new CState();
     
-  constructor() {
-    super({});
+  constructor(p: any) {
+    super(p);
     this.setmessage = this.setmessage.bind(this);
   }
 

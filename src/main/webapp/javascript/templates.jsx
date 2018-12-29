@@ -23,7 +23,7 @@ export default class Templates extends React.Component {
             width: '100px'
         }, {
             Header: 'Rhythmus',
-            accessor: 'rhythm',
+            accessor: 'rhythmus',
             width: '100px'
         }, {
             Header: 'Beschreibung',
@@ -31,7 +31,7 @@ export default class Templates extends React.Component {
             width: '50%'
         }, {
             Header: 'Betrag',
-            accessor: 'betrag',
+            accessor: 'wert',
             width: '100px',
             Cell: row => (
 

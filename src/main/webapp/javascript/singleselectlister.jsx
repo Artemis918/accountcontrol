@@ -14,6 +14,7 @@ export default class SingleSelectLister extends React.Component {
         this.state = { data: [], selected: undefined };
         this.getTrProps = this.getTrProps.bind(this);
         this.changeSelected = this.changeSelected.bind(this);
+        this.componentWillMount = this.componentWillMount.bind(this);
     }
 
     componentWillMount() {

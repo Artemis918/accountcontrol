@@ -12,8 +12,8 @@ export default class PatternEditor extends React.Component {
 
     }
     
-    setValue( index, value ) {
-        this.state.pattern[index] = value;
+    setValue( index, event ) {
+        this.state.pattern[index] = event.target.value;
         this.setState( { pattern: this.state.pattern } );
     }
 
