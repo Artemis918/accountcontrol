@@ -7,12 +7,12 @@ class Uploader extends React.Component {
 
     constructor() {
         super()
-        this.uploadit = this.uploadit.bind(this);
-        this.buttonClear = this.buttonClear.bind(this);
-        this.onDrop = this.onDrop.bind(this);
-        this.uploadit = this.uploadit.bind(this);
-        this.loadOK = this.loadOK.bind(this);
-        this.loadError = this.loadError.bind(this);
+        this.uploadit = this.uploadit.bind( this );
+        this.buttonClear = this.buttonClear.bind( this );
+        this.onDrop = this.onDrop.bind( this );
+        this.uploadit = this.uploadit.bind( this );
+        this.loadOK = this.loadOK.bind( this );
+        this.loadError = this.loadError.bind( this );
         this.state = {
             accepted: [],
             fileok: [],
@@ -21,58 +21,59 @@ class Uploader extends React.Component {
     }
 
     buttonClear() {
-        this.setState({ accepted: [] });
+        this.setState( { accepted: [] } );
     }
 
-    onDrop(accepted) {
-        this.setState({ accepted: this.state.accepted.concat(accepted), fileok: [], fileerr: []});
+    onDrop( accepted ) {
+        this.setState( { accepted: this.state.accepted.concat( accepted ), fileok: [], fileerr: [] } );
     }
 
-    loadOK(response) {
-        if (response.data.status == 1)
-            this.setState({ fileok: this.state.fileok.concat(response.data.message) });
+    loadOK( response ) {
+        if ( response.data.status == 1 )
+            this.setState( { fileok: this.state.fileok.concat( response.data.message ) } );
         else
-            this.setState({ fileerr: this.state.fileerr.concat(response.data.message) });
+            this.setState( { fileerr: this.state.fileerr.concat( response.data.message ) } );
     }
 
-    loadError(error) {
-        this.setState({ fileerr: this.state.fileerr.concat(error.response) });
+    loadError( error ) {
+        this.setState( { fileerr: this.state.fileerr.concat( error.response ) } );
     }
 
 
     uploadit() {
-        this.state.accepted.forEach(file => {
+        this.state.accepted.forEach( file => {
 
             const data = new FormData();
-            data.append('file', file);
+            data.append( 'file', file );
 
-            axios.post('/upload', data)
-                .then(this.loadOK)
-                .catch(this.loadError)
-        });
-        this.setState({ accepted: [] })
+            axios.post( '/upload', data )
+                .then( this.loadOK )
+                .catch( this.loadError )
+        } );
+        this.setState( { accepted: [] } )
     }
 
     render() {
         return (
             <section>
                 <table>
-                    <col style={{ width: '80%' }} />
-                    <col style={{ width: '20%' }} />
+                    <colgroup>
+                        <col style={{ width: '80%' }} />
+                        <col style={{ width: '20%' }} />
+                    </colgroup>
                     <tbody>
                         <tr>
                             <td>
                                 <div style={{ textalign: 'center' }}>
                                     <ul>
                                         {
-                                            this.state.accepted.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                                        }
-                                        <hrule />
-                                        {
-                                            this.state.fileerr.map(f => <li> fail: {f} </li>)
+                                            this.state.accepted.map( f => <li key={f.name}>{f.name} - {f.size} bytes</li> )
                                         }
                                         {
-                                            this.state.fileok.map(f => <li> ok: {f} </li>)
+                                            this.state.fileerr.map( f => <li> fail: {f} </li> )
+                                        }
+                                        {
+                                            this.state.fileok.map( f => <li> ok: {f} </li> )
                                         }
                                     </ul>
                                 </div>
@@ -81,21 +82,24 @@ class Uploader extends React.Component {
                                 <div className="dropzone">
                                     <Dropzone
                                         accept="text/*"
-                                        onDrop={this.onDrop}
-                                    >
-                                        <div style={{ textAlign: 'center' }}>
-                                            <p>Drop file here</p>
-                                            <p>or</p>
-                                            <p>Press to select</p>
-                                        </div>
+                                        onDrop={(a) => this.onDrop(a) } >                                      
+                                        {({getRootProps, getInputProps, open}) => (
+                                                <div {...getRootProps()}>
+                                                  <input {...getInputProps()} />
+                                                    <p>Drop files here</p>
+                                                    <button type="button" onClick={() => open()}>
+                                                      Open File Dialog
+                                                    </button>
+                                                </div>
+                                        )}
                                     </Dropzone>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <button className="button" onClick={(e) => this.buttonClear()}> Clear </button>
-                                <button className="button" onClick={(e) => this.uploadit()}> Upload </button>
+                                <button className="button" onClick={( e ) => this.buttonClear()}> Clear </button>
+                                <button className="button" onClick={( e ) => this.uploadit()}> Upload </button>
                             </td>
                         </tr>
                     </tbody>
@@ -109,6 +113,6 @@ class Uploader extends React.Component {
 
 export default class BuchungsBelege extends React.Component {
     render() {
-        return (<div> <table width='100%' > <tr> <td></td><td> <Uploader /> </td> </tr> </table> </div>);
+        return ( <div> <table width='100%' > <tr> <td></td><td> <Uploader /> </td> </tr> </table> </div> );
     }
 }

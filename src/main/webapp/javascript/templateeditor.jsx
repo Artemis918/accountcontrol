@@ -1,14 +1,7 @@
 import React from 'react'
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import dateFnsFormat from 'date-fns/format';
-import dateFnsParse from 'date-fns/parse';
-import DateUtils from 'react-day-picker';
-import DropdownService from 'utils/dropdownservice.jsx'
 import PatternEditor from 'patterneditor.jsx'
-
-import 'react-day-picker/lib/style.css';
-
-
+import KSDayPickerInput from 'utils/KSDayPickerInput'
+import DropdownService from 'utils/dropdownservice.jsx'
 
 export default class TemplateEditor extends React.Component {
 
@@ -133,19 +126,6 @@ export default class TemplateEditor extends React.Component {
         this.setState( { message: '' } );
     }
 
-    formatDate( date, format, locale ) {
-        return dateFnsFormat( date, format, { locale } );
-    }
-
-    parseDate( str, format, locale ) {
-        const parsed = dateFnsParse( str, format, { locale } );
-        if ( !isNaN( parsed ) ) {
-            return parsed;
-        }
-
-        return undefined;
-    }
-
     renderButton() {
         if ( this.props.beleg == undefined ) {
             return (
@@ -153,7 +133,7 @@ export default class TemplateEditor extends React.Component {
                     <button onClick={this.save.bind( this )}>Save</button>
                     <button onClick={this.clear}>New</button>
                     <button onClick={this.copy}>Copy</button>
-                    <button onClick={this.delete}>Delete</button>
+                    <button onClick={this.delete}>Del</button>
                 </div>
             );
         }
@@ -168,7 +148,6 @@ export default class TemplateEditor extends React.Component {
     }
 
     render() {
-        const FORMAT = "dd.MM.YYYY";
         if ( this.state.reset ) {
             this.state.template = this.createNewTemplate();
             this.state.reset = false;
@@ -183,46 +162,46 @@ export default class TemplateEditor extends React.Component {
                             </td>
                         </tr>
                         <tr><td>gültig ab</td>
-                            <td><DayPickerInput
-                                onDayChange={( d ) => this.setValue( 'gueltigVon', d )}
-                                value={this.state.template.gueltigVon}
-                                formatDate={this.formatDate}
-                                format={FORMAT}
-                                parseDate={this.parseDate} /></td>
-
+                            <td><KSDayPickerInput
+                                onChange={( d ) => this.setValue( 'gueltigVon', d )}
+                                startdate={this.state.template.gueltigVon} />
+                            </td>
                         </tr>
                         <tr><td>gültig bis</td>
-                            <td><DayPickerInput
-                                onDayChange={( d ) => this.setValue( 'gueltigBis', d )}
-                                formatDate={this.formatDate}
-                                value={this.state.template.gueltigBis}
-                                format={FORMAT}
-                                parseDate={this.parseDate} /></td>
+                            <td><KSDayPickerInput
+                                onChange={( d ) => this.setValue( 'gueltigBis', d )}
+                                startdate={this.state.template.gueltigBis} />
+                            </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Rythmus</td>
                             <td>
-                                <DropdownService value={this.state.template.rythmus}
-                                    onChange={( e ) => this.setValue( 'rythmus', e )}
-                                    url='collections/rythmus'
-                                    textfield='text'
-                                    valuefield='value' />
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td style={{ width: '20%' }}>
+                                                <input style={{ width: '40px' }} value={this.state.template.anzahl}
+                                                    type='number'
+                                                    onChange={( e ) => this.setValue( 'anzahl', e.target.value )} />
+                                            </td>
+                                            <td style={{ width: '70%' }}>
+                                                <DropdownService  value={this.state.template.rythmus}
+                                                    onChange={( e ) => this.setValue( 'rythmus', e )}
+                                                    url='collections/rythmus'
+                                                    textfield='text'
+                                                    valuefield='value' />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Erste Buchung</td>
-                            <td><DayPickerInput
-                                onDayChange={( d ) => this.setValue( 'start', d )}
-                                formatDate={this.formatDate}
-                                value={this.state.template.start}
-                                format={FORMAT}
-                                parseDate={this.parseDate} /></td>
-                        </tr>
-                        <tr style={{ background: 'darkgray' }}><td>Anzahl</td>
-                            <td><input value={this.state.template.anzahl}
-                                type='number'
-                                onChange={( e ) => this.setValue( 'anzahl', e.target.value )} />
+                            <td><KSDayPickerInput
+                                onChange={( d ) => this.setValue( 'start', d )}
+                                startdate={this.state.template.start} />
                             </td>
                         </tr>
-                        <tr style={{ background: 'darkgray' }}><td>VarDays</td>
+                        <tr style={{ background: 'darkgray' }}><td>Vardays</td>
                             <td><input value={this.state.template.vardays}
                                 type='number'
                                 onChange={( e ) => this.setValue( 'vardays', e.target.value )} />
@@ -264,9 +243,9 @@ export default class TemplateEditor extends React.Component {
                             </td>
                         </tr>
                         <tr><td>Wert</td>
-                            <td><input value={this.state.template.wert}
+                            <td><input step="0.01" value={this.state.template.wert / 100}
                                 type='number'
-                                onChange={( e ) => this.setValue( 'wert', e.target.value )} />
+                                onChange={( e ) => this.setValue( 'wert', e.target.value * 100 )} />
                             </td>
                         </tr>
                         <tr><td>Beschreibung</td>
@@ -278,12 +257,9 @@ export default class TemplateEditor extends React.Component {
                         <tr><td>Pattern</td>
                             <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
                         </tr>
-
-                        <tr>
-                            <td> {this.renderButton()} </td>
-                        </tr>
                     </tbody>
                 </table>
+                {this.renderButton()}
                 {this.state.patternEdit ?
                     <PatternEditor cols='20' rows='3'
                         pattern={this.state.template.pattern}

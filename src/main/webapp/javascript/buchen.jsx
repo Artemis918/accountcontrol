@@ -22,7 +22,7 @@ export default class Buchen extends React.Component {
 
     assignAuto() {
         fetch( 'http://localhost:8080/assign/all' ).then( response => response.json() );
-        componentWillMount();
+        this.componentWillMount();
     }
 
     handleSelect( shiftKey, row ) {

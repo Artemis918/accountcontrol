@@ -7,23 +7,33 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 
-export default class SingleSelectLister extends React.Component {
+export default class MultiSelectLister extends React.Component {
     
     constructor( props ) {
         super( props );
-        this.state = { data: [], selected: undefined };
+        var extensions = props.ext;
+        if (extensions === undefined)
+            extensions="";  
+        this.state = { data: [], selected: undefined, ext: extensions };
         this.getTrProps = this.getTrProps.bind(this);
         this.changeSelected = this.changeSelected.bind(this);
-        this.componentWillMount = this.componentWillMount.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        this.reload();
+    }
+    
+    setUrlExtension(extension) {
+        if (extension === undefined)
+            this.state.ext=""; 
+        else
+            this.state.ext=extension;
         this.reload();
     }
 
     reload() {
         var self = this;
-        fetch( this.props.url )
+        fetch( this.props.url + this.state.ext )
             .then( response => response.json() )
             .then( (d) => self.setState( { data : d, selected: undefined } ) );
     }

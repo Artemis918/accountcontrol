@@ -1,5 +1,6 @@
 package loc.balsen.kontospring.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,10 +37,13 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 	
-	@GetMapping("/list")
+	@GetMapping("/list/{year}/{month}")
 	@ResponseBody
-	List<PlanDTO> findPlans() {
-		return planRepository.findAll()
+	List<PlanDTO> findPlans(@PathVariable Integer year ,@PathVariable Integer month) {
+		LocalDate start = LocalDate.of(year, month, 1);
+		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
+		
+		return planRepository.findByPlanDate(start,end)
 				.stream()
 				.map((plan) -> {return new PlanDTO(plan);})
 				.collect(Collectors.toList());
@@ -47,8 +51,10 @@ public class PlanController {
 	
 	@PostMapping("/save")
 	@ResponseBody
-	KontoSpringResult savePlan(@RequestBody PlanDTO plan) {
-		planRepository.save(plan.toPlan(templateRepository,kontoRepository));
+	KontoSpringResult savePlan(@RequestBody PlanDTO plandto) {
+		Plan plan = plandto.toPlan(templateRepository,kontoRepository);
+		plan.setCreationDate(LocalDate.now());
+		planRepository.save(plan);
 		return new KontoSpringResult(false,"Gespeichert");
 	}
 	

@@ -1,6 +1,6 @@
 import React from 'react'
 import TemplateEditor from './templateeditor'
-import SingleSelectLister from './singleselectlister.jsx'
+import SingleSelectLister from 'utils/singleselectlister'
 
 export default class Templates extends React.Component {
 

@@ -7,6 +7,7 @@ import Buchungsbelege from 'buchungsbelege.jsx'
 import Templates from 'templates.jsx'
 import Planen from 'planen.jsx'
 import Buchen from 'buchen.jsx'
+import Konten from 'konten.jsx'
 import Footer from 'footer'
 
 import 'index.css'
@@ -50,9 +51,17 @@ class Main extends React.Component {
             </div>
             );
         }
+        else if (this.state.value == 4) {
+            return (<div>
+                    <Header changeValue={this.changeValue} value={this.state.value} title="Kontenübersicht" />
+                    <Konten sendmessage= {this.sendMessage }/>
+                    <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+                </div>
+                );
+        }
         else if (this.state.value == 1) {
             var tasks = [
-                { name: 'Vorlagen', comp: (<Templates sendmessage={this.sendMessage }/>) },
+                { name: 'Vorlagen', comp: (<Templates sendmessage={this.sendMessage }/>)  },
                 { name: 'Planen', comp: (<Planen sendmessage={this.sendMessage }/>) },
             ];
             return (<div>

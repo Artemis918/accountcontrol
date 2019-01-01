@@ -32,7 +32,7 @@ export default class PatternEditor extends React.Component {
                     margin: '15% auto',
                     padding: '20px',
                     border: '1px solid #888',
-                    width: '300', height: '300',
+                    width: '300px', height: '300px',
                     background: 'darkgray'
                 }}>
                     <table>

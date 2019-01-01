@@ -31,17 +31,37 @@ module.exports = {
         include: [SRC],
         loader: 'babel-loader',
 		options: {
-			presets: [ 'es2015','react']
+           presets: [ "@babel/env", "@babel/react" ]
 		}
       },
 
       { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-      {test: /\.css$/, loader: 'style-loader!css-loader'},
-      {test: /\.less$/, loader: 'style!css!less'},
-      {test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=application/font-woff'},
-      {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=application/octet-stream'},
-      {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
-      {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&amp;mimetype=image/svg+xml'},
+      { test: /\.css$/,
+    	include: [SRC],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              camelCase: true,
+              modules: true,
+              localIdentName: '[name]__[local]___[hash:base64:5]'
+            }
+          }
+        ]
+      },
+      { test: /\.css$/, 
+    	exclude: [SRC],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: false,
+            }
+          }
+          ]
+        },
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
   }

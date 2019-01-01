@@ -1,23 +1,24 @@
 import React from 'react'
-//import TemplateEditor from 'templateeditor.jsx'
-import SingleSelectLister from 'singleselectlister.jsx'
+import PlanEditor from 'planeditor.jsx'
+import SingleSelectLister from 'utils/singleselectlister'
+import MonthSelect from 'utils/monthselect'
 
 export default class Planen extends React.Component {
 
     constructor( props ) {
         super( props );
-        this.state = { changed: false };
+        var currentTime = new Date();
+
+        this.state = { changed: false, month: currentTime.getMonth()+1, year: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
+        this.setFilter = this.setFilter.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.listComponent = undefined;
         this.editorComponent = undefined;
+        
         this.plancolumns = [{
-            Header: 'Gültig von',
-            accessor: 'gueltigVon',
-            width: '100px'
-        }, {
-            Header: 'Gültig bis',
-            accessor: 'gueltigBis',
+            Header: 'Datum',
+            accessor: 'plandate',
             width: '100px'
         }, {
             Header: 'Beschreibung',
@@ -25,7 +26,7 @@ export default class Planen extends React.Component {
             width: '50%'
         }, {
             Header: 'Betrag',
-            accessor: 'betrag',
+            accessor: 'wert',
             width: '100px',
             Cell: row => (
 
@@ -39,39 +40,49 @@ export default class Planen extends React.Component {
         }]
     }
 
+    setFilter( m ,y ) {
+        this.listComponent.setUrlExtension( y + "/" + m );
+        this.setState({year: y, month: m})
+    }
+
     refreshlist() {
         this.listComponent.reload();
     }
 
-    refresheditor( templateid ) {
-        this.editorComponent.setTemplate( templateid );
+    refresheditor( planid ) {
+        this.editorComponent.setPlan( planid );
     }
 
     render() {
         return (
-            <table style={{ width: '20%', border: '1px solid black' }}>
+            <table style={{ width: '100%', border: '1px solid black' }}>
                 <tbody>
                     <tr>
                         <td style={{ width: '20%', border: '1px solid black' }}>
-                            Hallo 
+                            <PlanEditor ref={( refEditor ) => { this.editorComponent = refEditor; }} onChange={() => this.refreshlist()} />
                         </td>
                         <td style={{ width: '80%' }}>
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td> Pläne erstellen bis:
-                                             <input type='number' />
-                                            <input type='number' />
+                                        <td style={{ border: '1px solid black' }}>
+                                            <MonthSelect label='Pläne erstellen bis:' year='2018' month='12' />
                                             <button> Erstellen </button>
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td> 
+                                            <MonthSelect label='Pläne für:' year={this.state.year} month= {this.state.month}  onChange={this.setFilter}/>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>
-                                            <SingleSelectLister ref={( refList ) => { this.templateList = refList; }} 
-                                                                handleChange={(id) => this.refresheditor(id)} 
-                                                                columns={this.plancolumns}
-                                                                url = 'http://localhost:8080/plans/list'/>
-                                       </td>
+                                            <SingleSelectLister ref={( refList ) => { this.listComponent = refList; }}
+                                                ext={this.state.year + '/' + this.state.month}
+                                                handleChange={( id ) => this.refresheditor( id )}
+                                                columns={this.plancolumns}
+                                                url='http://localhost:8080/plans/list/' />
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
