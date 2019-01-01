@@ -26,6 +26,9 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 			       " and id not in ( select z.plan from zuordnung z)",nativeQuery=true)
 	List<Plan> findByPeriod(LocalDate mindate, LocalDate maxdate);
 
+	@Query(value = "select * from Plan where plan_date between ?1 and ?2",nativeQuery=true)
+	List<Plan> findByPlanDate(LocalDate mindate, LocalDate maxdate);
+	
 	List<Plan> findByTemplate(Template template);
 
 }

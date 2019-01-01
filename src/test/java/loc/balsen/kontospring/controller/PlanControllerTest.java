@@ -35,10 +35,10 @@ public class PlanControllerTest extends TestContext {
 
 	static private String planjson = "{  " +
 			"\"id\": \"1234\", " +
-			"\"creationdate\": \"2018-12-03\", " +
-			"\"startdate\": \"2018-10-03\", " +
-			"\"plandate\": \"2018-10-03\", " +
-			"\"enddate\": \"2018-10-03\", " +
+			"\"creationdate\": \"1797-12-03\", " +
+			"\"startdate\": \"1797-10-03\", " +
+			"\"plandate\": \"1797-10-31\", " +
+			"\"enddate\": \"1797-10-03\", " +
 			"\"idkonto\": KONTO, " +
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
@@ -76,15 +76,18 @@ public class PlanControllerTest extends TestContext {
 		Plan plan  = plans.get(sizeBefore);
 		assertEquals(100, plan.getWert());
 		assertEquals(konto1.getId(), plan.getKonto().getId());
+
+		mvc.perform(get("/plans/list/1797/11"))
+		   .andExpect(jsonPath("$.[*]", hasSize(0)));
 		
-		mvc.perform(get("/plans/list"))
-		   .andExpect(jsonPath("$.[*]", hasSize(sizeBefore +1)))
-		   .andExpect(jsonPath("$.[" + sizeBefore + "].shortdescription").value("Kurz"));
+		mvc.perform(get("/plans/list/1797/10"))
+		   .andExpect(jsonPath("$.[*]", hasSize(1)))
+		   .andExpect(jsonPath("$.[0].shortdescription").value("Kurz"));
 		
 		mvc.perform(get("/plans/delete/" + plan.getId()))
 		   .andExpect(status().isOk());
 
-		plan =planRepository.findById(plan.getId()).get();
+		plan = planRepository.findById(plan.getId()).get();
 		assertNotNull(plan.getDeactivateDate());
 	
 	}

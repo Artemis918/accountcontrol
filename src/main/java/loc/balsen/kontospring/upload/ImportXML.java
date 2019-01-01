@@ -60,9 +60,11 @@ public class ImportXML extends Importbase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		List<Element> entryList = document.getRootElement().getChild("BkToCstmrAcctRpt").getChild("Rpt")
-				.getChildren("Ntry");
+		
+		Element root = document.getRootElement();
+		Element acct = root.getChild("BkToCstmrAcctRpt",null);
+		Element rpt = acct.getChild("Rpt",null);
+		List<Element> entryList = rpt.getChildren("Ntry",null);
 
 		int entryNum = 0;
 		for (Element entry : entryList) {
@@ -90,20 +92,20 @@ public class ImportXML extends Importbase {
 			throw new ParseException("Unknown Indicator :" + cdtDbtInd, 0);
 		
 		beleg.setWert(amount);
-		beleg.setBeleg(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt"),dateformater));
-		beleg.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt"),dateformater));
+		beleg.setBeleg(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt",null),dateformater));
+		beleg.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt",null),dateformater));
 
-		Element details = getChild(entry, "NtryDtls").getChild("TxDtls");
+		Element details = getChild(entry, "NtryDtls").getChild("TxDtls",null);
 
 		Element parties = getChild(details, "RltdPties");
-		beleg.setAbsender(getChild(parties, "Dbtr").getChildText("Nm"));
-		beleg.setEmpfaenger(getChild(parties, "Cdtr").getChildText("Nm"));
+		beleg.setAbsender(getChild(parties, "Dbtr").getChildText("Nm",null));
+		beleg.setEmpfaenger(getChild(parties, "Cdtr").getChildText("Nm",null));
 
 		Element infoElement = getChild(details, "RmtInf");
 
 		String infotxt = "";
 
-		List<Element> infolines = infoElement.getChildren("Ustrd");
+		List<Element> infolines = infoElement.getChildren("Ustrd",null);
 		for (Element line : infolines) {
 			String text = line.getValue();
 			if (text.startsWith("Referenz"))
@@ -123,7 +125,7 @@ public class ImportXML extends Importbase {
 	}
 
 	private Art getArt(Element details) throws ParseException {
-		String arttext = getChild(details, "BkTxCd").getChild("Prtry").getChildText("Cd");
+		String arttext = getChild(details, "BkTxCd").getChild("Prtry",null).getChildText("Cd",null);
 		Art art =  belegArtenMap.get(arttext);
 		if (art == null)
 			throw new ParseException("unknown Arttext: " + arttext, 0 );
@@ -131,7 +133,7 @@ public class ImportXML extends Importbase {
 	}
 
 	private Element getChild(Element entry, String childKey) throws ParseException {
-		Element child = entry.getChild(childKey);
+		Element child = entry.getChild(childKey,null);
 		if (child == null)
 			throw new ParseException("key <" + childKey + "> not found", 0);
 		return child;
