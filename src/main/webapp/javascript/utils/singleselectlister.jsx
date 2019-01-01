@@ -3,67 +3,42 @@
  */
 
 import React from 'react';
-import ReactTable from "react-table";
-import "react-table/react-table.css";
+import SelectLister from 'utils/selectlister'
 
 
 export default class SingleSelectLister extends React.Component {
     
     constructor( props ) {
         super( props );
-        var extensions = props.ext;
-        if (extensions === undefined)
-            extensions="";  
-        this.state = { data: [], selected: undefined, ext: extensions };
-        this.getTrProps = this.getTrProps.bind(this);
+        this.state = { selected: undefined };
+        this.lister=undefined;
         this.changeSelected = this.changeSelected.bind(this);
-    }
-
-    componentDidMount() {
-        this.reload();
+        this.setUrlExtension = this.setUrlExtension.bind(this);
+        this.isSelected = this.isSelected.bind(this);
     }
     
-    setUrlExtension(extension) {
-        if (extension === undefined)
-            this.state.ext=""; 
-        else
-            this.state.ext=extension;
-        this.reload();
-    }
-
-    reload() {
-        var self = this;
-        fetch( this.props.url + this.state.ext )
-            .then( response => response.json() )
-            .then( (d) => self.setState( { data : d, selected: undefined } ) );
-    }
-
     changeSelected( index ) {
         this.setState( { selected: index } )
         this.props.handleChange( this.state.data[index].id);
     }
     
-    getTrProps( rowInfo ) {
-        var table = this;
-        if ( rowInfo && rowInfo.row ) {
-            return {
-                onClick: (e) => this.changeSelected (rowInfo.index)
-                ,style: {
-                    background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
-                    color: rowInfo.index === this.state.selected ? 'white' : 'black'
-                }
-            }
-        } else {
-            return {}
-        }
+    setUrlExtension(ext) {
+        this.lister.setUrlExtension(ext);
+    }
+    
+    isSelected(index) {
+        return this.state.seleted == index;
     }
 
     render() {
         return (
-            <ReactTable
-            getTrProps={(state, rowInfo, column, instance) => this.getTrProps( rowInfo )}
-            defaultPageSize={10}
-            data={this.state.data}
-            columns={this.props.columns} />); 
+            <SelectLister
+                columns= {this.props.columns}
+                ext={this.props.ext} 
+                url={this.props.url} 
+                handleSelect={(s,c,i)=> this.changeSelected(i)} 
+                isSelected={(i)=>this.isSelected(i)}
+                ref={( r ) => { this.lister = r; }}/>
+        ); 
     }
 }
