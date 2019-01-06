@@ -2,9 +2,9 @@ import React from 'react'
 import TemplateEditor from './templateeditor'
 import SingleSelectLister from 'utils/singleselectlister'
 
+
+
 export default class Templates extends React.Component {
-
-
     
     constructor( props ) {
         super( props );
@@ -49,8 +49,8 @@ export default class Templates extends React.Component {
         this.templateList.reload();
     }
     
-    refresheditor(templateid) {
-        this.templateEditor.setTemplate(templateid);
+    refresheditor(template) {
+        this.templateEditor.setTemplate(template.id);
     }
     
     render() {
@@ -63,7 +63,7 @@ export default class Templates extends React.Component {
                         </td>
                         <td style={{ width: '80%' }}>
                             <SingleSelectLister ref={( refList ) => { this.templateList = refList; }} 
-                                                handleChange={(id) => this.refresheditor(id)}
+                                                handleChange={(id) => this.refresheditor(data)}
                                                 url = 'http://localhost:8080/templates/list'
                                                 columns = {this.templatecolumns}/>
                         </td>

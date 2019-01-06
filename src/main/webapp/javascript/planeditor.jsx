@@ -11,26 +11,35 @@ export default class PlanEditor extends React.Component {
 
     constructor( props ) {
         super( props );
-        this.state = { plan: {}, message: '', reset: true };
+        this.state = { plan: {}, message: ''};
         this.clear = this.clear.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
+        this.setPlan = this.setPlan.bind( this );
         this.kontoselect = undefined;
     }
 
     componentWillMount() {
         this.state.plan = this.createNewPlan();
     }
-
-    setPlan( id ) {
-        var self = this;
-        fetch( 'http://localhost:8080/plans/id/' + id )
-            .then( response => response.json() )
-           // .then( p => { self.copyPlan( p ); self.setState( { reset: this.state.reset } ) } );
-            .then( p => { self.setState( { plan: p } ) } );
+    
+    resetEditor() {
+        this.setState( { plan: this.createNewPlan()  } );
     }
 
+    setPlan( id ) {
+        if ( id == undefined ) {
+            this.resetEditor();
+        }
+        else {
+            var self = this;
+            fetch( 'http://localhost:8080/plans/id/' + id )
+                .then( response => response.json() )
+                .then( p => { self.setState( { plan: p } ) } );
+        }
+    }
+    
     createNewPlan() {
         var date = new Date();
         return {
@@ -79,7 +88,7 @@ export default class PlanEditor extends React.Component {
 
     clear() {
         this.props.onChange();
-        this.setState( { reset: true } );
+        this.resetEditor();
     }
 
     delete() {
@@ -116,10 +125,7 @@ export default class PlanEditor extends React.Component {
 
     render() {
         const FORMAT = "dd.MM.YYYY";
-        if ( this.state.reset ) {
-            this.state.template = this.createNewPlan();
-            this.state.reset = false;
-        }
+
         return (
             <div>
                 <label>{this.state.message}</label>

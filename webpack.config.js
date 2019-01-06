@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack')
+var cssloader = require('css-loader')
 var ROOT = path.resolve(__dirname, 'src/main/webapp');
 var SRC  = path.resolve( ROOT, 'javascript');
 var DEST = path.resolve( ROOT, 'dist');
@@ -19,6 +20,9 @@ module.exports = {
 	  ],
       extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
+  plugins: [
+	    new webpack.WatchIgnorePlugin([/css\.d\.ts$/])
+  ],
   output: {
     path: DEST,
     filename: 'bundle.js',
@@ -42,10 +46,12 @@ module.exports = {
           'style-loader',
           {
             loader: 'css-loader',
+            // loader: 'typings-for-css-modules-loader',
             options: {
-              camelCase: true,
+              camelCase: false,
               modules: true,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
+              localIdentName: '[name]__[local]___[hash:base64:5]',
+              //namedExport: true
             }
           }
         ]

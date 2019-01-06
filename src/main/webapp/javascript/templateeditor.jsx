@@ -28,10 +28,15 @@ export default class TemplateEditor extends React.Component {
     }
 
     setTemplate( id ) {
-        var self = this;
-        fetch( 'http://localhost:8080/templates/id/' + id )
-            .then( response => response.json() )
-            .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
+        if ( id == undefined ) {
+            this.setState( { reset: true } );
+        }
+        else {
+            var self = this;
+            fetch( 'http://localhost:8080/templates/id/' + id )
+                .then( response => response.json() )
+                .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
+        }
     }
 
     createNewTemplate() {
@@ -184,7 +189,7 @@ export default class TemplateEditor extends React.Component {
                                                     onChange={( e ) => this.setValue( 'anzahl', e.target.value )} />
                                             </td>
                                             <td style={{ width: '70%' }}>
-                                                <DropdownService  value={this.state.template.rythmus}
+                                                <DropdownService value={this.state.template.rythmus}
                                                     onChange={( e ) => this.setValue( 'rythmus', e )}
                                                     url='collections/rythmus'
                                                     textfield='text'

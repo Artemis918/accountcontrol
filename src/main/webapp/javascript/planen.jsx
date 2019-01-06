@@ -42,15 +42,17 @@ export default class Planen extends React.Component {
 
     setFilter( m ,y ) {
         this.listComponent.setUrlExtension( y + "/" + m );
-        this.setState({year: y, month: m})
+        this.setState({year: y, month: m,selectedRow: undefined, selectedData: undefined})
+        this.editorComponent.setPlan(undefined);
+        
     }
 
     refreshlist() {
         this.listComponent.reload();
     }
 
-    refresheditor( planid ) {
-        this.editorComponent.setPlan( planid );
+    refresheditor( data ) {
+        this.editorComponent.setPlan( data.id );
     }
 
     render() {
@@ -79,7 +81,7 @@ export default class Planen extends React.Component {
                                         <td>
                                             <SingleSelectLister ref={( refList ) => { this.listComponent = refList; }}
                                                 ext={this.state.year + '/' + this.state.month}
-                                                handleChange={( id ) => this.refresheditor( id )}
+                                                handleChange={( data ) => this.refresheditor( data )}
                                                 columns={this.plancolumns}
                                                 url='http://localhost:8080/plans/list/' />
                                         </td>
