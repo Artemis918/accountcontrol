@@ -1,7 +1,3 @@
-/*
- * 
- */
-
 import * as React from 'react';
 import {SelectLister} from './selectlister'
 
@@ -50,7 +46,7 @@ export default class SingleSelectLister<D> extends React.Component<SingleSelectl
         return this.state.selectedRow === index;
     }
 
-    render() {
+    render() : JSX.Element {
         return (
             <SelectLister<D>
                 columns= {this.props.columns}

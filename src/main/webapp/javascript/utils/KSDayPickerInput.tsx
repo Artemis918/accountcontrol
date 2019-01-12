@@ -29,7 +29,7 @@ export default class KSDayPickerInput extends React.Component<KSDayPickerProps,{
         return undefined;
     }
     
-    render() {
+    render() : JSX.Element {
         const FORMAT :string = "dd.MM.yyyy";
         return (
                 <DayPickerInput

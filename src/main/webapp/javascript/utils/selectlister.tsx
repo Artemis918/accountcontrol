@@ -1,7 +1,3 @@
-/*
- * 
- */
-
 import * as React from 'react';
 import * as ReactTable from 'react-table';
 import * as css from './css/selectlister.css';
@@ -46,6 +42,14 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         else
             this.setState( { ext: extension, reload: true } );
     }
+    
+    getData(rows: number[]) : D[] {
+         return rows.map((i: number) :D =>{return this.state.data[i];});
+    }
+    
+    getDataRange(start: number, end: number) : D[] {
+         return Array.from(Array(end-start+1).keys()).map((i:number) : D => this.state.data[i]);
+    }
 
     reload(): void {
         var self = this;
@@ -69,7 +73,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         }
     }
 
-    render() {
+    render():JSX.Element {
         if (this.state.reload) {
             this.reload();
         }

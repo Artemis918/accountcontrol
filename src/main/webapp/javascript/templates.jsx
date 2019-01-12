@@ -55,7 +55,7 @@ export default class Templates extends React.Component {
     
     render() {
         return (
-            <table style={{ width: '20%', border: '1px solid black' }}>
+            <table style={{border: '1px solid black' }}>
                 <tbody>
                     <tr>
                         <td style={{ width: '20%', border: '1px solid black' }}>

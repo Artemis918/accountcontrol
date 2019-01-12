@@ -23,16 +23,15 @@ export default class MonthSelect extends React.Component<MonthSelectProps, CStat
         this.state = { month: this.props.month, year: this.props.year };
     }
 
-    handleChange( m: number, y: number ) {
+    handleChange( m: number, y: number ) : void {
 
-        
         this.setState({month: m, year: y});
 
         if ( y >= 2000 && y <= 3000 && m >= 1  && m <= 12 && this.props.onChange!== undefined  )
             this.props.onChange(m, y);
     }
     
-    increaseMonth() {
+    increaseMonth() : void {
         if (this.state.month == 12) {
             var y :number = this.state.year;
             y++;
@@ -45,7 +44,7 @@ export default class MonthSelect extends React.Component<MonthSelectProps, CStat
         }
     }
     
-    decreaseMonth() {
+    decreaseMonth() :void {
         if (this.state.month == 1) {
             var y :number = this.state.year;
             y--;
@@ -58,7 +57,7 @@ export default class MonthSelect extends React.Component<MonthSelectProps, CStat
         }
     }
 
-    render() {
+    render() : JSX.Element {
         return (
             <div>
                 {this.props.label}

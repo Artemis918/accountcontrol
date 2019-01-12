@@ -21,7 +21,7 @@ export default class TemplateEditor extends React.Component {
         }
         else {
             var self = this;
-            fetch( 'http://localhost:8080/templates/beleg/' + this.props.beleg )
+            fetch( 'templates/beleg/' + this.props.beleg )
                 .then( response => response.json() )
                 .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
         }
@@ -33,7 +33,7 @@ export default class TemplateEditor extends React.Component {
         }
         else {
             var self = this;
-            fetch( 'http://localhost:8080/templates/id/' + id )
+            fetch( 'templates/id/' + id )
                 .then( response => response.json() )
                 .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
         }

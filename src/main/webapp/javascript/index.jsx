@@ -7,7 +7,7 @@ import Buchungsbelege from 'buchungsbelege.jsx'
 import Templates from 'templates.jsx'
 import Planen from 'planen.jsx'
 import Buchen from 'buchen.jsx'
-import Konten from 'konten.jsx'
+import Konten from 'konten'
 import Footer from 'footer'
 
 import 'index.css'
@@ -27,8 +27,8 @@ class Main extends React.Component {
         this.setState({ value: val });
     }
     
-    sendMessage(msg) {
-        this.footer.setmessage(msg);
+    sendMessage(msg,error) {
+        this.footer.setmessage(msg,error);
     }
 
     render() {
@@ -46,7 +46,7 @@ class Main extends React.Component {
         else if (this.state.value == 3) {
             return (<div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Buchen" />
-                <Buchen sendmessage= {this.sendMessage }/>
+                <Buchen sendmessage= {(m,e) => this.sendMessage(m,e) }/>
                 <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div>
             );

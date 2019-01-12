@@ -1,69 +1,35 @@
 import React from 'react'
-import ReactTable from "react-table";
-import TemplateEditor from "templateeditor";
+import MultiSelectLister from 'utils/multiselectlister';
+import TemplateEditor from 'templateeditor';
 import "react-table/react-table.css";
-
 
 export default class Buchen extends React.Component {
 
     constructor( props ) {
         super( props )
-        this.handleSelect = this.handleSelect.bind( this );
-        this.state = { data: [], 
-                       selected1: undefined, 
-                       selected2: undefined, 
-                       selectedHi: undefined, 
-                       selectedLo: undefined, 
-                       plan: undefined }
-        this.createPlan = this.createPlan.bind(this);
-        this.handleSelect = this.handleSelect.bind( this );
+        this.lister = undefined;
+        this.state = { plan: undefined }
+        this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
     }
 
     assignAuto() {
         fetch( 'http://localhost:8080/assign/all' ).then( response => response.json() );
-        this.componentWillMount();
-    }
-
-    handleSelect( shiftKey, row ) {
-        if ( shiftKey == true && this.state.selected2 != undefined ) {
-            var row1 = this.state.selected2;
-            this.setState( {
-                selected1: row1,
-                selected2: row,
-                selectedHi: row1 > row ? row1 : row,
-                selectedLo: row1 > row ? row : row1
-            } )
-        }
-        else {
-            this.setState( {
-                selected1: row,
-                selected2: row,
-                selectedHi: row,
-                selectedLo: row
-            } )
-        }
-    }
-
-    componentWillMount() {
-        console.log( "loading belege" );
-        fetch( 'http://localhost:8080/belege/unassigned' )
-            .then( response => response.json() )
-            .then( (d) => this.setState( { data: d } ) );
+        this.lister.reload();
     }
 
     createPlan() {
-        if ( this.state.selectedHi != this.state.selectedLo ) {
-            this.props.sendmessage( "es darf nur ein Beleg selektiert sein", true );
+        var data = lister.getSelectedData();
+        if ( data.length != 1 ) {
+            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
         else {
-            var beleg = this.state.data[this.state.selectedLo];
-            this.setState({plan: beleg.id })
+            this.setState( { plan: data.id } )
         }
     }
-    
+
     onChange() {
-        this.setState({plan: undefined});
+        this.setState( { plan: undefined } );
     }
 
     render() {
@@ -96,28 +62,16 @@ export default class Buchen extends React.Component {
         }];
 
         if ( this.state.plan !== undefined ) {
-            return <TemplateEditor beleg = {this.state.plan} onChange={() => this.onChange()}/>
+            return <TemplateEditor beleg={this.state.plan} onChange={() => this.onChange()} />
         }
         return (
             <table>
                 <tbody>
                     <tr>
                         <td>
-                            <ReactTable
-                                data={this.state.data}
-                                columns={columns}
-                                getTrProps={( state, rowInfo ) => {
-                                    if ( rowInfo && rowInfo.row ) {
-                                        return {
-                                            onClick: ( e ) => { this.handleSelect( e.shiftKey, rowInfo.index ) },
-                                            style: { background: this.state.selectedLo != undefined && rowInfo.index >= this.state.selectedLo && rowInfo.index <= this.state.selectedHi ? 'white' : null }
-                                        }
-                                    } else {
-                                        return {}
-                                    }
-                                }
-                                }
-                            />
+                            <MultiSelectLister columns={columns} 
+                             url='http://localhost:8080/belege/unassigned'
+                             ref={(ref)=>{this.lister=ref}}/>
                         </td>
                         <td style={{ verticalAlign: "top" }}>
                             <table>
