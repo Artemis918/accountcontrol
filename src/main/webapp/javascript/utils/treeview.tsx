@@ -58,12 +58,10 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
     fillNode( data: Enum[], node: Node ): void {
         node.children = data.map( ( e ) => this.createNode( e, node.level + 1 ) )
         node.expanded = true;
+        this.setState( { root: this.root } );
         if ( this.state.selected == undefined ) {
-            this.setState( { root: this.root, selected: this.root.children[0] } );
-            this.props.handleSelect( this.root.children[0].level, this.root.children[0].id );
+            this.treeSelect(this.root.children[0]);
         }
-        else
-            this.setState( { root: this.root } );
     }
 
     expandNode( node: Node ): void {
@@ -84,8 +82,8 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
     }
 
     treeSelect( node: Node ): void {
-        this.setState( { root: this.root, selected: this.root.children[0] } );
-        this.props.handleSelect( this.root.children[0].level, this.root.children[0].id );
+        this.setState( { selected: node } );
+        this.props.handleSelect( node.level, node.id );
     }
 
     renderButton( node: Node ): JSX.Element {
@@ -112,7 +110,7 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
 
     renderChildren( node: Node ): JSX.Element {
         if ( node.children != undefined ) {
-            return ( <div className={tcss.treeview}><ul className={tcss.list}>{node.children.map( this.renderNode )}</ul></div> )
+            return ( <div className={tcss.treeview}><ul className={node.level==0?tcss.list0:tcss.list}>{node.children.map( this.renderNode )}</ul></div> )
         }
         else {
             return ( <div></div> );

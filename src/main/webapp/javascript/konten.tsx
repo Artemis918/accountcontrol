@@ -34,7 +34,7 @@ export default class Konten extends React.Component<KontenProps, CState> {
           <div style={{border: '1px solid black'}}>
           action und Filter
           </div>
-          <div style={{width: '30%', height: '100%', float: 'left', border: '1px solid black'}}>
+          <div style={{width: '30%', float: 'left', border: '1px solid black'}}>
           <KontenSelector 
              handleKGSelect={(kg:number)=>this.handleKGSelect(kg)} 
              handleKontoSelect={(k:number)=>this.handleKontoSelect(k)}
