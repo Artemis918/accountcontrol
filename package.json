@@ -11,6 +11,7 @@
     "ajv": "^6.6.2",
     "axios": "^0.18.0",
     "date-fns": "^2.0.0-alpha.26",
+    "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.7.0",
