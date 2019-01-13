@@ -1,6 +1,6 @@
 import React from 'react'
 import PatternEditor from 'patterneditor.jsx'
-import KSDayPickerInput from 'utils/KSDayPickerInput'
+import {KSDayPickerInput} from 'utils/KSDayPickerInput'
 import DropdownService from 'utils/dropdownservice.jsx'
 
 export default class TemplateEditor extends React.Component {

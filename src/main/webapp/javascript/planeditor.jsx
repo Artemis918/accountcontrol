@@ -1,7 +1,7 @@
 import React from 'react'
 import DropdownService from 'utils/dropdownservice.jsx'
 import PatternEditor from 'patterneditor.jsx'
-import KSDayPickerInput from 'utils/KSDayPickerInput'
+import {KSDayPickerInput} from 'utils/KSDayPickerInput'
 
 import 'react-day-picker/lib/style.css';
 

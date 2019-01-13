@@ -1,5 +1,5 @@
 import React from 'react'
-import MultiSelectLister from 'utils/multiselectlister';
+import {MultiSelectLister} from 'utils/multiselectlister';
 import TemplateEditor from 'templateeditor';
 import "react-table/react-table.css";
 

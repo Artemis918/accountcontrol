@@ -1,6 +1,6 @@
 import React from 'react'
 import TemplateEditor from './templateeditor'
-import SingleSelectLister from 'utils/singleselectlister'
+import {SingleSelectLister} from 'utils/singleselectlister'
 
 
 

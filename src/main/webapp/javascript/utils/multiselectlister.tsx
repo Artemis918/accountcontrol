@@ -6,7 +6,7 @@ export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
 export interface MultiSelectlisterProps<D> {
     ext: string;
     url: string;
-    handleselect: HandleMultiSelectCallback<D>;
+    handleselect?: HandleMultiSelectCallback<D>;
     columns: any[];
 }
 
@@ -29,12 +29,12 @@ class Range {
 
 }
 
-class CState<D> {
+class CState {
     selectedRows: number[];
     range: Range;
 }
 
-export default class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps<D>, CState<D>> {
+export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps<D>, CState> {
     lister: SelectLister<D>;
 
     constructor( props: MultiSelectlisterProps<D> ) {

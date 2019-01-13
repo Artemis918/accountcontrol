@@ -15,7 +15,7 @@ class CState<D> {
     selectedRow: number;
 }
 
-export default class SingleSelectLister<D> extends React.Component<SingleSelectlisterProps<D>,CState<D>> {
+export class SingleSelectLister<D> extends React.Component<SingleSelectlisterProps<D>,CState<D>> {
     
     lister: SelectLister<D>;
     

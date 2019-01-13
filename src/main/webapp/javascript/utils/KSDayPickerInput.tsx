@@ -11,7 +11,7 @@ export interface KSDayPickerProps {
 }
 
 
-export default class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
+export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 
     constructor( props : KSDayPickerProps ) {
         super( props );

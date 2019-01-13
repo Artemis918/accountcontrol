@@ -1,7 +1,7 @@
 import React from 'react'
 import PlanEditor from 'planeditor.jsx'
-import SingleSelectLister from 'utils/singleselectlister'
-import MonthSelect from 'utils/monthselect'
+import {SingleSelectLister} from 'utils/singleselectlister'
+import {MonthSelect} from 'utils/monthselect'
 
 export default class Planen extends React.Component {
 
