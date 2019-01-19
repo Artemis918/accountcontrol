@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import InitialPage from 'initial.jsx'
-import Header from 'header.jsx'
-import TaskSelector from 'taskselector.jsx'
+import { Header } from 'header'
+import { TaskSelector } from './utils/taskselector'
 import Buchungsbelege from 'buchungsbelege.jsx'
 import Templates from 'templates.jsx'
 import Planen from 'planen.jsx'
