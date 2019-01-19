@@ -95,9 +95,6 @@ public class ZuordnungControllerTest extends TestContext {
 		
 		List<Zuordnung> assignList = zuordnungRepository.findByShortdescription("helpme");
 		assertEquals(2, assignList.size());
-		
-		mvc.perform(get("/assign/getKonto/" + year + "/" + month + "/" + konto1.getId())).andExpect(status().isOk())
-		.andExpect(jsonPath("$.[*]", hasSize(1)));
 	}
 	
 	private BuchungsBeleg createBeleg(String description) {
