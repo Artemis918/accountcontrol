@@ -1,7 +1,8 @@
 import React from 'react'
-import PatternEditor from 'patterneditor.jsx'
-import {KSDayPickerInput} from 'utils/KSDayPickerInput'
-import DropdownService from 'utils/dropdownservice.jsx'
+import { PatternEditor } from 'planing/patterneditor'
+import { KSDayPickerInput } from 'utils/KSDayPickerInput'
+import { DropdownService } from 'utils/dropdownservice'
+import { KontenSelector } from 'konten/kontenselector'
 
 export default class TemplateEditor extends React.Component {
 
@@ -131,6 +132,12 @@ export default class TemplateEditor extends React.Component {
         this.setState( { message: '' } );
     }
 
+    setKonto( konto, group ) {
+        this.state.plan.idkontogroup = group;
+        this.state.plan.idkonto = konto;
+        this.setState( { message: '' } );
+    }
+
     renderButton() {
         if ( this.props.beleg == undefined ) {
             return (
@@ -219,32 +226,16 @@ export default class TemplateEditor extends React.Component {
                             </td>
                         </tr>
                         <tr><td>Konto</td>
-                            <td>
-                                <DropdownService key="kontogroupselect" value={this.state.template.kontogroup}
-                                    onChange={( e ) => { this.setValue( 'kontogroup', e ); this.kontoselect.setparam( e ); }}
-                                    url='collections/kontogroups'
-                                    textfield='text'
-                                    valuefield='value' />
-                            </td>
-                        </tr>
-                        <tr><td></td>
-                            <td>
-                                <DropdownService value={this.state.template.konto}
-                                    onChange={( e ) => this.setValue( 'konto', e )}
-                                    url='collections/konto'
-                                    param={this.state.template.kontogroup}
-                                    textfield='text'
-                                    valuefield='value'
-                                    ref={c => this.kontoselect = c} />
-                            </td>
+                            <td><KontenSelector
+                                onChange={( k, g ) => this.setKonto( k, g )}
+                                konto={this.state.template.konto}
+                                group={this.state.template.kontogroup} /></td>
                         </tr>
                         <tr><td>MatchArt</td>
                             <td>
                                 <DropdownService value={this.state.template.matchStyle}
                                     onChange={( e ) => this.setValue( 'art', e )}
-                                    url='collections/matchstyle'
-                                    textfield='text'
-                                    valuefield='value' />
+                                    url='collections/matchstyle' />
                             </td>
                         </tr>
                         <tr><td>Wert</td>

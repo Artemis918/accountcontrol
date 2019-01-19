@@ -1,31 +1,50 @@
-import React from 'react'
+import * as React from 'react'
 
+type SendPatternCallback= (pattern: Pattern)=>void
 
-export default class PatternEditor extends React.Component {
+export interface Pattern {
+    sender: string;
+    receiver:string;
+    referenceID: string;
+    mandat: string;
+    senderID: string;
+    details: string;
+    [key:string] : string;
+} 
 
-    constructor( props ) {
+interface PatternEditorProps {
+    pattern: Pattern;
+    sendPattern: SendPatternCallback;
+}
+
+interface IState {
+    pattern: Pattern;
+}
+
+export class PatternEditor extends React.Component<PatternEditorProps,IState> {
+
+    pattern: Pattern;
+    
+    constructor( props: PatternEditorProps ) {
         super( props );
         this.state = {pattern: props.pattern }
-    }
-
-    componentWillMount() {
-
+        this.pattern = props.pattern;
     }
     
-    setValue( index, event ) {
-        this.state.pattern[index] = event.target.value;
+    setValue( index :string, event :React.ChangeEvent<HTMLInputElement> ) :void {
+        this.pattern[index] = event.target.value;
         this.setState( { pattern: this.state.pattern } );
     }
 
-    sendPattern() {
+    sendPattern(): void {
         this.props.sendPattern( this.state.pattern );
     }
 
-    render() {
+    render() : JSX.Element {
         return (
             <div style={{
                 position: 'fixed',
-                zIndex: '1',
+                zIndex: 1,
                 left: '0', top: '0', width: '100%', height: '100%'
             }}>
                 <div style={{
@@ -50,5 +69,4 @@ export default class PatternEditor extends React.Component {
             </div>
         );
     }
-
 }

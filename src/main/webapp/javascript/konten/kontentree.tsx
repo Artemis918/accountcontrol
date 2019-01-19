@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {TreeView} from './utils/treeview'
+import {TreeView} from '../utils/treeview'
 
 
 export type HandleSelectKontoGroupCallback = ( kontogroupid: number ) => void;
 export type HandleSelectKontoCallback = ( kontoid: number ) => void;
 
-export interface KontenSelectorProps {
+export interface KontenTreeProps {
     handleKGSelect: HandleSelectKontoGroupCallback;
     handleKontoSelect: HandleSelectKontoCallback;
 }
@@ -28,11 +28,11 @@ class CState {
 }
 
 
-export class KontenSelector extends React.Component<KontenSelectorProps, CState> {
+export class KontenTree extends React.Component<KontenTreeProps, CState> {
 
     data: Group[];
     
-    constructor (props: KontenSelectorProps) {
+    constructor (props: KontenTreeProps) {
         super (props);
         this.data = undefined;
         this.state = { data: this.data };

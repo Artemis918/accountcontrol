@@ -1,10 +1,10 @@
 
 .selectedrow {
-	background: #d8d8d8;
+	background: #f0f0f0;
 	color : #000000;
 }
 
 .unselectedrow {
-	background: #f0f0f0;
+	background: #d8d8d8;
 	color : #000000;
 }

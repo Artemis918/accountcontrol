@@ -1,47 +1,71 @@
-import React from 'react'
+import * as React from 'react'
 
-export default class DropdownService extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {data: []};
-    this.handleChange = this.handleChange.bind(this);
-    this.setparam = this.setparam.bind(this);
-    this.fetchData = this.fetchData.bind(this);
+
+type HandleChange = ( id: number ) => void;
+
+export interface DropdownServiceProps {
+    onChange: HandleChange;
+    url: string;
+    param?: string;
+    value: number;
+}
+
+class CState {
+    data: EnumDTO[];
+}
+
+interface EnumDTO {
+    text: string;
+    value: number;
+}
+
+export class DropdownService extends React.Component<DropdownServiceProps, CState> {
+    
+    constructor( props: DropdownServiceProps ) {
+        super( props );
+        this.state = { data: [{ text: '', value: 1 }] };
+        this.handleChange = this.handleChange.bind( this );
+        this.setparam = this.setparam.bind( this );
+        this.fetchData = this.fetchData.bind( this );
+        this.setData = this.setData.bind( this );
     }
-  
-  handleChange(event) {
-      this.props.onChange(event.target.value);
-  }
-  
-  componentWillMount() {
-      this.fetchData(this.props.param);
-  }
-  
-  fetchData(value) {
-      var url = this.props.url;
-      if (value != undefined) {
-          url = url + '/' + value;
-      }
-      fetch(url)
-          .then(response => response.json())
-          .then(data => { this.setState({data: data})} )
-  }
-  
-  setparam(value) {
-      this.fetchData(value);
-  }
-  
-  render() {
-      var enumdata = this.state.data;
-      return (
-        <div>
-          <form>
-            <select value={this.props.value} onChange={this.handleChange}>
-              {enumdata.map(( t )=> <option key={t[this.props.valuefield]} value={t[this.props.valuefield]}>{t[this.props.textfield]}</option>)}
+
+    handleChange( value: string ) {
+        this.props.onChange( parseInt( value ) );
+    }
+
+    componentDidMount() {
+        this.fetchData( this.props.param );
+    }
+
+    setData( data: EnumDTO[] ): void {
+        this.setState( { data: data } );
+        if ( data.length > 0 )
+            this.props.onChange( data[0].value );
+    }
+
+    fetchData( param: string ) :void {
+        var url = this.props.url;
+        if ( param != undefined ) {
+            url = url + '/' + param;
+        }
+        if ( param == undefined || param != '' ) {
+            fetch( url )
+                .then( response => response.json() )
+                .then( d => { this.setData( d as EnumDTO[] ) } )
+        }
+    }
+
+    setparam( param: string ) {
+        this.fetchData( param );
+    }
+
+    render() : JSX.Element{
+        return (
+            <select value={this.props.value} onChange={( e ) => this.handleChange( e.target.value )}>
+                {this.state.data.map( ( t ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>
-          </form>
-        </div>
-      );
+        );
     }
 
 }

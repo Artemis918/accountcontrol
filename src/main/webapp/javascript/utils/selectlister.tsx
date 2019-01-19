@@ -42,13 +42,15 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         else
             this.setState( { ext: extension, reload: true } );
     }
-    
-    getData(rows: number[]) : D[] {
-         return rows.map((i: number) :D =>{return this.state.data[i];});
+
+    getData( rows: number[] ): D[] {
+        return rows.map( ( i: number ): D => { return this.state.data[i]; } );
     }
-    
-    getDataRange(start: number, end: number) : D[] {
-         return Array.from(Array(end-start+1).keys()).map((i:number) : D => this.state.data[i]);
+
+    getDataRange( start: number, end: number ): D[] {
+        var lo: number = start > end ? end : start;
+        var hi: number = start > end ? start : end;
+        return Array.from( Array( hi - lo + 1 ).keys() ).map( ( i: number ): D => this.state.data[i] );
     }
 
     reload(): void {
@@ -66,18 +68,18 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
                     e.ctrlKey,
                     this.state.data[rowInfo.index],
                     rowInfo.index )
-                    , className: this.props.isSelected( rowInfo.index ) ? css.selectedrow : css.unselectedrow
+                , className: this.props.isSelected( rowInfo.index ) ? css.selectedrow : css.unselectedrow
             } );
         } else {
             return ( {} );
         }
     }
 
-    render():JSX.Element {
-        if (this.state.reload) {
+    render(): JSX.Element {
+        if ( this.state.reload ) {
             this.reload();
         }
-        
+
         return (
             <div>
                 <ReactTable.default

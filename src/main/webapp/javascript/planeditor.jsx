@@ -1,7 +1,8 @@
 import React from 'react'
-import DropdownService from 'utils/dropdownservice.jsx'
-import PatternEditor from 'patterneditor.jsx'
-import {KSDayPickerInput} from 'utils/KSDayPickerInput'
+import { DropdownService } from 'utils/dropdownservice'
+import { PatternEditor} from 'planing/patterneditor'
+import { KSDayPickerInput } from 'utils/KSDayPickerInput'
+import { KontenSelector } from './konten/kontenselector'
 
 import 'react-day-picker/lib/style.css';
 
@@ -11,7 +12,7 @@ export default class PlanEditor extends React.Component {
 
     constructor( props ) {
         super( props );
-        this.state = { plan: {}, message: ''};
+        this.state = { plan: {}, message: '' };
         this.clear = this.clear.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
@@ -23,9 +24,9 @@ export default class PlanEditor extends React.Component {
     componentWillMount() {
         this.state.plan = this.createNewPlan();
     }
-    
+
     resetEditor() {
-        this.setState( { plan: this.createNewPlan()  } );
+        this.setState( { plan: this.createNewPlan() } );
     }
 
     setPlan( id ) {
@@ -39,7 +40,7 @@ export default class PlanEditor extends React.Component {
                 .then( p => { self.setState( { plan: p } ) } );
         }
     }
-    
+
     createNewPlan() {
         var date = new Date();
         return {
@@ -111,6 +112,12 @@ export default class PlanEditor extends React.Component {
         this.setState( { message: '' } );
     }
 
+    setKonto( konto, group ) {
+        this.state.plan.idkontogroup = group;
+        this.state.plan.idkonto = konto;
+        this.setState( { message: '' } );
+    }
+
     renderButton() {
         return (
             <div>
@@ -162,26 +169,12 @@ export default class PlanEditor extends React.Component {
                             </td>
                         </tr>
                         <tr>
-
                             <td>Konto</td>
                             <td>
-                                <DropdownService key="kontogroupselect" value={this.state.plan.idkontogroup}
-                                    onChange={( e ) => { this.setValue( 'idkontogroup', e ); this.kontoselect.setparam( e ); }}
-                                    url='collections/kontogroups'
-                                    textfield='text'
-                                    valuefield='value' />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <DropdownService value={this.state.plan.idkonto}
-                                    onChange={( e ) => this.setValue( 'idkonto', e )}
-                                    url='collections/konto'
-                                    param={this.state.plan.idkontogroup}
-                                    textfield='text'
-                                    valuefield='value'
-                                    ref={c => this.kontoselect = c} />
+                                <KontenSelector
+                                    onChange={( k, g ) => this.setKonto( k, g )}
+                                    konto={this.state.plan.konto}
+                                    group={this.state.plan.kontogroup} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

@@ -66,7 +66,9 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
         else if ( ctrl ) {
             var rows: number[];
             if ( this.state.range != undefined ) {
-                rows = Array.from( Array( this.state.range.getHi() - this.state.range.getLo() ).keys() );
+                var lo: number = this.state.range.getLo();
+                var hi: number = this.state.range.getHi();
+                rows = Array.from( Array( hi - lo + 1 ), ( val, i ) => { return i + lo } );
             }
             else if ( this.state.selectedRows != undefined ) {
                 rows = Array.from( this.state.selectedRows );
@@ -87,6 +89,10 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
             this.props.handleselect( selectedData );
     }
 
+    hasSelectedData() : boolean {
+        return this.state.range != undefined || this.state.selectedRows != undefined;
+    }
+    
     getSelectedData(): D[] {
         if ( this.state.range != undefined )
             return this.lister.getDataRange( this.state.range.getLo(), this.state.range.getHi() );
@@ -96,21 +102,21 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
             return [];
     }
 
-    relaod(): void {
+    reload(): void {
         this.lister.reload();
     }
 
     isSelected( index: number ): boolean {
         if ( this.state.range != undefined ) {
-            return index >= this.state.range.getLo() && index >= this.state.range.getHi();
+            return index >= this.state.range.getLo() && index <= this.state.range.getHi();
         }
         else if ( this.state.selectedRows != undefined ) {
-            return ( index in this.state.selectedRows );
+            return ( this.state.selectedRows.indexOf( index ) > -1 );
         }
         return false;
     }
 
-    render() :JSX.Element {
+    render(): JSX.Element {
         return (
             <SelectLister<D>
                 columns={this.props.columns}
