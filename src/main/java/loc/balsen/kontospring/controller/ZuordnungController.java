@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,6 +23,7 @@ import loc.balsen.kontospring.dto.ZuordnungDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import lombok.Data;
 
 @Controller
 @RequestMapping("/assign")
@@ -72,7 +74,7 @@ public class ZuordnungController {
 		}).collect(Collectors.toList());
 	}
 
-	@PostMapping("/getKonto/commit/{id}")
+	@GetMapping("/getKonto/commit/{id}")
 	@ResponseBody
 	KontoSpringResult invertCommit(@PathVariable int id) {
 		Optional<Zuordnung> zuordnung = zuordnungRepository.findById(id);
@@ -84,10 +86,27 @@ public class ZuordnungController {
 		return new KontoSpringResult(false, "ok");
 	}
 
-	@PostMapping("/getKonto/remove/{id}")
+	@GetMapping("/getKonto/remove/{id}")
 	@ResponseBody
 	KontoSpringResult remove(@PathVariable int id) {
 		zuordnungRepository.deleteById(id);
 		return new KontoSpringResult(false, "ok");
+	}
+	
+	@Data
+	static class ToKontoRequestDTO {
+		public int konto;
+		public String text;
+		public List<Integer> ids;
+	};
+	
+	@PostMapping("/tokonto")
+	@ResponseBody
+	KontoSpringResult assignToKonto(@RequestBody ToKontoRequestDTO request) {
+		Konto konto = kontoRepository.getOne(request.konto);
+		
+		request.ids.forEach(
+				(Integer z)->zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));
+		return new KontoSpringResult(false,"zugeordnet");
 	}
 }

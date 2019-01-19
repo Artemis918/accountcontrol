@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -89,6 +90,7 @@ public class ZuordnungService {
 		zuordnung.setKonto(plan.getKonto());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(wert);
+		zuordnung.setCommited(false);
 		
 		if ( plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
 			zuordnung.setPlan(plan);
@@ -108,6 +110,21 @@ public class ZuordnungService {
 			}
 		}
 		return result;
+	}
+	
+	public void assignToKonto(Konto konto, String text, BuchungsBeleg beleg) {
+		if (text.isEmpty())
+			text = beleg.getDetails();
+		
+		Zuordnung zuordnung = new Zuordnung();
+
+		zuordnung.setBuchungsbeleg(beleg);
+		zuordnung.setDescription(text);
+		zuordnung.setKonto(konto);
+		zuordnung.setShortdescription(text);
+		zuordnung.setWert(beleg.getWert());
+		zuordnung.setCommited(false);
+		zuordnungRepository.save(zuordnung);
 	}
 
 }
