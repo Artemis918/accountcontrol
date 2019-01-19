@@ -16,11 +16,3 @@
 .maintable {
 	width: 100%;
 }
-
-.maincell {
-	align: center;
-	horizontal-align: center;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	background-color: green; 
-}
