@@ -37,7 +37,7 @@ interface TemplateEditorProps {
     }   
 
 
-export default class TemplateEditor extends React.Component<TemplateEditorProps,IState> {
+export class TemplateEditor extends React.Component<TemplateEditorProps,IState> {
 
     template : Template;
     

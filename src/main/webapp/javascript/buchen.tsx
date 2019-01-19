@@ -1,34 +1,54 @@
-import React from 'react'
-import { MultiSelectLister } from 'utils/multiselectlister';
-import { KontoAssign } from 'konten/kontoassign'
-import { TemplateEditor } from 'planing/templateeditor';
+import * as React from 'react'
+import { MultiSelectLister } from './utils/multiselectlister';
+import { KontoAssign } from './konten/kontoassign'
+import { TemplateEditor } from './planing/templateeditor';
 import "react-table/react-table.css";
 
-export default class Buchen extends React.Component {
+type SendMessage = (m:string,error: boolean)=>void 
 
-    constructor( props ) {
+class BuchungsBeleg {
+    id:number;
+}
+
+interface BuchenProps {
+    sendmessage: SendMessage;
+}
+
+interface IState {
+    plan: number;
+    kontoassign: boolean;
+    deftext: string;
+    defkonto : number;
+    defgroup: number
+}
+
+export class Buchen extends React.Component<BuchenProps,IState> {
+
+    lister: MultiSelectLister<BuchungsBeleg>;
+    
+    constructor( props: BuchenProps ) {
         super( props )
         this.lister = undefined;
-        this.state = { plan: undefined, kontoassign: false }
+        this.state = { plan: undefined, kontoassign: false, deftext: "", defkonto:1, defgroup:1 }
         this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
     }
 
-    assignAuto() {
+    assignAuto() :void {
         fetch( 'http://localhost:8080/assign/all' ).then( response => response.json() );
         this.lister.reload();
     }
 
-    assignKonto() {
+    assignKonto() :void {
         if ( this.lister.hasSelectedData() )
             this.setState( { kontoassign: true } );
     }
 
-    assignManuell() {
+    assignManuell() :void {
     }
 
-    assignSelected( k, t ) {
+    assignSelected( k :number, t:string ):void {
         var self = this;
         if ( k != undefined ) {
             var request = { text: t, konto: k, ids: this.lister.getSelectedData().map( d => d.id ) };
@@ -46,21 +66,21 @@ export default class Buchen extends React.Component {
         }
     }
 
-    createPlan() {
-        var data = lister.getSelectedData();
+    createPlan() :void {
+        var data : BuchungsBeleg[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
         else {
-            this.setState( { plan: data.id } )
+            this.setState( { plan: data[0].id } )
         }
     }
 
-    onChange() {
+    onChange() :void {
         this.setState( { plan: undefined } );
     }
 
-    render() {
+    render() :JSX.Element {
         var columns = [{
             Header: 'Datum',
             accessor: 'date',
@@ -77,7 +97,7 @@ export default class Buchen extends React.Component {
             Header: 'Betrag',
             accessor: 'betrag',
             width: '150',
-            Cell: row => (
+            Cell: (row: any) => (
 
                 <div style={{
                     color: row.value >= 0 ? 'green' : 'red',
@@ -96,14 +116,19 @@ export default class Buchen extends React.Component {
             <div>
                 <button className="button" onClick={( e ) => this.assignAuto()}> Automatisch </button>
                 <button className="button" onClick={( e ) => this.assignKonto()}> Konto </button>
-                <button className="button" onClick={( e ) => this.assignManuel()}> Manuell </button>
+                <button className="button" onClick={( e ) => this.assignManuell()}> Manuell </button>
                 <button className="button" onClick={( e ) => this.createPlan()}> Planen </button>
                 <div>
-                    <MultiSelectLister columns={columns}
+                    <MultiSelectLister<BuchungsBeleg> columns={columns}
                         url='http://localhost:8080/belege/unassigned'
                         ref={( ref ) => { this.lister = ref }} />
                 </div>
-                {this.state.kontoassign ? <KontoAssign handleAssign={( k, t ) => { this.assignSelected( k, t ) }} /> : null
+                {this.state.kontoassign ? <KontoAssign 
+                                          text={this.state.deftext}
+                                          konto={this.state.defkonto}
+                                          group={this.state.defgroup}
+                                          handleAssign={( k, t ) => { this.assignSelected( k, t ) }} />
+                                        : null
                 }
             </div>
         )

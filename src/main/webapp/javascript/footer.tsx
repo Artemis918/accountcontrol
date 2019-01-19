@@ -6,7 +6,7 @@ class CState {
 };
 
 
-export default class Footer extends React.PureComponent<any, CState> {
+export class Footer extends React.PureComponent<any, CState> {
 
     readonly state = new CState();
     

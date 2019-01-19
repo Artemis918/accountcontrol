@@ -4,7 +4,7 @@ import { SelectLister } from "./selectlister";
 export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
 
 export interface MultiSelectlisterProps<D> {
-    ext: string;
+    ext?: string;
     url: string;
     handleselect?: HandleMultiSelectCallback<D>;
     columns: any[];

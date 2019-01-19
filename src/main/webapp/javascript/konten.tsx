@@ -26,7 +26,7 @@ class CState {
     year: number;
 }
 
-export default class Konten extends React.Component<KontenProps, CState> {
+export class Konten extends React.Component<KontenProps, CState> {
 
     columns: any[];
     lister: React.RefObject<MultiSelectLister<assignment>>;

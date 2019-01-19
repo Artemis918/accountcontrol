@@ -1,5 +1,5 @@
 import React from 'react'
-import TemplateEditor from './planing/templateeditor'
+import {TemplateEditor} from './planing/templateeditor'
 import {SingleSelectLister} from 'utils/singleselectlister'
 
 
