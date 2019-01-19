@@ -1,5 +1,5 @@
 import React from 'react'
-import PlanEditor from 'planeditor.jsx'
+import PlanEditor from 'planing/planeditor'
 import {SingleSelectLister} from 'utils/singleselectlister'
 import {MonthSelect} from 'utils/monthselect'
 

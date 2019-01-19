@@ -1,7 +1,7 @@
 import React from 'react'
 import { MultiSelectLister } from 'utils/multiselectlister';
 import { KontoAssign } from 'konten/kontoassign'
-import TemplateEditor from 'templateeditor';
+import { TemplateEditor } from 'planing/templateeditor';
 import "react-table/react-table.css";
 
 export default class Buchen extends React.Component {
@@ -21,17 +21,17 @@ export default class Buchen extends React.Component {
     }
 
     assignKonto() {
-        if (this.lister.hasSelectedData())
+        if ( this.lister.hasSelectedData() )
             this.setState( { kontoassign: true } );
     }
-    
+
     assignManuell() {
     }
 
-    assignSelected( k, t )  {
+    assignSelected( k, t ) {
         var self = this;
         if ( k != undefined ) {
-            var request = { text: t , konto: k , ids: this.lister.getSelectedData().map(d=>d.id) };
+            var request = { text: t, konto: k, ids: this.lister.getSelectedData().map( d => d.id ) };
             var self = this;
             var jsonbody = JSON.stringify( request );
             fetch( '/assign/tokonto', {
@@ -41,8 +41,8 @@ export default class Buchen extends React.Component {
                     "Content-Type": "application/json"
                 }
             } ).then( function( response ) {
-                self.setState( {kontoassign: false} );
-            } );  
+                self.setState( { kontoassign: false } );
+            } );
         }
     }
 

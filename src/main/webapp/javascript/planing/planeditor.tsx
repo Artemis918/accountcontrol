@@ -1,35 +1,59 @@
-import React from 'react'
-import { DropdownService } from 'utils/dropdownservice'
-import { PatternEditor} from 'planing/patterneditor'
-import { KSDayPickerInput } from 'utils/KSDayPickerInput'
-import { KontenSelector } from './konten/kontenselector'
+import * as React from 'react'
+import { DropdownService } from '../utils/dropdownservice'
+import { PatternEditor, Pattern} from './patterneditor'
+import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { KontenSelector } from '../konten/kontenselector'
 
-import 'react-day-picker/lib/style.css';
+import 'react-day-picker/lib/style.css'
 
+type OnChangeCallback = ()=>void;
 
+export interface Plan {
+    id: number,
+    startdate: Date,
+    plandate: Date,
+    enddate: Date,
+    position: number,
+    description: string,
+    shortdescription: string,
+    kontogroup: number,
+    konto: number,
+    wert: number,
+    patterndto: Pattern,
+    matchstyle: number,
+}
 
-export default class PlanEditor extends React.Component {
+interface PlanEditorProps {
+    onChange: OnChangeCallback;
+}
 
-    constructor( props ) {
+interface IState {
+    plan: Plan;
+    message: string;
+    patternEdit: boolean;
+}
+
+export default class PlanEditor extends React.Component<PlanEditorProps,IState> {
+    
+    plan: Plan;
+
+    constructor( props: PlanEditorProps ) {
         super( props );
-        this.state = { plan: {}, message: '' };
+        this.plan = this.createNewPlan();
+        this.state = { plan: this.plan , message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
         this.setPlan = this.setPlan.bind( this );
-        this.kontoselect = undefined;
     }
 
-    componentWillMount() {
-        this.state.plan = this.createNewPlan();
+    resetEditor() : void {
+        this.plan = this.createNewPlan();
+        this.setState( { plan: this.plan } );
     }
 
-    resetEditor() {
-        this.setState( { plan: this.createNewPlan() } );
-    }
-
-    setPlan( id ) {
+    setPlan( id: number ) :void {
         if ( id == undefined ) {
             this.resetEditor();
         }
@@ -37,11 +61,11 @@ export default class PlanEditor extends React.Component {
             var self = this;
             fetch( 'http://localhost:8080/plans/id/' + id )
                 .then( response => response.json() )
-                .then( p => { self.setState( { plan: p } ) } );
+                .then( p => { self.plan = p; self.setState( { plan: self.plan } ) } );
         }
     }
 
-    createNewPlan() {
+    createNewPlan() : Plan {
         var date = new Date();
         return {
             id: undefined,
@@ -51,8 +75,8 @@ export default class PlanEditor extends React.Component {
             position: 0,
             description: 'Neuer Plan',
             shortdescription: 'neu',
-            idkontogroup: 1,
-            idkonto: 1,
+            kontogroup: 1,
+            konto: 1,
             wert: 0,
             patterndto: {
                 sender: '',
@@ -80,19 +104,19 @@ export default class PlanEditor extends React.Component {
         } );
     }
 
-    setAnswer( data ) {
+    setAnswer( data: any ) :void {
         this.setState( { message: data.message } );
         if ( !data.error ) {
             this.clear();
         }
     }
 
-    clear() {
+    clear() : void {
         this.props.onChange();
         this.resetEditor();
     }
 
-    delete() {
+    delete() :void {
         if ( this.state.plan.id !== undefined ) {
             var self = this;
             fetch( '/plans/delete/' + this.state.plan.id, { method: 'get' } )
@@ -100,25 +124,24 @@ export default class PlanEditor extends React.Component {
         }
     }
 
-    copy() {
-        this.state.plan.id = undefined;
-        this.state.plan.shortdescription = "copy of " + this.state.plan.shortdescription;
-        this.setState( { reset: this.state.reset } );
+    copy() :void {
+        this.plan.id = undefined;
+        this.plan.shortdescription = "copy of " + this.state.plan.shortdescription;
+        this.setState( { plan: this.plan } );
         this.props.onChange();
     }
 
-    setValue( index, value ) {
-        this.state.plan[index] = value;
-        this.setState( { message: '' } );
+    setPlanState() : void {
+        this.setState( { plan: this.plan, message: '' } );
     }
 
-    setKonto( konto, group ) {
-        this.state.plan.idkontogroup = group;
-        this.state.plan.idkonto = konto;
-        this.setState( { message: '' } );
+    setKonto( konto: number, group: number ) :void {
+        this.plan.kontogroup = group;
+        this.plan.konto = konto;
+        this.setState( { plan: this.plan, message: '' } );
     }
 
-    renderButton() {
+    renderButton(): JSX.Element {
         return (
             <div>
                 <button onClick={this.save.bind( this )}>Save</button>
@@ -130,7 +153,7 @@ export default class PlanEditor extends React.Component {
     }
 
 
-    render() {
+    render() :JSX.Element{
         const FORMAT = "dd.MM.YYYY";
 
         return (
@@ -140,32 +163,33 @@ export default class PlanEditor extends React.Component {
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr style={{ background: 'darkgray' }}>
                             <td>Name</td>
-                            <td><input value={this.state.plan.shortdescription} type='text' onChange={( e ) => this.setValue( 'shortdescription', e.target.value )} />
+                            <td><input value={this.state.plan.shortdescription} type='text'
+                                       onChange={( e ) =>  {this.plan.shortdescription=e.target.value; this.setPlanState()} } />
                             </td>
                         </tr>
                         <tr>
                             <td>Stardatum</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'startdate', d )}
+                                onChange={( d ) => {this.plan.startdate = d; this.setPlanState()}}
                                 startdate={this.state.plan.startdate} /></td>
 
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Plandatum</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'plandate', d )}
+                                onChange={( d ) => {this.plan.plandate = d; this.setPlanState()}}
                                 startdate={this.state.plan.plandate} /></td>
                         </tr>
                         <tr> <td>Enddatum</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'enddate', d )}
+                                onChange={( d ) => {this.plan.enddate = d; this.setPlanState()}}
                                 startdate={this.state.plan.enddate} /></td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Position</td>
                             <td><input value={this.state.plan.position}
                                 type='number'
-                                onChange={( e ) => this.setValue( 'position', e.target.value )} />
+                                onChange={( e ) =>  {this.plan.position=e.target.valueAsNumber; this.setPlanState()}} />
                             </td>
                         </tr>
                         <tr>
@@ -180,11 +204,10 @@ export default class PlanEditor extends React.Component {
                         <tr style={{ background: 'darkgray' }}>
                             <td>MatchArt</td>
                             <td>
-                                <DropdownService value={this.state.plan.matchStyle}
-                                    onChange={( e ) => this.setValue( 'art', e )}
+                                <DropdownService value={this.state.plan.matchstyle}
+                                    onChange={( e ) =>  {this.plan.matchstyle=e; this.setPlanState()}}
                                     url='collections/matchstyle'
-                                    textfield='text'
-                                    valuefield='value' />
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -192,14 +215,14 @@ export default class PlanEditor extends React.Component {
                             <td><input value={this.state.plan.wert / 100}
                                 type='number'
                                 step='0.01'
-                                onChange={( e ) => this.setValue( 'wert', e.target.value * 100 )} />
+                                onChange={( e ) =>  {this.plan.wert=e.target.valueAsNumber*100; this.setPlanState()}} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Beschreibung</td>
-                            <td><textarea cols='20' rows='3'
+                            <td><textarea cols={20} rows={3}
                                 value={this.state.plan.description}
-                                onChange={( e ) => this.setValue( 'description', e.target.value )} />
+                                onChange={( e ) => {this.plan.description=e.target.value; this.setPlanState()}} />
                             </td>
                         </tr>
                         <tr>
@@ -212,9 +235,9 @@ export default class PlanEditor extends React.Component {
                 <p />
                 {this.renderButton()}
                 {this.state.patternEdit ?
-                    <PatternEditor cols='20' rows='3'
+                    <PatternEditor 
                         pattern={this.state.plan.patterndto}
-                        sendPattern={( e ) => { this.state.plan.patterndto = e; this.setState( { patternEdit: false } ) }}
+                        sendPattern={( e ) => { this.plan.patterndto = e; this.setState( { patternEdit: false, plan: this.plan, message: "" } ) }}
                     />
                     : null
                 }

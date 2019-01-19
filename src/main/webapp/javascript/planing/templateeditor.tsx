@@ -1,46 +1,79 @@
-import React from 'react'
-import { PatternEditor } from 'planing/patterneditor'
-import { KSDayPickerInput } from 'utils/KSDayPickerInput'
-import { DropdownService } from 'utils/dropdownservice'
-import { KontenSelector } from 'konten/kontenselector'
+import * as React from 'react'
+import { PatternEditor, Pattern } from './patterneditor'
+import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { DropdownService } from '../utils/dropdownservice'
+import { KontenSelector } from '../konten/kontenselector'
 
-export default class TemplateEditor extends React.Component {
+type OnChangeCallback = ()=>void;
 
-    constructor( props ) {
+export class Template {
+    id?: number;
+    gueltigVon: Date;
+    gueltigBis: Date;
+    start: Date;
+    vardays: number;
+    anzahl: number;
+    rythmus : number;
+    description: string;
+    kontogroup: number;
+    konto: number ;
+    position: number;
+    wert: number;
+    pattern: Pattern;
+    shortdescription: string;
+    matchstyle: number;
+    previous: number;  
+}
+
+interface TemplateEditorProps {
+     onChange: OnChangeCallback;
+     beleg?: number;
+    }
+
+    interface IState {
+        template: Template;
+        message: string;
+        patternEdit: boolean;
+    }   
+
+
+export default class TemplateEditor extends React.Component<TemplateEditorProps,IState> {
+
+    template : Template;
+    
+    constructor( props : TemplateEditorProps ) {
         super( props );
-        this.state = { template: {}, message: '', reset: true };
+        this.template = this.createNewTemplate();
+        this.state = { template: this.template, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
-        this.kontoselect = undefined;
     }
 
     componentWillMount() {
-        if ( this.props.beleg == undefined ) {
-            this.state.template = this.createNewTemplate();
-        }
-        else {
+        if ( this.props.beleg != undefined ) {
             var self = this;
             fetch( 'templates/beleg/' + this.props.beleg )
                 .then( response => response.json() )
-                .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
+                .then( t => { self.template = t; self.setState( { template: self.template } ) } );
         }
     }
 
-    setTemplate( id ) {
+    setTemplate( id: number ) :void {
         if ( id == undefined ) {
-            this.setState( { reset: true } );
+            this.template = this.createNewTemplate();
+            this.setState( { template: this.template } );
         }
         else {
             var self = this;
             fetch( 'templates/id/' + id )
                 .then( response => response.json() )
-                .then( t => { self.copyTemplate( t ); self.setState( { reset: this.state.reset } ) } );
+                .then( t => { self.template = t; self.setState( { template: self.template } ) } );
         }
     }
 
-    createNewTemplate() {
+    createNewTemplate() : Template {
         var date = new Date();
         return {
             id: undefined,
@@ -64,31 +97,12 @@ export default class TemplateEditor extends React.Component {
                 mandat: '',
             },
             shortdescription: 'neu',
-            matchStyle: 0,
+            matchstyle: 0,
             previous: undefined
         }
     }
 
-    copyTemplate( t ) {
-        this.state.template.id = t.id;
-        this.state.template.gueltigVon = t.gueltigVon;
-        this.state.template.gueltigBis = t.gueltigBis;
-        this.state.template.start = t.start;
-        this.state.template.vardays = t.vardays;
-        this.state.template.anzahl = t.anzahl;
-        this.state.template.rythmus = t.rythmus;
-        this.state.template.description = t.description;
-        this.state.template.kontogroup = t.kontogroup;
-        this.state.template.konto = t.konto;
-        this.state.template.position = t.position;
-        this.state.template.wert = t.wert;
-        this.state.template.pattern = t.pattern;
-        this.state.template.shortdescription = t.shortdescription;
-        this.state.template.matchStyle = t.matchstyle;
-        this.state.template.previous = t.previous;
-    }
-
-    save() {
+    save() :void {
         var self = this;
         var jsonbody = JSON.stringify( self.state.template );
         fetch( '/templates/save', {
@@ -102,43 +116,43 @@ export default class TemplateEditor extends React.Component {
         } );
     }
 
-    setAnswer( data ) {
+    setAnswer( data: any ):void {
         this.setState( { message: data.message } );
         if ( !data.error ) {
             this.clear();
         }
     }
 
-    clear() {
+    clear() :void {
+        this.template = this.createNewTemplate();
         this.props.onChange();
-        this.setState( { reset: true } );
+        this.setState( { template: this.template } );
     }
 
-    delete() {
+    delete() :void {
         var self = this;
         fetch( '/templates/delete/' + this.state.template.id, { method: 'get' } )
             .then( function( response ) { self.setAnswer( response.json() ); } );
     }
 
-    copy() {
-        this.state.template.id = undefined;
-        this.state.template.shortdescription = "copy of " + this.state.template.shortdescription;
-        this.setState( { reset: this.state.reset } );
+    copy() :void {
+        this.template.id = undefined;
+        this.template.shortdescription = "copy of " + this.template.shortdescription;
+        this.setTemplateState();
         this.props.onChange();
     }
 
-    setValue( index, value ) {
-        this.state.template[index] = value;
-        this.setState( { message: '' } );
+    setTemplateState() :void {
+        this.setState( { patternEdit: false, template: this.template, message: '' } );
     }
 
-    setKonto( konto, group ) {
-        this.state.plan.idkontogroup = group;
-        this.state.plan.idkonto = konto;
-        this.setState( { message: '' } );
+    setKonto( konto: number, group: number ) {
+        this.template.kontogroup = group;
+        this.template.konto = konto;
+        this.setTemplateState();
     }
 
-    renderButton() {
+    renderButton() :JSX.Element {
         if ( this.props.beleg == undefined ) {
             return (
                 <div>
@@ -159,70 +173,61 @@ export default class TemplateEditor extends React.Component {
         }
     }
 
-    render() {
-        if ( this.state.reset ) {
-            this.state.template = this.createNewTemplate();
-            this.state.reset = false;
-        }
+    render() : JSX.Element{
+        const FORMAT = "dd.MM.YYYY";
+        
         return (
             <div>
                 <label>{this.state.message}</label>
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr><td>Name</td>
-                            <td><input value={this.state.template.shortdescription} type='text' onChange={( e ) => this.setValue( 'shortdescription', e.target.value )} />
+                            <td><input value={this.state.template.shortdescription} type='text' 
+                                onChange={( e ) => {this.template.shortdescription=e.target.value; this.setTemplateState()}} />
                             </td>
                         </tr>
                         <tr><td>gültig ab</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'gueltigVon', d )}
+                                onChange={( d ) => {this.template.gueltigVon=d; this.setTemplateState() }}
                                 startdate={this.state.template.gueltigVon} />
                             </td>
                         </tr>
                         <tr><td>gültig bis</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'gueltigBis', d )}
+                                onChange={( d ) => {this.template.gueltigBis=d; this.setTemplateState() }}
                                 startdate={this.state.template.gueltigBis} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Rythmus</td>
-                            <td>
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ width: '20%' }}>
+                          <td>
+                                    <span style={{width: '30%'}}>
                                                 <input style={{ width: '40px' }} value={this.state.template.anzahl}
                                                     type='number'
-                                                    onChange={( e ) => this.setValue( 'anzahl', e.target.value )} />
-                                            </td>
-                                            <td style={{ width: '70%' }}>
+                                                    onChange={( e ) => {this.template.anzahl=e.target.valueAsNumber;this.setTemplateState() } } />
+                                            </span>
+                                            <span style={{ width: '70%' }}>
                                                 <DropdownService value={this.state.template.rythmus}
-                                                    onChange={( e ) => this.setValue( 'rythmus', e )}
-                                                    url='collections/rythmus'
-                                                    textfield='text'
-                                                    valuefield='value' />
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    onChange={( e ) => { this.template.rythmus=e;this.setTemplateState() }}
+                                                    url='collections/rythmus' />
+                                            </span>
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Erste Buchung</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => this.setValue( 'start', d )}
+                                onChange={( d ) => {this.template.start=d; this.setTemplateState()}}
                                 startdate={this.state.template.start} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Vardays</td>
                             <td><input value={this.state.template.vardays}
                                 type='number'
-                                onChange={( e ) => this.setValue( 'vardays', e.target.value )} />
+                                onChange={( e ) => {this.template.vardays=e.target.valueAsNumber; this.setTemplateState()}} />
                             </td>
                         </tr>
                         <tr><td>Position</td>
                             <td><input value={this.state.template.position}
                                 type='number'
-                                onChange={( e ) => this.setValue( 'position', e.target.value )} />
+                                onChange={( e ) => {this.template.position=e.target.valueAsNumber; this.setTemplateState()}} />
                             </td>
                         </tr>
                         <tr><td>Konto</td>
@@ -233,21 +238,21 @@ export default class TemplateEditor extends React.Component {
                         </tr>
                         <tr><td>MatchArt</td>
                             <td>
-                                <DropdownService value={this.state.template.matchStyle}
-                                    onChange={( e ) => this.setValue( 'art', e )}
+                                <DropdownService value={this.state.template.matchstyle}
+                                    onChange={( e ) => {this.template.matchstyle=e; this.setTemplateState()}}
                                     url='collections/matchstyle' />
                             </td>
                         </tr>
                         <tr><td>Wert</td>
                             <td><input step="0.01" value={this.state.template.wert / 100}
                                 type='number'
-                                onChange={( e ) => this.setValue( 'wert', e.target.value * 100 )} />
+                                onChange={( e ) => {this.template.wert=e.target.valueAsNumber * 100; this.setTemplateState()}} />
                             </td>
                         </tr>
                         <tr><td>Beschreibung</td>
-                            <td><textarea cols='20' rows='3'
+                            <td><textarea cols={20} rows={3} 
                                 value={this.state.template.description}
-                                onChange={( e ) => this.setValue( 'description', e.target.value )} />
+                                onChange={( e ) => {this.template.description=e.target.value; this.setTemplateState()}} />
                             </td>
                         </tr>
                         <tr><td>Pattern</td>
@@ -257,9 +262,9 @@ export default class TemplateEditor extends React.Component {
                 </table>
                 {this.renderButton()}
                 {this.state.patternEdit ?
-                    <PatternEditor cols='20' rows='3'
+                    <PatternEditor
                         pattern={this.state.template.pattern}
-                        sendPattern={( e ) => { this.state.template.pattern = e; this.setState( { patternEdit: false } ) }}
+                        sendPattern={( e ) => { this.template.pattern = e; this.setTemplateState() }}
                     />
                     : null
                 }
