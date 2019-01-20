@@ -1,19 +1,27 @@
-import React from 'react'
-import {TemplateEditor} from './planing/templateeditor'
-import {SingleSelectLister} from 'utils/singleselectlister'
+import * as React from 'react'
+import {TemplateEditor, Template} from './planing/templateeditor'
+import {SingleSelectLister} from './utils/singleselectlister'
 
+type SendMessage = (message: string, error: boolean)=>void;
 
+interface TemplateProps {
+    sendmessage: SendMessage;
+} 
 
-export default class Templates extends React.Component {
+export  class Templates extends React.Component<TemplateProps,{}> {
     
-    constructor( props ) {
+    lister: SingleSelectLister<Template>;
+    editor: TemplateEditor;
+    columns: any[];
+
+    constructor( props: TemplateProps ) {
         super( props );
-        this.state = { changed: false };
+        this.state = { };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
-        this.templateList = undefined;
-        this.templateEditor = undefined;
-        this.templatecolumns = [{
+        this.lister = undefined;
+        this.editor = undefined;
+        this.columns = [{
             Header: 'Gültig von',
             accessor: 'gueltigVon',
             width: '100px'
@@ -33,8 +41,7 @@ export default class Templates extends React.Component {
             Header: 'Betrag',
             accessor: 'wert',
             width: '100px',
-            Cell: row => (
-
+            Cell: (row:any) => (
                 <div style={{
                     color: row.value >= 0 ? 'green' : 'red',
                     textAlign: 'right'
@@ -46,11 +53,11 @@ export default class Templates extends React.Component {
     }
 
     refreshlist() {
-        this.templateList.reload();
+        this.lister.reload();
     }
     
-    refresheditor(template) {
-        this.templateEditor.setTemplate(template.id);
+    refresheditor(template: Template) {
+        this.editor.setTemplate(template.id);
     }
     
     render() {
@@ -59,13 +66,13 @@ export default class Templates extends React.Component {
                 <tbody>
                     <tr>
                         <td style={{ width: '20%', border: '1px solid black' }}>
-                            <TemplateEditor ref={( refEditor ) => { this.templateEditor = refEditor; }} onChange={() => this.refreshlist()} />
+                            <TemplateEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
-                            <SingleSelectLister ref={( refList ) => { this.templateList = refList; }} 
-                                                handleChange={(id) => this.refresheditor(data)}
+                            <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }} 
+                                                handleChange={this.refresheditor}
                                                 url = 'http://localhost:8080/templates/list'
-                                                columns = {this.templatecolumns}/>
+                                                columns = {this.columns}/>
                         </td>
                     </tr>
                 </tbody>

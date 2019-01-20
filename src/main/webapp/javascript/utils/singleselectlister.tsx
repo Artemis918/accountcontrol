@@ -4,7 +4,7 @@ import {SelectLister} from './selectlister'
 export type HandleSingleSelectCallback<D> = ( data: D ) => void;
 
 export interface SingleSelectlisterProps<D> {
-    ext: string;
+    ext?: string;
     url: string;
     handleChange: HandleSingleSelectCallback<D>;
     columns: any[];
