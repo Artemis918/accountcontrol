@@ -3,7 +3,7 @@ import React from 'react';
 import { InitialPage } from 'initial'
 import { Header } from 'header'
 import { TaskSelector } from './utils/taskselector'
-import Buchungsbelege from 'buchungsbelege.jsx'
+import { BuchungsBelege }from 'buchungsbelege'
 import Templates from 'templates.jsx'
 import Planen from 'planen.jsx'
 import { Buchen } from 'buchen'
@@ -34,7 +34,7 @@ class Main extends React.Component {
     render() {
         if ( this.state.value == 2 ) {
             var tasks = [
-                { name: 'Laden', comp: ( <Buchungsbelege sendmessage={this.sendMessage} /> ) },
+                { name: 'Laden', comp: ( <BuchungsBelege sendmessage={this.sendMessage} /> ) },
             ];
             return ( <div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Buchungsbelege" />

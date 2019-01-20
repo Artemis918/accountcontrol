@@ -1,12 +1,21 @@
-import React from 'react'
-import Dropzone from 'react-dropzone'
-import axios from 'axios'
+import * as React from 'react'
+import * as Dropzone from 'react-dropzone'
+import * as axios from 'axios'
 
+interface IState {
+    accepted: File[];
+    fileok: string[];
+    fileerr: string[];
+}
 
-class Uploader extends React.Component {
+interface BuchungsBelegeProps {
+    
+}
 
-    constructor() {
-        super()
+export class BuchungsBelege extends React.Component<BuchungsBelegeProps,IState> {
+    
+    constructor(props: BuchungsBelegeProps) {
+        super(props);
         this.uploadit = this.uploadit.bind( this );
         this.buttonClear = this.buttonClear.bind( this );
         this.onDrop = this.onDrop.bind( this );
@@ -20,42 +29,49 @@ class Uploader extends React.Component {
         }
     }
 
-    buttonClear() {
+    buttonClear(): void {
         this.setState( { accepted: [] } );
     }
 
-    onDrop( accepted ) {
-        this.setState( { accepted: this.state.accepted.concat( accepted ), fileok: [], fileerr: [] } );
+    onDrop( accepted: File[], rejected: File[],event: React.DragEvent<HTMLElement> ) :void {
+        this.setState( { accepted: this.state.accepted.concat(accepted), fileok: [], fileerr: [] } );
     }
 
-    loadOK( response ) {
-        if ( response.data.status == 1 )
-            this.setState( { fileok: this.state.fileok.concat( response.data.message ) } );
-        else
-            this.setState( { fileerr: this.state.fileerr.concat( response.data.message ) } );
+    loadOK( response : any) :void {
+        var message: string = response.data.message;
+        if ( response.data.status == 1 ) {
+            var oklist: string[] = this.state.fileok;
+            oklist.push(message)
+            this.setState( { fileok: oklist } );
+        }
+        else {
+            var errlist: string[] = this.state.fileerr;
+            errlist.push(message)
+            this.setState( { fileerr: errlist } );
+        }
     }
 
-    loadError( error ) {
-        this.setState( { fileerr: this.state.fileerr.concat( error.response ) } );
+    loadError( error : any ):void {
+        var errlist: string[] = this.state.fileok;
+        errlist.push(error.response)
+        this.setState( { fileerr: errlist } );
     }
 
-
-    uploadit() {
+    uploadit() :void {
         this.state.accepted.forEach( file => {
 
             const data = new FormData();
             data.append( 'file', file );
 
-            axios.post( '/upload', data )
+            axios.default.post( '/upload', data )
                 .then( this.loadOK )
                 .catch( this.loadError )
         } );
         this.setState( { accepted: [] } )
     }
 
-    render() {
+    render() : JSX.Element{
         return (
-            <section>
                 <table>
                     <colgroup>
                         <col style={{ width: '80%' }} />
@@ -64,7 +80,7 @@ class Uploader extends React.Component {
                     <tbody>
                         <tr>
                             <td>
-                                <div style={{ textalign: 'center' }}>
+                                <div style={{ textAlign: 'center' }}>
                                     <ul>
                                         {
                                             this.state.accepted.map( f => <li key={f.name}>{f.name} - {f.size} bytes</li> )
@@ -80,9 +96,7 @@ class Uploader extends React.Component {
                             </td>
                             <td>
                                 <div className="dropzone">
-                                    <Dropzone
-                                        accept="text/*"
-                                        onDrop={(a) => this.onDrop(a) } >                                      
+                                    <Dropzone.default accept="text/*" onDrop={this.onDrop} >                                      
                                         {({getRootProps, getInputProps, open}) => (
                                                 <div {...getRootProps()}>
                                                   <input {...getInputProps()} />
@@ -92,7 +106,7 @@ class Uploader extends React.Component {
                                                     </button>
                                                 </div>
                                         )}
-                                    </Dropzone>
+                                    </Dropzone.default>
                                 </div>
                             </td>
                         </tr>
@@ -104,15 +118,6 @@ class Uploader extends React.Component {
                         </tr>
                     </tbody>
                 </table>
-            </section>
         );
-    }
-}
-
-
-
-export default class BuchungsBelege extends React.Component {
-    render() {
-        return ( <div> <table width='100%' > <tr> <td></td><td> <Uploader /> </td> </tr> </table> </div> );
     }
 }

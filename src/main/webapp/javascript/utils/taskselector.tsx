@@ -25,7 +25,7 @@ export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
         this.setState( { currenttask: i } )
     }
 
-    render() {
+    render() : JSX.Element {
         return (
             <div>
                 <div style={{ height: '30px', verticalAlign: 'bottom' }}>

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {},
   "dependencies": {
+    "@types/dropzone": "^5.0.4",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-table": "^6.7.21",
