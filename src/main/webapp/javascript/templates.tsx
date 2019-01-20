@@ -52,15 +52,15 @@ export  class Templates extends React.Component<TemplateProps,{}> {
         }]
     }
 
-    refreshlist() {
+    refreshlist() :void {
         this.lister.reload();
     }
     
-    refresheditor(template: Template) {
+    refresheditor(template: Template) :void {
         this.editor.setTemplate(template.id);
     }
     
-    render() {
+    render() :JSX.Element {
         return (
             <table style={{border: '1px solid black' }}>
                 <tbody>

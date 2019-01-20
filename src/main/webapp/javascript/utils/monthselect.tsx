@@ -6,7 +6,7 @@ export type OnMonthSelectCallback = ( month: number, year: number ) => void;
 export interface MonthSelectProps {
     year: number;
     month: number;
-    onChange: OnMonthSelectCallback;
+    onChange?: OnMonthSelectCallback;
     label: string
 }
 

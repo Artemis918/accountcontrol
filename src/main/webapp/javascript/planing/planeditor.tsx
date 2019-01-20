@@ -33,7 +33,7 @@ interface IState {
     patternEdit: boolean;
 }
 
-export default class PlanEditor extends React.Component<PlanEditorProps,IState> {
+export class PlanEditor extends React.Component<PlanEditorProps,IState> {
     
     plan: Plan;
 

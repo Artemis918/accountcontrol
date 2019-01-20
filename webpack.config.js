@@ -9,7 +9,7 @@ module.exports = {
   devtool: 'source-map',
   mode: 'development',
   entry: {
-     app: SRC + '/index.jsx',
+     app: SRC + '/index.tsx',
   },
   resolve: {
 	  modules: [
