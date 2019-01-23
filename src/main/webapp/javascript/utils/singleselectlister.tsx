@@ -35,6 +35,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
     
     reload(): void {
         this.setState( { selectedData: undefined, selectedRow: undefined } )
+        this.lister.reload();
     }
     
     setUrlExtension(ext : string): void {

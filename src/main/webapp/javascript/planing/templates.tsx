@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {TemplateEditor, Template} from './planing/templateeditor'
-import {SingleSelectLister} from './utils/singleselectlister'
+import {TemplateEditor, Template} from './templateeditor'
+import {SingleSelectLister} from '../utils/singleselectlister'
 
 type SendMessage = (message: string, error: boolean)=>void;
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { MultiSelectLister } from './utils/multiselectlister'
-import { KontenTree } from './konten/kontentree'
+import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
-import { KontenSelector } from './konten/kontenselector'
+import { KontenSelector } from './utils/kontenselector'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;

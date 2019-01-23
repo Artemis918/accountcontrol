@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { PlanEditor, Plan } from './planing/planeditor'
-import { SingleSelectLister } from './utils/singleselectlister'
-import { MonthSelect } from './utils/monthselect'
+import { PlanEditor, Plan } from './planeditor'
+import { SingleSelectLister } from '../utils/singleselectlister'
+import { MonthSelect } from '../utils//monthselect'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
@@ -62,6 +62,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
     }
 
     refreshlist() {
+        this.setState( { selectedRow: undefined } )
         this.lister.reload();
     }
 

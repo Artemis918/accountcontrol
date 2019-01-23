@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { KontenSelector } from './kontenselector'
+import { KontenSelector } from '../utils/kontenselector'
 
 
 type HandleAssignCallback = ( konto: number, text: string ) => void;

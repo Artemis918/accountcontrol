@@ -2,7 +2,7 @@ import * as React from 'react'
 import { PatternEditor, Pattern } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { DropdownService } from '../utils/dropdownservice'
-import { KontenSelector } from '../konten/kontenselector'
+import { KontenSelector } from '../utils/kontenselector'
 
 type OnChangeCallback = ()=>void;
 
@@ -46,12 +46,13 @@ export class TemplateEditor extends React.Component<TemplateEditorProps,IState> 
         this.template = this.createNewTemplate();
         this.state = { template: this.template, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
+        this.save = this.save.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if ( this.props.beleg != undefined ) {
             var self = this;
             fetch( 'templates/beleg/' + this.props.beleg )
@@ -121,6 +122,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps,IState> 
         if ( !data.error ) {
             this.clear();
         }
+        this.props.onChange();
     }
 
     clear() :void {
@@ -156,7 +158,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps,IState> 
         if ( this.props.beleg == undefined ) {
             return (
                 <div>
-                    <button onClick={this.save.bind( this )}>Save</button>
+                    <button onClick={this.save}>Save</button>
                     <button onClick={this.clear}>New</button>
                     <button onClick={this.copy}>Copy</button>
                     <button onClick={this.delete}>Del</button>
@@ -174,8 +176,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps,IState> 
     }
 
     render() : JSX.Element{
-        const FORMAT = "dd.MM.YYYY";
-        
         return (
             <div>
                 <label>{this.state.message}</label>

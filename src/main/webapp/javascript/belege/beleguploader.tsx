@@ -14,7 +14,7 @@ interface BuchungsBelegeProps {
     sendmessage: SendMessageCallback;
 }
 
-export class BuchungsBelege extends React.Component<BuchungsBelegeProps, IState> {
+export class BelegUploader extends React.Component<BuchungsBelegeProps, IState> {
 
     constructor( props: BuchungsBelegeProps ) {
         super( props );

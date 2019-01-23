@@ -2,12 +2,15 @@ package loc.balsen.kontospring.repositories;
 
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.BuchungsBeleg.Art;
+import loc.balsen.kontospring.dto.BelegSmallDTO;
 
 public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, Integer> {
 
@@ -19,5 +22,7 @@ public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, In
 	               + "order by b.wertstellung"
 	       , nativeQuery = true)
 	public List<BuchungsBeleg> findUnresolvedBeleg();
+
+	public Collection<BuchungsBeleg> findByArt(Art art);
 	
 }

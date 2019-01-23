@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {TreeView} from '../utils/treeview'
+import {TreeView} from './utils/treeview'
 
 
 export type HandleSelectKontoGroupCallback = ( kontogroupid: number ) => void;

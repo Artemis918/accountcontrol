@@ -48,6 +48,6 @@ public class BuchungsBeleg {
 	private String details;
 	private String einreicherId;
 	private String mandat;
-	private String Referenz;
+	private String referenz;
 	
 }

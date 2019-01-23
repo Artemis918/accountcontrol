@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { MultiSelectLister } from './utils/multiselectlister';
-import { KontoAssign } from './konten/kontoassign'
-import { TemplateEditor } from './planing/templateeditor';
+import { MultiSelectLister } from '../utils/multiselectlister';
+import { KontoAssign } from './kontoassign'
+import { TemplateEditor } from '../planing/templateeditor';
 import "react-table/react-table.css";
 
 type SendMessage = (m:string,error: boolean)=>void 
@@ -24,6 +24,33 @@ interface IState {
 
 export class Buchen extends React.Component<BuchenProps,IState> {
 
+    columns :any[] = [{
+        Header: 'Datum',
+        accessor: 'date',
+        width: '150'
+    }, {
+        Header: 'Empf./Absender',
+        accessor: 'partner',
+        width: '400'
+    }, {
+        Header: 'Detail',
+        accessor: 'details',
+        width: '30%'
+    }, {
+        Header: 'Betrag',
+        accessor: 'betrag',
+        width: '150',
+        Cell: (row: any) => (
+
+            <div style={{
+                color: row.value >= 0 ? 'green' : 'red',
+                textAlign: 'right'
+            }}>
+                {( row.value / 100 ).toFixed( 2 )}
+            </div>
+
+        )
+    }];
     lister: MultiSelectLister<BuchungsBeleg>;
     
     constructor( props: BuchenProps ) {
@@ -81,33 +108,6 @@ export class Buchen extends React.Component<BuchenProps,IState> {
     }
 
     render() :JSX.Element {
-        var columns = [{
-            Header: 'Datum',
-            accessor: 'date',
-            width: '150'
-        }, {
-            Header: 'Empf./Absender',
-            accessor: 'partner',
-            width: '400'
-        }, {
-            Header: 'Detail',
-            accessor: 'details',
-            width: '30%'
-        }, {
-            Header: 'Betrag',
-            accessor: 'betrag',
-            width: '150',
-            Cell: (row: any) => (
-
-                <div style={{
-                    color: row.value >= 0 ? 'green' : 'red',
-                    textAlign: 'right'
-                }}>
-                    {( row.value / 100 ).toFixed( 2 )}
-                </div>
-
-            )
-        }];
 
         if ( this.state.plan !== undefined ) {
             return <TemplateEditor beleg={this.state.plan} onChange={() => this.onChange()} />
@@ -119,7 +119,7 @@ export class Buchen extends React.Component<BuchenProps,IState> {
                 <button className="button" onClick={( e ) => this.assignManuell()}> Manuell </button>
                 <button className="button" onClick={( e ) => this.createPlan()}> Planen </button>
                 <div>
-                    <MultiSelectLister<BuchungsBeleg> columns={columns}
+                    <MultiSelectLister<BuchungsBeleg> columns={this.columns}
                         url='http://localhost:8080/belege/unassigned'
                         ref={( ref ) => { this.lister = ref }} />
                 </div>

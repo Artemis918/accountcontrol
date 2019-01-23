@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { DropdownService } from '../utils/dropdownservice'
+import { DropdownService } from './dropdownservice'
 
 
 export type HandleKontoChange = ( kontoid: number, group: number ) => void;
