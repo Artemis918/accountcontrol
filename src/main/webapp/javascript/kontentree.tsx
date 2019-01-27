@@ -10,12 +10,12 @@ export interface KontenTreeProps {
     handleKontoSelect: HandleSelectKontoCallback;
 }
 
-class Konto {
+interface Konto {
     name:string;
     id: number;
 }
 
-class Group {
+interface Group {
     name:string;
     expanded: boolean;
     id: number;
@@ -23,12 +23,12 @@ class Group {
 }
 
 
-class CState {
+interface IState {
     data : Group[];  
 }
 
 
-export class KontenTree extends React.Component<KontenTreeProps, CState> {
+export class KontenTree extends React.Component<KontenTreeProps, IState> {
 
     data: Group[];
     

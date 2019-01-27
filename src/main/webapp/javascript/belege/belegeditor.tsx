@@ -1,45 +1,36 @@
 import * as React from 'react'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { BuchungsBeleg } from '../utils/dtos'
 
 type OnChangeCallback = () => void;
 type SendMessage = ( message: string, error: boolean ) => void;
-
-export interface Beleg {
-    id: number
-    wert: number;
-    details: string;
-    absender: string;
-    empfaenger: string;
-    wertstellung: Date;
-}
-
 
 interface BelegEditorProps {
     onChange: OnChangeCallback;
 }
 
 interface IState {
-    beleg: Beleg;
+    beleg: BuchungsBeleg;
 }
 
 
 export class BelegEditor extends React.Component<BelegEditorProps, IState> {
 
-    beleg: Beleg;
+    beleg: BuchungsBeleg;
 
     constructor( props: BelegEditorProps ) {
         super( props );
         this.beleg = this.createEmptyBeleg();
         this.state = { beleg: this.beleg };
         this.cleanup = this.cleanup.bind( this );
-        this.save = this.save.bind( this );        
+        this.save = this.save.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
     }
 
-    createEmptyBeleg(): Beleg {
-        return { id: undefined, wert: 0, absender: '', empfaenger: '', details: '', wertstellung: new Date() };
+    createEmptyBeleg(): BuchungsBeleg {
+        return new BuchungsBeleg();
     }
     setBeleg( id: number ): void {
         if ( id == undefined ) {

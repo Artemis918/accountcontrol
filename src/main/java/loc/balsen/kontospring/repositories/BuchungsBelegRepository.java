@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.BuchungsBeleg.Art;
-import loc.balsen.kontospring.dto.BelegSmallDTO;
 
 public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, Integer> {
 

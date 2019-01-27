@@ -3,20 +3,13 @@ import { MultiSelectLister } from './utils/multiselectlister'
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
 import { KontenSelector } from './utils/kontenselector'
+import { Zuordnung } from './utils/dtos'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
 interface KontenProps {
     sendmessage: SendMessageCallback;
-}
-
-class assignment {
-    detail: string;
-    sollwert: number;
-    istwert: number;
-    committed: boolean;
-    id: number;
 }
 
 class CState {
@@ -29,7 +22,7 @@ class CState {
 export class Konten extends React.Component<KontenProps, CState> {
 
     columns: any[];
-    lister: React.RefObject<MultiSelectLister<assignment>>;
+    lister: React.RefObject<MultiSelectLister<Zuordnung>>;
 
     constructor( props: KontenProps ) {
         super( props );
@@ -63,7 +56,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'Ist',
                 accessor: 'istwert',
                 width: '150px',
-                Cell: ( row: any, original: assignment ) => {
+                Cell: ( row: any, original: Zuordnung ) => {
                     return (
                         <div style={{ textAlign: 'right', color: original.sollwert > row ? 'red' : 'green' }}>
                             {( row.value / 100 ).toFixed( 2 )}
@@ -75,7 +68,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'ok',
                 accessor: 'commited',
                 width: '10px',
-                Cell: ( row: any, original: assignment ) => {
+                Cell: ( row: any, original: Zuordnung ) => {
                     return (
                         <input type='checkbox'
                             value={row}
@@ -86,7 +79,7 @@ export class Konten extends React.Component<KontenProps, CState> {
         ];
     }
 
-    commitAssignment( a: assignment ): void {
+    commitAssignment( a: Zuordnung ): void {
 
     }
 
@@ -118,7 +111,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                     />
                 </div>
                 <div style={{ border: '1px solid black' }}>
-                    <MultiSelectLister<assignment>
+                    <MultiSelectLister<Zuordnung>
                         url='assign/get'
                         ext='KontoGroup/1800/1/1'
                         columns={this.columns}

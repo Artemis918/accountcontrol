@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import org.junit.Test;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.dto.BelegSmallDTO;
+import loc.balsen.kontospring.dto.BelegDTO;
 
 public class BelegDTOTest {
 
@@ -20,7 +20,7 @@ public class BelegDTOTest {
 		beleg.setEmpfaenger("empfänger");
 		beleg.setDetails("Referenz NOTPROVIDED");
 		
-		BelegSmallDTO dto = new BelegSmallDTO(beleg);
+		BelegDTO dto = new BelegDTO(beleg);
 		
 		assertEquals("absender", dto.getPartner());
 		assertEquals("Referenz NOTPROVIDED",dto.getDetails());

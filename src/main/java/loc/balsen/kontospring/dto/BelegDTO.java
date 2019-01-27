@@ -25,10 +25,10 @@ public class BelegDTO {
 	private String einreicherId;
 	private String mandat;
 	private String referenz;
-	
+
 	public BelegDTO() {
 	}
-	
+
 	public BelegDTO(BuchungsBeleg beleg) {
 		this.id = beleg.getId();
 		this.eingang = beleg.getEingang();
@@ -40,10 +40,10 @@ public class BelegDTO {
 		this.wert = beleg.getWert();
 		this.details = beleg.getDetails();
 		this.einreicherId = beleg.getEinreicherId();
-		this.mandat =  beleg.getMandat();
+		this.mandat = beleg.getMandat();
 		this.referenz = beleg.getReferenz();
 	}
-		
+
 	public BuchungsBeleg toBeleg() {
 		BuchungsBeleg beleg = new BuchungsBeleg();
 		beleg.setId(id);
@@ -58,8 +58,15 @@ public class BelegDTO {
 		beleg.setEinreicherId(einreicherId);
 		beleg.setMandat(mandat);
 		beleg.setReferenz(referenz);
-		
-		return beleg;		
+
+		return beleg;
 	}
 
+	public String getPartner() {
+		if (wert > 0) {
+			return absender;
+		} else {
+			return empfaenger;
+		}
+	}
 }

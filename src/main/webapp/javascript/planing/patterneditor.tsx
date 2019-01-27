@@ -1,16 +1,9 @@
 import * as React from 'react'
+import {Pattern} from '../utils/dtos'
 
 type SendPatternCallback= (pattern: Pattern)=>void
 
-export interface Pattern {
-    sender: string;
-    receiver:string;
-    referenceID: string;
-    mandat: string;
-    senderID: string;
-    details: string;
-    [key:string] : string;
-} 
+ 
 
 interface PatternEditorProps {
     pattern: Pattern;

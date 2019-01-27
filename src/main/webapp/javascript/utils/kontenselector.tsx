@@ -51,7 +51,7 @@ export class KontenSelector extends React.Component<KontenSelectorProps, CState>
                         onChange={this.setGroup}
                         url='collections/kontogroups' />
                     <DropdownService value={this.state.konto}
-                        onChange={( e ) => this.setState( { konto: e } )}
+                        onChange={this.setKonto}
                         url='collections/konto'
                         param={this.state.group == undefined ? '' : '' + this.state.group}
                         ref={this.kontoselect} />

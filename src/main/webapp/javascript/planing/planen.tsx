@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { PlanEditor, Plan } from './planeditor'
+import { PlanEditor} from './planeditor'
 import { SingleSelectLister } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils//monthselect'
+import {Plan} from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 

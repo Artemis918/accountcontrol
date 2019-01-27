@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { SingleSelectLister } from '../utils/singleselectlister'
-import { BelegEditor, Beleg } from './belegeditor'
+import { BelegEditor } from './belegeditor'
+import { BuchungsBeleg } from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
@@ -14,7 +15,7 @@ interface IState {
 
 export class BelegErfassung extends React.Component<BelegErfassungProps, IState> {
 
-    lister: SingleSelectLister<Beleg>;
+    lister: SingleSelectLister<BuchungsBeleg>;
     editor: BelegEditor;
     columns: any[] = [{
         Header: 'Datum',
@@ -62,7 +63,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
         this.lister.reload();
     }
 
-    refresheditor( beleg: Beleg ): void {
+    refresheditor( beleg: BuchungsBeleg ): void {
         this.editor.setBeleg( beleg.id );
     }
 
@@ -75,7 +76,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                             <BelegEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
-                            <SingleSelectLister<Beleg> ref={( ref ) => { this.lister = ref; }}
+                            <SingleSelectLister<BuchungsBeleg> ref={( ref ) => { this.lister = ref; }}
                                 handleChange={this.refresheditor}
                                 url='belege/manlist'
                                 columns={this.columns} />

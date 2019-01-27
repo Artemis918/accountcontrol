@@ -1,14 +1,15 @@
 import * as React from 'react'
+import * as ReactTable from 'react-table'
 import { MultiSelectLister } from '../utils/multiselectlister';
 import { KontoAssign } from './kontoassign'
 import { TemplateEditor } from '../planing/templateeditor';
+import { ManuellBuchen } from './manuellbuchen';
+import { BuchungsBeleg } from '../utils/dtos'
 import "react-table/react-table.css";
 
-type SendMessage = (m:string,error: boolean)=>void 
+type SendMessage = ( m: string, error: boolean ) => void
 
-class BuchungsBeleg {
-    id:number;
-}
+
 
 interface BuchenProps {
     sendmessage: SendMessage;
@@ -16,21 +17,27 @@ interface BuchenProps {
 
 interface IState {
     plan: number;
+    beleg: BuchungsBeleg;
     kontoassign: boolean;
     deftext: string;
-    defkonto : number;
+    defkonto: number;
     defgroup: number
 }
 
-export class Buchen extends React.Component<BuchenProps,IState> {
+export class Buchen extends React.Component<BuchenProps, IState> {
 
-    columns :any[] = [{
+    columns: any[] = [{
         Header: 'Datum',
         accessor: 'date',
         width: '150'
     }, {
         Header: 'Empf./Absender',
-        accessor: 'partner',
+        accessor: 'absender',
+        Cell: (row: ReactTable.RowInfo) => {
+            <div>
+                {row.original.wert>0 ? row.original.absender: row.original.empfaenger}
+            </div>
+        },
         width: '400'
     }, {
         Header: 'Detail',
@@ -38,9 +45,9 @@ export class Buchen extends React.Component<BuchenProps,IState> {
         width: '30%'
     }, {
         Header: 'Betrag',
-        accessor: 'betrag',
+        accessor: 'wert',
         width: '150',
-        Cell: (row: any) => (
+        Cell: ( row: any ) => (
 
             <div style={{
                 color: row.value >= 0 ? 'green' : 'red',
@@ -52,30 +59,37 @@ export class Buchen extends React.Component<BuchenProps,IState> {
         )
     }];
     lister: MultiSelectLister<BuchungsBeleg>;
-    
+
     constructor( props: BuchenProps ) {
         super( props )
         this.lister = undefined;
-        this.state = { plan: undefined, kontoassign: false, deftext: "", defkonto:1, defgroup:1 }
+        this.state = { plan: undefined, beleg: undefined, kontoassign: false, deftext: "", defkonto: 1, defgroup: 1 }
         this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
     }
 
-    assignAuto() :void {
+    assignAuto(): void {
         fetch( 'http://localhost:8080/assign/all' ).then( response => response.json() );
         this.lister.reload();
     }
 
-    assignKonto() :void {
+    assignKonto(): void {
         if ( this.lister.hasSelectedData() )
             this.setState( { kontoassign: true } );
     }
 
-    assignManuell() :void {
+    assignManuell(): void {
+        var data: BuchungsBeleg[] = this.lister.getSelectedData();
+        if ( data.length != 1 ) {
+            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
+        }
+        else {
+            this.setState( { beleg: data[0] } )
+        }
     }
 
-    assignSelected( k :number, t:string ):void {
+    assignSelected( k: number, t: string ): void {
         var self = this;
         if ( k != undefined ) {
             var request = { text: t, konto: k, ids: this.lister.getSelectedData().map( d => d.id ) };
@@ -93,8 +107,8 @@ export class Buchen extends React.Component<BuchenProps,IState> {
         }
     }
 
-    createPlan() :void {
-        var data : BuchungsBeleg[] = this.lister.getSelectedData();
+    createPlan(): void {
+        var data: BuchungsBeleg[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
@@ -103,15 +117,20 @@ export class Buchen extends React.Component<BuchenProps,IState> {
         }
     }
 
-    onChange() :void {
-        this.setState( { plan: undefined } );
+    onChange(): void {
+        this.setState( { plan: undefined, beleg: undefined } );
     }
 
-    render() :JSX.Element {
+    render(): JSX.Element {
 
         if ( this.state.plan !== undefined ) {
             return <TemplateEditor beleg={this.state.plan} onChange={() => this.onChange()} />
         }
+
+        if ( this.state.beleg !== undefined ) {
+            return <ManuellBuchen beleg={this.state.beleg} onCommit={() => this.onChange()} />
+        }
+
         return (
             <div>
                 <button className="button" onClick={( e ) => this.assignAuto()}> Automatisch </button>
@@ -123,12 +142,12 @@ export class Buchen extends React.Component<BuchenProps,IState> {
                         url='http://localhost:8080/belege/unassigned'
                         ref={( ref ) => { this.lister = ref }} />
                 </div>
-                {this.state.kontoassign ? <KontoAssign 
-                                          text={this.state.deftext}
-                                          konto={this.state.defkonto}
-                                          group={this.state.defgroup}
-                                          handleAssign={( k, t ) => { this.assignSelected( k, t ) }} />
-                                        : null
+                {this.state.kontoassign ? <KontoAssign
+                    text={this.state.deftext}
+                    konto={this.state.defkonto}
+                    group={this.state.defgroup}
+                    handleAssign={( k, t ) => { this.assignSelected( k, t ) }} />
+                    : null
                 }
             </div>
         )

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.dto.BelegDTO;
-import loc.balsen.kontospring.dto.BelegSmallDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 @Controller
@@ -28,10 +27,10 @@ public class BelegController {
 	
 	@GetMapping("/unassigned")
 	@ResponseBody
-	List<BelegSmallDTO> findNewBelege() {
+	List<BelegDTO> findNewBelege() {
 		return belegRepository.findUnresolvedBeleg()
 				.stream()
-				.map((beleg) -> {return new BelegSmallDTO(beleg);})
+				.map((beleg) -> {return new BelegDTO(beleg);})
 				.collect(Collectors.toList());
 	}
 	

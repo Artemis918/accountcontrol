@@ -1,27 +1,12 @@
 import * as React from 'react'
 import { DropdownService } from '../utils/dropdownservice'
-import { PatternEditor, Pattern } from './patterneditor'
+import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { KontenSelector } from '../utils/kontenselector'
-
+import {Plan, Pattern} from '../utils/dtos'
 import 'react-day-picker/lib/style.css'
 
 type OnChangeCallback = () => void;
-
-export interface Plan {
-    id: number,
-    startdate: Date,
-    plandate: Date,
-    enddate: Date,
-    position: number,
-    description: string,
-    shortdescription: string,
-    kontogroup: number,
-    konto: number,
-    wert: number,
-    patterndto: Pattern,
-    matchstyle: number,
-}
 
 interface PlanEditorProps {
     onChange: OnChangeCallback;
@@ -39,7 +24,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
 
     constructor( props: PlanEditorProps ) {
         super( props );
-        this.plan = this.createNewPlan();
+        this.plan = new Plan();
         this.state = { plan: this.plan, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.save = this.save.bind( this );
@@ -50,7 +35,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
     }
 
     resetEditor(): void {
-        this.plan = this.createNewPlan();
+        this.plan = new Plan();
         this.setState( { plan: this.plan } );
     }
 
@@ -63,31 +48,6 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
             fetch( 'http://localhost:8080/plans/id/' + id )
                 .then( response => response.json() )
                 .then( p => { self.plan = p; self.setState( { plan: self.plan } ) } );
-        }
-    }
-
-    createNewPlan(): Plan {
-        var date = new Date();
-        return {
-            id: undefined,
-            startdate: date,
-            plandate: date,
-            enddate: date,
-            position: 0,
-            description: 'Neuer Plan',
-            shortdescription: 'neu',
-            kontogroup: 1,
-            konto: 1,
-            wert: 0,
-            patterndto: {
-                sender: '',
-                senderID: '',
-                receiver: '',
-                referenceID: '',
-                details: '',
-                mandat: '',
-            },
-            matchstyle: 0,
         }
     }
 

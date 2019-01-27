@@ -1,0 +1,6 @@
+.maninput {
+	border: none; 
+	-moz-appearance : textfield;
+	-webkit-appearance: none;
+	margin: 0;
+}
