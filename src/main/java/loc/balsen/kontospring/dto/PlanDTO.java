@@ -24,9 +24,9 @@ public class PlanDTO {
 	private String shortdescription;
 	private String description;
 	private MatchStyle matchstyle;
-	private int idtemplate;
-	private int idkonto;
-	private int idkontogroup;
+	private int template;
+	private int konto;
+	private int kontogroup;
 	
 	public PlanDTO() {
 	}
@@ -43,13 +43,13 @@ public class PlanDTO {
 		this.shortdescription=plan.getShortDescription();
 		this.description=plan.getDescription();
 		this.matchstyle=plan.getMatchStyle();
-		this.idkonto=plan.getKonto().getId();
-		this.idkontogroup=plan.getKonto().getKontoGruppe().getId();
+		this.konto=plan.getKonto().getId();
+		this.kontogroup=plan.getKonto().getKontoGruppe().getId();
 		
 		if(plan.getTemplate() != null)
-			this.idtemplate=plan.getTemplate().getId();
+			this.template=plan.getTemplate().getId();
 		else
-			this.idtemplate = 0;
+			this.template = 0;
 	}
 	
 	public Plan toPlan(	TemplateRepository templateRepository, 	KontoRepository kontoRepository) {
@@ -65,8 +65,8 @@ public class PlanDTO {
 		plan.setShortDescription(shortdescription);
 		plan.setDescription(description);
 		plan.setMatchStyle(matchstyle);
-		plan.setKonto(kontoRepository.findById(idkonto).get());
-		Optional<Template> otemp = templateRepository.findById(idtemplate);
+		plan.setKonto(kontoRepository.findById(konto).get());
+		Optional<Template> otemp = templateRepository.findById(template);
 		if (otemp.isPresent())
 			plan.setTemplate(otemp.get());
 		return plan;

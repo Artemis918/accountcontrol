@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { PlanEditor} from './planeditor'
+import { PlanEditor } from './planeditor'
 import { SingleSelectLister } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils//monthselect'
-import {Plan} from '../utils/dtos'
+import { Column } from 'react-table'
+import { Plan } from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
@@ -20,7 +21,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
 
     lister: SingleSelectLister<Plan>;
     editor: PlanEditor;
-    columns: any[];
+    columns: Column[];
 
     constructor( props: PlanenProps ) {
         super( props );
@@ -34,15 +35,12 @@ export class Planen extends React.Component<PlanenProps, IState> {
         this.columns = [{
             Header: 'Datum',
             accessor: 'plandate',
-            width: '100px'
         }, {
             Header: 'Beschreibung',
             accessor: 'shortdescription',
-            width: '50%'
         }, {
             Header: 'Betrag',
             accessor: 'wert',
-            width: '100px',
             Cell: ( row: any ) => (
 
                 <div style={{
@@ -92,7 +90,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
                                     ext={this.state.year + '/' + this.state.month}
                                     handleChange={( data: Plan ) => this.refresheditor( data )}
                                     columns={this.columns}
-                                    url='http://localhost:8080/plans/list/' />
+                                    url='plans/list/' />
                             </div>
                         </td>
                     </tr>

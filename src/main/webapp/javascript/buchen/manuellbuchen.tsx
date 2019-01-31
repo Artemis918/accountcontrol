@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { KontenSelector } from '../utils/kontenselector'
-import { BuchungsBeleg } from '../utils/dtos'
+import { BuchungsBeleg, Plan } from '../utils/dtos'
+import { PlanSelect } from './planselect'
 import * as mcss from './css/manuellbuchen.css'
 
 type onCommitCallback = () => void;
@@ -12,6 +13,7 @@ export interface ManuellBuchenProps {
 
 interface IState {
     data: TeilBuchung[];
+    planselect: boolean;
 }
 
 class TeilBuchung {
@@ -20,14 +22,15 @@ class TeilBuchung {
     konto: number;
     group: number;
     wertstring: string;
+    plan?: Plan;
 
-    constructor( details: string, wert: number, konto: number, group: number ) {
+    constructor( details: string, wert: number, konto: number, group: number, plan?: Plan ) {
         this.setBetrag( wert );
         this.konto = konto;
         this.group = group;
         this.details = details;
+        this.plan = plan;
     }
-
 
     setBetrag( wert: number ) {
         this.wertstring = ( Math.abs( wert ) / 100 ).toFixed( 2 );
@@ -40,12 +43,14 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     constructor( props: ManuellBuchenProps ) {
         super( props )
-        var initial: TeilBuchung = new TeilBuchung( props.beleg.details, props.beleg.wert,1,1 );
-        this.state = { data: [initial] };
+        var initial: TeilBuchung = new TeilBuchung( props.beleg.details, props.beleg.wert, 1, 1 );
+        this.state = { data: [initial], planselect: false };
         this.setKonto = this.setKonto.bind( this );
         this.renderDetails = this.renderDetails.bind( this );
         this.renderKonto = this.renderKonto.bind( this );
         this.renderValue = this.renderValue.bind( this );
+        this.addPlan = this.addPlan.bind( this );
+        this.renderPlanSelect = this.renderPlanSelect.bind( this );
         this.recalcData = this.recalcData.bind( this );
     }
 
@@ -53,11 +58,22 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     }
 
+    addPlan( plan: Plan ): void {
+        if ( plan != undefined ) {
+            var planbuchung: TeilBuchung = new TeilBuchung( plan.shortdescription, plan.wert, plan.konto, plan.kontogroup, plan )
+            var data: TeilBuchung[] = this.state.data;
+            data.splice( 0, 0, planbuchung );
+            this.setState( { data: this.recalcData( data ), planselect: false } );
+        }
+        else
+            this.setState( { planselect: false } );
+    }
+
     setKonto( index: number, konto: number, group: number ): void {
         const data: TeilBuchung[] = this.state.data;
         data[index].konto = konto;
         data[index].group = group;
-        this.setState( { data } );
+        this.setState( { data: data } );
     }
 
 
@@ -81,7 +97,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                 result[result.length - 1].setBetrag( result[result.length - 1].betrag + this.props.beleg.wert - sum );
             }
             else {
-                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', this.props.beleg.wert - sum, result[result.length - 1].konto, result[result.length - 1].group)
+                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', this.props.beleg.wert - sum, result[result.length - 1].konto, result[result.length - 1].group )
                 result.push( newbuch );
             }
         }
@@ -139,10 +155,19 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     renderDelButton( index: number ): JSX.Element {
-        if ( this.state.data.length > 1 && index < this.state.data.length-1)
+        if ( this.state.data.length > 1 && index < this.state.data.length - 1 )
             return ( <button onClick={e => { this.removeRow( index ) }}>x</button> );
         else
-            return ( <div/> );
+            return ( <div /> );
+    }
+
+    renderPlanSelect(): JSX.Element {
+        if ( this.state.planselect == true ) {
+            var now: Date = new Date;
+            return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onSelect={this.addPlan} /> );
+        }
+        else
+            return ( <div /> );
     }
 
     renderRow( index: number ): JSX.Element {
@@ -171,7 +196,9 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                         {this.state.data.map( ( d: TeilBuchung, i: number ) => this.renderRow( i ) )}
                     </tbody>
                 </table>
-                <button onClick={this.save} > Speichern </button>
+                <span style={{ width: '50%' }}><button onClick={( e ) => this.setState( { planselect: true } )} > Select Plan </button> </span>
+                <span style={{ width: '50%' }}><button onClick={this.save} > Speichern </button></span>
+                {this.renderPlanSelect()}
             </div>
         )
     }

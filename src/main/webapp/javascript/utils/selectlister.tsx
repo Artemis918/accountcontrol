@@ -9,9 +9,10 @@ export type IsSelectedCallback = ( index: number ) => boolean;
 export interface SelectListerProps<D> {
     ext: string;
     url: string;
-    handleSelect: HandleSelectCallback<D>;
-    isSelected: IsSelectedCallback;
-    columns: any[];
+    handleSelect?: HandleSelectCallback<D>;
+    handleExecute?: HandleSelectCallback<D>;
+    isSelected?: IsSelectedCallback;
+    columns: ReactTable.Column[];
 }
 
 class CState<D> {
@@ -67,8 +68,12 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
                 onClick: ( e: MouseEvent ) => this.props.handleSelect( e.shiftKey,
                     e.ctrlKey,
                     this.state.data[rowInfo.index],
-                    rowInfo.index )
-                , className: this.props.isSelected( rowInfo.index ) ? css.selectedrow : css.unselectedrow
+                    rowInfo.index ),
+                onDoubleClick: ( e: MouseEvent ) => this.props.handleExecute (e.shiftKey,
+                    e.ctrlKey,
+                    this.state.data[rowInfo.index],
+                    rowInfo.index ),
+                className: this.props.isSelected( rowInfo.index ) ? css.selectedrow : css.unselectedrow
             } );
         } else {
             return ( {} );

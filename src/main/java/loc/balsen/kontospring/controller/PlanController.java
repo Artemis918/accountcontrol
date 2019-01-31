@@ -49,6 +49,18 @@ public class PlanController {
 				.collect(Collectors.toList());
 	}
 	
+	@GetMapping("/unassigned/{year}/{month}")
+	@ResponseBody
+	List<PlanDTO> findUnassignedPlans(@PathVariable Integer year ,@PathVariable Integer month) {
+		LocalDate start = LocalDate.of(year, month, 1);
+		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
+		
+		return planRepository.findByPeriod(start,end)
+				.stream()
+				.map((plan) -> {return new PlanDTO(plan);})
+				.collect(Collectors.toList());
+	}
+	
 	@PostMapping("/save")
 	@ResponseBody
 	KontoSpringResult savePlan(@RequestBody PlanDTO plandto) {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {EnumDTO} from './dtos'
+import { EnumDTO } from './dtos'
 
 
 type HandleChange = ( id: number ) => void;
@@ -11,47 +11,44 @@ export interface DropdownServiceProps {
     value: number;
 }
 
-class CState {
+interface IState {
     data: EnumDTO[];
-    value: number;
 }
 
-export class DropdownService extends React.Component<DropdownServiceProps, CState> {
-    
+export class DropdownService extends React.Component<DropdownServiceProps, IState> {
+
     constructor( props: DropdownServiceProps ) {
         super( props );
-        this.state = { data: [{ text: '', value: 1 }], value: undefined };
+        this.state = { data: []};
         this.handleChange = this.handleChange.bind( this );
-        this.setparam = this.setparam.bind( this );
         this.fetchData = this.fetchData.bind( this );
         this.setData = this.setData.bind( this );
     }
-
-    handleChange( value: string ) {
-        var v: number = parseInt(value);
-        this.setState({value: v});
-        this.props.onChange( v );
+    
+    componentDidUpdate(prevProps: DropdownServiceProps) :void {
+        if ( this.props.param != prevProps.param )
+            this.fetchData();     
     }
 
-    componentDidMount() {
-        this.fetchData( this.props.param );
+    componentDidMount() :void {
+        this.fetchData();     
+    }
+
+    handleChange( value: string ) {
+        var v: number = parseInt( value );
+        if (v != this.props.value )
+            this.props.onChange( v );
     }
 
     setData( data: EnumDTO[] ): void {
         this.setState( { data: data } );
-        if ( data.length > 0 ) {
-            if (this.state.value == undefined && this.props.value != undefined ) {
-                this.setState({value: this.props.value});
-            }
-            else {
-                this.setState({value: data[0].value});
-                this.props.onChange( data[0].value );
-            }
-        }
+        if (this.props.value == undefined)
+            this.props.onChange(data[0].value);
     }
 
-    fetchData( param: string ) :void {
+    fetchData(): void {        
         var url = this.props.url;
+        var param = this.props.param;
         if ( param != undefined ) {
             url = url + '/' + param;
         }
@@ -62,13 +59,10 @@ export class DropdownService extends React.Component<DropdownServiceProps, CStat
         }
     }
 
-    setparam( param: string ) {
-        this.fetchData( param );
-    }
-
-    render() : JSX.Element{
+    render(): JSX.Element {
         return (
-            <select value={this.state.value} onChange={( e: React.ChangeEvent<HTMLSelectElement>) => this.handleChange( e.target.value )}>
+            <select value={this.props.value} 
+                    onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
                 {this.state.data.map( ( t ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>
         );
