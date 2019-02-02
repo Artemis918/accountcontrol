@@ -48,7 +48,6 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
     }
 
     setFilter( m: number, y: number ): void {
-        this.lister.setUrlExtension( y + "/" + m );
         this.setState( { year: y, month: m } )
     }
 

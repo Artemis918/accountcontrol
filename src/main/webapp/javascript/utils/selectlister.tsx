@@ -7,8 +7,9 @@ export type HandleSelectCallback<D> = ( shift: boolean, ctrl: boolean, data: D, 
 export type IsSelectedCallback = ( index: number ) => boolean;
 
 export interface SelectListerProps<D> {
-    ext: string;
+    ext?: string;
     url: string;
+    lines?: number
     handleSelect?: HandleSelectCallback<D>;
     handleExecute?: HandleSelectCallback<D>;
     isSelected?: IsSelectedCallback;
@@ -17,31 +18,28 @@ export interface SelectListerProps<D> {
 
 class CState<D> {
     data: D[];
-    ext: string;
-    reload: boolean;
 }
 
 export class SelectLister<D> extends React.Component<SelectListerProps<D>, CState<D>> {
 
+    static defaultProps = {
+        ext: '',
+        lines: 10,
+    }
+
     constructor( props: SelectListerProps<D> ) {
         super( props );
-        var extensions: string = props.ext;
-        if ( extensions === undefined )
-            extensions = "";
-        this.state = { data: [], ext: extensions, reload: false };
+        this.state = { data: [] };
         this.getTrProps = this.getTrProps.bind( this );
-        this.setUrlExtension = this.setUrlExtension.bind( this );
     }
 
     componentDidMount(): void {
         this.reload();
     }
 
-    setUrlExtension( extension: string ): void {
-        if ( extension === undefined )
-            this.setState( { ext: "", reload: true } );
-        else
-            this.setState( { ext: extension, reload: true } );
+    componentDidUpdate( prevProps: SelectListerProps<D> ): void {
+        if ( prevProps.ext !== this.props.ext )
+            this.reload();
     }
 
     getData( rows: number[] ): D[] {
@@ -56,9 +54,9 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     reload(): void {
         var self = this;
-        fetch( this.props.url + this.state.ext )
+        fetch( this.props.url + this.props.ext )
             .then( response => response.json() )
-            .then( ( d ) => self.setState( { data: d, reload: false } ) );
+            .then( ( d ) => self.setState( { data: d } ) );
     }
 
     getTrProps( rowInfo: ReactTable.RowInfo ): object {
@@ -69,7 +67,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
                     e.ctrlKey,
                     this.state.data[rowInfo.index],
                     rowInfo.index ),
-                onDoubleClick: ( e: MouseEvent ) => this.props.handleExecute (e.shiftKey,
+                onDoubleClick: ( e: MouseEvent ) => this.props.handleExecute( e.shiftKey,
                     e.ctrlKey,
                     this.state.data[rowInfo.index],
                     rowInfo.index ),
@@ -81,15 +79,11 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
     }
 
     render(): JSX.Element {
-        if ( this.state.reload ) {
-            this.reload();
-        }
-
         return (
             <div>
                 <ReactTable.default
                     getTrProps={( state: any, rowInfo: ReactTable.RowInfo ) => this.getTrProps( rowInfo )}
-                    defaultPageSize={10}
+                    defaultPageSize={this.props.lines}
                     data={this.state.data}
                     columns={this.props.columns} />
             </div>

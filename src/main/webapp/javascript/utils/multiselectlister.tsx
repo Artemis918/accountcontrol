@@ -41,13 +41,8 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
         super( props );
         this.lister = undefined;
         this.state = { range: undefined, selectedRows: undefined }
-        this.setUrlExtension = this.setUrlExtension.bind( this );
         this.handleSelect = this.handleSelect.bind( this );
         this.isSelected = this.isSelected.bind( this );
-    }
-
-    setUrlExtension( extension: string ): void {
-        this.lister.setUrlExtension( extension );
     }
 
     handleSelect( shift: boolean, ctrl: boolean, index: number ): void {
@@ -103,6 +98,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
     }
 
     reload(): void {
+        this.setState({ range: undefined, selectedRows: undefined });
         this.lister.reload();
     }
 

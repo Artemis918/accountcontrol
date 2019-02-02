@@ -54,7 +54,6 @@ export class Planen extends React.Component<PlanenProps, IState> {
     }
 
     setFilter( m: number, y: number ): void {
-        this.lister.setUrlExtension( y + "/" + m );
         this.setState( { year: y, month: m, selectedRow: undefined } )
         this.editor.setPlan( undefined );
 

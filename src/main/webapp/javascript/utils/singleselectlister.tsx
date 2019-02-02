@@ -47,11 +47,6 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
         this.lister.reload();
     }
 
-    setUrlExtension( ext: string ): void {
-        this.setState( { selectedData: undefined, selectedRow: undefined } )
-        this.lister.setUrlExtension( ext );
-    }
-
     isSelected( index: number ): boolean {
         return this.state.selectedRow === index;
     }

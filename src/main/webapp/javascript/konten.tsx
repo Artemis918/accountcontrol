@@ -1,9 +1,10 @@
 import * as React from 'react'
+import { CellInfo } from 'react-table'
 import { MultiSelectLister } from './utils/multiselectlister'
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
 import { KontenSelector } from './utils/kontenselector'
-import { ZuordnungView } from './utils/dtos'
+import { Zuordnung } from './utils/dtos'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -22,7 +23,7 @@ class CState {
 export class Konten extends React.Component<KontenProps, CState> {
 
     columns: any[];
-    lister: React.RefObject<MultiSelectLister<ZuordnungView>>;
+    lister: React.RefObject<MultiSelectLister<Zuordnung>>;
 
     constructor( props: KontenProps ) {
         super( props );
@@ -44,10 +45,10 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'Soll',
                 accessor: 'sollwert',
                 width: '150px',
-                Cell: ( row: any ) => {
+                Cell: ( cell: CellInfo ) => {
                     return (
                         <div style={{ textAlign: 'right' }}>
-                            {( row.value / 100 ).toFixed( 2 )}
+                            {( cell.value / 100 ).toFixed( 2 )}
                         </div>
                     )
                 }
@@ -56,10 +57,10 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'Ist',
                 accessor: 'istwert',
                 width: '150px',
-                Cell: ( row: any, original: ZuordnungView ) => {
+                Cell: ( cell: CellInfo ) => {
                     return (
-                        <div style={{ textAlign: 'right', color: original.sollwert > row ? 'red' : 'green' }}>
-                            {( row.value / 100 ).toFixed( 2 )}
+                        <div style={{ textAlign: 'right', color: cell.original.sollwert > cell.value ? 'red' : 'green' }}>
+                            {( cell.value / 100 ).toFixed( 2 )}
                         </div>
                     )
                 }
@@ -68,52 +69,73 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'ok',
                 accessor: 'commited',
                 width: '10px',
-                Cell: ( row: any, original: ZuordnungView ) => {
+                Cell: ( cell: CellInfo ) => {
                     return (
                         <input type='checkbox'
-                            value={row}
-                            onClick={() => this.commitAssignment( original )} />
+                            value={cell.value}
+                            onClick={() => this.commitAssignment( cell.original )} />
                     )
                 }
             }
         ];
+
+        this.commitAssignment = this.commitAssignment.bind( this );
+        this.commitSelected = this.commitSelected.bind( this );
+        this.commitAll = this.commitAll.bind( this );
+        this.removeAssignment = this.removeAssignment.bind( this );
     }
 
-    commitAssignment( a: ZuordnungView ): void {
-
+    commitAssignment( a: Zuordnung ): void {
+        
     }
 
-    handleKGSelect( id: number ): void {
-
-    }
-
-    handleKontoSelect( id: number ): void {
-
-    }
-
-    onChangeMonth( month: number, year: number ): void {
+    commitSelected(): void {
 
     }
 
-    render() {
+    commitAll(): void {
+
+    }
+
+    removeAssignment(): void {
+
+    }
+
+    createExt(): string {
+        var date: string = '/' + this.state.year + '/' + this.state.month + '/';
+        if ( this.state.selectedKonto != undefined ) {
+            return 'getKonto' + date + this.state.selectedKonto;
+        }
+        else if ( this.state.selectedGroup != undefined ) {
+            return 'getKontoGroup' + date + this.state.selectedGroup;
+        }
+        else {
+            return 'getKontoGroup' + date + '1';
+        }
+    }
+
+    render(): JSX.Element {
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
                     <MonthSelect label='Monat: '
-                        onChange={this.onChangeMonth}
+                        onChange={( m: number, y: number ) => this.setState( { month: m, year: y } )}
                         month={this.state.month}
                         year={this.state.year} />
-          </div>
+                    <button onClick={() => this.commitSelected()}> Auswahl Bestätigen </button>
+                    <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
+                    <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
+                </div>
                 <div style={{ width: '30%', float: 'left', border: '1px solid black' }}>
                     <KontenTree
-                        handleKGSelect={( kg: number ) => this.handleKGSelect( kg )}
-                        handleKontoSelect={( k: number ) => this.handleKontoSelect( k )}
+                        handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
+                        handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}
                     />
                 </div>
                 <div style={{ border: '1px solid black' }}>
-                    <MultiSelectLister<ZuordnungView>
-                        url='assign/get'
-                        ext='KontoGroup/1800/1/1'
+                    <MultiSelectLister<Zuordnung>
+                        url='assign/'
+                        ext={this.createExt()}
                         columns={this.columns}
                         ref={this.lister} />
                 </div>
