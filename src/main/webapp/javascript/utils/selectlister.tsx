@@ -46,6 +46,10 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         return rows.map( ( i: number ): D => { return this.state.data[i]; } );
     }
 
+    getDataAll() :D[] {
+            return this.state.data;
+    }
+    
     getDataRange( start: number, end: number ): D[] {
         var lo: number = start > end ? end : start;
         var hi: number = start > end ? start : end;

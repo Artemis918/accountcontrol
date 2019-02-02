@@ -28,6 +28,8 @@ public class ZuordnungDTO {
 		id = z.getId();
 		detail = z.getShortdescription();
 		istwert = z.getWert();
+		beleg = z.getBuchungsbeleg().getId();
+		committed = z.isCommitted();
 
 		Plan p = z.getPlan();
 		if (p != null) {
@@ -49,7 +51,7 @@ public class ZuordnungDTO {
 		res.setShortdescription(detail);
 		res.setDescription(description);
 		res.setWert(istwert);
-		res.setCommited(committed);
+		res.setCommitted(committed);
 
 		if (plan != 0)
 			res.setPlan(planRepository.getOne(plan));

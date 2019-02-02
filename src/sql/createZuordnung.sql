@@ -7,7 +7,7 @@ create table Zuordnung
 	wert             int,
 	plan             int,
 	buchungsbeleg    int,
-	commited		boolean,
+	committed		boolean,
 	primary key (id)
 );
 

@@ -44,7 +44,7 @@ public class ZuordnungController {
 
 	@Autowired
 	private PlanRepository planRepository;
-	
+
 	@GetMapping("/all")
 	@ResponseBody
 	public KontoSpringResult assignAll() {
@@ -78,48 +78,52 @@ public class ZuordnungController {
 		}).collect(Collectors.toList());
 	}
 
-	@GetMapping("/getKonto/commit/{id}")
+	@PostMapping("/commit")
 	@ResponseBody
-	public KontoSpringResult invertCommit(@PathVariable int id) {
-		Optional<Zuordnung> zuordnung = zuordnungRepository.findById(id);
-		if (zuordnung.isPresent()) {
-			Zuordnung z = zuordnung.get(); 
-			z.setCommited(!z.getCommited());
-			zuordnungRepository.save(z);
+	public KontoSpringResult invertCommit(@RequestBody List<Integer> ids) {
+		for (Integer id : ids) {
+			Optional<Zuordnung> zuordnung = zuordnungRepository.findById(id);
+			if (zuordnung.isPresent()) {
+				Zuordnung z = zuordnung.get();
+				z.setCommitted(!z.isCommitted());
+				zuordnungRepository.save(z);
+			}
 		}
 		return new KontoSpringResult(false, "ok");
 	}
 
-	@GetMapping("/getKonto/remove/{id}")
+	@PostMapping("/remove")
 	@ResponseBody
-	public KontoSpringResult remove(@PathVariable int id) {
-		zuordnungRepository.deleteById(id);
+	public KontoSpringResult remove(@RequestBody List<Integer> ids) {
+		for (Integer id : ids) {
+			zuordnungRepository.deleteByBelegId(id);
+		}
 		return new KontoSpringResult(false, "ok");
 	}
-	
+
 	@Data
 	static class ToKontoRequestDTO {
 		public int konto;
 		public String text;
 		public List<Integer> ids;
 	};
-	
+
 	@PostMapping("/tokonto")
 	@ResponseBody
 	public KontoSpringResult assignToKonto(@RequestBody ToKontoRequestDTO request) {
 		Konto konto = kontoRepository.getOne(request.konto);
-		
+
 		request.ids.forEach(
-				(Integer z)->zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));
-		return new KontoSpringResult(false,"zugeordnet");
+				(Integer z) -> zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));
+		return new KontoSpringResult(false, "zugeordnet");
 	}
-	
+
 	@PostMapping("/parts")
 	@ResponseBody
 	public KontoSpringResult assigPartso(@RequestBody List<ZuordnungDTO> request) {
-		
-		request.forEach(
-				(ZuordnungDTO z)->zuordnungRepository.save(z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository)));
-		return new KontoSpringResult(false,"zugeordnet");
+
+		request.forEach((ZuordnungDTO z) -> zuordnungRepository
+				.save(z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository)));
+		return new KontoSpringResult(false, "zugeordnet");
 	}
 }

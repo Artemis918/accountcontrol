@@ -90,7 +90,7 @@ public class ZuordnungService {
 		zuordnung.setKonto(plan.getKonto());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(wert);
-		zuordnung.setCommited(false);
+		zuordnung.setCommitted(false);
 		
 		if ( plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
 			zuordnung.setPlan(plan);
@@ -123,7 +123,7 @@ public class ZuordnungService {
 		zuordnung.setKonto(konto);
 		zuordnung.setShortdescription(text);
 		zuordnung.setWert(beleg.getWert());
-		zuordnung.setCommited(false);
+		zuordnung.setCommitted(false);
 		zuordnungRepository.save(zuordnung);
 	}
 

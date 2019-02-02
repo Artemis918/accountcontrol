@@ -23,7 +23,7 @@ public class Zuordnung {
 	private int wert;
 	private String shortdescription;
 	private String description;
-	private Boolean commited;
+	private boolean committed;
 	
 	@OneToOne
 	@JoinColumn(name = "plan")

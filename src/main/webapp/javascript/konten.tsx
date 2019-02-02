@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { CellInfo } from 'react-table'
+import { CellInfo, Column } from 'react-table'
 import { MultiSelectLister } from './utils/multiselectlister'
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
@@ -22,7 +22,7 @@ class CState {
 
 export class Konten extends React.Component<KontenProps, CState> {
 
-    columns: any[];
+    columns: Column[];
     lister: React.RefObject<MultiSelectLister<Zuordnung>>;
 
     constructor( props: KontenProps ) {
@@ -38,13 +38,11 @@ export class Konten extends React.Component<KontenProps, CState> {
         this.columns = [
             {
                 Header: 'Beschreibung',
-                accessor: 'details',
-                width: '200px'
+                accessor: 'detail',
             },
             {
                 Header: 'Soll',
                 accessor: 'sollwert',
-                width: '150px',
                 Cell: ( cell: CellInfo ) => {
                     return (
                         <div style={{ textAlign: 'right' }}>
@@ -56,7 +54,6 @@ export class Konten extends React.Component<KontenProps, CState> {
             {
                 Header: 'Ist',
                 accessor: 'istwert',
-                width: '150px',
                 Cell: ( cell: CellInfo ) => {
                     return (
                         <div style={{ textAlign: 'right', color: cell.original.sollwert > cell.value ? 'red' : 'green' }}>
@@ -67,12 +64,11 @@ export class Konten extends React.Component<KontenProps, CState> {
             },
             {
                 Header: 'ok',
-                accessor: 'commited',
-                width: '10px',
+                accessor: 'committed',
                 Cell: ( cell: CellInfo ) => {
                     return (
                         <input type='checkbox'
-                            value={cell.value}
+                            checked={cell.value}
                             onClick={() => this.commitAssignment( cell.original )} />
                     )
                 }
@@ -85,20 +81,46 @@ export class Konten extends React.Component<KontenProps, CState> {
         this.removeAssignment = this.removeAssignment.bind( this );
     }
 
+    commit( z: Zuordnung[] ): void {
+        var ids: number[] = z.map((za: Zuordnung)=>{return za.id;});
+        var self: Konten = this;
+        fetch( '/assign/commit', {
+            method: 'post',
+            body: JSON.stringify( ids ),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        } ).then( function( response ) {
+            self.lister.current.reload();
+        } );
+    }
+
     commitAssignment( a: Zuordnung ): void {
-        
+        this.commit( [a] );
     }
 
     commitSelected(): void {
-
+        this.commit( this.lister.current.getSelectedData() );
+        this.lister.current.reload();
     }
 
     commitAll(): void {
-
+        this.commit( this.lister.current.getDataAll() );
+        this.lister.current.reload();
     }
 
     removeAssignment(): void {
-
+        var ids: number[] = this.lister.current.getSelectedData().map((za: Zuordnung)=>{return za.beleg;});
+        var self: Konten = this;
+        fetch( '/assign/remove', {
+            method: 'post',
+            body: JSON.stringify( ids ),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        } ).then( function( response ) {
+            self.lister.current.reload();
+        } );
     }
 
     createExt(): string {

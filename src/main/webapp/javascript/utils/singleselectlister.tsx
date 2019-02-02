@@ -26,7 +26,6 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
         this.state = { selectedData: undefined, selectedRow: undefined };
         this.lister = undefined;
         this.changeSelected = this.changeSelected.bind( this );
-        this.setUrlExtension = this.setUrlExtension.bind( this );
         this.isSelected = this.isSelected.bind( this );
     }
 

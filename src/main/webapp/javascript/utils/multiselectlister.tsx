@@ -84,10 +84,10 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
             this.props.handleselect( selectedData );
     }
 
-    hasSelectedData() : boolean {
+    hasSelectedData(): boolean {
         return this.state.range != undefined || this.state.selectedRows != undefined;
     }
-    
+
     getSelectedData(): D[] {
         if ( this.state.range != undefined )
             return this.lister.getDataRange( this.state.range.getLo(), this.state.range.getHi() );
@@ -97,8 +97,12 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
             return [];
     }
 
+    getDataAll(): D[] {
+        return this.lister.getDataAll();
+    }
+
     reload(): void {
-        this.setState({ range: undefined, selectedRows: undefined });
+        this.setState( { range: undefined, selectedRows: undefined } );
         this.lister.reload();
     }
 

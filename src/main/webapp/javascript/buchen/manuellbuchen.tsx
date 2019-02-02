@@ -44,7 +44,7 @@ class TeilBuchung {
             description: this.details,
             istwert: this.betrag,
             committed: false,
-            plan: (this.plan == undefined) ? undefined: this.plan.id,
+            plan: ( this.plan == undefined ) ? undefined : this.plan.id,
             beleg: belegid,
             konto: this.konto
         }
@@ -70,11 +70,12 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     save(): void {
         var zuordnungen: Zuordnung[] = this.state.data.map( ( t: TeilBuchung ) => { return t.getZuordnung( this.props.beleg.id ) } );
+        zuordnungen.forEach( ( z: Zuordnung ) => { z.committed = true } );
+
         var self: ManuellBuchen = this;
-        var jsonbody = JSON.stringify( zuordnungen );
         fetch( '/assign/parts', {
             method: 'post',
-            body: jsonbody,
+            body: JSON.stringify( zuordnungen ),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -130,10 +131,18 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
         return result;
     }
 
+    removeLastRow(): void {
+        var data: TeilBuchung[] = this.state.data;
+        data[data.length - 2].setBetrag( data[data.length - 2].betrag + data[data.length - 1].betrag )
+        data.splice( data.length - 1 , 1 );
+        this.setState( { data: data } );
+    }
+
     removeRow( index: number ): void {
         var data: TeilBuchung[] = this.state.data;
         data.splice( index, 1 );
         this.setState( { data: this.recalcData( data ) } );
+
     }
 
     renderDetails( index: number ): JSX.Element {
@@ -181,10 +190,11 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     renderDelButton( index: number ): JSX.Element {
-        if ( this.state.data.length > 1 && index < this.state.data.length - 1 )
-            return ( <button onClick={e => { this.removeRow( index ) }}>x</button> );
-        else
-            return ( <div /> );
+        if ( index == this.state.data.length - 1 ) {
+            return ( <button onClick={e => { this.removelastRow() }}>^</button> );
+
+        }
+        return ( <button onClick={e => { this.removeRow( index ) }}>x</button> );
     }
 
     renderPlanSelect(): JSX.Element {
