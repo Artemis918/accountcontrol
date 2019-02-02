@@ -125,11 +125,16 @@ export class Template {
 
 //=====================================================
 export interface Zuordnung {
+    id: number;
     detail: string;
-    sollwert: number;
+    description: string;
+    sollwert?: number;
     istwert: number;
     committed: boolean;
-    id: number;
+    plan?: number;
+    beleg: number;
+    konto: number;
+    group?: number;
 }
 
 

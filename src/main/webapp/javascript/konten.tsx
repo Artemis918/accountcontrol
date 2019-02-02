@@ -3,7 +3,7 @@ import { MultiSelectLister } from './utils/multiselectlister'
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
 import { KontenSelector } from './utils/kontenselector'
-import { Zuordnung } from './utils/dtos'
+import { ZuordnungView } from './utils/dtos'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -22,7 +22,7 @@ class CState {
 export class Konten extends React.Component<KontenProps, CState> {
 
     columns: any[];
-    lister: React.RefObject<MultiSelectLister<Zuordnung>>;
+    lister: React.RefObject<MultiSelectLister<ZuordnungView>>;
 
     constructor( props: KontenProps ) {
         super( props );
@@ -56,7 +56,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'Ist',
                 accessor: 'istwert',
                 width: '150px',
-                Cell: ( row: any, original: Zuordnung ) => {
+                Cell: ( row: any, original: ZuordnungView ) => {
                     return (
                         <div style={{ textAlign: 'right', color: original.sollwert > row ? 'red' : 'green' }}>
                             {( row.value / 100 ).toFixed( 2 )}
@@ -68,7 +68,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                 Header: 'ok',
                 accessor: 'commited',
                 width: '10px',
-                Cell: ( row: any, original: Zuordnung ) => {
+                Cell: ( row: any, original: ZuordnungView ) => {
                     return (
                         <input type='checkbox'
                             value={row}
@@ -79,7 +79,7 @@ export class Konten extends React.Component<KontenProps, CState> {
         ];
     }
 
-    commitAssignment( a: Zuordnung ): void {
+    commitAssignment( a: ZuordnungView ): void {
 
     }
 
@@ -111,7 +111,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                     />
                 </div>
                 <div style={{ border: '1px solid black' }}>
-                    <MultiSelectLister<Zuordnung>
+                    <MultiSelectLister<ZuordnungView>
                         url='assign/get'
                         ext='KontoGroup/1800/1/1'
                         columns={this.columns}

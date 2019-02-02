@@ -57,7 +57,7 @@ export class KontoAssign extends React.Component<KontoAssignProps, {}> {
                             horiz={true}
                         />
                     </div>
-                    <div><input type='text' value={this.props.text} ref={this.comment} /></div>
+                    <div><input type='text' defaultValue={this.props.text} ref={this.comment} /></div>
                     <div><button onClick={this.assign}>Zuweisen</button>
                         <button onClick={this.cancel}>Abbrechen</button>
                     </div>

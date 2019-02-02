@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { KontenSelector } from '../utils/kontenselector'
-import { BuchungsBeleg, Plan } from '../utils/dtos'
+import { BuchungsBeleg, Plan, Zuordnung } from '../utils/dtos'
 import { PlanSelect } from './planselect'
 import * as mcss from './css/manuellbuchen.css'
 
@@ -32,9 +32,22 @@ class TeilBuchung {
         this.plan = plan;
     }
 
-    setBetrag( wert: number ) {
+    setBetrag( wert: number ): void {
         this.wertstring = ( Math.abs( wert ) / 100 ).toFixed( 2 );
         this.betrag = wert;
+    }
+
+    getZuordnung( belegid: number ): Zuordnung {
+        return {
+            id: undefined,
+            detail: this.details,
+            description: this.details,
+            istwert: this.betrag,
+            committed: false,
+            plan: (this.plan == undefined) ? undefined: this.plan.id,
+            beleg: belegid,
+            konto: this.konto
+        }
     }
 }
 
@@ -52,9 +65,22 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
         this.addPlan = this.addPlan.bind( this );
         this.renderPlanSelect = this.renderPlanSelect.bind( this );
         this.recalcData = this.recalcData.bind( this );
+        this.save = this.save.bind( this );
     }
 
     save(): void {
+        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: TeilBuchung ) => { return t.getZuordnung( this.props.beleg.id ) } );
+        var self: ManuellBuchen = this;
+        var jsonbody = JSON.stringify( zuordnungen );
+        fetch( '/assign/parts', {
+            method: 'post',
+            body: jsonbody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        } ).then( function( response ) {
+            self.props.onCommit();
+        } );
 
     }
 
