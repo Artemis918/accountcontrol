@@ -10,6 +10,7 @@ export interface SingleSelectlisterProps<D> {
     handleChange?: HandleSingleSelectCallback<D>;
     handleSelect?: HandleSingleSelectCallback<D>;
     columns: Column[];
+    lines?: number;
 }
 
 class CState<D> {
@@ -56,6 +57,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
                 columns={this.props.columns}
                 ext={this.props.ext}
                 url={this.props.url}
+                lines={this.props.lines}
                 handleSelect={( s, c, d, i ) => this.changeSelected( d, i )}
                 handleExecute={( s, c, d, i ) => this.executeSelected( d, i )}
                 isSelected={( i ) => this.isSelected( i )}

@@ -9,6 +9,7 @@ import { Templates } from './planing/templates'
 import { Planen } from './planing/planen'
 import { Buchen } from './buchen/buchen'
 import { Konten } from './konten'
+import { OverviewGFX } from './overviewgfx'
 import { Footer } from './footer'
 
 import * as css from './css/index.css'
@@ -61,6 +62,18 @@ class Main extends React.Component<{}, IState> {
         else if ( this.state.value == 4 ) {
             return ( <div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Kontenübersicht" />
+                <Konten sendmessage={this.sendMessage} />
+                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+            </div>
+            );
+        }
+        else if ( this.state.value == 5 ) {
+            var tasks: Tabulator[] = [
+                { name: 'Grafisch', comp: ( <OverviewGFX /> ) },
+                { name: 'Tabelle', comp: ( <div/> ) }
+            ];
+            return ( <div>
+                <Header changeValue={this.changeValue} value={this.state.value} title="Übersicht" />
                 <Konten sendmessage={this.sendMessage} />
                 <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div>

@@ -157,6 +157,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                 <div style={{ border: '1px solid black' }}>
                     <MultiSelectLister<Zuordnung>
                         url='assign/'
+                        lines={20}
                         ext={this.createExt()}
                         columns={this.columns}
                         ref={this.lister} />

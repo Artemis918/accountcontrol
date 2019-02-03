@@ -37,15 +37,15 @@ class TeilBuchung {
         this.betrag = wert;
     }
 
-    getZuordnung( belegid: number ): Zuordnung {
+    getZuordnung( beleg: BuchungsBeleg ): Zuordnung {
         return {
             id: undefined,
             detail: this.details,
             description: this.details,
-            istwert: this.betrag,
+            istwert: beleg.wert >=0 ? this.betrag: this.betrag*-1,
             committed: false,
             plan: ( this.plan == undefined ) ? undefined : this.plan.id,
-            beleg: belegid,
+            beleg: beleg.id,
             konto: this.konto
         }
     }
@@ -69,7 +69,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     save(): void {
-        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: TeilBuchung ) => { return t.getZuordnung( this.props.beleg.id ) } );
+        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: TeilBuchung ) => { return t.getZuordnung( this.props.beleg) } );
         zuordnungen.forEach( ( z: Zuordnung ) => { z.committed = true } );
 
         var self: ManuellBuchen = this;
@@ -191,7 +191,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     renderDelButton( index: number ): JSX.Element {
         if ( index == this.state.data.length - 1 ) {
-            return ( <button onClick={e => { this.removelastRow() }}>^</button> );
+            return ( <button onClick={e => { this.removeLastRow() }}>^</button> );
 
         }
         return ( <button onClick={e => { this.removeRow( index ) }}>x</button> );

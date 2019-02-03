@@ -8,6 +8,7 @@ export interface MultiSelectlisterProps<D> {
     url: string;
     handleselect?: HandleMultiSelectCallback<D>;
     columns: any[];
+    lines?: number;
 }
 
 class Range {
@@ -122,6 +123,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
                 columns={this.props.columns}
                 ext={this.props.ext}
                 url={this.props.url}
+                lines={this.props.lines}
                 handleSelect={( s: boolean, c: boolean, d: D, i: number ) => this.handleSelect( s, c, i )}
                 isSelected={( i ) => this.isSelected( i )}
                 ref={( r ) => { this.lister = r; }} />

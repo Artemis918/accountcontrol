@@ -47,6 +47,17 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok:1.18.4"
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/webapp'
+        }
+    }
+}
+
 task webpack(type: NodeTask, dependsOn: 'npmInstall') {
 	script = project.file('node_modules/.bin/webpack')
 }
@@ -57,7 +68,10 @@ clean.delete << file('src/main/webapp/dist')
 
 jar {
     baseName = 'kontospring'
-    version =  '0.1.0'
+    version =  '0.5.0'
+    from('src/main/webapp') {
+      include 'dist/bundle.js'
+   }
 }
 
 
