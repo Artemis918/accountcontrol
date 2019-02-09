@@ -45,7 +45,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         }
         else {
             var self = this;
-            fetch( 'http://localhost:8080/plans/id/' + id )
+            fetch( 'plans/id/' + id )
                 .then( response => response.json() )
                 .then( p => { self.plan = p; self.setState( { plan: self.plan } ) } );
         }

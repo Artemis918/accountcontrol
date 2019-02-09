@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.dataservice.ZuordnungService;
 import loc.balsen.kontospring.dto.ZuordnungDTO;
@@ -56,16 +57,30 @@ public class ZuordnungController {
 	@GetMapping("/getKontoGroup/{year}/{month}/{id}")
 	@ResponseBody
 	public List<ZuordnungDTO> getKontoGroup(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
-		List<Zuordnung> assingments = new ArrayList<>();
+		List<Zuordnung> zuordnungen = new ArrayList<>();
 		List<Konto> kontolist = kontoRepository.findByKontoGruppeId(id);
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 		for (Konto konto : kontolist) {
-			assingments.addAll(zuordnungRepository.findByKontoAndMonth(start, end, konto.getId()));
+			zuordnungen.addAll(zuordnungRepository.findByKontoAndMonth(start, end, konto.getId()));
 		}
-		return assingments.stream().map(z -> {
+
+		List<ZuordnungDTO> zdtos = zuordnungen.stream().map(z -> {
 			return new ZuordnungDTO(z);
 		}).collect(Collectors.toList());
+
+		zdtos.addAll(planRepository.findByPlanDateNotPlanned(start, end).stream().filter(p -> {
+			return contains(p, kontolist);
+		}).map(p -> {
+			return new ZuordnungDTO(p);
+		}).collect(Collectors.toList()));
+
+		zdtos.sort((z1, z2) -> z1.compareGroup(z2));
+		return zdtos;
+	}
+
+	private boolean contains(Plan p, List<Konto> kontolist) {
+		return kontolist.contains(p.getKonto());
 	}
 
 	@GetMapping("/getKonto/{year}/{month}/{id}")
@@ -73,9 +88,18 @@ public class ZuordnungController {
 	public List<ZuordnungDTO> getKonto(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
-		return zuordnungRepository.findByKontoAndMonth(start, end, id).stream().map(z -> {
+
+		List<ZuordnungDTO> zuordnungen = zuordnungRepository.findByKontoAndMonth(start, end, id).stream().map(z -> {
 			return new ZuordnungDTO(z);
 		}).collect(Collectors.toList());
+
+		zuordnungen.addAll(
+				planRepository.findByPlanDateNotPlanned(start, end).stream().filter(p -> p.getKonto().getId() == id).map(p -> {
+					return new ZuordnungDTO(p);
+				}).collect(Collectors.toList()));
+
+		zuordnungen.sort((z1, z2) -> z1.compareKonto(z2));
+		return zuordnungen;
 	}
 
 	@PostMapping("/commit")
@@ -118,12 +142,22 @@ public class ZuordnungController {
 		return new KontoSpringResult(false, "zugeordnet");
 	}
 
+	@GetMapping("/toplan/{planid}/{belegid}")
+	@ResponseBody
+	public KontoSpringResult assignToPlan(@PathVariable int planid, @PathVariable int belegid) {
+		zuordnungService.assignToPlan(planRepository.getOne(planid), buchungsBelegRepository.getOne(belegid));
+		return new KontoSpringResult(false, "zugeordnet");
+	}
+
 	@PostMapping("/parts")
 	@ResponseBody
-	public KontoSpringResult assigPartso(@RequestBody List<ZuordnungDTO> request) {
+	public KontoSpringResult assignParts(@RequestBody List<ZuordnungDTO> request) {
 
-		request.forEach((ZuordnungDTO z) -> zuordnungRepository
-				.save(z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository)));
+		request.forEach((ZuordnungDTO z) -> {
+			if (z.getIstwert()!= 0) 
+				zuordnungRepository.save(
+						z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository));
+		});
 		return new KontoSpringResult(false, "zugeordnet");
 	}
 }

@@ -73,11 +73,11 @@ public class Pattern {
 				&& matches(receiver, beleg.getEmpfaenger())
 				&& matches(referenceID , beleg.getReferenz())
 				&& matches(senderID , beleg.getEinreicherId())
-				&& matches(details , beleg.getDetails())
+				&& matches(details , beleg.getDetailsNOLF())
 				&& matches(mandat , beleg.getMandat());
 	}
 
 	private boolean matches(String pattern, String text) {
-		return text  == null || text.isEmpty() || text.contains(pattern);
+		return ((text  == null || text.isEmpty()) && pattern.isEmpty()) || text.contains(pattern);
 	}
 }

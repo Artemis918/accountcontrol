@@ -72,7 +72,7 @@ export  class Templates extends React.Component<TemplateProps,{}> {
                         <td style={{ width: '80%' }}>
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }} 
                                                 handleChange={this.refresheditor}
-                                                url = 'http://localhost:8080/templates/list'
+                                                url = 'templates/list'
                                                 columns = {this.columns}/>
                         </td>
                     </tr>

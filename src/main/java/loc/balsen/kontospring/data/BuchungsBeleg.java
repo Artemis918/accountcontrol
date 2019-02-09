@@ -16,6 +16,8 @@ import lombok.Data;
 @Table(name="buchungsbeleg")
 public class BuchungsBeleg {
 
+	public static String LF= " | ";
+	
 	public enum Art {
 		GUTSCHRIFT ,
 		LASTSCHRIFT ,
@@ -50,4 +52,13 @@ public class BuchungsBeleg {
 	private String mandat;
 	private String referenz;
 	
+	public String getDetailsNOLF() {
+		return details.replace(LF, "");
+	}
+	
+	public void addDetailLine (String line) {
+		if (!details.isEmpty())
+			details+=LF;
+		details+=line;
+	}
 }

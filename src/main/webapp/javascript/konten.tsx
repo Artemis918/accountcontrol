@@ -49,29 +49,34 @@ export class Konten extends React.Component<KontenProps, CState> {
                             {( cell.value / 100 ).toFixed( 2 )}
                         </div>
                     )
-                }
+                },
+                width: 100
             },
             {
                 Header: 'Ist',
                 accessor: 'istwert',
                 Cell: ( cell: CellInfo ) => {
                     return (
-                        <div style={{ textAlign: 'right', color: cell.original.sollwert > cell.value ? 'red' : 'green' }}>
-                            {( cell.value / 100 ).toFixed( 2 )}
+                        <div style={{ textAlign: 'right', backgroundColor: this.getColor(cell.original) }}>
+                            {( cell.original.beleg == 0 ) ? '--' : ( cell.value / 100 ).toFixed( 2 )}
                         </div>
                     )
-                }
+                },
+                width: 100
             },
             {
                 Header: 'ok',
                 accessor: 'committed',
                 Cell: ( cell: CellInfo ) => {
-                    return (
-                        <input type='checkbox'
-                            checked={cell.value}
-                            onClick={() => this.commitAssignment( cell.original )} />
-                    )
-                }
+                    if ( cell.original.beleg != 0 )
+                        return (
+                            <input type='checkbox'
+                                checked={cell.value}
+                                width={40}
+                                onClick={() => this.commitAssignment( cell.original )} />
+                        )
+                },
+                width: 50
             }
         ];
 
@@ -81,8 +86,17 @@ export class Konten extends React.Component<KontenProps, CState> {
         this.removeAssignment = this.removeAssignment.bind( this );
     }
 
+    getColor( z: Zuordnung ): string {
+        if ( z.beleg == 0 || z.sollwert < z.istwert )
+            return 'lightgrey';
+        else if ( z.sollwert > z.istwert )
+            return 'red';
+        else
+            return 'green';
+    }
+
     commit( z: Zuordnung[] ): void {
-        var ids: number[] = z.map((za: Zuordnung)=>{return za.id;});
+        var ids: number[] = z.map( ( za: Zuordnung ) => { return za.id; } );
         var self: Konten = this;
         fetch( '/assign/commit', {
             method: 'post',
@@ -110,7 +124,7 @@ export class Konten extends React.Component<KontenProps, CState> {
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map((za: Zuordnung)=>{return za.beleg;});
+        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Zuordnung ) => { return za.beleg; } );
         var self: Konten = this;
         fetch( '/assign/remove', {
             method: 'post',
@@ -148,7 +162,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                     <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
                     <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
                 </div>
-                <div style={{ width: '30%', float: 'left', border: '1px solid black' }}>
+                <div style={{ width: '200px', float: 'left', border: '1px solid black' }}>
                     <KontenTree
                         handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
                         handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}

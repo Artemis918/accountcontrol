@@ -34,7 +34,7 @@ class TeilBuchung {
 
     setBetrag( wert: number ): void {
         this.wertstring = ( Math.abs( wert ) / 100 ).toFixed( 2 );
-        this.betrag = wert;
+        this.betrag = Math.abs(wert);
     }
 
     getZuordnung( beleg: BuchungsBeleg ): Zuordnung {
@@ -107,10 +107,11 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     recalcData( data: TeilBuchung[] ): TeilBuchung[] {
         var result: TeilBuchung[] = [];
         var sum: number = 0
+        var belegwert = Math.abs(this.props.beleg.wert);
 
         for ( var row of data ) {
-            if ( sum + row.betrag > this.props.beleg.wert ) {
-                var betrag: number = this.props.beleg.wert - sum;
+            if ( sum + row.betrag > belegwert ) {
+                var betrag: number = belegwert - sum;
                 row.betrag = betrag > 0 ? betrag : 0;
                 row.wertstring = ( row.betrag / 100 ).toFixed( 2 );
             }
@@ -118,13 +119,13 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
             sum += row.betrag;
         }
 
-        if ( sum < Math.abs( this.props.beleg.wert ) ) {
+        if ( sum < belegwert ) {
 
             if ( result[result.length - 1].details == 'Rest' ) {
-                result[result.length - 1].setBetrag( result[result.length - 1].betrag + this.props.beleg.wert - sum );
+                result[result.length - 1].setBetrag( result[result.length - 1].betrag + belegwert - sum );
             }
             else {
-                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', this.props.beleg.wert - sum, result[result.length - 1].konto, result[result.length - 1].group )
+                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', belegwert - sum, result[result.length - 1].konto, result[result.length - 1].group )
                 result.push( newbuch );
             }
         }
@@ -232,8 +233,9 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                         {this.state.data.map( ( d: TeilBuchung, i: number ) => this.renderRow( i ) )}
                     </tbody>
                 </table>
-                <span style={{ width: '50%' }}><button onClick={( e ) => this.setState( { planselect: true } )} > Select Plan </button> </span>
-                <span style={{ width: '50%' }}><button onClick={this.save} > Speichern </button></span>
+                <span style={{ width: '30%' }}><button onClick={( e ) => this.setState( { planselect: true } )} > Select Plan </button> </span>
+                <span style={{ width: '30%' }}><button onClick={this.props.onCommit} > Abbrechen </button></span>
+                <span style={{ width: '30%' }}><button onClick={this.save} > Speichern </button></span>
                 {this.renderPlanSelect()}
             </div>
         )

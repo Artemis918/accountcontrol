@@ -53,7 +53,8 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
     getDataRange( start: number, end: number ): D[] {
         var lo: number = start > end ? end : start;
         var hi: number = start > end ? start : end;
-        return Array.from( Array( hi - lo + 1 ).keys() ).map( ( i: number ): D => this.state.data[i] );
+        return Array.from( Array( hi - lo + 1 ).keys() )
+                    .map( ( i: number ): D => this.state.data[i+start] );
     }
 
     reload(): void {

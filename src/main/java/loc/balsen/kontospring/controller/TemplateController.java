@@ -36,6 +36,15 @@ public class TemplateController {
 	@GetMapping("/list")
 	@ResponseBody
 	List<TemplateDTO> findTemplates() {
+		return templateRepository.findValid()
+				.stream()
+				.map((template) -> {return new TemplateDTO(template);})
+				.collect(Collectors.toList());
+	}
+	
+	@GetMapping("/listall")
+	@ResponseBody
+	List<TemplateDTO> findAllTemplates() {
 		return templateRepository.findAll()
 				.stream()
 				.map((template) -> {return new TemplateDTO(template);})

@@ -11,6 +11,7 @@ import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 
@@ -41,7 +42,7 @@ public class ZuordnungService {
 		}
 
 		// get Planlist for period
-		assign(belege, planRepository.findByPeriod(mindate, maxdate));
+		assign(belege, planRepository.findByPeriodNotPlanned(mindate, maxdate));
 	}
 
 	public void assign(List<BuchungsBeleg> belege, List<Plan> plans) {
@@ -56,9 +57,10 @@ public class ZuordnungService {
 
 		for (Plan plan : plans) {
 			boolean pattern = plan.getMatchStyle() == Plan.MatchStyle.PATTERN;
+			boolean summax = plan.getMatchStyle() == Plan.MatchStyle.SUMMAX;
 			boolean period = plan.isInPeriod(beleg.getBeleg());
 
-			if ((pattern || period) && plan.matches(beleg)) {
+			if (!summax && (pattern || period) && plan.matches(beleg)) {
 				plansForBeleg.add(plan);
 			}
 		}
@@ -71,12 +73,19 @@ public class ZuordnungService {
 		for (int i = plansForBeleg.size() - 1; i > 0; i--) {
 			Plan plan = plansForBeleg.get(i);
 			assign(beleg, plan, plan.getWert());
-			summe += plan.getWert();
+			if (plan.getMatchStyle() != Plan.MatchStyle.PATTERN)
+				summe += plan.getWert();
 		}
 
 		/// the entry gets the rest
 		Plan plan = plansForBeleg.get(0);
 		assign(beleg, plan, beleg.getWert() - summe);
+
+		// remove used plans
+		for (Plan plan1 : plansForBeleg) {
+			if (plan1.getMatchStyle() != MatchStyle.PATTERN)
+				plans.remove(plan1);
+		}
 
 		return true;
 	}
@@ -91,15 +100,14 @@ public class ZuordnungService {
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(wert);
 		zuordnung.setCommitted(false);
-		
-		if ( plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
+
+		if (plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
 			zuordnung.setPlan(plan);
 		}
-		
-		// Save zurordnung
+
 		zuordnungRepository.save(zuordnung);
 	}
-	
+
 	public List<BuchungsBeleg> deleteDeactivated(List<Plan> deactivatedPlans) {
 		List<BuchungsBeleg> result = new ArrayList<>();
 		for (Plan plan : deactivatedPlans) {
@@ -111,11 +119,11 @@ public class ZuordnungService {
 		}
 		return result;
 	}
-	
+
 	public void assignToKonto(Konto konto, String text, BuchungsBeleg beleg) {
 		if (text.isEmpty())
 			text = beleg.getDetails();
-		
+
 		Zuordnung zuordnung = new Zuordnung();
 
 		zuordnung.setBuchungsbeleg(beleg);
@@ -124,6 +132,18 @@ public class ZuordnungService {
 		zuordnung.setShortdescription(text);
 		zuordnung.setWert(beleg.getWert());
 		zuordnung.setCommitted(false);
+		zuordnungRepository.save(zuordnung);
+	}
+
+	public void assignToPlan(Plan plan, BuchungsBeleg beleg) {
+		Zuordnung zuordnung = new Zuordnung();
+
+		zuordnung.setBuchungsbeleg(beleg);
+		zuordnung.setDescription(plan.getDescription());
+		zuordnung.setKonto(plan.getKonto());
+		zuordnung.setShortdescription(plan.getShortDescription());
+		zuordnung.setWert(beleg.getWert());
+		zuordnung.setCommitted(true);
 		zuordnungRepository.save(zuordnung);
 	}
 

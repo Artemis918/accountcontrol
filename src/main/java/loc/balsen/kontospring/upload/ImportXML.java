@@ -103,7 +103,6 @@ public class ImportXML extends Importbase {
 
 		Element infoElement = getChild(details, "RmtInf");
 
-		String infotxt = "";
 
 		List<Element> infolines = infoElement.getChildren("Ustrd",null);
 		for (Element line : infolines) {
@@ -114,10 +113,10 @@ public class ImportXML extends Importbase {
 				beleg.setMandat(text.substring(7));
 			else if (text.startsWith("Einreicher-ID"))
 				beleg.setEinreicherId(text.substring(14));
-			else
-				infotxt += text;
+			else {
+				beleg.addDetailLine(text);
+			}
 		}
-		beleg.setDetails(infotxt);
 
 		beleg.setArt(getArt(details));
 		beleg.setEingang(LocalDate.now());

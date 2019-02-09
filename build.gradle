@@ -74,4 +74,11 @@ jar {
    }
 }
 
+task install(type: Copy) {
+    from "$buildDir/build/libs/kontospring.jar"
+    into "/home/webproject/kontospring.jar"
+}
+
+install.dependsOn 'jar'
+
 

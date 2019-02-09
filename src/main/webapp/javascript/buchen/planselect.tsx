@@ -63,7 +63,7 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
                     padding: '20px',
                     border: '2px',
                     borderStyle: 'double',
-                    width: '300px',
+                    width: '500px',
                     background: 'gray'
                 }}>
                     <span>
