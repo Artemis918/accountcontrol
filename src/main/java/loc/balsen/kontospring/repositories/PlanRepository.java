@@ -1,6 +1,7 @@
 package loc.balsen.kontospring.repositories;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,7 +39,10 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 			+ " and p.deactivate_date is null", nativeQuery = true)
 	List<Plan> findByPlanDateNotPlanned(LocalDate mindate, LocalDate maxdate);
 
-	
+
 	List<Plan> findByTemplate(Template template);
+
+	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date = null" , nativeQuery = true)
+	Collection<Plan> findByPatternPlans();
 
 }

@@ -9,7 +9,6 @@
     "@types/react": "^16.7.20",
     "@types/react-dom": "^16.0.11",
     "@types/react-easy-chart": "^0.1.4",
-    "@types/react-table": "^6.7.21",
     "ajv": "^6.7.0",
     "axios": "^0.18.0",
     "date-fns": "^2.0.0-alpha.27",
@@ -18,8 +17,7 @@
     "react-day-picker": "^7.2.4",
     "react-dom": "^16.7.0",
     "react-dropzone": "^8.0.3",
-    "react-easy-chart": "^1.0.0",
-    "react-table": "^6.8.6"
+    "react-easy-chart": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

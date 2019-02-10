@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { Column, CellInfo } from 'react-table'
-import { MultiSelectLister } from '../utils/multiselectlister';
+import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
 import { KontoAssign } from './kontoassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { ManuellBuchen } from './manuellbuchen';
 import { PlanSelect } from './planselect';
 import { BuchungsBeleg, Plan } from '../utils/dtos'
-import "react-table/react-table.css";
 
 type SendMessage = ( m: string, error: boolean ) => void
 
@@ -28,34 +26,33 @@ interface IState {
 
 export class Buchen extends React.Component<BuchenProps, IState> {
 
-    columns: Column[] = [{
-        Header: 'Datum',
-        accessor: 'wertstellung',
-    }, {
-        Header: 'Empf./Absender',
-        accessor: 'absender',
-        Cell: ( cellinfo: CellInfo ) => (
-            <div>
-                {( cellinfo.original.wert > 0 ) ? cellinfo.original.absender : cellinfo.original.empfaenger}
-            </div>
-        )
-    }, {
-        Header: 'Detail',
-        accessor: 'details',
-    }, {
-        Header: 'Betrag',
-        accessor: 'wert',
-        Cell: ( cellinfo: CellInfo ) => (
+    columns: ColumnInfo<BuchungsBeleg>[] = [
+        {
+            header: 'Datum',
+            getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE') }
+        }, {
+            header: 'Empf./Absender',
+            cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
+                <div>
+                    {( cellinfo.data.wert > 0 ) ? cellinfo.data.absender : cellinfo.data.empfaenger}
+                </div>
+            )
+        }, {
+            header: 'Detail',
+            getdata: ( data: BuchungsBeleg ) => { return data.details },
+        }, {
+            header: 'Betrag',
+            cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
 
-            <div style={{
-                color: cellinfo.value >= 0 ? 'green' : 'red',
-                textAlign: 'right'
-            }}>
-                {( cellinfo.value / 100 ).toFixed( 2 )}
-            </div>
+                <div style={{
+                    color: cellinfo.data.wert >= 0 ? 'green' : 'red',
+                    textAlign: 'right'
+                }}>
+                    {( cellinfo.data.wert / 100 ).toFixed( 2 )}
+                </div>
 
-        )
-    }];
+            )
+        }];
     lister: MultiSelectLister<BuchungsBeleg>;
 
     constructor( props: BuchenProps ) {
@@ -65,7 +62,8 @@ export class Buchen extends React.Component<BuchenProps, IState> {
         this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
-        this.assignSelectedPlan = this.assignSelectedPlan.bind( this );    }
+        this.assignSelectedPlan = this.assignSelectedPlan.bind( this );
+    }
 
     assignAuto(): void {
         fetch( 'assign/all' ).then( response => response.json() );
@@ -125,16 +123,16 @@ export class Buchen extends React.Component<BuchenProps, IState> {
         var self = this;
         if ( plan != undefined ) {
             var self = this;
-            fetch( '/assign/toplan/' + plan.id +'/' + this.state.planassign)
-            .then( function( response ) {
-                self.setState( { planassign: undefined } );
-                self.lister.reload();
-            } );
+            fetch( '/assign/toplan/' + plan.id + '/' + this.state.planassign )
+                .then( function( response ) {
+                    self.setState( { planassign: undefined } );
+                    self.lister.reload();
+                } );
         }
         else
             this.setState( { planassign: undefined } );
     }
-    
+
     assignPlan(): void {
         var data: BuchungsBeleg[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
@@ -153,7 +151,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
         else
             return null;
     }
-    
+
     render(): JSX.Element {
 
         if ( this.state.plan !== undefined ) {

@@ -61,6 +61,15 @@ public class PlanController {
 			return new PlanDTO(plan);
 		}).collect(Collectors.toList());
 	}
+	
+	@GetMapping("/patternplans")
+	@ResponseBody
+	List<PlanDTO> findPatternPlans() {
+
+		return planRepository.findByPatternPlans().stream().map((plan) -> {
+			return new PlanDTO(plan);
+		}).collect(Collectors.toList());
+	}
 
 	@PostMapping("/save")
 	@ResponseBody

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { CellInfo, Column } from 'react-table'
-import { MultiSelectLister } from './utils/multiselectlister'
+import { MultiSelectLister, ColumnInfo, CellInfo } from './utils/multiselectlister'
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
 import { KontenSelector } from './utils/kontenselector'
@@ -22,7 +21,7 @@ class CState {
 
 export class Konten extends React.Component<KontenProps, CState> {
 
-    columns: Column[];
+    columns: ColumnInfo<Zuordnung>[];
     lister: React.RefObject<MultiSelectLister<Zuordnung>>;
 
     constructor( props: KontenProps ) {
@@ -37,46 +36,44 @@ export class Konten extends React.Component<KontenProps, CState> {
         this.lister = React.createRef();
         this.columns = [
             {
-                Header: 'Beschreibung',
-                accessor: 'detail',
+                header: 'Beschreibung',
+                getdata: ( z: Zuordnung ) => { return z.detail }
             },
             {
-                Header: 'Soll',
-                accessor: 'sollwert',
-                Cell: ( cell: CellInfo ) => {
+                header: 'Soll',
+                cellrender: ( cell: CellInfo<Zuordnung> ) => {
+                    if ( cell.data.sollwert == 0 ) {
+                        return null;
+                    }
+                    else {
+                        return (
+                            <div style={{ textAlign: 'right' }}>
+                                {( cell.data.sollwert / 100 ).toFixed( 2 )}
+                            </div>
+                        )
+                    }
+                }
+            },
+            {
+                header: 'Ist',
+                cellrender: ( cell: CellInfo<Zuordnung> ) => {
                     return (
-                        <div style={{ textAlign: 'right' }}>
-                            {( cell.value / 100 ).toFixed( 2 )}
+                        <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
+                            {( cell.data.beleg == 0 ) ? '--' : ( cell.data.istwert / 100 ).toFixed( 2 )}
                         </div>
                     )
                 },
-                width: 100
             },
             {
-                Header: 'Ist',
-                accessor: 'istwert',
-                Cell: ( cell: CellInfo ) => {
-                    return (
-                        <div style={{ textAlign: 'right', backgroundColor: this.getColor(cell.original) }}>
-                            {( cell.original.beleg == 0 ) ? '--' : ( cell.value / 100 ).toFixed( 2 )}
-                        </div>
-                    )
-                },
-                width: 100
-            },
-            {
-                Header: 'ok',
-                accessor: 'committed',
-                Cell: ( cell: CellInfo ) => {
-                    if ( cell.original.beleg != 0 )
+                header: 'ok',
+                cellrender: ( cell: CellInfo<Zuordnung> ) => {
+                    if ( cell.data.beleg != 0 )
                         return (
                             <input type='checkbox'
-                                checked={cell.value}
-                                width={40}
-                                onClick={() => this.commitAssignment( cell.original )} />
+                                checked={cell.data.committed}
+                                onClick={() => this.commitAssignment( cell.data )} />
                         )
                 },
-                width: 50
             }
         ];
 

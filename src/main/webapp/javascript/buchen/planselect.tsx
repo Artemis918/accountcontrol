@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { SingleSelectLister } from '../utils/singleselectlister'
+import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils/monthselect'
-import { Column } from 'react-table'
 import { Plan } from '../utils/dtos'
 
 type OnSelectCallBack = ( plan: Plan ) => void;
@@ -19,31 +18,31 @@ interface IState {
 
 export class PlanSelect extends React.Component<PlanSelectProps, IState> {
 
-    columns: Column[];
+    columns: ColumnInfo<Plan>[];
     lister: SingleSelectLister<Plan>;
 
     constructor( props: PlanSelectProps ) {
         super( props );
         this.state = { year: this.props.year, month: this.props.month };
-        this.setFilter = this.setFilter.bind(this);
+        this.setFilter = this.setFilter.bind( this );
         this.columns = [{
-            Header: 'Datum',
-            accessor: 'plandate',
+            header: 'Datum',
+            getdata: ( p: Plan ): string => { return p.plandate.toLocaleDateString( 'de-DE' ) }
         }, {
-            Header: 'Beschreibung',
-            accessor: 'shortdescription',
+            header: 'Beschreibung',
+            getdata: ( p: Plan ): string => { return p.shortdescription }
         }, {
-            Header: 'Betrag',
-            accessor: 'wert',
-            Cell: ( row: any ) => (
+            header: 'Betrag',
+            cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
+                return
 
                 <div style={{
-                    color: row.value >= 0 ? 'green' : 'red',
+                    color: cell.data.wert >= 0 ? 'green' : 'red',
                     textAlign: 'right'
                 }}>
-                    {( row.value / 100 ).toFixed( 2 )}
+                    {( cell.data.wert / 100 ).toFixed( 2 )}
                 </div>
-            )
+            }
         }]
     }
 
@@ -68,14 +67,14 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
                 }}>
                     <span>
                         <MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
-                        <button onClick={()=>this.props.onSelect(undefined)}>Cancel</button> 
+                        <button onClick={() => this.props.onSelect( undefined )}>Cancel</button>
                     </span>
                     <SingleSelectLister<Plan>
                         ext={this.state.year + '/' + this.state.month}
                         url='plans/unassigned/'
                         handleSelect={this.props.onSelect}
                         columns={this.columns}
-                        ref={(ref)=>{this.lister=ref}} />
+                        ref={( ref ) => { this.lister = ref }} />
                 </div>
             </div>
         )

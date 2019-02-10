@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { SelectLister } from "./selectlister";
+import { SelectLister, ColumnInfo, CellInfo } from "./selectlister";
 
 export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
+export type ColumnInfo<D> = ColumnInfo<D>;
+export type CellInfo<D> = CellInfo<D>;
 
 export interface MultiSelectlisterProps<D> {
     ext?: string;
     url: string;
     handleselect?: HandleMultiSelectCallback<D>;
-    columns: any[];
+    columns: ColumnInfo<D>[];
     lines?: number;
 }
 

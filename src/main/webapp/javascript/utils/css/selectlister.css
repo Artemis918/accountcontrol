@@ -8,3 +8,8 @@
 	background: #d8d8d8;
 	color : #000000;
 }
+
+.tablebody {
+	overflow: scroll;
+	height: '80%';
+}

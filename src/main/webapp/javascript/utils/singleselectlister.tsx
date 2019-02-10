@@ -1,15 +1,17 @@
 import * as React from 'react';
-import { Column } from 'react-table'
-import { SelectLister } from './selectlister'
+import { SelectLister, ColumnInfo, CellInfo } from './selectlister'
 
 export type HandleSingleSelectCallback<D> = ( data: D ) => void;
+
+export type ColumnInfo<D> = ColumnInfo<D>;
+export type CellInfo<D> = CellInfo<D>;
 
 export interface SingleSelectlisterProps<D> {
     ext?: string;
     url: string;
     handleChange?: HandleSingleSelectCallback<D>;
     handleSelect?: HandleSingleSelectCallback<D>;
-    columns: Column[];
+    columns: ColumnInfo<D>[];
     lines?: number;
 }
 

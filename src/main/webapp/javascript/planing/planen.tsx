@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { PlanEditor } from './planeditor'
-import { SingleSelectLister } from '../utils/singleselectlister'
+import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils//monthselect'
-import { Column } from 'react-table'
 import { Plan } from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -21,7 +20,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
 
     lister: SingleSelectLister<Plan>;
     editor: PlanEditor;
-    columns: Column[];
+    columns: ColumnInfo<Plan>[];
 
     constructor( props: PlanenProps ) {
         super( props );
@@ -33,21 +32,20 @@ export class Planen extends React.Component<PlanenProps, IState> {
         this.refresheditor = this.refresheditor.bind( this );
 
         this.columns = [{
-            Header: 'Datum',
-            accessor: 'plandate',
+            header: 'Datum',
+            getdata: (data: Plan) : string => { return data.plandate.toLocaleDateString('de-DE') }
         }, {
-            Header: 'Beschreibung',
-            accessor: 'shortdescription',
+            header: 'Beschreibung',
+            getdata: (data: Plan) : string => { return data.shortdescription }
         }, {
-            Header: 'Betrag',
-            accessor: 'wert',
-            Cell: ( row: any ) => (
+            header: 'Betrag',
+            cellrender: ( cell: CellInfo<Plan> ) : JSX.Element => (
 
                 <div style={{
-                    color: row.value >= 0 ? 'green' : 'red',
+                    color: cell.data.wert >= 0 ? 'green' : 'red',
                     textAlign: 'right'
                 }}>
-                    {( row.value / 100 ).toFixed( 2 )}
+                    {( cell.data.wert / 100 ).toFixed( 2 )}
                 </div>
             )
         }]

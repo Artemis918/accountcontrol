@@ -7,6 +7,7 @@ import { BelegUploader } from './belege/beleguploader'
 import { BelegErfassung } from './belege/belegerfassung'
 import { Templates } from './planing/templates'
 import { Planen } from './planing/planen'
+import { PatternPlanen } from './planing/patternplanen'
 import { Buchen } from './buchen/buchen'
 import { Konten } from './konten'
 import { OverviewGFX } from './overviewgfx'
@@ -83,6 +84,7 @@ class Main extends React.Component<{}, IState> {
             var tasks = [
                 { name: 'Vorlagen', comp: ( <Templates sendmessage={this.sendMessage} /> ) },
                 { name: 'Planen', comp: ( <Planen sendmessage={this.sendMessage} /> ) },
+                { name: 'Muster', comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
             ];
             return ( <div>
                 <Header changeValue={this.changeValue} value={this.state.value} title="Planen" />
