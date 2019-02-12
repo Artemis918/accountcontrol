@@ -66,8 +66,12 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     }
 
     assignAuto(): void {
-        fetch( 'assign/all' ).then( response => response.json() );
-        this.lister.reload();
+        fetch( 'assign/all' )
+        .then( response => {
+            response.json() 
+            this.lister.reload();
+        }
+        );
     }
 
     assignKonto(): void {
