@@ -47,7 +47,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
     }
 
     refresheditor( data: Plan ): void {
-        this.editor.setPlan( data.id );
+        this.editor.setPlan( data );
     }
 
     render(): JSX.Element {
@@ -62,7 +62,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
                             <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                 handleChange={( data: Plan ) => this.refresheditor( data )}
                                 columns={this.columns}
-                                url='plans/patternplans/' />
+                                url='plans/patternplans' />
                         </td>
                     </tr>
                 </tbody>

@@ -1,11 +1,13 @@
 package loc.balsen.kontospring.dataservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +34,11 @@ public class ZuordnungServiceTest extends TestContext {
 	public void setup() {
 		plans =  new ArrayList<>();
 		createKontoData();
+	}
+	
+	@After
+	public void teardown() {
+		clearRepos();
 	}
 	
 	@Test
@@ -75,7 +83,15 @@ public class ZuordnungServiceTest extends TestContext {
 		buchungen4.add(createBeleg("2018-01-25","5678"));
 		zuordnungService.assign(buchungen4);
 		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
-		assertEquals(5,zuordnungen.size());		
+		assertEquals(5,zuordnungen.size());	
+				
+		// pattern
+		List<BuchungsBeleg> buchungen5 =  new ArrayList<>();
+		buchungen5.add(createBeleg("2018-01-04","a98765"));
+		zuordnungService.assign(buchungen5);
+		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assertEquals(6,zuordnungen.size());	
+		assertNull(zuordnungen.get(5).getPlan());
 	}
 	
 	private BuchungsBeleg createBeleg(String date, String mandat) {
@@ -93,6 +109,7 @@ public class ZuordnungServiceTest extends TestContext {
 		createplan("2018-01-08", "2018-01-16", "{\"mandat\": \"3456\"}");
 		createplan("2018-01-08", "2018-01-19", "{\"mandat\": \"3456\"}");
 		createplan("2018-01-17", "2018-01-25", "{\"mandat\": \"5678\"}");
+		createplan("2018-01-17", "{\"mandat\": \"9876\"}");
 		
 	}
 	
@@ -104,6 +121,18 @@ public class ZuordnungServiceTest extends TestContext {
 		plan.setPattern(new Pattern(pattern));
 		plan.setWert(25);
 		plan.setKonto(konto1);
+		planRepository.save(plan);
+		plans.add(plan);
+	}
+	
+	private void createplan(String start, String pattern) {
+		Plan plan= new Plan();
+		plan.setStartDate(LocalDate.parse(start));
+		plan.setPlanDate(LocalDate.parse(start).plusDays(2));
+		plan.setPattern(new Pattern(pattern));
+		plan.setMatchStyle(MatchStyle.PATTERN);
+		plan.setWert(25);
+		plan.setKonto(konto2);
 		planRepository.save(plan);
 		plans.add(plan);
 	}

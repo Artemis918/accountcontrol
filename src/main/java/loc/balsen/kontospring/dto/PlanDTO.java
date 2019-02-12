@@ -23,7 +23,7 @@ public class PlanDTO {
 	private PatternDTO patterndto;
 	private String shortdescription;
 	private String description;
-	private MatchStyle matchstyle;
+	private int matchstyle;
 	private int template;
 	private int konto;
 	private int kontogroup;
@@ -42,7 +42,7 @@ public class PlanDTO {
 		this.patterndto=new PatternDTO(plan.getPatternObject());
 		this.shortdescription=plan.getShortDescription();
 		this.description=plan.getDescription();
-		this.matchstyle=plan.getMatchStyle();
+		this.matchstyle=plan.getMatchStyle().ordinal();
 		this.konto=plan.getKonto().getId();
 		this.kontogroup=plan.getKonto().getKontoGruppe().getId();
 		
@@ -64,7 +64,7 @@ public class PlanDTO {
 		plan.setPattern(patterndto.toPattern());
 		plan.setShortDescription(shortdescription);
 		plan.setDescription(description);
-		plan.setMatchStyle(matchstyle);
+		plan.setMatchStyle(MatchStyle.values()[matchstyle]);
 		plan.setKonto(kontoRepository.findById(konto).get());
 		Optional<Template> otemp = templateRepository.findById(template);
 		if (otemp.isPresent())

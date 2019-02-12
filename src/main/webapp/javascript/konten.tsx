@@ -84,7 +84,7 @@ export class Konten extends React.Component<KontenProps, CState> {
     }
 
     getColor( z: Zuordnung ): string {
-        if ( z.beleg == 0 || z.sollwert < z.istwert )
+        if ( z.beleg == 0 || z.plan == 0)
             return 'lightgrey';
         else if ( z.sollwert > z.istwert )
             return 'red';
@@ -147,6 +147,17 @@ export class Konten extends React.Component<KontenProps, CState> {
         }
     }
 
+    createFooter( z: Zuordnung[] ): Zuordnung {
+        var footer: Zuordnung = new Zuordnung();
+        var istwert: number = 0;
+        var sollwert: number = 0;
+        z.map( ( zuordnung: Zuordnung ) => { istwert += zuordnung.istwert; if ( zuordnung.sollwert != undefined ) sollwert += zuordnung.sollwert; } )
+        footer.detail = 'Summe';
+        footer.istwert = istwert;
+        footer.sollwert = sollwert;
+        return footer;
+    }
+
     render(): JSX.Element {
         return (
             <div>
@@ -159,22 +170,29 @@ export class Konten extends React.Component<KontenProps, CState> {
                     <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
                     <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
                 </div>
-                <div style={{ width: '200px', float: 'left', border: '1px solid black' }}>
-                    <KontenTree
-                        handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
-                        handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}
-                    />
-                </div>
-                <div style={{ border: '1px solid black' }}>
-                    <MultiSelectLister<Zuordnung>
-                        url='assign/'
-                        lines={20}
-                        ext={this.createExt()}
-                        columns={this.columns}
-                        ref={this.lister} />
-                </div>
+                <table>
+                    <tbody>
+                        <tr>
+
+                            <td style={{ width: '200px', border: '1px solid black' }}>
+                                <KontenTree
+                                    handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
+                                    handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}
+                                />
+                            </td>
+                            <td style={{ border: '1px solid black' }}>
+                                <MultiSelectLister<Zuordnung>
+                                    createFooter={this.createFooter}
+                                    url='assign/'
+                                    lines={20}
+                                    ext={this.createExt()}
+                                    columns={this.columns}
+                                    ref={this.lister} />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
-
     }
 }

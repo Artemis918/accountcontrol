@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,11 @@ public class PlanServiceTest extends TestContext {
 	@Before
 	public void setup() {
 		createKontoData();
+	}
+	
+	@After
+	public void teardown() {
+		clearRepos();
 	}
 	
 	@Test
@@ -61,7 +67,6 @@ public class PlanServiceTest extends TestContext {
 		template2.setKonto(konto5);
 		templateRepository.save(template2);
 
-		
 		planService.createPlansfromTemplate(template);
 
 		List<Plan> plans = planRepository.findAll();

@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +40,7 @@ public class PlanControllerTest extends TestContext {
 			"\"startdate\": \"1797-10-03\", " +
 			"\"plandate\": \"1797-10-31\", " +
 			"\"enddate\": \"1797-10-03\", " +
-			"\"idkonto\": KONTO, " +
+			"\"konto\": KONTO, " +
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
@@ -61,19 +62,23 @@ public class PlanControllerTest extends TestContext {
 	public void setup() {
 		createKontoData();
 	}
-
+	
+	@After
+	public void teardown() {
+		clearRepos();
+	}
+	
 	private Template template;
 
 	@Test
 	public void testSaveAndList() throws Exception {
 		
-		int sizeBefore = planRepository.findAll().size();
 		String planjsonk = planjson.replace("KONTO", Integer.toString(konto1.getId()));
 		mvc.perform(post("/plans/save").content(planjsonk).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
 		List<Plan> plans =planRepository.findAll();
-		assertEquals(sizeBefore+1,plans.size());
-		Plan plan  = plans.get(sizeBefore);
+		assertEquals(1,plans.size());
+		Plan plan  = plans.get(0);
 		assertEquals(100, plan.getWert());
 		assertEquals(konto1.getId(), plan.getKonto().getId());
 

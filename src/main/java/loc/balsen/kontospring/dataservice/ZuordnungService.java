@@ -143,6 +143,7 @@ public class ZuordnungService {
 		zuordnung.setKonto(plan.getKonto());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(beleg.getWert());
+		zuordnung.setPlan(plan);
 		zuordnung.setCommitted(true);
 		zuordnungRepository.save(zuordnung);
 	}

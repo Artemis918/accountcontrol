@@ -79,7 +79,7 @@ public class Plan {
 	}
 
 	public boolean isInPeriod(LocalDate beleg) {
-		return !beleg.isBefore(startDate) && !beleg.isAfter(endDate);
+		return !beleg.isBefore(startDate) && (endDate==null || !beleg.isAfter(endDate));
 	}
 
 	public boolean matches(BuchungsBeleg beleg) {

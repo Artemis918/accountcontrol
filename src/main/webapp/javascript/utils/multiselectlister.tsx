@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectLister, ColumnInfo, CellInfo } from "./selectlister";
+import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from "./selectlister";
 
 export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
 export type ColumnInfo<D> = ColumnInfo<D>;
@@ -9,6 +9,7 @@ export interface MultiSelectlisterProps<D> {
     ext?: string;
     url: string;
     handleselect?: HandleMultiSelectCallback<D>;
+    createFooter?: CreateFooterCallback<D>;
     columns: ColumnInfo<D>[];
     lines?: number;
 }
@@ -123,6 +124,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
         return (
             <SelectLister<D>
                 columns={this.props.columns}
+                createFooter={this.props.createFooter}
                 ext={this.props.ext}
                 url={this.props.url}
                 lines={this.props.lines}

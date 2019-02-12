@@ -33,7 +33,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
 
         this.columns = [{
             header: 'Datum',
-            getdata: (data: Plan) : string => { return data.plandate.toLocaleDateString('de-DE') }
+            getdata: (data: Plan) : string => { return data.plandate.toLocaleDateString('de-DE',{day: '2-digit', month: '2-digit'}) }
         }, {
             header: 'Beschreibung',
             getdata: (data: Plan) : string => { return data.shortdescription }
@@ -63,7 +63,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
     }
 
     refresheditor( data: Plan ): void {
-        this.editor.setPlan( data.id );
+        this.editor.setPlan( data );
     }
 
     render(): JSX.Element {

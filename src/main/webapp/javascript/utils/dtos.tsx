@@ -79,7 +79,7 @@ export class Plan {
         this.konto = 1;
         this.wert = 0;
         this.patterndto = new Pattern();
-        matchstyle: 0;
+        this.matchstyle = 0;
     }
 }
 
@@ -124,7 +124,7 @@ export class Template {
 }
 
 //=====================================================
-export interface Zuordnung {
+export class  Zuordnung {
     id: number;
     detail: string;
     description: string;

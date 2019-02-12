@@ -53,7 +53,10 @@ public class BuchungsBeleg {
 	private String referenz;
 	
 	public String getDetailsNOLF() {
-		return details.replace(LF, "");
+		if (details != null) 
+			return details.replace(LF, "");
+		else
+			return "";
 	}
 	
 	public void addDetailLine (String line) {

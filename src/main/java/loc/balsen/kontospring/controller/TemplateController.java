@@ -23,34 +23,42 @@ import loc.balsen.kontospring.repositories.TemplateRepository;
 @Controller
 @RequestMapping("/templates")
 public class TemplateController {
-	
+
 	@Autowired
 	TemplateRepository templateRepository;
-	
+
 	@Autowired
 	KontoRepository kontoRepository;
-	
+
 	@Autowired
 	TemplateService templateService;
-	
+
 	@GetMapping("/list")
 	@ResponseBody
 	List<TemplateDTO> findTemplates() {
-		return templateRepository.findValid()
-				.stream()
-				.map((template) -> {return new TemplateDTO(template);})
-				.collect(Collectors.toList());
+		return templateRepository.findValid().stream().map((template) -> {
+			return new TemplateDTO(template);
+		}).collect(Collectors.toList());
 	}
-	
+
+	@GetMapping("/listgroup/{group}")
+	@ResponseBody
+	List<TemplateDTO> findGroupTemplates(@PathVariable int group) {
+		return templateRepository.findValid().stream().filter((template) -> {
+			return template.getKonto().getKontoGruppe().getId() == group;
+		}).map((template) -> {
+			return new TemplateDTO(template);
+		}).collect(Collectors.toList());
+	}
+
 	@GetMapping("/listall")
 	@ResponseBody
 	List<TemplateDTO> findAllTemplates() {
-		return templateRepository.findAll()
-				.stream()
-				.map((template) -> {return new TemplateDTO(template);})
-				.collect(Collectors.toList());
+		return templateRepository.findAll().stream().map((template) -> {
+			return new TemplateDTO(template);
+		}).collect(Collectors.toList());
 	}
-	
+
 	@PostMapping("/save")
 	@ResponseBody
 	KontoSpringResult saveTemplate(@RequestBody TemplateDTO template) {
@@ -59,28 +67,27 @@ public class TemplateController {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new KontoSpringResult(false,"Fehler beim Speichern");
+			return new KontoSpringResult(false, "Fehler beim Speichern");
 		}
-		return new KontoSpringResult(false,"Gespeichert");
+		return new KontoSpringResult(false, "Gespeichert");
 	}
-	
+
 	@GetMapping("/id/{id}")
 	@ResponseBody
 	TemplateDTO findTemplate(@PathVariable Integer id) {
 		Optional<Template> template = templateRepository.findById(id);
 		if (template.isPresent()) {
 			return (new TemplateDTO(template.get()));
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
+
 	@GetMapping("/delete/{id}")
 	@ResponseBody
 	KontoSpringResult deleteTemplate(@PathVariable Integer id) {
 		templateRepository.deleteById(id);
-		return new KontoSpringResult(false,"gelöscht");
+		return new KontoSpringResult(false, "gelöscht");
 	}
 
 	@GetMapping("/beleg/{id}")
@@ -89,5 +96,4 @@ public class TemplateController {
 		return new TemplateDTO(templateService.createFromBeleg(id));
 	}
 
-	
 }

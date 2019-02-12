@@ -25,7 +25,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	        + " left join Zuordnung z on z.plan=p.id" 
 			+ " where z.id is null"
 			+ " and deactivate_date is NULL"
-			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and end_date >= ?2))"
+			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )"
 			 ,nativeQuery = true)
 	List<Plan> findByPeriodNotPlanned(LocalDate mindate, LocalDate maxdate);
 
@@ -42,7 +42,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 
 	List<Plan> findByTemplate(Template template);
 
-	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date = null" , nativeQuery = true)
+	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date is null" , nativeQuery = true)
 	Collection<Plan> findByPatternPlans();
 
 }

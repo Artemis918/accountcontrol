@@ -29,7 +29,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     columns: ColumnInfo<BuchungsBeleg>[] = [
         {
             header: 'Datum',
-            getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE') }
+            getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE',{day: '2-digit', month: '2-digit'}) }
         }, {
             header: 'Empf./Absender',
             cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
@@ -101,6 +101,9 @@ export class Buchen extends React.Component<BuchenProps, IState> {
                 self.setState( { kontoassign: false } );
                 self.lister.reload();
             } );
+        }
+        else {
+            self.setState( { kontoassign: false } ); 
         }
     }
 

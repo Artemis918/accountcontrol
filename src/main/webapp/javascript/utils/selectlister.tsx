@@ -5,8 +5,8 @@ import * as css from './css/selectlister.css';
 export type HandleSelectCallback<D> = ( shift: boolean, ctrl: boolean, data: D, index: number ) => void;
 export type IsSelectedCallback = ( index: number ) => boolean;
 export type SelectTableCellRender<D> = ( cell: CellInfo<D> ) => JSX.Element;
-export type SelectTableGetter<D> = ( data:D  ) => string;
-
+export type SelectTableGetter<D> = ( data: D ) => string;
+export type CreateFooterCallback<D> = ( data: D[] ) => D;
 
 export interface ColumnInfo<D> {
     header: string;
@@ -23,7 +23,8 @@ export interface CellInfo<D> {
 export interface SelectListerProps<D> {
     ext?: string;
     url: string;
-    lines?: number
+    lines?: number;
+    createFooter?: CreateFooterCallback<D>;
     handleSelect?: HandleSelectCallback<D>;
     handleExecute?: HandleSelectCallback<D>;
     isSelected?: IsSelectedCallback;
@@ -74,10 +75,10 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         return Array.from( Array( hi - lo + 1 ).keys() )
             .map( ( i: number ): D => this.state.data[i + start] );
     }
-    
-    datereviver (key: string, value : string) : any {
-        if (typeof(value)==='string' && value.match('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')!=null) {
-            return new Date(value);
+
+    datereviver( key: string, value: string ): any {
+        if ( typeof ( value ) === 'string' && value.match( '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' ) != null ) {
+            return new Date( value );
         }
         else
             return value;
@@ -86,8 +87,8 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
     reload(): void {
         var self = this;
         fetch( this.props.url + this.props.ext )
-            .then( (response :Response) => response.text() )
-            .then( ( text ) => { self.setState( { data: JSON.parse(text, this.datereviver) } ) } )
+            .then( ( response: Response ) => response.text() )
+            .then( ( text ) => { self.setState( { data: JSON.parse( text, this.datereviver ) } ) } )
     }
 
     renderHeadCol( col: ColumnInfo<D> ): JSX.Element {
@@ -96,27 +97,29 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         )
     }
 
-    
-    handleDoubleClick (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) :void{
+
+    handleDoubleClick( e: React.MouseEvent<HTMLTableRowElement, MouseEvent> ): void {
+        var rownum: number = e.currentTarget.rowIndex - 1;
         this.props.handleExecute( e.shiftKey,
-                e.ctrlKey,
-                this.state.data[e.currentTarget.rowIndex],
-                e.currentTarget.rowIndex)        
+            e.ctrlKey,
+            this.state.data[rownum],
+            rownum )
     }
-    
-    
-    handleClick (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>) :void {
+
+
+    handleClick( e: React.MouseEvent<HTMLTableRowElement, MouseEvent> ): void {
+        var rownum: number = e.currentTarget.rowIndex - 1;
         this.props.handleSelect( e.shiftKey,
-                e.ctrlKey,
-                this.state.data[e.currentTarget.rowIndex],
-                e.currentTarget.rowIndex)
+            e.ctrlKey,
+            this.state.data[rownum],
+            rownum )
     }
-    
+
     renderRow( data: D, rownum: number ): JSX.Element {
         return (
             <tr onClick={this.handleClick}
-                onDoubleClick={this.handleDoubleClick} 
-                className={this.props.isSelected( rownum ) ? css.selectedrow : css.unselectedrow }> 
+                onDoubleClick={this.handleDoubleClick}
+                className={this.props.isSelected( rownum ) ? css.selectedrow : css.unselectedrow}>
                 {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, rownum ) )}
             </tr>
         );
@@ -134,7 +137,22 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         if ( col.cellrender != undefined )
             return ( col.cellrender( { data: data, rownum: index, col: col } ) );
         else if ( col.getdata != undefined ) {
-            return ( <div> {col.getdata(data)} </div> );
+            return ( <div> {col.getdata( data )} </div> );
+        }
+        else
+            return null;
+    }
+
+    renderFooter(): JSX.Element {
+        if ( this.props.createFooter != undefined ) {
+            var data: D= this.props.createFooter(this.state.data);
+            return (
+                <tfoot>
+                    <tr>
+                        {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, -1) )}
+                    </tr>
+                </tfoot>
+            )
         }
         else
             return null;
@@ -142,7 +160,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     render(): JSX.Element {
         return (
-            <table style={{ width: '100%'}} >
+            <table style={{ width: '100%' }} >
                 <thead>
                     <tr>
                         {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderHeadCol( col ) )}
@@ -151,6 +169,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
                 <tbody className={css.tablebody}>
                     {this.state.data.map( this.renderRow )}
                 </tbody>
+                {this.renderFooter()}
             </table>
         );
     }

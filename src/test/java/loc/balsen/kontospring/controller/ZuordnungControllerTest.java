@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,11 @@ public class ZuordnungControllerTest extends TestContext {
 	public void setup() {
 		createKontoData();
 	}
+	
+	@After
+	public void teardown() {
+		clearRepos();
+	}
 
 	@Test
 	public void testAssign() throws Exception {
@@ -56,9 +62,8 @@ public class ZuordnungControllerTest extends TestContext {
 		createPlan("2", konto2);
 		createPlan("3", konto5);
 
-		int zlen = zuordnungRepository.findAll().size();
 		mvc.perform(get("/assign/all")).andExpect(status().isOk());
-		assertEquals(zlen + 3, zuordnungRepository.findAll().size());
+		assertEquals(3, zuordnungRepository.findAll().size());
 
 		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + kontogruppe1.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(2)));
@@ -76,10 +81,6 @@ public class ZuordnungControllerTest extends TestContext {
 
 	@Test
 	public void testAssignKonto() throws Exception {
-
-		LocalDate today = LocalDate.now();
-		int month = today.getMonthValue();
-		int year = today.getYear();
 		
 		BuchungsBeleg beleg2 = createBeleg("test5 bleble");
 		BuchungsBeleg beleg1 =createBeleg("test6 bleble");

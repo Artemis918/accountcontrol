@@ -27,21 +27,21 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
         this.setFilter = this.setFilter.bind( this );
         this.columns = [{
             header: 'Datum',
-            getdata: ( p: Plan ): string => { return p.plandate.toLocaleDateString( 'de-DE' ) }
+            getdata: ( p: Plan ): string => { return p.plandate.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
             header: 'Beschreibung',
             getdata: ( p: Plan ): string => { return p.shortdescription }
         }, {
             header: 'Betrag',
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
-                return
-
-                <div style={{
-                    color: cell.data.wert >= 0 ? 'green' : 'red',
-                    textAlign: 'right'
-                }}>
-                    {( cell.data.wert / 100 ).toFixed( 2 )}
-                </div>
+                return (
+                    <div style={{
+                        color: cell.data.wert >= 0 ? 'green' : 'red',
+                        textAlign: 'right'
+                    }}>
+                        {( cell.data.wert / 100 ).toFixed( 2 )}
+                    </div>
+                )
             }
         }]
     }

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { TemplateEditor } from './templateeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Template } from '../utils/dtos'
+import { DropdownService } from '../utils/dropdownservice'
 
 type SendMessage = ( message: string, error: boolean ) => void;
 
@@ -9,7 +10,11 @@ interface TemplateProps {
     sendmessage: SendMessage;
 }
 
-export class Templates extends React.Component<TemplateProps, {}> {
+interface IState {
+    group: number;
+}
+
+export class Templates extends React.Component<TemplateProps, IState> {
 
     lister: SingleSelectLister<Template>;
     editor: TemplateEditor;
@@ -17,17 +22,17 @@ export class Templates extends React.Component<TemplateProps, {}> {
 
     constructor( props: TemplateProps ) {
         super( props );
-        this.state = {};
+        this.state = { group: 1 };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.lister = undefined;
         this.editor = undefined;
         this.columns = [{
-            header: 'Gültig von',
-            getdata: ( d: Template ): string => { return d.gueltigVon.toLocaleDateString( 'de-DE' ) },
+            header: 'Start Tag',
+            getdata: ( d: Template ): string => { return d.start.toLocaleDateString( 'de-DE', {day: '2-digit', month: '2-digit'} ).substr( 0, 6 ) },
         }, {
             header: 'Gültig bis',
-            getdata: ( d: Template ): string => { return d.gueltigBis != null ? d.gueltigBis.toLocaleDateString( 'de-DE' ):"" },
+            getdata: ( d: Template ): string => { return d.gueltigBis != null ? d.gueltigBis.toLocaleDateString( 'de-DE' ) : "" },
         }, {
             header: 'Rhythmus',
             getdata: ( d: Template ): string => { return d.rythmus.toString( 10 ) }
@@ -36,7 +41,7 @@ export class Templates extends React.Component<TemplateProps, {}> {
             getdata: ( d: Template ): string => { return d.shortdescription; }
         }, {
             header: 'Betrag',
-            cellrender: ( cellinfo : CellInfo<Template> ) => (
+            cellrender: ( cellinfo: CellInfo<Template> ) => (
                 <div style={{
                     color: cellinfo.data.wert >= 0 ? 'green' : 'red',
                     textAlign: 'right'
@@ -51,8 +56,11 @@ export class Templates extends React.Component<TemplateProps, {}> {
         this.lister.reload();
     }
 
+    setKontoGroup( val: number ) {
+    }
+
     refresheditor( template: Template ): void {
-        this.editor.setTemplate( template.id );
+        this.editor.setTemplate( template );
     }
 
     render(): JSX.Element {
@@ -64,9 +72,14 @@ export class Templates extends React.Component<TemplateProps, {}> {
                             <TemplateEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
+                            <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
+                                url='collections/kontogroups'
+                                value={this.state.group}
+                            />
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
                                 handleChange={this.refresheditor}
-                                url='templates/list'
+                                url='templates/listgroup/'
+                                ext={this.state.group.toString(10)}
                                 columns={this.columns} />
                         </td>
                     </tr>

@@ -27,7 +27,9 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     
     componentDidUpdate(prevProps: DropdownServiceProps) :void {
         if ( this.props.param != prevProps.param )
-            this.fetchData();     
+            this.fetchData();   
+        if ( this.props.value != prevProps.value )
+            this.setState({data: this.state.data } );
     }
 
     componentDidMount() :void {

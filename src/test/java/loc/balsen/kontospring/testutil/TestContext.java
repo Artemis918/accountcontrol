@@ -46,6 +46,13 @@ public class TestContext {
 	protected Kontogruppe kontogruppe2;
 	protected Kontogruppe kontogruppe3;
 
+	public void clearRepos() {
+		zuordnungRepository.deleteAll();
+		buchungsbelegRepository.deleteAll();
+		planRepository.deleteAll();
+		templateRepository.deleteAll();
+	}
+	
 	protected void createKontoData() {
 
 		if (kontogruppeRepository.findById(1).isPresent()) {

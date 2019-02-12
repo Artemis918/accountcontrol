@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectLister, ColumnInfo, CellInfo } from './selectlister'
+import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './selectlister'
 
 export type HandleSingleSelectCallback<D> = ( data: D ) => void;
 
@@ -11,6 +11,7 @@ export interface SingleSelectlisterProps<D> {
     url: string;
     handleChange?: HandleSingleSelectCallback<D>;
     handleSelect?: HandleSingleSelectCallback<D>;
+    createFooter?: CreateFooterCallback<D>;
     columns: ColumnInfo<D>[];
     lines?: number;
 }
@@ -34,13 +35,13 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
 
     changeSelected( data: D, index: number ): void {
         this.setState( { selectedData: data, selectedRow: index } )
-        if (this.props.handleChange != undefined)
+        if ( this.props.handleChange != undefined )
             this.props.handleChange( data );
     }
-    
+
     executeSelected( data: D, index: number ): void {
         this.setState( { selectedData: data, selectedRow: index } )
-        if (this.props.handleSelect != undefined)
+        if ( this.props.handleSelect != undefined )
             this.props.handleSelect( data );
     }
 
@@ -57,6 +58,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
         return (
             <SelectLister<D>
                 columns={this.props.columns}
+                createFooter={this.props.createFooter}
                 ext={this.props.ext}
                 url={this.props.url}
                 lines={this.props.lines}

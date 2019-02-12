@@ -39,15 +39,13 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setState( { plan: this.plan } );
     }
 
-    setPlan( id: number ): void {
-        if ( id == undefined ) {
+    setPlan(plan: Plan) {
+        if ( plan == undefined ) {
             this.resetEditor();
         }
         else {
-            var self = this;
-            fetch( 'plans/id/' + id )
-                .then( response => response.json() )
-                .then( p => { self.plan = p; self.setState( { plan: self.plan } ) } );
+            this.plan = plan; 
+            this.setState( { plan: this.plan } );
         }
     }
 

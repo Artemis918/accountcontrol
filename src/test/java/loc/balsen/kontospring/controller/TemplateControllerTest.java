@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class TemplateControllerTest extends TestContext {
 
 	static private String templatejson = "{  " + 
 			"\"gueltigVon\": \"2018-12-03\", " +
-			"\"gueltigBis\": \"2018-11-03\", " +
+			"\"gueltigBis\": \"\", " +
 			"\"start\": \"2018-10-03\", " +
 			"\"vardays\": 5, " +
 			"\"anzahl\": 1," +
@@ -60,25 +61,29 @@ public class TemplateControllerTest extends TestContext {
 		createKontoData();
 	}
 	
+	@After
+	public void teardown() {
+		clearRepos();
+	}
+	
+	
 	@Test
 	public void testSaveAndList() throws Exception {
-		
-		int sizeBefore = templateRepository.findAll().size();
 		
 		String tempjson1 = templatejson.replace("KONTO", Integer.toString(konto1.getId()));
 		
 		mvc.perform(post("/templates/save").content(tempjson1).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
 		List<Template> templates =templateRepository.findAll();
-		assertEquals(sizeBefore+1,templates.size());
-		Template template = templates.get(sizeBefore);
+		assertEquals(1,templates.size());
+		Template template = templates.get(0);
 		assertEquals(100, template.getWert());
 		assertEquals(konto1.getId(), template.getKonto().getId());
 		
 		mvc.perform(get("/templates/list"))
-		   .andExpect(jsonPath("$.[*]", hasSize(sizeBefore+1)));
+		   .andExpect(jsonPath("$.[*]", hasSize(1)));
 		
-		mvc.perform(get("/templates/id/" + (sizeBefore + 1)))
+		mvc.perform(get("/templates/id/" + template.getId()))
 		   .andExpect(jsonPath("$.shortdescription").value("Kurz"));
 		
 	}

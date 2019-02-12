@@ -44,16 +44,14 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         }
     }
 
-    setTemplate( id: number ): void {
-        if ( id == undefined ) {
+    setTemplate( template: Template ): void {
+        if ( template == undefined ) {
             this.template = new Template();
             this.setState( { template: this.template } );
         }
         else {
-            var self = this;
-            fetch( 'templates/id/' + id )
-                .then( response => response.json() )
-                .then( t => { self.template = t; self.setState( { template: self.template } ) } );
+            this.template = template;
+            this.setState( { template: this.template } );
         }
     }
 

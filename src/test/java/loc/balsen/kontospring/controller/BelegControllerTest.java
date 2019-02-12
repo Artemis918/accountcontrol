@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,11 @@ public class BelegControllerTest extends TestContext {
 	@Before
 	public void setup() {
 		createKontoData();
+	}
+	
+	@After
+	public void teardown() {
+		clearRepos();
 	}
 	
 	@Test
