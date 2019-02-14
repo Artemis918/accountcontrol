@@ -75,7 +75,7 @@ public class PlanService {
 	public List<Plan> deactivatePlans(Template template) {
 		LocalDate endDate = template.getGueltigBis();
 
-		List<Plan> plans = planRepository.findActiveByTemplate(template.getId());
+		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
 		List<Plan> result = new ArrayList<Plan>();
 		plans.stream().filter((p) -> {
 			return p.getPlanDate().isAfter(endDate);

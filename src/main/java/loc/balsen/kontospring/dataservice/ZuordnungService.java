@@ -42,7 +42,7 @@ public class ZuordnungService {
 		}
 
 		// get Planlist for period
-		assign(belege, planRepository.findByPeriodNotPlanned(mindate, maxdate));
+		assign(belege, planRepository.findByPeriodNotAssigned(mindate, maxdate));
 	}
 
 	public void assign(List<BuchungsBeleg> belege, List<Plan> plans) {

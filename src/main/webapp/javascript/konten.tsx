@@ -3,7 +3,8 @@ import { MultiSelectLister, ColumnInfo, CellInfo } from './utils/multiselectlist
 import { KontenTree } from './kontentree'
 import { MonthSelect } from './utils/monthselect'
 import { KontenSelector } from './utils/kontenselector'
-import { Zuordnung } from './utils/dtos'
+import { Zuordnung, Template } from './utils/dtos'
+import { myParseJson } from './utils/misc'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -81,10 +82,11 @@ export class Konten extends React.Component<KontenProps, CState> {
         this.commitSelected = this.commitSelected.bind( this );
         this.commitAll = this.commitAll.bind( this );
         this.removeAssignment = this.removeAssignment.bind( this );
+        this.replanAssignment = this.replanAssignment.bind( this );
     }
 
     getColor( z: Zuordnung ): string {
-        if ( z.beleg == 0 || z.plan == 0)
+        if ( z.beleg == 0 || z.plan == 0 )
             return 'lightgrey';
         else if ( z.sollwert > z.istwert )
             return 'red';
@@ -118,6 +120,29 @@ export class Konten extends React.Component<KontenProps, CState> {
     commitAll(): void {
         this.commit( this.lister.current.getDataAll() );
         this.lister.current.reload();
+    }
+
+    replanAssignment(): void {
+        var zuordnungen: Zuordnung[] = this.lister.current.getSelectedData();
+        if ( zuordnungen.length != 1 ) {
+            this.props.sendmessage( "es muss genau ein Eintrag selektiert sein", true );
+        }
+        else {
+            var id: number = zuordnungen[0].id;
+            var url: string =  '/assign/replan/';
+        
+            if ( id == 0 || id == undefined ) {
+                id = zuordnungen[0].plan;
+                url = '/assign/endplan/';
+            }
+            
+            if (id != undefined ) {
+                var self: Konten = this;                
+                fetch( url + id, { headers: { "Content-Type": "application/json" } } )
+                    .then( ( response: Response ) => response.text() )
+                    .then( () => self.lister.current.reload() );
+            }
+        }
     }
 
     removeAssignment(): void {
@@ -169,6 +194,7 @@ export class Konten extends React.Component<KontenProps, CState> {
                     <button onClick={() => this.commitSelected()}> Auswahl Bestätigen </button>
                     <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
                     <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
+                    <button onClick={() => this.replanAssignment()}> Plan anpassen </button>
                 </div>
                 <table>
                     <tbody>

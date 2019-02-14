@@ -18,31 +18,30 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	@Query(value = "select max(plan_date) from Plan where Plan.template = ?1", nativeQuery = true)
 	LocalDate findMaxPlanDateByTemplate(Integer template);
 
-	@Query(value = "select * from Plan p where p.deactivate_date is null and P.template = ?1", nativeQuery = true)
-	List<Plan> findActiveByTemplate(Integer template);
+	@Query(value = "select * from Plan p"
+	        + " left join Zuordnung z on z.plan=p.id"
+			+ " where z.id is null"
+			+ "   and p.deactivate_date is null"
+			+ "   and P.template = ?1", nativeQuery = true)
+	List<Plan> findActiveByTemplateNotAssigned(Integer template);
 
 	@Query(value = "select * from Plan p" 
-	        + " left join Zuordnung z on z.plan=p.id" 
+	        + " left join Zuordnung z on z.plan=p.id"
 			+ " where z.id is null"
 			+ " and deactivate_date is NULL"
-			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )"
-			 ,nativeQuery = true)
-	List<Plan> findByPeriodNotPlanned(LocalDate mindate, LocalDate maxdate);
+			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )", nativeQuery = true)
+	List<Plan> findByPeriodNotAssigned(LocalDate mindate, LocalDate maxdate);
 
 	@Query(value = "select * from Plan where plan_date between ?1 and ?2 and deactivate_date is null", nativeQuery = true)
 	List<Plan> findByPlanDate(LocalDate mindate, LocalDate maxdate);
 
-	@Query(value = "select * from Plan p "
-	        + " left join Zuordnung z on z.plan=p.id" 
-			+ " where z.id is null"
-			+ " and p.plan_date between ?1 and ?2"
-			+ " and p.deactivate_date is null", nativeQuery = true)
-	List<Plan> findByPlanDateNotPlanned(LocalDate mindate, LocalDate maxdate);
-
+	@Query(value = "select * from Plan p " + " left join Zuordnung z on z.plan=p.id" + " where z.id is null"
+			+ " and p.plan_date between ?1 and ?2" + " and p.deactivate_date is null", nativeQuery = true)
+	List<Plan> findByPlanDateNotAssigned(LocalDate mindate, LocalDate maxdate);
 
 	List<Plan> findByTemplate(Template template);
 
-	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date is null" , nativeQuery = true)
+	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date is null", nativeQuery = true)
 	Collection<Plan> findByPatternPlans();
 
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { myParseJson } from './misc'
 import * as css from './css/selectlister.css';
 
 
@@ -76,19 +77,11 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
             .map( ( i: number ): D => this.state.data[i + start] );
     }
 
-    datereviver( key: string, value: string ): any {
-        if ( typeof ( value ) === 'string' && value.match( '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' ) != null ) {
-            return new Date( value );
-        }
-        else
-            return value;
-    }
-
     reload(): void {
         var self = this;
         fetch( this.props.url + this.props.ext )
             .then( ( response: Response ) => response.text() )
-            .then( ( text ) => { self.setState( { data: JSON.parse( text, this.datereviver ) } ) } )
+            .then( ( text ) => { self.setState( { data: myParseJson( text ) } ) } )
     }
 
     renderHeadCol( col: ColumnInfo<D> ): JSX.Element {

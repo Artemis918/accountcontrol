@@ -44,7 +44,6 @@ public class TemplateService {
 		else {
 			int templateid = template.getId();
 			template.setId(0);
-			
 			Template templateOrig = templateRepository.findById(templateid).get();
 			
 			if (template.getGueltigVon().isBefore(templateOrig.getGueltigVon()) 
@@ -55,7 +54,6 @@ public class TemplateService {
 				renewTemplate(templateOrig,template,template.getGueltigVon());
 			}
 			else {
-				template.setId(0);
 				templateRepository.save(template);
 				planService.createPlansfromTemplate(template);
 				templateOrig.setNext(template.getId());
@@ -70,11 +68,8 @@ public class TemplateService {
 		templateOrig.setNext(template.getId());
 		templateRepository.save(templateOrig);
 
-		List<Plan> deactivatedPlans = planService.deactivatePlans(templateOrig);
+		planService.deactivatePlans(templateOrig);
 		planService.createPlansfromTemplate(template);
-
-		List<BuchungsBeleg> belege = zuordnungService.deleteDeactivated(deactivatedPlans);		
-		zuordnungService.assign(belege);
 	}
 
 	private boolean isBefore(LocalDate gueltigBis, LocalDate gueltigBisOrig) {
@@ -83,7 +78,7 @@ public class TemplateService {
 			return false;
 		else if (gueltigBis == null && gueltigBisOrig != null) 
 			return false;
-		else if (gueltigBis == null && gueltigBisOrig == null)
+		else if (gueltigBis != null && gueltigBisOrig == null)
 			return true;
 		else
 			return gueltigBis.isBefore(gueltigBisOrig);

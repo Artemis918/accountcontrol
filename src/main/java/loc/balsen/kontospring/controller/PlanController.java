@@ -38,6 +38,7 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 
+	
 	@GetMapping("/list/{year}/{month}")
 	@ResponseBody
 	List<PlanDTO> findPlans(@PathVariable Integer year, @PathVariable Integer month) {
@@ -55,7 +56,7 @@ public class PlanController {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 
-		return planRepository.findByPlanDateNotPlanned(start, end).stream().filter((plan) -> {
+		return planRepository.findByPlanDateNotAssigned(start, end).stream().filter((plan) -> {
 			return plan.getMatchStyle() != MatchStyle.PATTERN && plan.getMatchStyle() != MatchStyle.SUMMAX;
 		}).map((plan) -> {
 			return new PlanDTO(plan);

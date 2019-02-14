@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dataservice.ZuordnungService;
 import loc.balsen.kontospring.dto.ZuordnungDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
@@ -40,6 +42,9 @@ public class ZuordnungController {
 	@Autowired
 	private ZuordnungService zuordnungService;
 
+	@Autowired
+	private TemplateService templateService;
+	
 	@Autowired
 	private BuchungsBelegRepository buchungsBelegRepository;
 
@@ -69,7 +74,7 @@ public class ZuordnungController {
 			return new ZuordnungDTO(z);
 		}).collect(Collectors.toList());
 
-		zdtos.addAll(planRepository.findByPlanDateNotPlanned(start, end).stream().filter(p -> {
+		zdtos.addAll(planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> {
 			return contains(p, kontolist);
 		}).map(p -> {
 			return new ZuordnungDTO(p);
@@ -94,7 +99,7 @@ public class ZuordnungController {
 		}).collect(Collectors.toList());
 
 		zuordnungen.addAll(
-				planRepository.findByPlanDateNotPlanned(start, end).stream().filter(p -> p.getKonto().getId() == id).map(p -> {
+				planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> p.getKonto().getId() == id).map(p -> {
 					return new ZuordnungDTO(p);
 				}).collect(Collectors.toList()));
 
@@ -130,7 +135,7 @@ public class ZuordnungController {
 		public int konto;
 		public String text;
 		public List<Integer> ids;
-	};
+	}
 
 	@PostMapping("/tokonto")
 	@ResponseBody
@@ -159,5 +164,28 @@ public class ZuordnungController {
 						z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository));
 		});
 		return new KontoSpringResult(false, "zugeordnet");
+	}
+
+	@GetMapping("/endplan/{id}")
+	@ResponseBody
+	KontoSpringResult endplan(@PathVariable Integer id) {
+		Plan plan = planRepository.getOne(id);
+		if ( plan.getTemplate() != null ) {
+			Template template = plan.getTemplate();
+			template.setGueltigBis(plan.getStartDate());
+			templateService.saveTemplate(template);
+		} 		
+		return new KontoSpringResult(false, "Gespeichert");
+	}
+	
+	@GetMapping("/replan/{id}")
+	@ResponseBody
+	KontoSpringResult replan(@PathVariable Integer id) {
+		Zuordnung zuordnung = zuordnungRepository.getOne(id);
+		if (zuordnung.getPlan() != null && zuordnung.getPlan().getTemplate() != null ) {
+			Template template = zuordnung.getPlan().getTemplate().copy(zuordnung.getWert(),zuordnung.getPlan().getStartDate());
+			templateService.saveTemplate(template);
+		} 		
+		return new KontoSpringResult(false, "Gespeichert");
 	}
 }

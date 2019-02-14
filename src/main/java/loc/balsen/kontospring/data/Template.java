@@ -128,4 +128,12 @@ public class Template {
 	public void setPattern(Pattern p) {
 		pattern = p.toJson();
 	}
+
+	public Template copy(int wert, LocalDate startDate) {
+		Template result = new Template();
+		result.set(this);
+		result.setWert(wert);;
+		result.setGueltigVon(startDate);
+		return result;
+	}
 }
