@@ -4,8 +4,8 @@
 create table Template
 (
     id               integer NOT NULL,
-    gueltig_von       date,    
-    gueltig_bis       date,    
+    valid_from       date,    
+    valid_until       date,    
     start            date,
 	vardays          int,
 	anzahl_rythmus    int,

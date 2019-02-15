@@ -42,7 +42,7 @@ public class TemplateControllerTest extends TestContext {
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
-			"\"wert\": 100, " +
+			"\"value\": 100, " +
 			"\"matchstyle\": 1, " +
 			"\"pattern\": { " +
             "  \"sender\": \"Absender\", " +
@@ -77,7 +77,7 @@ public class TemplateControllerTest extends TestContext {
 		List<Template> templates =templateRepository.findAll();
 		assertEquals(1,templates.size());
 		Template template = templates.get(0);
-		assertEquals(100, template.getWert());
+		assertEquals(100, template.getValue());
 		assertEquals(konto1.getId(), template.getKonto().getId());
 		
 		mvc.perform(get("/templates/list"))
@@ -111,7 +111,7 @@ public class TemplateControllerTest extends TestContext {
 		   .andExpect(jsonPath("$.pattern.receiver").value("empfänger"))
 		   .andExpect(jsonPath("$.pattern.mandat").value("mandat"))
 		   .andExpect(jsonPath("$.pattern.referenceID").value("refernzID"))
-		   .andExpect(jsonPath("$.wert").value("200"))
+		   .andExpect(jsonPath("$.value").value("200"))
 		   .andExpect(jsonPath("$.start").value("2000-04-02"))
 		   ;
 	}

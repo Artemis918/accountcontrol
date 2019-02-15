@@ -32,7 +32,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
             getdata: ( d: Template ): string => { return d.start.toLocaleDateString( 'de-DE', {day: '2-digit', month: '2-digit'} ).substr( 0, 6 ) },
         }, {
             header: 'Gültig bis',
-            getdata: ( d: Template ): string => { return d.gueltigBis != null ? d.gueltigBis.toLocaleDateString( 'de-DE' ) : "" },
+            getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
         }, {
             header: 'Rhythmus',
             getdata: ( d: Template ): string => { return d.rythmus.toString( 10 ) }
@@ -43,10 +43,10 @@ export class Templates extends React.Component<TemplateProps, IState> {
             header: 'Betrag',
             cellrender: ( cellinfo: CellInfo<Template> ) => (
                 <div style={{
-                    color: cellinfo.data.wert >= 0 ? 'green' : 'red',
+                    color: cellinfo.data.value >= 0 ? 'green' : 'red',
                     textAlign: 'right'
                 }}>
-                    {( cellinfo.data.wert / 100 ).toFixed( 2 )}
+                    {( cellinfo.data.value / 100 ).toFixed( 2 )}
                 </div>
             )
         }]

@@ -12,8 +12,8 @@ import lombok.Data;
 @Data
 public class TemplateDTO {
 	private int id;
-	private LocalDate gueltigVon;
-	private LocalDate gueltigBis;
+	private LocalDate validFrom;
+	private LocalDate validUntill;
 	private LocalDate start;
 	private int vardays;
 	private int anzahl;
@@ -22,10 +22,10 @@ public class TemplateDTO {
 	private int kontogroup;
 	private String description;
 	private int position;
-	private int wert;
+	private int value;
 	private PatternDTO pattern;
 	private String shortdescription;
-	private int matchStyle;
+	private int matchstyle;
 	private int previous;	
 
 	public TemplateDTO() {
@@ -34,8 +34,8 @@ public class TemplateDTO {
 	public TemplateDTO(Template template) {
 				
 		this.id = template.getId();
-		this.gueltigVon = template.getGueltigVon();
-		this.gueltigBis = template.getGueltigBis();
+		this.validFrom = template.getValidFrom();
+		this.validUntill = template.getValidUntil();
 		this.start = template.getStart();
 		this.vardays=template.getVardays();
 		this.anzahl = template.getAnzahlRythmus();
@@ -44,10 +44,10 @@ public class TemplateDTO {
 		this.position= template.getPosition();
 		this.konto=template.getKonto().getId();		
 		this.kontogroup=template.getKonto().getKontoGruppe().getId();
-		this.wert = template.getWert();
+		this.value = template.getValue();
 		this.pattern = new PatternDTO(template.getPatternObject());
 		this.shortdescription = template.getShortDescription();
-		this.matchStyle = template.getMatchStyle().ordinal();
+		this.matchstyle = template.getMatchStyle().ordinal();
 		this.previous = template.getNext();
 	}
 	
@@ -55,19 +55,19 @@ public class TemplateDTO {
 		Template template = new Template();
 
 		template.setId(this.getId());
-		template.setGueltigVon(this.gueltigVon == null ? LocalDate.now(): this.gueltigVon);
-		template.setGueltigBis(this.gueltigBis);
+		template.setValidFrom(this.validFrom == null ? LocalDate.now(): this.validFrom);
+		template.setValidUntil(this.validUntill);
 		template.setStart(this.start == null ? LocalDate.now() : this.start);
 		template.setVardays(this.getVardays());
 		template.setAnzahlRythmus(this.getAnzahl());
 		template.setRythmus(Rythmus.values()[this.rythmus]);
 		template.setDescription(this.getDescription());
 		template.setPosition(this.getPosition());
-		template.setWert(this.getWert());
+		template.setValue(this.getValue());
 		template.setKonto(kontoRepository.getOne(this.konto));
 		template.setPattern(pattern.toPattern());
 		template.setShortDescription(this.getShortdescription());
-		template.setMatchStyle(Plan.MatchStyle.values()[this.matchStyle]);
+		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);
 		template.setNext(this.getPrevious());
 
 		return template;

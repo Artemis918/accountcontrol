@@ -55,9 +55,10 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
             url = url + '/' + param;
         }
         if ( param == undefined || param != '' ) {
+            var self: DropdownService = this;
             fetch( url )
                 .then( response => response.json() )
-                .then( d => { this.setData( d as EnumDTO[] ) } )
+                .then( d => { self.setData( d as EnumDTO[] ) } )
         }
     }
 

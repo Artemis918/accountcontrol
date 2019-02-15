@@ -68,7 +68,7 @@ public class Plan {
 
 		konto = templ.getKonto();
 		position = templ.getPosition();
-		wert = templ.getWert();
+		wert = templ.getValue();
 		pattern = templ.getPattern();
 		shortDescription = templ.getShortDescription();
 		description = templ.getDescription();

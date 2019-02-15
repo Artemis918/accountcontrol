@@ -49,7 +49,7 @@ public class PlanService {
 			last = LocalDate.now();
 		end = LocalDate.of(last.getYear(), last.getMonth(), 1);
 		end = end.withDayOfMonth(end.lengthOfMonth());
-		start = template.getGueltigVon();
+		start = template.getValidFrom();
 
 		createPlans(template);
 	}
@@ -64,8 +64,8 @@ public class PlanService {
 
 		while (!nextDate.isAfter(end)) {
 
-			if (!nextDate.isBefore(template.getGueltigVon())
-					&& (template.getGueltigBis() == null || !nextDate.isAfter(template.getGueltigBis()))) {
+			if (!nextDate.isBefore(template.getValidFrom())
+					&& (template.getValidUntil() == null || !nextDate.isAfter(template.getValidUntil()))) {
 				planRepository.save(new Plan(template, nextDate));
 			}
 			nextDate = template.increaseDate(nextDate);
@@ -73,7 +73,7 @@ public class PlanService {
 	}
 
 	public List<Plan> deactivatePlans(Template template) {
-		LocalDate endDate = template.getGueltigBis();
+		LocalDate endDate = template.getValidUntil();
 
 		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
 		List<Plan> result = new ArrayList<Plan>();
@@ -93,10 +93,10 @@ public class PlanService {
 	
 
 	private boolean isTemplateRange(Template template) {
-		if (template.getGueltigVon().isBefore(start)
-				&& (template.getGueltigBis() == null || !template.getGueltigBis().isBefore(start))) {
+		if (template.getValidFrom().isBefore(start)
+				&& (template.getValidUntil() == null || !template.getValidUntil().isBefore(start))) {
 			return true;
-		} else if (!template.getGueltigVon().isAfter(end)) {
+		} else if (!template.getValidFrom().isAfter(end)) {
 			return true;
 		} else
 			return false;

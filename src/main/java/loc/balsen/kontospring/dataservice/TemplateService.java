@@ -46,12 +46,12 @@ public class TemplateService {
 			template.setId(0);
 			Template templateOrig = templateRepository.findById(templateid).get();
 			
-			if (template.getGueltigVon().isBefore(templateOrig.getGueltigVon()) 
-					|| isBefore(template.getGueltigBis(),templateOrig.getGueltigBis()) ) {
-				renewTemplate(templateOrig,template,templateOrig.getGueltigVon());
+			if (template.getValidFrom().isBefore(templateOrig.getValidFrom()) 
+					|| isBefore(template.getValidUntil(),templateOrig.getValidUntil()) ) {
+				renewTemplate(templateOrig,template,templateOrig.getValidFrom());
 			}
-			else if (isBefore(template.getGueltigVon(),templateOrig.getGueltigBis())) {
-				renewTemplate(templateOrig,template,template.getGueltigVon());
+			else if (isBefore(template.getValidFrom(),templateOrig.getValidUntil())) {
+				renewTemplate(templateOrig,template,template.getValidFrom());
 			}
 			else {
 				templateRepository.save(template);
@@ -64,7 +64,7 @@ public class TemplateService {
 
 	private void renewTemplate(Template templateOrig, Template template, LocalDate changeDate) {
 		templateRepository.save(template);
-		templateOrig.setGueltigBis(template.getGueltigVon());
+		templateOrig.setValidUntil(template.getValidFrom());
 		templateOrig.setNext(template.getId());
 		templateRepository.save(templateOrig);
 

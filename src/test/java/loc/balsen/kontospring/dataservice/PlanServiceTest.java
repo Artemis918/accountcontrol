@@ -50,7 +50,7 @@ public class PlanServiceTest extends TestContext {
 		template.setAnzahlRythmus(1);
 		template.setRythmus(Template.Rythmus.MONTH);
 		template.setVardays(5);
-		template.setGueltigVon(LocalDate.of(1999, 1, 3));
+		template.setValidFrom(LocalDate.of(1999, 1, 3));
 		template.setStart(LocalDate.of(1998, 5, 2));
 		template.setPattern(new Pattern("\"sender\": \"gulli1\""));
 		template.setKonto(konto2);
@@ -61,7 +61,7 @@ public class PlanServiceTest extends TestContext {
 		template2.setAnzahlRythmus(1);
 		template2.setRythmus(Template.Rythmus.MONTH);
 		template2.setVardays(5);
-		template2.setGueltigVon(LocalDate.of(1999, 1, 3));
+		template2.setValidFrom(LocalDate.of(1999, 1, 3));
 		template2.setStart(LocalDate.of(1998, 5, 2));
 		template2.setPattern(new Pattern("\"sender\": \"gulli2\""));
 		template2.setKonto(konto5);
@@ -106,7 +106,7 @@ public class PlanServiceTest extends TestContext {
 		plans = planRepository.findAll();
 		assertEquals(4, plans.size());
 
-		template.setGueltigBis(LocalDate.of(1999, 6, 2));
+		template.setValidUntil(LocalDate.of(1999, 6, 2));
 		templateRepository.save(template);
 
 		plan.setPlanDate(LocalDate.of(1999, 8, 30));
@@ -116,7 +116,7 @@ public class PlanServiceTest extends TestContext {
 		assertEquals(6, plans.size());
 
 		// TestUntil
-		template.setGueltigBis(null);
+		template.setValidUntil(null);
 		templateRepository.save(template);
 		
 		planService.createPlansfromTemplatesUntil(8,1999);
@@ -128,28 +128,28 @@ public class PlanServiceTest extends TestContext {
 		assertEquals(17, plans.size());
 		
 		// deactivate plans
-		template.setGueltigBis(LocalDate.of(1999,9,15));
+		template.setValidUntil(LocalDate.of(1999,9,15));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
 		long deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
 		assertEquals(0, deactivated);
 
-		template.setGueltigBis(LocalDate.of(1999,9,2));
+		template.setValidUntil(LocalDate.of(1999,9,2));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
 		deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
 		assertEquals(0, deactivated);
 
-		template.setGueltigBis(LocalDate.of(1999,9,1));
+		template.setValidUntil(LocalDate.of(1999,9,1));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
 		deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
 		assertEquals(1, deactivated);
 		
-		template.setGueltigBis(LocalDate.of(1999,7,1));
+		template.setValidUntil(LocalDate.of(1999,7,1));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();

@@ -86,8 +86,8 @@ export class Plan {
 //=====================================================
 export class Template {
     id?: number;
-    gueltigVon: Date;
-    gueltigBis: Date;
+    validFrom: Date;
+    validUntil: Date;
     start: Date;
     vardays: number;
     anzahl: number;
@@ -96,7 +96,7 @@ export class Template {
     kontogroup: number;
     konto: number;
     position: number;
-    wert: number;
+    value: number;
     pattern: Pattern;
     shortdescription: string;
     matchstyle: number;
@@ -105,8 +105,8 @@ export class Template {
     constructor() {
         var date = new Date();
         this.id = undefined;
-        this.gueltigVon = date;
-        this.gueltigBis = undefined;
+        this.validFrom = date;
+        this.validUntil = undefined;
         this.start = date;
         this.vardays = 4;
         this.anzahl = 1;
@@ -115,7 +115,7 @@ export class Template {
         this.kontogroup = 1;
         this.konto = 1;
         this.position = 1;
-        this.wert = 0;
+        this.value = 0;
         this.pattern = new Pattern();
         this.shortdescription = 'neu';
         this.matchstyle = 0;

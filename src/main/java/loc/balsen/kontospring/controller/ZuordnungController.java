@@ -172,7 +172,7 @@ public class ZuordnungController {
 		Plan plan = planRepository.getOne(id);
 		if ( plan.getTemplate() != null ) {
 			Template template = plan.getTemplate();
-			template.setGueltigBis(plan.getStartDate());
+			template.setValidUntil(plan.getStartDate());
 			templateService.saveTemplate(template);
 		} 		
 		return new KontoSpringResult(false, "Gespeichert");

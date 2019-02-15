@@ -33,6 +33,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
+        this.setTemplate = this.setTemplate.bind( this );
     }
 
     componentDidMount() {
@@ -44,10 +45,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         }
     }
 
+
+    resetEditor(): void {
+        this.template = new Template();
+        this.setState( { template: this.template } );
+    }
+
     setTemplate( template: Template ): void {
         if ( template == undefined ) {
-            this.template = new Template();
-            this.setState( { template: this.template } );
+            this.resetEditor();
         }
         else {
             this.template = template;
@@ -78,15 +84,16 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     }
 
     clear(): void {
-        this.template = new Template();
         this.props.onChange();
-        this.setState( { template: this.template } );
+        this.resetEditor();
     }
 
     delete(): void {
-        var self = this;
-        fetch( '/templates/delete/' + this.state.template.id, { method: 'get' } )
-            .then( function( response ) { self.setAnswer( response.json() ); } );
+        if ( this.state.template.id != undefined && this.state.template.id != 0 ) {
+            var self = this;
+            fetch( '/templates/delete/' + this.state.template.id, { method: 'get' } )
+                .then( function( response ) { self.setAnswer( response.json() ); } );
+        }
     }
 
     copy(): void {
@@ -140,14 +147,14 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         </tr>
                         <tr><td>gültig ab</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => { this.template.gueltigVon = d; this.setTemplateState() }}
-                                startdate={this.state.template.gueltigVon} />
+                                onChange={( d ) => { this.template.validFrom = d; this.setTemplateState() }}
+                                startdate={this.state.template.validFrom} />
                             </td>
                         </tr>
                         <tr><td>gültig bis</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => { this.template.gueltigBis = d; this.setTemplateState() }}
-                                startdate={this.state.template.gueltigBis} />
+                                onChange={( d ) => { this.template.validUntil = d; this.setTemplateState() }}
+                                startdate={this.state.template.validUntil} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Rythmus</td>
@@ -196,9 +203,9 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                             </td>
                         </tr>
                         <tr><td>Wert</td>
-                            <td><input step="0.01" value={this.state.template.wert / 100}
+                            <td><input step="0.01" value={this.state.template.value / 100}
                                 type='number'
-                                onChange={( e ) => { this.template.wert = e.target.valueAsNumber * 100; this.setTemplateState() }} />
+                                onChange={( e ) => { this.template.value = e.target.valueAsNumber * 100; this.setTemplateState() }} />
                             </td>
                         </tr>
                         <tr><td>Beschreibung</td>

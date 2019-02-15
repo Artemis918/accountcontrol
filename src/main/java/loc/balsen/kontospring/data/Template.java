@@ -26,15 +26,15 @@ public class Template {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_template_name")
 	@SequenceGenerator(name = "seq_template_name", sequenceName = "seq_template", allocationSize = 1)
 	private int id;
-	private LocalDate gueltigVon;
-	private LocalDate gueltigBis;
+	private LocalDate validFrom;
+	private LocalDate validUntil;
 	private LocalDate start;
 	private int vardays;
 	private int anzahlRythmus;
 	private Rythmus rythmus;
 	private String description;
 	private int position;
-	private int wert;
+	private int value;
 	private String shortDescription;
 	private Plan.MatchStyle matchStyle;
 	private int next;
@@ -49,15 +49,15 @@ public class Template {
 
 	public Template() {
 		this.id = 0;
-		this.gueltigVon = null;
-		this.gueltigBis= null;
+		this.validFrom = null;
+		this.validUntil= null;
 		this.start= null;
 		this.vardays= 4;
 		this.anzahlRythmus= 0;
 		this.rythmus= Rythmus.MONTH;
 		this.description= null;
 		this.position= 0;
-		this.wert= 0;
+		this.value= 0;
 		this.pattern= null;
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
@@ -68,15 +68,15 @@ public class Template {
 	public Template (BuchungsBeleg buchungsBeleg) {
 		LocalDate plandate = buchungsBeleg.getWertstellung(); 
 		this.id = 0;
-		this.gueltigVon = plandate;
-		this.gueltigBis= null;
+		this.validFrom = plandate;
+		this.validUntil= null;
 		this.start= plandate;
 		this.vardays= 4;
 		this.anzahlRythmus= 0;
 		this.rythmus= Rythmus.MONTH;
 		this.description= null;
 		this.position= 0;
-		this.wert= buchungsBeleg.getWert();
+		this.value= buchungsBeleg.getWert();
 		this.pattern= (new Pattern(buchungsBeleg)).toJson();
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
@@ -89,15 +89,15 @@ public class Template {
 	 */
 	public void set(Template t) {
 		this.id = t.id;
-		this.gueltigVon = t.gueltigVon;
-		this.gueltigBis= t.gueltigBis;
+		this.validFrom = t.validFrom;
+		this.validUntil= t.validUntil;
 		this.start= t.start;
 		this.vardays= t.vardays;
 		this.anzahlRythmus= t.anzahlRythmus;
 		this.rythmus= t.rythmus;
 		this.description= t.description;
 		this.position= t.position;
-		this.wert= t.wert;
+		this.value= t.value;
 		this.pattern= t.pattern;
 		this.shortDescription= t.shortDescription;
 		this.matchStyle= t.matchStyle;
@@ -132,8 +132,24 @@ public class Template {
 	public Template copy(int wert, LocalDate startDate) {
 		Template result = new Template();
 		result.set(this);
-		result.setWert(wert);;
-		result.setGueltigVon(startDate);
+		result.setValue(wert);;
+		result.setValidFrom(startDate);
 		return result;
+	}
+	
+	public boolean equalsExceptValidPeriod(Template t) {
+		return this.id == t.id
+				&& this.start.equals(t.start)
+				&& this.vardays  == t.vardays
+				&& this.anzahlRythmus == t.anzahlRythmus
+				&& this.rythmus == t.rythmus
+				&& this.description.equals(t.description)
+				&& this.position == t.position
+				&& this.value == t.value
+				&& this.pattern.equals(t.pattern)
+                && this.shortDescription.equals(t.shortDescription)
+                && this.matchStyle == t.matchStyle
+                && this.next == t.next
+                && this.konto == t.konto;
 	}
 }

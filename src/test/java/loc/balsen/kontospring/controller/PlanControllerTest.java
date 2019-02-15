@@ -113,8 +113,8 @@ public class PlanControllerTest extends TestContext {
 	
 	private void createTemplate(int year) {
 		template =  new Template();
-		template.setGueltigVon(LocalDate.of(year,9, 1));
-		template.setGueltigBis(LocalDate.of(year,12, 31));
+		template.setValidFrom(LocalDate.of(year,9, 1));
+		template.setValidUntil(LocalDate.of(year,12, 31));
 		template.setStart(LocalDate.of(year,9, 15));
 		template.setVardays(5);
 		template.setAnzahlRythmus(1);
@@ -122,7 +122,7 @@ public class PlanControllerTest extends TestContext {
 		template.setKonto(konto1);
 		template.setDescription("Beschreibung");
 		template.setShortDescription("Kurz1234");
-		template.setWert(100);
+		template.setValue(100);
 		template.setPosition(4);
 		template.setMatchStyle(MatchStyle.EXACT);
 		template.setPattern(new Pattern( "  \"sender\": \"Absender\", " +
