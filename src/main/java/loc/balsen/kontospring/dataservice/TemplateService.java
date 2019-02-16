@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
@@ -39,7 +40,10 @@ public class TemplateService {
 		if (template.getId() == 0) {
 			templateRepository.save(template);
 			planService.createPlansfromTemplate(template);
-		} else {
+		} else if (template.getMatchStyle() == MatchStyle.PATTERN){
+			templateRepository.save(template);
+		}
+		else {
 			Template templateOrig = templateRepository.findById(template.getId()).get();
 
 			if (templateOrig.equalsExceptValidPeriod(template)) {
