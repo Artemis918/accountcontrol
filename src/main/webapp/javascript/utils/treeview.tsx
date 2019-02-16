@@ -100,10 +100,10 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
 
     renderNode( node: Node ): JSX.Element {
         if ( node.children && node.expanded ) {
-            return ( <li>{this.renderButton( node )}{this.renderChildren( node )}</li> );
+            return ( <li key={node.name + node.id} >{this.renderButton( node )}{this.renderChildren( node )}</li> );
         }
         else {
-            return ( <li>{this.renderButton( node )}</li> );
+            return ( <li key={node.name + node.id}>{this.renderButton( node )}</li> );
         }
     }
 

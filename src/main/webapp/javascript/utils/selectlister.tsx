@@ -86,7 +86,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     renderHeadCol( col: ColumnInfo<D> ): JSX.Element {
         return (
-            <td> {col.header} </td>
+            <td key={col.header + "_head"}> {col.header} </td>
         )
     }
 
@@ -112,7 +112,8 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         return (
             <tr onClick={this.handleClick}
                 onDoubleClick={this.handleDoubleClick}
-                className={this.props.isSelected( rownum ) ? css.selectedrow : css.unselectedrow}>
+                className={this.props.isSelected( rownum ) ? css.selectedrow : css.unselectedrow}
+                key={"slrow"+rownum}>
                 {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, rownum ) )}
             </tr>
         );
@@ -120,7 +121,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     renderDataCol( col: ColumnInfo<D>, data: D, index: number ): JSX.Element {
         return (
-            <td>
+            <td key={col.header+index}>
                 {this.renderCell( col, data, index )}
             </td>
         );

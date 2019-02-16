@@ -13,22 +13,20 @@ interface TaskSelectorProps {
 
 interface IState {
     currenttask: number;
-    tasksname: string;
 }
 
 export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
 
     constructor( props: TaskSelectorProps ) {
         super( props );
-        this.state = { currenttask: this.props.currenttask, tasksname: this.props.tasksname };
+        this.state = { currenttask: this.props.currenttask};
         this.selectTask = this.selectTask.bind( this );
     }
 
-    static getDerivedStateFromProps(nextprops: TaskSelectorProps, prevstate: IState) : Partial<IState>{
-        if (nextprops.tasksname !== prevstate.tasksname)
-            return ( {currenttask: nextprops.currenttask, tasksname: nextprops.tasksname})
-        else 
-            return {};
+    componentDidUpdate(prevProps :TaskSelectorProps) :void {
+         if (this.props.tasksname !== prevProps.tasksname) {
+             this.selectTask ( this.props.currenttask );
+         }
     }
     
     selectTask( i: number ): void {

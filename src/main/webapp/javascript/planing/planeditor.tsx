@@ -3,7 +3,7 @@ import { DropdownService } from '../utils/dropdownservice'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { KontenSelector } from '../utils/kontenselector'
-import {Plan, Pattern} from '../utils/dtos'
+import { Plan, Pattern } from '../utils/dtos'
 import 'react-day-picker/lib/style.css'
 
 type OnChangeCallback = () => void;
@@ -39,12 +39,12 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setState( { plan: this.plan } );
     }
 
-    setPlan(plan: Plan) {
+    setPlan( plan: Plan ) {
         if ( plan == undefined ) {
             this.resetEditor();
         }
         else {
-            this.plan = plan; 
+            this.plan = plan;
             this.setState( { plan: this.plan } );
         }
     }
@@ -112,7 +112,6 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         );
     }
 
-
     render(): JSX.Element {
         return (
             <div>
@@ -129,19 +128,22 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             <td>Stardatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.startdate = d; this.setPlanState() }}
-                                startdate={this.state.plan.startdate} /></td>
-
+                                startdate={this.state.plan.startdate} />
+                            </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Plandatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.plandate = d; this.setPlanState() }}
-                                startdate={this.state.plan.plandate} /></td>
+                                startdate={this.state.plan.plandate} />
+                            </td>
                         </tr>
-                        <tr> <td>Enddatum</td>
+                        <tr>
+                            <td>Enddatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.enddate = d; this.setPlanState() }}
-                                startdate={this.state.plan.enddate} /></td>
+                                startdate={this.state.plan.enddate} />
+                            </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Position</td>
@@ -152,20 +154,17 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         </tr>
                         <tr>
                             <td>Konto</td>
-                            <td>
-                                <KontenSelector
-                                    onChange={( k, g ) => this.setKonto( k, g )}
-                                    konto={this.state.plan.konto}
-                                    group={this.state.plan.kontogroup} />
+                            <td><KontenSelector
+                                onChange={( k, g ) => this.setKonto( k, g )}
+                                konto={this.state.plan.konto}
+                                group={this.state.plan.kontogroup} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>MatchArt</td>
-                            <td>
-                                <DropdownService value={this.state.plan.matchstyle}
-                                    onChange={( e ) => { this.plan.matchstyle = e; this.setPlanState() }}
-                                    url='collections/matchstyle'
-                                />
+                            <td><DropdownService value={this.state.plan.matchstyle}
+                                onChange={( e ) => { this.plan.matchstyle = e; this.setPlanState() }}
+                                url='collections/matchstyle' />
                             </td>
                         </tr>
                         <tr>
@@ -187,7 +186,6 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             <td>Pattern</td>
                             <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
                         </tr>
-
                     </tbody>
                 </table>
                 <p />

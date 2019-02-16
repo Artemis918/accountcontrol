@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { MultiSelectLister, ColumnInfo, CellInfo } from './utils/multiselectlister'
+import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
 import { KontenTree } from './kontentree'
-import { MonthSelect } from './utils/monthselect'
-import { KontenSelector } from './utils/kontenselector'
-import { Zuordnung, Template } from './utils/dtos'
-import { myParseJson } from './utils/misc'
+import { MonthSelect } from '../utils/monthselect'
+import { KontenSelector } from '../utils/kontenselector'
+import { Zuordnung, Template } from '../utils/dtos'
+import { myParseJson } from '../utils/misc'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -68,7 +68,7 @@ export class Konten extends React.Component<KontenProps, CState> {
             {
                 header: 'ok',
                 cellrender: ( cell: CellInfo<Zuordnung> ) => {
-                    if ( cell.data.beleg != 0 )
+                    if ( cell.data.beleg != 0 && cell.rownum != -1 )
                         return (
                             <input type='checkbox'
                                 checked={cell.data.committed}
