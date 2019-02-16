@@ -1,7 +1,6 @@
 package loc.balsen.kontospring.dataservice;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
-import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Component
@@ -24,73 +23,63 @@ public class TemplateService {
 	PlanService planService;
 	
 	@Autowired
+	PlanRepository planRepository;
+
+	@Autowired
 	TemplateRepository templateRepository;
 
 	@Autowired
 	BuchungsBelegRepository buchungsBelegRepository;
-	
+
 	@Autowired
 	KontoRepository kontoRepository;
-	
-	@Autowired
-	ZuordnungService zuordnungService;
-	
+
 	public void saveTemplate(Template template) {
-		
-		if (template.getId() == 0  ) {
+
+		if (template.getId() == 0) {
 			templateRepository.save(template);
 			planService.createPlansfromTemplate(template);
-		}
-		else {
-			int templateid = template.getId();
-			template.setId(0);
-			Template templateOrig = templateRepository.findById(templateid).get();
-			
-			if (template.getValidFrom().isBefore(templateOrig.getValidFrom()) 
-					|| isBefore(template.getValidUntil(),templateOrig.getValidUntil()) ) {
-				renewTemplate(templateOrig,template,templateOrig.getValidFrom());
-			}
-			else if (isBefore(template.getValidFrom(),templateOrig.getValidUntil())) {
-				renewTemplate(templateOrig,template,template.getValidFrom());
-			}
-			else {
-				templateRepository.save(template);
-				planService.createPlansfromTemplate(template);
-				templateOrig.setNext(template.getId());
-				templateRepository.save(templateOrig);
+		} else {
+			Template templateOrig = templateRepository.findById(template.getId()).get();
+
+			if (templateOrig.equalsExceptValidPeriod(template)) {
+				changeValidPeriod(templateOrig, template.getValidFrom(), template.getValidUntil());
+			} else {
+				replanUnassigned(template, templateOrig);
 			}
 		}
 	}
 
-	private void renewTemplate(Template templateOrig, Template template, LocalDate changeDate) {
+	public void replanUnassigned(Template template, Template templateOrig) {
+
+		template.setId(0);
 		templateRepository.save(template);
+		
 		templateOrig.setValidUntil(template.getValidFrom());
 		templateOrig.setNext(template.getId());
 		templateRepository.save(templateOrig);
-
-		planService.deactivatePlans(templateOrig);
-		planService.createPlansfromTemplate(template);
-	}
-
-	private boolean isBefore(LocalDate gueltigBis, LocalDate gueltigBisOrig) {
 		
-		if (gueltigBis == null && gueltigBisOrig == null)
-			return false;
-		else if (gueltigBis == null && gueltigBisOrig != null) 
-			return false;
-		else if (gueltigBis != null && gueltigBisOrig == null)
-			return true;
-		else
-			return gueltigBis.isBefore(gueltigBisOrig);
+		planService.deactivateUnassignedPlans(templateOrig);
+		LocalDate excludeFrom = planRepository.findMinPlanDateByTemplate(templateOrig.getId());
+		LocalDate excludeUntil = planRepository.findMaxPlanDateByTemplate(templateOrig.getId());
+
+		planService.createPlansfromTemplate(template,excludeFrom,excludeUntil);
 	}
 
+	private void changeValidPeriod(Template templateOrig, LocalDate validFrom, LocalDate validUntil) {
+		planService.deactivateUnassignedPlans(templateOrig);
+		LocalDate excludeFrom = planRepository.findMinPlanDateByTemplate(templateOrig.getId());
+		LocalDate excludeUntil = planRepository.findMaxPlanDateByTemplate(templateOrig.getId());
+		planService.createPlansfromTemplate(templateOrig,excludeFrom,excludeUntil);
+	}
+	
 	public Template createFromBeleg(Integer id) {
 		Optional<BuchungsBeleg> beleg = buchungsBelegRepository.findById(id);
 		if (beleg.isPresent()) {
-			Konto konto =  kontoRepository.findById(KONTO_DEFAULT).get();
+			Konto konto = kontoRepository.findById(KONTO_DEFAULT).get();
 			Template template = new Template(beleg.get());
 			template.setKonto(konto);
-			return  template;
+			return template;
 		}
 		return new Template();
 	}

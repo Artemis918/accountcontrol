@@ -11,12 +11,9 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 
 public interface PlanRepository extends JpaRepository<Plan, Integer> {
-
+	
 	@Query(value = "select max(plan_date) from Plan", nativeQuery = true)
 	LocalDate findMaxPlanDate();
-
-	@Query(value = "select max(plan_date) from Plan where Plan.template = ?1", nativeQuery = true)
-	LocalDate findMaxPlanDateByTemplate(Integer template);
 
 	@Query(value = "select * from Plan p"
 	        + " left join Zuordnung z on z.plan=p.id"
@@ -43,5 +40,11 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 
 	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date is null", nativeQuery = true)
 	Collection<Plan> findByPatternPlans();
+
+	@Query(value= "select max(p.plan_date) from Plan p where p.template = ?1" , nativeQuery = true)
+	LocalDate findMaxPlanDateByTemplate(Integer templateid);
+
+	@Query(value= "select min(p.plan_date) from Plan p where p.template = ?1" , nativeQuery = true)
+	LocalDate findMinPlanDateByTemplate(Integer templateid);
 
 }

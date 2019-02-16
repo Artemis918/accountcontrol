@@ -28,7 +28,7 @@ public class PlanService {
 	public void createPlansfromTemplatesUntil(int month, int year) {
 
 		LocalDate last = planRepository.findMaxPlanDate();
-		if (last == null) 
+		if (last == null)
 			last = LocalDate.now();
 
 		if (last.getMonth().getValue() == month && last.getYear() == year)
@@ -39,10 +39,14 @@ public class PlanService {
 		start = last.plusMonths(1).withDayOfMonth(1);
 
 		List<Template> templates = templateRepository.findAll();
-		templates.stream().filter((t) -> isTemplateRange(t)).forEach((t) -> createPlans(t));
+		templates.stream().filter((t) -> isTemplateRange(t)).forEach((t) -> createPlans(t, null, null));
 	}
 
 	public void createPlansfromTemplate(Template template) {
+		createPlansfromTemplate(template, null, null);
+	}
+	
+	public void createPlansfromTemplate(Template template, LocalDate excludeFrom, LocalDate excludeUntil) {
 
 		LocalDate last = planRepository.findMaxPlanDate();
 		if (last == null)
@@ -51,25 +55,33 @@ public class PlanService {
 		end = end.withDayOfMonth(end.lengthOfMonth());
 		start = template.getValidFrom();
 
-		createPlans(template);
+		createPlans(template, excludeFrom, excludeUntil);
 	}
 
-	private void createPlans(Template template) {
-		LocalDate nextDate = planRepository.findMaxPlanDateByTemplate(template.getId());
+	private void createPlans(Template template, LocalDate excludeFrom, LocalDate excludeUntil ) {
 		
-		if (nextDate == null)
-			nextDate = template.getStart();
-		else
-			nextDate = template.increaseDate(nextDate);
+		for (LocalDate nextDate = template.getStart();
+		     !nextDate.isAfter(end);
+			 nextDate = template.increaseDate(nextDate)
+			) {
 
-		while (!nextDate.isAfter(end)) {
-
-			if (!nextDate.isBefore(template.getValidFrom())
-					&& (template.getValidUntil() == null || !nextDate.isAfter(template.getValidUntil()))) {
-				planRepository.save(new Plan(template, nextDate));
-			}
-			nextDate = template.increaseDate(nextDate);
+			if ( nextDate.isBefore(template.getValidFrom())) 
+				continue;
+				
+			if (excludeFrom!=null && excludeUntil!= null &&  !(nextDate.isBefore(excludeFrom) || nextDate.isAfter(excludeUntil)) )
+				continue;
+			
+			if ( template.getValidUntil() != null && nextDate.isAfter(template.getValidUntil()))
+				continue;
+					
+			planRepository.save(new Plan(template, nextDate));
 		}
+	}
+
+	public void deactivateUnassignedPlans(Template template) {
+		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
+		for (Plan plan : plans)
+			deactivatePlan(plan);
 	}
 
 	public List<Plan> deactivatePlans(Template template) {
@@ -90,7 +102,6 @@ public class PlanService {
 		p.setDeactivateDate(LocalDate.now());
 		planRepository.save(p);
 	}
-	
 
 	private boolean isTemplateRange(Template template) {
 		if (template.getValidFrom().isBefore(start)

@@ -183,8 +183,15 @@ public class ZuordnungController {
 	KontoSpringResult replan(@PathVariable Integer id) {
 		Zuordnung zuordnung = zuordnungRepository.getOne(id);
 		if (zuordnung.getPlan() != null && zuordnung.getPlan().getTemplate() != null ) {
+			BuchungsBeleg beleg = zuordnung.getBuchungsbeleg();
 			Template template = zuordnung.getPlan().getTemplate().copy(zuordnung.getWert(),zuordnung.getPlan().getStartDate());
+			
+			zuordnungRepository.delete(zuordnung);
 			templateService.saveTemplate(template);
+			
+			List<BuchungsBeleg> list = new ArrayList<BuchungsBeleg>();
+			list.add(beleg);
+			zuordnungService.assign(list);
 		} 		
 		return new KontoSpringResult(false, "Gespeichert");
 	}

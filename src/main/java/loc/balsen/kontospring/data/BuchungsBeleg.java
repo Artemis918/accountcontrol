@@ -60,8 +60,16 @@ public class BuchungsBeleg {
 	}
 	
 	public void addDetailLine (String line) {
+		if (details == null) 
+			details = "";
+		
 		if (!details.isEmpty())
 			details+=LF;
+		
 		details+=line;
+	}
+
+	public String getPartner() {
+		return wert > 0 ? absender : empfaenger;
 	}
 }

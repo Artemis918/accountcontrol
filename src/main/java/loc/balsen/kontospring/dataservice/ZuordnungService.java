@@ -122,7 +122,7 @@ public class ZuordnungService {
 
 	public void assignToKonto(Konto konto, String text, BuchungsBeleg beleg) {
 		if (text.isEmpty())
-			text = beleg.getDetails();
+			text = beleg.getPartner();
 
 		Zuordnung zuordnung = new Zuordnung();
 
