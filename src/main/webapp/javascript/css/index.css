@@ -1,3 +1,7 @@
-body {
+.production {
+	background-color: lightblue;
+}
+
+.testing {
 	background-color: lightgrey;
 }

@@ -20,6 +20,7 @@ type renderMethod = () => JSX.Element;
 
 interface IState {
     value: number;
+    production: boolean;
 }
 
 interface Page {
@@ -40,12 +41,18 @@ class Main extends React.Component<{}, IState> {
 
     constructor( props: any ) {
         super( props );
-        this.state = { value: -1 };
+        this.state = { value: -1, production: false };
         this.footer = undefined;
         this.changeValue = this.changeValue.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
     }
 
+    componentDidMount() {
+        var self = this;
+        fetch( "collections/production" )
+            .then( ( response: Response ) => response.json() )
+            .then( ( json ) => { self.setState( { production: json.production } ) } )
+    }
     changeValue( val: number ): void {
         this.setState( { value: val } );
     }
@@ -88,16 +95,17 @@ class Main extends React.Component<{}, IState> {
     }
 
     render(): JSX.Element {
+        var cname: string = this.state.production ? css.production : css.testing;
         var index = this.state.value;
         if ( this.pages[index] == undefined  ) {
-            return ( <div>
+            return ( <div className={cname}>
                 <InitialPage changeValue={this.changeValue} />
                 <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
             </div> );
         }
         else {
             return (
-                <div>
+                <div className={cname}>
                     <Header changeValue={this.changeValue} value={index} title={this.pages[index].title} />
                     {this.pages[index].render()}
                     <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
@@ -107,4 +115,4 @@ class Main extends React.Component<{}, IState> {
     }
 }
 
-ReactDOM.render( ( <div className={css.body}> <Main /></div> ), document.getElementById( 'react' ) );
+ReactDOM.render( ( <Main />), document.getElementById( 'react' ) );

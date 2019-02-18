@@ -122,6 +122,13 @@ export class Template {
         this.previous = undefined;
     }
 }
+//=====================================================
+
+export class StatsDTO {
+    day: Date;
+    value: number;
+    planvalue: number;
+}
 
 //=====================================================
 export class  Zuordnung {

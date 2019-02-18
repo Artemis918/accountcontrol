@@ -1,4 +1,4 @@
-package loc.balsen.kontospring;
+package loc.balsen.kontospring.controller;
 
 
 import org.springframework.stereotype.Controller;

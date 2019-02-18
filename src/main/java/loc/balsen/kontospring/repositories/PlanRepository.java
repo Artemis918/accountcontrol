@@ -29,7 +29,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )", nativeQuery = true)
 	List<Plan> findByPeriodNotAssigned(LocalDate mindate, LocalDate maxdate);
 
-	@Query(value = "select * from Plan where plan_date between ?1 and ?2 and deactivate_date is null", nativeQuery = true)
+	@Query(value = "select * from Plan where plan_date between ?1 and ?2 and deactivate_date is null order by plan_date", nativeQuery = true)
 	List<Plan> findByPlanDate(LocalDate mindate, LocalDate maxdate);
 
 	@Query(value = "select * from Plan p " + " left join Zuordnung z on z.plan=p.id" + " where z.id is null"

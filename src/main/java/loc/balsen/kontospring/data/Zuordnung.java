@@ -1,5 +1,7 @@
 package loc.balsen.kontospring.data;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,5 +48,10 @@ public class Zuordnung {
 	public void setEuroWert(Double val) {
 		val *= 100;
 		setWert(val.intValue());
+	}
+	
+	public LocalDate getStatsDay()  {
+		return plan == null ? buchungsbeleg.getWertstellung() : plan.getPlanDate();
+		
 	}
 }
