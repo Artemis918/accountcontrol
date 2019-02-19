@@ -109,16 +109,28 @@ public class ZuordnungController {
 
 	@PostMapping("/commit")
 	@ResponseBody
-	public KontoSpringResult invertCommit(@RequestBody List<Integer> ids) {
+	public KontoSpringResult commit(@RequestBody List<Integer> ids) {
 		for (Integer id : ids) {
 			Optional<Zuordnung> zuordnung = zuordnungRepository.findById(id);
 			if (zuordnung.isPresent()) {
 				Zuordnung z = zuordnung.get();
-				z.setCommitted(!z.isCommitted());
+				z.setCommitted(true);
 				zuordnungRepository.save(z);
 			}
 		}
 		return new KontoSpringResult(false, "ok");
+	}
+	
+	@GetMapping("/invertcommit/{id}")
+	@ResponseBody
+	public KontoSpringResult invertCommit(@PathVariable int id) {
+		Optional<Zuordnung> zuordnung = zuordnungRepository.findById(id);
+		if (zuordnung.isPresent()) {
+			Zuordnung z = zuordnung.get();
+			z.setCommitted(!z.isCommitted());
+			zuordnungRepository.save(z);
+		}
+		return new KontoSpringResult(false, "ok");	
 	}
 
 	@PostMapping("/remove")

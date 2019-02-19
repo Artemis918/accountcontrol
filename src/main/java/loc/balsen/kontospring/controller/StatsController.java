@@ -31,25 +31,46 @@ public class StatsController {
 		LocalDate day;
 		int value;
 		int planvalue;
+		int forecast;
 		
-		public StatsMonthDTO(LocalDate d, int v, int p) { day = d; value =v; planvalue = p; }
+		public StatsMonthDTO(LocalDate d, int v, int p, int f) { day = d; value =v; planvalue = p; forecast = f; }
 	}
 	
 	@GetMapping("/real/{startyear}/{startmonth}")
 	@ResponseBody
 	public List<StatsMonthDTO> getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth) {
-		LocalDate start = LocalDate.of(startyear, startmonth, 1);
+		LocalDate curDate = LocalDate.of(startyear, startmonth, 1);
 		
-		List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(start);
-		List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(start);
+		List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(curDate);
+		List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(curDate);
 
 		List<StatsMonthDTO> result = new ArrayList<>();
-		Iterator<Integer> planiter = monthlyPlanValues.iterator();
-		for (Integer val: monthlyValues) {
-			result.add(new StatsMonthDTO(start, val, planiter.next()));
-			start = start.plusMonths(1);
+
+		int beginforecast = monthlyValues.size()-1;
+		int diffval = 0;
+		
+		while (beginforecast > 0 && monthlyValues.get(beginforecast).equals(monthlyValues.get(beginforecast-1)))
+			beginforecast--;
+		
+		for (int i = 0; i< monthlyValues.size() ; i++) {
+			int planval = monthlyPlanValues.get(i);
+			int val = monthlyValues.get(i);
+			
+			if (i < beginforecast-1) {
+				result.add(new StatsMonthDTO(curDate, val, planval, 0));
+			}
+			else if ( beginforecast == 0 || i == beginforecast-1) {
+				diffval = val -planval;
+				result.add(new StatsMonthDTO(curDate, val, planval, val));
+			}
+			else if ( beginforecast !=0 && i== beginforecast) {
+				result.add(new StatsMonthDTO(curDate, val, planval, planval+diffval));
+			}
+			else {
+				result.add(new StatsMonthDTO(curDate, 0, planval, planval+diffval));
+			}
+			curDate = curDate.plusMonths(1);
 		}
 		return result;
 	}
-
 }

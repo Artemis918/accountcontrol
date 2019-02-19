@@ -111,6 +111,7 @@ public class ZuordnungControllerTest extends TestContext {
 		Plan plan = new Plan();
 		plan.setDescription("short: " + detailmatch);
 		plan.setStartDate(LocalDate.now().minusDays(2));
+		plan.setPlanDate(LocalDate.now());
 		plan.setEndDate(LocalDate.now().plusDays(2));
 		plan.setKonto(konto);
 		plan.setPattern(new Pattern("{\"details\": \"" + detailmatch + "\"}"));

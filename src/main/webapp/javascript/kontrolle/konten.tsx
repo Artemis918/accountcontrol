@@ -109,7 +109,11 @@ export class Konten extends React.Component<KontenProps, CState> {
     }
 
     commitAssignment( a: Zuordnung ): void {
-        this.commit( [a] );
+        var self: Konten = this;
+        fetch( '/assign/invertcommit/' + a.id)
+        .then( function( response ) {
+            self.lister.current.reload();
+        } );
     }
 
     commitSelected(): void {
@@ -129,15 +133,15 @@ export class Konten extends React.Component<KontenProps, CState> {
         }
         else {
             var id: number = zuordnungen[0].id;
-            var url: string =  '/assign/replan/';
-        
+            var url: string = '/assign/replan/';
+
             if ( id == 0 || id == undefined ) {
                 id = zuordnungen[0].plan;
                 url = '/assign/endplan/';
             }
-            
-            if (id != undefined ) {
-                var self: Konten = this;                
+
+            if ( id != undefined ) {
+                var self: Konten = this;
                 fetch( url + id, { headers: { "Content-Type": "application/json" } } )
                     .then( ( response: Response ) => response.text() )
                     .then( () => self.lister.current.reload() );

@@ -20,7 +20,8 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 
 	@Query(value = "select * from Zuordnung z " 
 			       + "inner join buchungsbeleg b on z.buchungsbeleg = b.id "
-			       + "where b.wertstellung between ?1 and ?2 " 
+			       + "left outer join plan p on z.plan = p.id "
+			       + "where (( p.id is null and b.wertstellung between ?1 and ?2 ) or p.plan_date between ?1 and ?2 ) " 
 		           + "and z.konto = ?3", nativeQuery=true)
 	public List<Zuordnung> findByKontoAndMonth(LocalDate start, LocalDate end, int id);
 
@@ -31,8 +32,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 	
 	@Query(value = "select * from Zuordnung z "
 		       + "inner join buchungsbeleg b on z.buchungsbeleg = b.id "
-		       + "left outer join plan p on z.plan = p.id "
-		       + "where z.plan is null"
+		       + "where z.plan is null "
 		       + "  and b.wertstellung between ?1 and ?2 "
 		       + "  and z.committed = true "
 		       + "order by b.wertstellung" , nativeQuery=true)

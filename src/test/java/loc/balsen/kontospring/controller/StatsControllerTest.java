@@ -1,13 +1,13 @@
 package loc.balsen.kontospring.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -17,8 +17,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,14 +34,15 @@ import loc.balsen.kontospring.testutil.TestContext;
 @WebAppConfiguration
 public class StatsControllerTest extends TestContext {
 
-	@Mock
-	private StatsService statistikService;
-	
-	@InjectMocks
-	private StatsController statsController;
+	@MockBean
+	private StatsService statistikServiceMock;
 	
 	@Autowired
 	MockMvc mvc;
+
+	private ArrayList<Integer> assigns;
+
+	private ArrayList<Integer> plans;
 
 	@Before
 	public void setup() {
@@ -53,26 +57,34 @@ public class StatsControllerTest extends TestContext {
 	}
 
 	@Test
-	public void test() throws Exception {
-		List<Integer> assigns = new ArrayList<Integer>();
+	public void testRestApi() throws Exception {
+		assigns = new ArrayList<Integer>();
 		assigns.add(new Integer(2));
 		assigns.add(new Integer(3));
 		assigns.add(new Integer(4));
-		List<Integer> plans = new ArrayList<Integer>();
+		assigns.add(new Integer(4));
+		assigns.add(new Integer(4));
+		assigns.add(new Integer(4));
+		plans = new ArrayList<Integer>();
 		plans.add(new Integer(9));
 		plans.add(new Integer(8));
 		plans.add(new Integer(7));
+		plans.add(new Integer(6));
+		plans.add(new Integer(5));
+		plans.add(new Integer(4));
 		
-		when(statistikService.getMonthlyCumulatedAssigns(any(LocalDate.class))).thenReturn(assigns);
-		when(statistikService.getMonthlyCumulatedPlan(any(LocalDate.class))).thenReturn(plans);
-		
+		when(statistikServiceMock.getMonthlyCumulatedAssigns(any(LocalDate.class))).thenReturn(assigns);
+		when(statistikServiceMock.getMonthlyCumulatedPlan(any(LocalDate.class))).thenReturn(plans);
+
 		// all Integers are zero in controller, but the lists contain 3 elemts ... strange
 		mvc.perform(get("/stats/real/2018/12"))
 		   .andExpect(content().string("["
-		   		+ "{\"day\":\"2018-12-01\",\"value\":0,\"planvalue\":0},"
-		   		+ "{\"day\":\"2019-01-01\",\"value\":0,\"planvalue\":0},"
-		   		+ "{\"day\":\"2019-02-01\",\"value\":0,\"planvalue\":0}"
+		   		+ "{\"day\":\"2018-12-01\",\"value\":2,\"planvalue\":9,\"forecast\":0},"
+		   		+ "{\"day\":\"2019-01-01\",\"value\":3,\"planvalue\":8,\"forecast\":3},"
+		   		+ "{\"day\":\"2019-02-01\",\"value\":4,\"planvalue\":7,\"forecast\":2},"
+		   		+ "{\"day\":\"2019-03-01\",\"value\":0,\"planvalue\":6,\"forecast\":1},"
+		   		+ "{\"day\":\"2019-04-01\",\"value\":0,\"planvalue\":5,\"forecast\":0},"
+		   		+ "{\"day\":\"2019-05-01\",\"value\":0,\"planvalue\":4,\"forecast\":-1}"
 		   		+ "]"));
 	}
-
 }

@@ -5,6 +5,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 import org.springframework.stereotype.Component;
 
@@ -12,12 +14,6 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
-
-import java.util.function.Consumer;
-import java.util.function.ToIntFunction;
-import java.util.function.Function;
-import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 
 
 @Component

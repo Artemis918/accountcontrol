@@ -55,41 +55,21 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
         var plandata: LineData[] = [];
         var realdata: LineData[] = [];
         var forecastdata: LineData[] = [];
-        var diffForForecast: number;
-        var lastvalue: number;
 
         for ( var i: number = 0; i < statsdata.length; i++ ) {
 
             var stat = statsdata[i];
-
-            if ( stat.value == lastvalue ) {
-                if (realdata.length >=2 ) {
-                    var lastdata: LineData = realdata[realdata.length - 2];
-                    forecastdata.push( { x: lastdata.x, y: lastdata.y } )
-                    lastdata = plandata[plandata.length - 1];
-                    forecastdata.push( { x: lastdata.x, y: ( ( statsdata[i-1].value + diffForForecast ) / 100 ).toFixed( 2 ) } )
-                }
-                
-                var lastplandata: LineData = realdata[realdata.length - 1];
-                forecastdata.push( { x: lastplandata.x, y: lastplandata.y } )
-                endofreal = true;
-                lastvalue = 0;
-            }
             var daystring: string = stat.day.toISOString().split( "T" )[0];
-            plandata.push( { x: daystring, y: ( stat.planvalue / 100 ).toFixed( 2 ) } );
-            if ( endofreal ) {
-                forecastdata.push( { x: daystring, y: ( ( stat.value + diffForForecast ) / 100 ).toFixed( 2 ) } )
+
+            if ( stat.forecast != 0 ) {
+                forecastdata.push( { x: daystring, y: ( stat.forecast / 100 ).toFixed( 2 ) } )
             }
-            else {
-                diffForForecast = stat.value - stat.planvalue;
-                lastvalue = stat.value;
+
+            plandata.push( { x: daystring, y: ( stat.planvalue / 100 ).toFixed( 2 ) } );
+            if ( stat.value != 0 ) {
                 realdata.push( { x: daystring, y: ( stat.value / 100 ).toFixed( 2 ) } )
             }
         }
-        
-        if (forecastdata.length == 0)
-            forecastdata.push( { x: lastplandata.x, y: lastplandata.y });
-            
 
         this.setState( { plandata: plandata, forecastdata: forecastdata, realdata: realdata } );
     }
@@ -98,7 +78,7 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
         return ( <LineChart
             width={750}
             height={500}
-            yDomainRange={[-4000, 8000 ]}
+            yDomainRange={[-4000, 8000]}
             axes
             xType='time'
             datePattern='%Y-%m-%d'

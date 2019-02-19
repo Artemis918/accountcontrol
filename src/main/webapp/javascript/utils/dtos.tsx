@@ -128,6 +128,7 @@ export class StatsDTO {
     day: Date;
     value: number;
     planvalue: number;
+    forecast: number;
 }
 
 //=====================================================
