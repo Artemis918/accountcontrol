@@ -1,7 +1,7 @@
 package loc.balsen.kontospring.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,7 +26,6 @@ import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)

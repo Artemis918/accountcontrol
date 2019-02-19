@@ -38,7 +38,7 @@ public class CollectionsController {
 	@GetMapping("/production")
 	@ResponseBody
 	 ProdDTO isProduction() {
-		return new ProdDTO(System.getProperty("server.port") != null);
+		return new ProdDTO(System.getProperty("local.server.port") != "8080");
 	}
 	
 	@GetMapping("/matchstyle")
