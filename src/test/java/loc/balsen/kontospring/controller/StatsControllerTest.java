@@ -67,18 +67,17 @@ public class StatsControllerTest extends TestContext {
 		plans.add(new Integer(5));
 		plans.add(new Integer(4));
 		
-		when(statistikServiceMock.getMonthlyCumulatedAssigns(any(LocalDate.class))).thenReturn(assigns);
-		when(statistikServiceMock.getMonthlyCumulatedPlan(any(LocalDate.class))).thenReturn(plans);
+		when(statistikServiceMock.getMonthlyCumulatedAssigns(any(LocalDate.class),any(LocalDate.class))).thenReturn(assigns);
+		when(statistikServiceMock.getMonthlyCumulatedPlan(any(LocalDate.class),any(LocalDate.class))).thenReturn(plans);
 
-		// all Integers are zero in controller, but the lists contain 3 elemts ... strange
-		mvc.perform(get("/stats/real/2018/12"))
-		   .andExpect(content().string("["
+		mvc.perform(get("/stats/real/2018/12/2019/5"))
+		   .andExpect(content().string("{\"data\":["
 		   		+ "{\"day\":\"2018-12-01\",\"value\":2,\"planvalue\":9,\"forecast\":0},"
 		   		+ "{\"day\":\"2019-01-01\",\"value\":3,\"planvalue\":8,\"forecast\":3},"
 		   		+ "{\"day\":\"2019-02-01\",\"value\":4,\"planvalue\":7,\"forecast\":2},"
 		   		+ "{\"day\":\"2019-03-01\",\"value\":0,\"planvalue\":6,\"forecast\":1},"
 		   		+ "{\"day\":\"2019-04-01\",\"value\":0,\"planvalue\":5,\"forecast\":0},"
 		   		+ "{\"day\":\"2019-05-01\",\"value\":0,\"planvalue\":4,\"forecast\":-1}"
-		   		+ "]"));
+		   		+ "],\"min\":2,\"max\":9}"));
 	}
 }

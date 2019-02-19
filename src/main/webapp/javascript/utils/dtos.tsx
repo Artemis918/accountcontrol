@@ -125,6 +125,12 @@ export class Template {
 //=====================================================
 
 export class StatsDTO {
+    max: number;
+    min: number;
+    data: StatsMonthDTO[];
+}
+
+export class StatsMonthDTO {
     day: Date;
     value: number;
     planvalue: number;

@@ -6,7 +6,7 @@ export type OnMonthSelectCallback = ( month: number, year: number ) => void;
 export interface MonthSelectProps {
     year: number;
     month: number;
-    onChange?: OnMonthSelectCallback;
+    onChange: OnMonthSelectCallback;
     label: string
 }
 
@@ -22,12 +22,12 @@ export class MonthSelect extends React.Component<MonthSelectProps, CState> {
         this.handleChange = this.handleChange.bind( this );
         this.state = { month: this.props.month, year: this.props.year };
     }
-
+    
     handleChange( m: number, y: number ): void {
 
         this.setState( { month: m, year: y } );
 
-        if ( y >= 2000 && y <= 3000 && m >= 1 && m <= 12 && this.props.onChange !== undefined )
+        if ( y >= 2000 && y <= 3000 && m >= 1 && m <= 12 )
             this.props.onChange( m, y );
     }
 

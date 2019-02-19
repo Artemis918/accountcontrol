@@ -26,6 +26,14 @@ public class StatsController {
 		this.statistikService = statistikService;
 	}
 	
+	@Data 
+	class StatsDTO {
+		List<StatsMonthDTO> data;
+		int min;
+		int max;
+		public StatsDTO(List<StatsMonthDTO> d, int min, int max) { data=d; this.min=min;this.max = max;}
+	}
+	
 	@Data
 	class StatsMonthDTO {
 		LocalDate day;
@@ -36,16 +44,22 @@ public class StatsController {
 		public StatsMonthDTO(LocalDate d, int v, int p, int f) { day = d; value =v; planvalue = p; forecast = f; }
 	}
 	
-	@GetMapping("/real/{startyear}/{startmonth}")
+	@GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}")
 	@ResponseBody
-	public List<StatsMonthDTO> getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth) {
+	public StatsDTO getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth, @PathVariable Integer endyear, @PathVariable Integer endmonth) {
 		LocalDate curDate = LocalDate.of(startyear, startmonth, 1);
+		LocalDate endDate = LocalDate.of(endyear, endmonth, 28);
 		
-		List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(curDate);
-		List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(curDate);
+		List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(curDate, endDate);
+		List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(curDate, endDate);
 
 		List<StatsMonthDTO> result = new ArrayList<>();
 
+		int maxval = monthlyValues.stream().max(Integer::compare).get();
+		int maxplan = monthlyPlanValues.stream().max(Integer::compare).get();
+		int minval = monthlyValues.stream().min(Integer::compare).get();
+		int minplan = monthlyPlanValues.stream().min(Integer::compare).get();
+		
 		int beginforecast = monthlyValues.size()-1;
 		int diffval = 0;
 		
@@ -71,6 +85,6 @@ public class StatsController {
 			}
 			curDate = curDate.plusMonths(1);
 		}
-		return result;
+		return new StatsDTO(result, Math.min(minplan, minval), Math.max(maxplan, maxval));
 	}
 }
