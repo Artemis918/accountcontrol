@@ -1,7 +1,6 @@
 package loc.balsen.kontospring.dataservice;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,17 @@ public class PlanService {
 		createPlansfromTemplate(template, null, null);
 	}
 	
-	public void createPlansfromTemplate(Template template, LocalDate excludeFrom, LocalDate excludeUntil) {
+	public LocalDate getLastPlanOf(Template template) {
+		return planRepository.findMinPlanDateByTemplate(template.getId());
+	}
+	
+	public void createNewPlansfromTemplate(Template template) {
+		LocalDate excludeFrom = planRepository.findMinPlanDateByTemplate(template.getId());
+		LocalDate excludeUntil = planRepository.findMaxPlanDateByTemplate(template.getId());
+		createPlansfromTemplate(template,excludeFrom,excludeUntil);
+	}
+	
+	private void createPlansfromTemplate(Template template, LocalDate excludeFrom, LocalDate excludeUntil) {
 
 		LocalDate last = planRepository.findMaxPlanDate();
 		if (last == null)
@@ -80,17 +89,14 @@ public class PlanService {
 		}
 	}
 
-	public void deactivateUnassignedPlans(Template template) {
-		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
-		for (Plan plan : plans)
-			deactivatePlan(plan);
-	}
-
 	public List<Plan> deactivatePlans(Template template) {
-		LocalDate endDate = template.getValidUntil();
-
-		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
 		List<Plan> result = new ArrayList<Plan>();
+
+		LocalDate endDate = template.getValidUntil();
+		if (endDate == null)
+			return result;
+		
+		List<Plan> plans = planRepository.findActiveByTemplateNotAssigned(template.getId());
 		plans.stream().filter((p) -> {
 			return p.getPlanDate().isAfter(endDate);
 		}).forEach((p) -> {

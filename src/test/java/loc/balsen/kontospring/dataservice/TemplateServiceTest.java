@@ -1,8 +1,11 @@
 package loc.balsen.kontospring.dataservice;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.time.LocalDate;
 
@@ -10,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +26,9 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.KontoRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
-
 
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
@@ -36,11 +39,13 @@ public class TemplateServiceTest extends TestContext {
 
 	@Autowired
 	public ZuordnungRepository zuordnungRepository;
-	
+
+	@Autowired
+	public KontoRepository kontoRepository;
+
 	@Mock
 	public PlanService planService;
 
-	@InjectMocks
 	public TemplateService templateService;
 
 	Plan latestPlan;
@@ -53,6 +58,8 @@ public class TemplateServiceTest extends TestContext {
 		MockitoAnnotations.initMocks(this);
 		createKontoData();
 		createTestData();
+		templateService = new TemplateService(planService, templateRepository, buchungsBelegRepository,
+				kontoRepository);
 	}
 
 	@After
@@ -62,33 +69,43 @@ public class TemplateServiceTest extends TestContext {
 
 	@Test
 	public void testReplan() {
-		// template1.setValue(200);
-		// template1.setValidFrom(LocalDate.of(1999, 5, 1));
-		// templateService.saveTemplate(template);
+		template1.setValue(200);
+		template1.setValidFrom(LocalDate.of(1999, 5, 1));
+		when(planService.getLastPlanOf(any(Template.class))).thenReturn(LocalDate.of(1999,4,30));
 		
-		// verify(planService,times(1)).deactivatePlans(template);
-		// verify(planService,times(1)).createPlansfromTemplate(template1, LocalDate.of(1999, 3, 2),LocalDate.of(1999, 5, 2));
-		// assertNotEquals(template1.getId(),template.getNext());
-		// assertEquals(template1.getValidFrom(),template.getValidUntil());
+		templateService.saveTemplate(template1);
+		
+
+
+		ArgumentCaptor<Template> tempcap = ArgumentCaptor.forClass(Template.class);
+		verify(planService,times(1)).deactivatePlans(tempcap.capture());
+		verify(planService,times(1)).createNewPlansfromTemplate(template1);
+		
+		Template templateOrig = templateRepository.findById(template.getId()).get();
+		assertEquals(template.getId(),tempcap.getValue().getId());
+		assertNotEquals(template1.getId(),template.getId());
+		assertEquals(template1.getId(),templateOrig.getNext());
+
+		assertEquals(template1.getValidFrom(),templateOrig.getValidUntil().plusDays(1));
 	}
 
 	// @Test
 	public void testEndTemplate() {
 		template.setValidUntil(LocalDate.of(1999, 5, 1));
 		templateService.saveTemplate(template);
-		verify(planService,times(1)).deactivatePlans(template);
+		verify(planService, times(1)).deactivatePlans(template);
 	}
 
-	
 	public void createTestData() {
-		
-		BuchungsBeleg beleg =  new BuchungsBeleg();
+
+		BuchungsBeleg beleg = new BuchungsBeleg();
 		buchungsBelegRepository.save(beleg);
-		
-		latestPlan = createPlan(null, LocalDate.of(1997, 5, 14),null);
+
+		latestPlan = createPlan(null, LocalDate.of(1997, 5, 14), null);
 
 		template = new Template();
 		template.setShortDescription("tester");
+		template.setDescription("tester");
 		template.setAnzahlRythmus(1);
 		template.setRythmus(Template.Rythmus.MONTH);
 		template.setVardays(5);
@@ -98,10 +115,11 @@ public class TemplateServiceTest extends TestContext {
 		template.setKonto(konto2);
 		template.setValue(100);
 		templateRepository.save(template);
-		
+
 		template1 = new Template();
 		template1.setId(template.getId());
 		template1.setShortDescription("tester");
+		template1.setDescription("tester");
 		template1.setAnzahlRythmus(1);
 		template1.setRythmus(Template.Rythmus.MONTH);
 		template1.setVardays(5);
@@ -110,15 +128,6 @@ public class TemplateServiceTest extends TestContext {
 		template1.setPattern(new Pattern("\"sender\": \"gulli1\""));
 		template1.setKonto(konto2);
 		template1.setValue(100);
-
-		
-
-		createPlan(null, LocalDate.of(1999, 2, 2), null);
-		createPlan(null, LocalDate.of(1999, 3, 2), beleg);
-		createPlan(null, LocalDate.of(1999, 5, 2), beleg);
-		createPlan(null, LocalDate.of(1999, 4, 2), null);
-		createPlan(null, LocalDate.of(1999, 6, 2), null);
-
 	}
 
 	private Plan createPlan(Template template, LocalDate plandate, BuchungsBeleg beleg) {
@@ -129,14 +138,14 @@ public class TemplateServiceTest extends TestContext {
 		plan.setKonto(konto1);
 		plan.setTemplate(template);
 		planRepository.save(plan);
-		
+
 		if (beleg != null) {
 			Zuordnung z = new Zuordnung();
 			z.setPlan(plan);
 			z.setBuchungsbeleg(beleg);
 			zuordnungRepository.save(z);
 		}
-		
+
 		return plan;
 	}
 

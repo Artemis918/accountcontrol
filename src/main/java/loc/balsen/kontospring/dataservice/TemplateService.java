@@ -12,7 +12,6 @@ import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Component
@@ -20,20 +19,21 @@ public class TemplateService {
 
 	private static final int KONTO_DEFAULT = 1;
 
-	@Autowired
 	PlanService planService;
+	TemplateRepository templateRepository;
+	BuchungsBelegRepository buchungsBelegRepository;
+	KontoRepository kontoRepository;
 	
 	@Autowired
-	PlanRepository planRepository;
-
-	@Autowired
-	TemplateRepository templateRepository;
-
-	@Autowired
-	BuchungsBelegRepository buchungsBelegRepository;
-
-	@Autowired
-	KontoRepository kontoRepository;
+	public TemplateService(PlanService planService,
+			               TemplateRepository templateRepository,
+			               BuchungsBelegRepository buchungsBelegRepository,
+			               KontoRepository kontoRepository) {
+		this.planService = planService;
+		this.templateRepository = templateRepository;
+		this.buchungsBelegRepository = buchungsBelegRepository;
+		this.kontoRepository = kontoRepository;
+	}
 
 	public void saveTemplate(Template template) {
 
@@ -45,36 +45,33 @@ public class TemplateService {
 		}
 		else {
 			Template templateOrig = templateRepository.findById(template.getId()).get();
-
+			
 			if (templateOrig.equalsExceptValidPeriod(template)) {
-				changeValidPeriod(templateOrig, template.getValidFrom(), template.getValidUntil());
+				templateOrig.setValidUntil(template.getValidUntil());
+				template = templateOrig;
 			} else {
-				replanUnassigned(template, templateOrig);
+				LocalDate lastPlan = planService.getLastPlanOf(templateOrig);
+				LocalDate changeDay = template.getValidFrom();
+				if (lastPlan.isAfter(changeDay))
+					changeDay=lastPlan.plusDays(1);
+				
+				template.setId(0);
+				
+				template.setValidFrom(changeDay);
+				if (template.getValidUntil() != null && template.getValidUntil().isBefore(changeDay))
+					template.setValidUntil(changeDay);
+					
+				templateRepository.save(template);
+				
+				templateOrig.setValidUntil(changeDay.minusDays(1));
+				templateOrig.setNext(template.getId());
 			}
+			templateRepository.save(templateOrig);
+			planService.deactivatePlans(templateOrig);
+			
+			planService.createNewPlansfromTemplate(template);
+
 		}
-	}
-
-	public void replanUnassigned(Template template, Template templateOrig) {
-
-		template.setId(0);
-		templateRepository.save(template);
-		
-		templateOrig.setValidUntil(template.getValidFrom());
-		templateOrig.setNext(template.getId());
-		templateRepository.save(templateOrig);
-		
-		planService.deactivateUnassignedPlans(templateOrig);
-		LocalDate excludeFrom = planRepository.findMinPlanDateByTemplate(templateOrig.getId());
-		LocalDate excludeUntil = planRepository.findMaxPlanDateByTemplate(templateOrig.getId());
-
-		planService.createPlansfromTemplate(template,excludeFrom,excludeUntil);
-	}
-
-	private void changeValidPeriod(Template templateOrig, LocalDate validFrom, LocalDate validUntil) {
-		planService.deactivateUnassignedPlans(templateOrig);
-		LocalDate excludeFrom = planRepository.findMinPlanDateByTemplate(templateOrig.getId());
-		LocalDate excludeUntil = planRepository.findMaxPlanDateByTemplate(templateOrig.getId());
-		planService.createPlansfromTemplate(templateOrig,excludeFrom,excludeUntil);
 	}
 	
 	public Template createFromBeleg(Integer id) {

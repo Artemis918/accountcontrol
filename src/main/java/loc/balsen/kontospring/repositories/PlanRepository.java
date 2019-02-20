@@ -16,14 +16,14 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	LocalDate findMaxPlanDate();
 
 	@Query(value = "select * from Plan p"
-	        + " left join Zuordnung z on z.plan=p.id"
+	        + " left outer join Zuordnung z on z.plan=p.id"
 			+ " where z.id is null"
 			+ "   and p.deactivate_date is null"
-			+ "   and P.template = ?1", nativeQuery = true)
+			+ "   and p.template = ?1", nativeQuery = true)
 	List<Plan> findActiveByTemplateNotAssigned(Integer template);
 
 	@Query(value = "select * from Plan p" 
-	        + " left join Zuordnung z on z.plan=p.id"
+	        + " left outer join Zuordnung z on z.plan=p.id"
 			+ " where z.id is null"
 			+ " and deactivate_date is NULL"
 			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )", nativeQuery = true)
