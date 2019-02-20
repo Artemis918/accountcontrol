@@ -23,10 +23,10 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 
     parseDate( str :string, f: string) :Date {
         const parsed: Date = parse( str, f, new Date());
-        if ( parsed != undefined )  {
-            return parsed;
+        if ( isNaN(parsed.getTime()))  {
+            return undefined;
         }
-        return undefined;
+        return parsed;
     }
     
     render() : JSX.Element {
