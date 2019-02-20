@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
-import { SingleSelectLister } from '../utils/singleselectlister'
+import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { BelegEditor } from './belegeditor'
 import { BuchungsBeleg } from '../utils/dtos'
 
@@ -17,33 +17,27 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
 
     lister: SingleSelectLister<BuchungsBeleg>;
     editor: BelegEditor;
-    columns: any[] = [{
-        Header: 'Datum',
-        accessor: 'wertstellung',
-        width: '150'
+    columns: ColumnInfo<BuchungsBeleg>[] = [ {
+        header: 'Datum',
+        getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE',{day: '2-digit', month: '2-digit'}) }
     }, {
-        Header: 'Absender',
-        accessor: 'absender',
-        width: '400'
+        header: 'Absender',
+        getdata: ( data: BuchungsBeleg ):string => { return data.absender },
     }, {
-        Header: 'Empfänger',
-        accessor: 'empfaenger',
-        width: '400'
+        header: 'Empfänger',
+        getdata: ( data: BuchungsBeleg ):string => { return data.empfaenger },
     }, {
-        Header: 'Detail',
-        accessor: 'details',
-        width: '30%'
+        header: 'Details',
+        getdata: ( data: BuchungsBeleg ):string => { return data.details },
     }, {
-        Header: 'Betrag',
-        accessor: 'wert',
-        width: '150',
-        Cell: ( row: any ) => (
+        header: 'Betrag',
+        cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
 
             <div style={{
-                color: row.value >= 0 ? 'green' : 'red',
+                color: cellinfo.data.wert >= 0 ? 'green' : 'red',
                 textAlign: 'right'
             }}>
-                {( row.value / 100 ).toFixed( 2 )}
+                {( cellinfo.data.wert / 100 ).toFixed( 2 )}
             </div>
 
         )
