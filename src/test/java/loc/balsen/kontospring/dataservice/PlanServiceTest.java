@@ -107,7 +107,11 @@ public class PlanServiceTest extends TestContext {
 		
 		planService.createPlansfromTemplatesUntil(9,1999);
 		plans = planRepository.findAll();
-		assertEquals(17, plans.size());
+		assertEquals(3, plans.size());
+
+		planService.createPlansfromTemplatesUntil(12,1999);
+		plans = planRepository.findAll();
+		assertEquals(9, plans.size());
 	}
 	
 	@Test

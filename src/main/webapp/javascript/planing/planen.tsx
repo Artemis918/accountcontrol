@@ -70,7 +70,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
     }
 
     createPlans() {
-        fetch( "plans/createFromTemplate/" + this.state.creationMonth + "/" + this.state.creationYear)
+        fetch( "plans/createFromTemplates/" + this.state.creationMonth + "/" + this.state.creationYear)
         .then( ( response: Response ) => response.text() )
         .then( (json)=> this.props.sendmessage("Pläne erzeugt", false) )
     }

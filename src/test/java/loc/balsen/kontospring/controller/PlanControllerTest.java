@@ -103,7 +103,7 @@ public class PlanControllerTest extends TestContext {
 		createKontoData();
 		createTemplate(year);
 
-		mvc.perform(get("/plans/createFromTemplate/11/" + year))
+		mvc.perform(get("/plans/createFromTemplates/11/" + year))
 		   .andExpect(status().isOk());
 		
 		List<Plan> plans = planRepository.findByTemplate(template);

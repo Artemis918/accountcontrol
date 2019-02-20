@@ -100,7 +100,7 @@ public class PlanController {
 		return new KontoSpringResult(false, "gelöscht");
 	}
 
-	@GetMapping("createFromTemplate/{month}/{year}")
+	@GetMapping("createFromTemplates/{month}/{year}")
 	@ResponseBody
 	KontoSpringResult createFromTemplates(@PathVariable Integer month, @PathVariable Integer year) {
 		planService.createPlansfromTemplatesUntil(month, year);

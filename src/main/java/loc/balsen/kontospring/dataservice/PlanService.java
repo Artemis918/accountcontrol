@@ -1,6 +1,8 @@
 package loc.balsen.kontospring.dataservice;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +37,11 @@ public class PlanService {
 			return;
 
 		end = LocalDate.of(year, month, 1);
-		end = end.withDayOfMonth(end.lengthOfMonth());
-		start = last.plusMonths(1).withDayOfMonth(1);
+		end = end.with(TemporalAdjusters.lastDayOfMonth());
+		start = last.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
 
 		List<Template> templates = templateRepository.findAll();
-		templates.stream().filter((t) -> isTemplateRange(t)).forEach((t) -> createPlans(t, null, null));
+		templates.stream().filter((t) -> isTemplateRange(t)).forEach((t) -> createPlans(t, t.getValidFrom(), start.minusDays(1)));
 	}
 
 	public void createPlansfromTemplate(Template template) {
