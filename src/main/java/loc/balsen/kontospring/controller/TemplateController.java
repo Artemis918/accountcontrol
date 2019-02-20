@@ -62,13 +62,7 @@ public class TemplateController {
 	@PostMapping("/save")
 	@ResponseBody
 	KontoSpringResult saveTemplate(@RequestBody TemplateDTO template) {
-		try {
-			templateService.saveTemplate(template.toTemplate(kontoRepository));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new KontoSpringResult(false, "Fehler beim Speichern");
-		}
+		templateService.saveTemplate(template.toTemplate(kontoRepository));
 		return new KontoSpringResult(false, "Gespeichert");
 	}
 

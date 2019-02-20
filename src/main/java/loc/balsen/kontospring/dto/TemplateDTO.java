@@ -1,6 +1,5 @@
 package loc.balsen.kontospring.dto;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 
 import loc.balsen.kontospring.data.Plan;
@@ -13,7 +12,7 @@ import lombok.Data;
 public class TemplateDTO {
 	private int id;
 	private LocalDate validFrom;
-	private LocalDate validUntill;
+	private LocalDate validUntil;
 	private LocalDate start;
 	private int vardays;
 	private int anzahl;
@@ -35,7 +34,7 @@ public class TemplateDTO {
 				
 		this.id = template.getId();
 		this.validFrom = template.getValidFrom();
-		this.validUntill = template.getValidUntil();
+		this.validUntil = template.getValidUntil();
 		this.start = template.getStart();
 		this.vardays=template.getVardays();
 		this.anzahl = template.getAnzahlRythmus();
@@ -51,12 +50,12 @@ public class TemplateDTO {
 		this.previous = template.getNext();
 	}
 	
-	public Template toTemplate(KontoRepository kontoRepository) throws ParseException {
+	public Template toTemplate(KontoRepository kontoRepository) {
 		Template template = new Template();
 
 		template.setId(this.getId());
 		template.setValidFrom(this.validFrom == null ? LocalDate.now(): this.validFrom);
-		template.setValidUntil(this.validUntill);
+		template.setValidUntil(this.validUntil);
 		template.setStart(this.start == null ? LocalDate.now() : this.start);
 		template.setVardays(this.getVardays());
 		template.setAnzahlRythmus(this.getAnzahl());
