@@ -23,7 +23,7 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 
     parseDate( str :string, f: string) :Date {
         const parsed: Date = parse( str, f, new Date());
-        if ( isNaN(parsed.getTime()))  {
+        if ( isNaN(parsed.getTime()) || parsed.getFullYear() < 1970)  {
             return undefined;
         }
         return parsed;

@@ -92,6 +92,7 @@ export class Template {
     vardays: number;
     anzahl: number;
     rythmus: number;
+    rythmName: string;
     description: string;
     kontogroup: number;
     konto: number;
@@ -111,6 +112,7 @@ export class Template {
         this.vardays = 4;
         this.anzahl = 1;
         this.rythmus = 1;
+        this.rythmName= "1 - Monat"
         this.description = 'Neue Vorlage';
         this.kontogroup = 1;
         this.konto = 1;

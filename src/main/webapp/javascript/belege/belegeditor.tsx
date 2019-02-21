@@ -32,17 +32,13 @@ export class BelegEditor extends React.Component<BelegEditorProps, IState> {
     createEmptyBeleg(): BuchungsBeleg {
         return new BuchungsBeleg();
     }
-    setBeleg( id: number ): void {
-        if ( id == undefined ) {
+    
+    setBeleg( beleg: BuchungsBeleg ): void {
+        if ( beleg == undefined )
             this.beleg = this.createEmptyBeleg();
-            this.setState( { beleg: this.beleg } );
-        }
-        else {
-            var self = this;
-            fetch( 'belege/id/' + id )
-                .then( response => response.json() )
-                .then( b => { self.beleg = b; self.setState( { beleg: self.beleg } ) } );
-        }
+        else
+            this.beleg = beleg;
+        this.setState( { beleg: this.beleg } );
     }
 
     save(): void {

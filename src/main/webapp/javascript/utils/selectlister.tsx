@@ -113,7 +113,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
             <tr onClick={this.handleClick}
                 onDoubleClick={this.handleDoubleClick}
                 className={this.props.isSelected( rownum ) ? css.selectedrow : css.unselectedrow}
-                key={"slrow"+rownum}>
+                key={"slrow" + rownum}>
                 {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, rownum ) )}
             </tr>
         );
@@ -121,7 +121,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     renderDataCol( col: ColumnInfo<D>, data: D, index: number ): JSX.Element {
         return (
-            <td key={col.header+index}>
+            <td key={col.header + index}>
                 {this.renderCell( col, data, index )}
             </td>
         );
@@ -139,11 +139,11 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     renderFooter(): JSX.Element {
         if ( this.props.createFooter != undefined ) {
-            var data: D= this.props.createFooter(this.state.data);
+            var data: D = this.props.createFooter( this.state.data );
             return (
                 <tfoot>
                     <tr>
-                        {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, -1) )}
+                        {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderDataCol( col, data, -1 ) )}
                     </tr>
                 </tfoot>
             )
@@ -154,13 +154,13 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     render(): JSX.Element {
         return (
-            <table style={{ width: '100%' }} >
+            <table className={css.selectlister}>
                 <thead>
                     <tr>
                         {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderHeadCol( col ) )}
                     </tr>
                 </thead>
-                <tbody className={css.tablebody}>
+                <tbody >
                     {this.state.data.map( this.renderRow )}
                 </tbody>
                 {this.renderFooter()}

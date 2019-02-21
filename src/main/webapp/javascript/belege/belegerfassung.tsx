@@ -58,7 +58,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
     }
 
     refresheditor( beleg: BuchungsBeleg ): void {
-        this.editor.setBeleg( beleg.id );
+        this.editor.setBeleg( beleg);
     }
 
     render(): JSX.Element {

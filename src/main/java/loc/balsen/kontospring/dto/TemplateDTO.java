@@ -17,6 +17,7 @@ public class TemplateDTO {
 	private int vardays;
 	private int anzahl;
 	private int rythmus;
+	private String rythmName;
 	private int konto;
 	private int kontogroup;
 	private String description;
@@ -48,6 +49,8 @@ public class TemplateDTO {
 		this.shortdescription = template.getShortDescription();
 		this.matchstyle = template.getMatchStyle().ordinal();
 		this.previous = template.getNext();
+		
+		this.rythmName = template.getAnzahlRythmus() + " - " + template.getRythmus().toString();
 	}
 	
 	public Template toTemplate(KontoRepository kontoRepository) {

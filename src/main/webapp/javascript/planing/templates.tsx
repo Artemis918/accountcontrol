@@ -35,7 +35,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
             getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
         }, {
             header: 'Rhythmus',
-            getdata: ( d: Template ): string => { return d.rythmus.toString( 10 ) }
+            getdata: ( d: Template ): string => { return d.rythmName }
         }, {
             header: 'Beschreibung',
             getdata: ( d: Template ): string => { return d.shortdescription; }
