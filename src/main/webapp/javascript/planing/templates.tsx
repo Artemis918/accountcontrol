@@ -14,7 +14,11 @@ interface IState {
     group: number;
 }
 
+const rythmNames: string[] = ['Tag', 'Woche', 'Monat', 'Jahr'];
+
+
 export class Templates extends React.Component<TemplateProps, IState> {
+    
 
     lister: SingleSelectLister<Template>;
     editor: TemplateEditor;
@@ -35,7 +39,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
             getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
         }, {
             header: 'Rhythmus',
-            getdata: ( d: Template ): string => { return d.rythmName }
+            getdata: ( d: Template ): string => { return d.anzahl + ' - ' + rythmNames[d.rythmus] }
         }, {
             header: 'Beschreibung',
             getdata: ( d: Template ): string => { return d.shortdescription; }
