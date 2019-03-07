@@ -33,23 +33,28 @@ import lombok.Data;
 @RequestMapping("/assign")
 public class ZuordnungController {
 
-	@Autowired
 	private KontoRepository kontoRepository;
-
-	@Autowired
 	private ZuordnungRepository zuordnungRepository;
-
-	@Autowired
 	private ZuordnungService zuordnungService;
-
-	@Autowired
 	private TemplateService templateService;
-	
-	@Autowired
 	private BuchungsBelegRepository buchungsBelegRepository;
+	private PlanRepository planRepository;
 
 	@Autowired
-	private PlanRepository planRepository;
+	public ZuordnungController(	
+			KontoRepository kontoRepository,
+			ZuordnungRepository zuordnungRepository,
+			ZuordnungService zuordnungService,
+			TemplateService templateService,
+			BuchungsBelegRepository buchungsBelegRepository,
+			PlanRepository planRepository) {
+		this.kontoRepository = kontoRepository;
+		this.zuordnungRepository = zuordnungRepository;
+		this.zuordnungService = zuordnungService;
+		this.templateService = templateService;
+		this.buchungsBelegRepository = buchungsBelegRepository;
+		this.planRepository = planRepository;
+	}
 
 	@GetMapping("/all")
 	@ResponseBody

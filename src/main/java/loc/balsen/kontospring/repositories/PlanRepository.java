@@ -47,4 +47,9 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	@Query(value= "select min(p.plan_date) from Plan p where p.template = ?1" , nativeQuery = true)
 	LocalDate findMinPlanDateByTemplate(Integer templateid);
 
+	@Query(value = "select max(p.plan_date) from Plan p" 
+	        + " inner join Zuordnung z on z.plan=p.id"
+			+ " where p.template = ?1",nativeQuery = true)
+	LocalDate findMaxAssignedPlanDateByTemplate(int id);
+
 }

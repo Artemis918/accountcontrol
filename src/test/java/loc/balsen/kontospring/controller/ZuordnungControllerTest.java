@@ -1,7 +1,12 @@
 package loc.balsen.kontospring.controller;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,9 +19,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockJspWriter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +37,11 @@ import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.Konto;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.dataservice.TemplateService;
+import loc.balsen.kontospring.dataservice.ZuordnungService;
+import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -36,14 +52,62 @@ public class ZuordnungControllerTest extends TestContext {
 	@Autowired
 	MockMvc mvc;
 
+	@Mock
+	private ZuordnungService mockZuordnungsService;
+
+	@Mock
+	private TemplateService mockTemplateService;
+	
+	@Mock
+	private ZuordnungRepository mockZuordnungRepository;
+	
+	
+	@Captor
+	private ArgumentCaptor<List<BuchungsBeleg>> captor;
+	
 	@Before
 	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		createKontoData();
 	}
 	
 	@After
 	public void teardown() {
 		clearRepos();
+	}
+	
+	@Test
+	public void testReplan() {
+		BuchungsBeleg beleg =  new BuchungsBeleg();
+		Plan plan = new Plan();
+		Template template = new Template();
+		
+		Zuordnung zuordnung =  new Zuordnung();
+		zuordnung.setId(1200);
+		zuordnung.setBuchungsbeleg(beleg);
+
+
+		when(mockZuordnungRepository.getOne(Integer.valueOf(100))).thenReturn(zuordnung);
+		
+		ZuordnungController controller =  new ZuordnungController(null, mockZuordnungRepository, mockZuordnungsService, 
+				mockTemplateService, null, null);
+		
+		// do nothing
+		controller.replan(100);
+		
+		zuordnung.setPlan(plan);
+		controller.replan(100);
+		
+		plan.setTemplate(template);	
+		controller.replan(100);
+
+		verify(mockZuordnungRepository,times(1)).delete(zuordnung);
+		verify(mockTemplateService,times(1)).saveTemplate(template);
+		
+		verify(mockZuordnungsService,times(1)).assign(captor.capture());
+		
+		assertSame(beleg, captor.getValue().get(0));
+
 	}
 
 	@Test

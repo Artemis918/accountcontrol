@@ -48,7 +48,7 @@ public class PlanService {
 	}
 	
 	public LocalDate getLastPlanOf(Template template) {
-		return planRepository.findMaxPlanDateByTemplate(template.getId());
+		return planRepository.findMaxAssignedPlanDateByTemplate(template.getId());
 	}
 	
 	public void createNewPlansfromTemplate(Template template) {

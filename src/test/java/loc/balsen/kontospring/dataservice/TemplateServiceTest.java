@@ -74,8 +74,6 @@ public class TemplateServiceTest extends TestContext {
 		when(planService.getLastPlanOf(any(Template.class))).thenReturn(LocalDate.of(1999,4,30));
 		
 		templateService.saveTemplate(template1);
-		
-
 
 		ArgumentCaptor<Template> tempcap = ArgumentCaptor.forClass(Template.class);
 		verify(planService,times(1)).deactivatePlans(tempcap.capture());

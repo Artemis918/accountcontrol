@@ -1,10 +1,13 @@
 package loc.balsen.kontospring.dataservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
+import org.h2.util.LocalDateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +15,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.comparator.Comparators;
 
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -24,6 +30,9 @@ public class PlanServiceTest extends TestContext {
 
 	@Autowired
 	PlanService planService;
+	
+	@Autowired
+	ZuordnungRepository zuordnungRepository;
 
 	@Before
 	public void setup() {
@@ -91,7 +100,48 @@ public class PlanServiceTest extends TestContext {
 		List<Plan> plans = planRepository.findAll();
 		assertEquals(6, plans.size());
 	}
+
+	@Test
+	public void testLastPlanOfTemplate() {
+		
+		latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
+		planRepository.save(latestPlan);
+		template.setValidUntil(null);
+		templateRepository.save(template);
+		planService.createPlansfromTemplatesUntil(05,2000);
+		
+		List<Plan> plans = planRepository.findByTemplate(template);
+		plans.sort(Comparator.comparing(Plan::getId));
+		
+		LocalDate last = planService.getLastPlanOf(template);
+		assertNull(last);
+
+		LocalDate plandate = createZuordnung(plans.get(1));
+		last = planService.getLastPlanOf(template);
+		assertEquals(plandate,last);
+
+		plandate = createZuordnung(plans.get(2));
+		last = planService.getLastPlanOf(template);
+		assertEquals(plandate,last);
+
+		plandate = createZuordnung(plans.get(4));
+		last = planService.getLastPlanOf(template);
+		assertEquals(plandate,last);
+
+		createZuordnung(plans.get(3));
+		last = planService.getLastPlanOf(template);
+		assertEquals(plandate,last);
+
+	}
+
 	
+	private LocalDate createZuordnung(Plan plan) {
+		Zuordnung zuordnung = new Zuordnung();
+		zuordnung.setPlan(plan);
+		zuordnungRepository.save(zuordnung);
+		return plan.getPlanDate();
+	}
+
 	@Test
 	public void testCreateUntil() {
 		
