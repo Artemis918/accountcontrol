@@ -1,0 +1,24 @@
+.tsbuttonselected {
+	height: 30px;
+	margin: 0px;
+	width: 102px;
+	border-radius: 5px 20px 0px 0px;
+	background-color: white;
+}
+
+.tsbutton {
+	padding: 0px 0px 0px 0px;
+	height: 23px;
+	width: 100px;
+	border-radius: 5px 20px 0px 0px;
+	vertical-align: bottom;
+	background-color: lightblue;
+}
+
+.tsline {
+	height: 30px;
+	border-color: royalblue;
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	padding: 10px 0px 0px 0px;
+}

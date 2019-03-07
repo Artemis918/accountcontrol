@@ -2,7 +2,7 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { InitialPage } from './initial'
 import { Header } from './header'
-import { TaskSelector, Tabulator } from './utils/taskselector'
+import { TaskSelector, Task } from './utils/taskselector'
 import { BelegUploader } from './belege/beleguploader'
 import { BelegErfassung } from './belege/belegerfassung'
 import { Templates } from './planing/templates'
@@ -25,18 +25,46 @@ interface IState {
 
 interface Page {
     title: string;
-    render: renderMethod;
+    tasks: Task[];
 }
 
 class Main extends React.Component<{}, IState> {
 
     footer: Footer;
     pages: Page[] = [
-        { title: "Planen", render: this.renderPlaning },
-        { title: "Buchungsbelege", render: this.renderBelege },
-        { title: "Buchen", render: this.renderBuchen },
-        { title: "Konten Kontrolle", render: this.renderKontrolle },
-        { title: "Übersicht", render: this.renderOverview }
+        {
+            title: "Planen", tasks:
+                [
+                    { name: 'Vorlagen', comp: ( <Templates sendmessage={this.sendMessage} /> ) },
+                    { name: 'Planen', comp: ( <Planen sendmessage={this.sendMessage} /> ) },
+                    { name: 'Muster', comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
+                ]
+        },
+        {
+            title: "Buchungsbelege", tasks:
+                [
+                    { name: 'Laden', comp: ( <BelegUploader sendmessage={this.sendMessage} /> ) },
+                    { name: 'Erfassen', comp: ( <BelegErfassung sendmessage={this.sendMessage} /> ) }
+                ]
+        },
+        {
+            title: "Buchen", tasks:
+                [
+                    { name: 'Belegliste', comp: ( <Buchen sendmessage={this.sendMessage} /> ) },
+                ]
+        },
+        {
+            title: "Konten Kontrolle", tasks:
+                [
+                    { name: 'Belegliste', comp: ( <Konten sendmessage={this.sendMessage} /> ) },
+                ]
+        },
+        {
+            title: "Übersicht", tasks: [
+                { name: 'Grafisch', comp: ( <OverviewGFX /> ) },
+                { name: 'Tabelle', comp: ( <div /> ) }
+            ]
+        }
     ];
 
     constructor( props: any ) {
@@ -61,43 +89,14 @@ class Main extends React.Component<{}, IState> {
         this.footer.setmessage( msg, error );
     }
 
-    renderPlaning(): JSX.Element {
-        var tasks = [
-            { name: 'Vorlagen', comp: ( <Templates sendmessage={this.sendMessage} /> ) },
-            { name: 'Planen', comp: ( <Planen sendmessage={this.sendMessage} /> ) },
-            { name: 'Muster', comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
-        ];
-        return ( <TaskSelector tasks={tasks} currenttask={0} tasksname='planen' /> );
-    }
-
-    renderBelege(): JSX.Element {
-        var tasks: Tabulator[] = [
-            { name: 'Laden', comp: ( <BelegUploader sendmessage={this.sendMessage} /> ) },
-            { name: 'Erfassen', comp: ( <BelegErfassung sendmessage={this.sendMessage} /> ) }
-        ];
-        return ( <TaskSelector tasks={tasks} currenttask={0} tasksname='belege'/> );
-    }
-
-    renderBuchen(): JSX.Element {
-        return ( <Buchen sendmessage={this.sendMessage} /> );
-    }
-
-    renderKontrolle(): JSX.Element {
-        return ( <Konten sendmessage={this.sendMessage} /> );
-    }
-
-    renderOverview(): JSX.Element {
-        var tasks: Tabulator[] = [
-            { name: 'Grafisch', comp: ( <OverviewGFX /> ) },
-            { name: 'Tabelle', comp: ( <div /> ) }
-        ];
-        return ( <TaskSelector tasks={tasks} currenttask={0} tasksname='belege'/> );
+    renderPage (page: Page): JSX.Element {
+        return ( <TaskSelector tasks={page.tasks} currenttask={0} tasksname={page.title} /> );
     }
 
     render(): JSX.Element {
         var cname: string = this.state.production ? css.production : css.testing;
         var index = this.state.value;
-        if ( this.pages[index] == undefined  ) {
+        if ( this.pages[index] == undefined ) {
             return ( <div className={cname}>
                 <InitialPage changeValue={this.changeValue} />
                 <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
@@ -107,7 +106,7 @@ class Main extends React.Component<{}, IState> {
             return (
                 <div className={cname}>
                     <Header changeValue={this.changeValue} value={index} title={this.pages[index].title} />
-                    {this.pages[index].render()}
+                    {this.renderPage(this.pages[index])}
                     <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
                 </div>
             )
@@ -115,4 +114,4 @@ class Main extends React.Component<{}, IState> {
     }
 }
 
-ReactDOM.render( ( <Main />), document.getElementById( 'react' ) );
+ReactDOM.render( ( <Main /> ), document.getElementById( 'react' ) );

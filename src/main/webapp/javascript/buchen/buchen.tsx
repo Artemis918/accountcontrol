@@ -6,6 +6,8 @@ import { ManuellBuchen } from './manuellbuchen';
 import { PlanSelect } from './planselect';
 import { BuchungsBeleg, Plan } from '../utils/dtos'
 
+import * as css from '../css/index.css'
+
 type SendMessage = ( m: string, error: boolean ) => void
 
 
@@ -171,11 +173,13 @@ export class Buchen extends React.Component<BuchenProps, IState> {
 
         return (
             <div>
-                <button className="button" onClick={( e ) => this.assignAuto()}>Automatisch</button>
-                <button className="button" onClick={( e ) => this.assignKonto()}>Konto</button>
-                <button className="button" onClick={( e ) => this.assignManuell()}>Manuell</button>
-                <button className="button" onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
-                <button className="button" onClick={( e ) => this.createPlan()}>Planen</button>
+                <div className={css.actionbar}>
+                <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>Automatisch</button>
+                <button className={css.actionbutton} onClick={( e ) => this.assignKonto()}>Konto</button>
+                <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>Manuell</button>
+                <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
+                <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
+                </div>
                 <div>
                     <MultiSelectLister<BuchungsBeleg> columns={this.columns}
                         url='belege/unassigned'

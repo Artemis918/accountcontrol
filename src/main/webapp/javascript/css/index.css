@@ -1,7 +1,35 @@
 .production {
 	background-color: lightblue;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .testing {
 	background-color: lightgrey;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+
+	padding: 10px;
+	border-style: solid;
+	border-width: 0px 0px 10px 0px; 
+	border-color: royalblue;
+	padding: 5px;
+}
+
+.title {
+	font-size: 36px;
+}
+
+.headerselector {
+	float: right;
+	padding: 5px;
+}
+
+.actionbar {
+	
+}
+
+.actionbutton {
+	
 }

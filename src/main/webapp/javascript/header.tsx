@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as css from './css/index.css'
 
 type HandleChange = ( index: number ) => void;
 
@@ -22,9 +23,9 @@ export class Header extends React.Component<HeaderProps, {}> {
 
     render(): JSX.Element {
         return (
-            <div>
-                <span style={{ width: '70%' }}> {this.props.title} </span>
-                <span>
+            <div className={css.header}>
+
+                <div className={css.headerselector}>
                     <select value={this.props.value} onChange={this.handleChange}>
                         <option value="0">Planen</option>
                         <option value="1">Belege</option>
@@ -33,8 +34,8 @@ export class Header extends React.Component<HeaderProps, {}> {
                         <option value="4">Übersicht</option>
                         <option value="5">Stammdaten</option>
                     </select>
-                </span>
-                <hr />
+                </div>
+                <div className={css.title}> -- {this.props.title} --</div>
             </div>
 
         );

@@ -1,12 +1,13 @@
 import * as React from 'react'
+import * as css from './css/taskselector.css'
 
-export interface Tabulator {
+export interface Task {
     name: string;
     comp: JSX.Element;
 }
 
 interface TaskSelectorProps {
-    tasks: Tabulator[];
+    tasks: Task[];
     currenttask: number;
     tasksname: string
 }
@@ -36,12 +37,11 @@ export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
     render() : JSX.Element { 
         return (
             <div>
-                <div style={{ height: '30px', verticalAlign: 'bottom' }}>
+                <div className={css.tsline}>
                     {this.props.tasks.map( ( t, i ) =>
-                        <button className='tabButton'
+                        <button className={ this.state.currenttask == i ? css.tsbuttonselected : css.tsbutton } 
                             key={"tabBut_" + t.name}
-                            onClick={( e ) => this.selectTask( i )}
-                            style={{ background: this.state.currenttask == i ? 'white' : null }} > {t.name}
+                            onClick={( e ) => this.selectTask( i )} > {t.name}
                         </button>
                     )}
                 </div>
