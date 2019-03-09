@@ -62,6 +62,8 @@ export class Plan {
     shortdescription: string;
     kontogroup: number;
     konto: number;
+    kontogroupname: string;
+    kontoname: string;
     wert: number;
     patterndto: Pattern;
     matchstyle: number;
@@ -77,6 +79,8 @@ export class Plan {
         this.shortdescription = 'neu';
         this.kontogroup = 1;
         this.konto = 1;
+        this.kontogroupname = '';
+        this.kontoname = '';
         this.wert = 0;
         this.patterndto = new Pattern();
         this.matchstyle = 0;
@@ -95,6 +99,8 @@ export class Template {
     description: string;
     kontogroup: number;
     konto: number;
+    kontogroupname: string;
+    kontoname: string;
     position: number;
     value: number;
     pattern: Pattern;
@@ -114,6 +120,8 @@ export class Template {
         this.description = 'Neue Vorlage';
         this.kontogroup = 1;
         this.konto = 1;
+        this.kontogroupname = '';
+        this.kontoname = '';
         this.position = 1;
         this.value = 0;
         this.pattern = new Pattern();

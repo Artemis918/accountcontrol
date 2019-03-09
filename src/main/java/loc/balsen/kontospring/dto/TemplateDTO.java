@@ -19,6 +19,8 @@ public class TemplateDTO {
 	private int rythmus;
 	private int konto;
 	private int kontogroup;
+	private String kontoname;
+	private String kontogroupname;
 	private String description;
 	private int position;
 	private int value;
@@ -43,6 +45,8 @@ public class TemplateDTO {
 		this.position= template.getPosition();
 		this.konto=template.getKonto().getId();		
 		this.kontogroup=template.getKonto().getKontoGruppe().getId();
+		this.kontoname=template.getKonto().getShortdescription();		
+		this.kontogroupname=template.getKonto().getKontoGruppe().getShortdescription();
 		this.value = template.getValue();
 		this.pattern = new PatternDTO(template.getPatternObject());
 		this.shortdescription = template.getShortDescription();

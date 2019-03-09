@@ -27,7 +27,8 @@ public class PlanDTO {
 	private int template;
 	private int konto;
 	private int kontogroup;
-	
+	private String kontoname;
+	private String kontogroupname;	
 	public PlanDTO() {
 	}
 	
@@ -45,6 +46,8 @@ public class PlanDTO {
 		this.matchstyle=plan.getMatchStyle().ordinal();
 		this.konto=plan.getKonto().getId();
 		this.kontogroup=plan.getKonto().getKontoGruppe().getId();
+		this.kontoname=plan.getKonto().getShortdescription();
+		this.kontogroupname=plan.getKonto().getKontoGruppe().getShortdescription();
 		
 		if(plan.getTemplate() != null)
 			this.template=plan.getTemplate().getId();

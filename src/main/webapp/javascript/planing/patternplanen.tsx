@@ -28,16 +28,11 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
             header: 'Beschreibung',
             getdata: ( data: Plan ): string => { return data.shortdescription }
         }, {
-            header: 'Betrag',
-            cellrender: ( cell: CellInfo<Plan> ): JSX.Element => (
-
-                <div style={{
-                    color: cell.data.wert >= 0 ? 'green' : 'red',
-                    textAlign: 'right'
-                }}>
-                    {( cell.data.wert / 100 ).toFixed( 2 )}
-                </div>
-            )
+            header: 'kontogruppe',
+            getdata: ( data: Plan ): string => { return data.kontogroupname }
+        }, {
+            header: 'konto',
+            getdata: ( data: Plan ): string => { return data.kontoname }
         }]
     }
 

@@ -1,0 +1,30 @@
+.creationFrame {
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%
+}
+
+
+.creationPopup {
+	text-align: center;
+	margin: 15% auto;
+	padding: 20px;
+	border: 2px;
+	border-style: double;
+	width: 300px;
+	background: gray
+}
+
+.creationButton {
+	margin: 5px;
+}
+
+.creationPopupMonthSelect {
+	border-bottom: 1px solid black;	
+	border-top: 1px solid black;
+	padding: 20px 0px 20px 0px;
+	margin: 5px	
+}
