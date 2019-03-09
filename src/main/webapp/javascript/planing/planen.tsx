@@ -12,10 +12,9 @@ interface PlanenProps {
 
 interface IState {
     month: number;
-    year: number
+    year: number;
     creationMonth: number;
-    creationYear: number
-    selectedRow: number
+    creationYear: number;
 }
 
 export class Planen extends React.Component<PlanenProps, IState> {
@@ -28,7 +27,8 @@ export class Planen extends React.Component<PlanenProps, IState> {
         super( props );
         var currentTime = new Date();
 
-        this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear(), creationMonth: currentTime.getMonth() + 1, creationYear: currentTime.getFullYear(), selectedRow: undefined };
+        this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear(),
+                       creationMonth: currentTime.getMonth() + 1, creationYear: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
         this.setFilter = this.setFilter.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
@@ -55,13 +55,12 @@ export class Planen extends React.Component<PlanenProps, IState> {
     }
 
     setFilter( m: number, y: number ): void {
-        this.setState( { year: y, month: m, selectedRow: undefined } )
+        this.setState( { year: y, month: m });
         this.editor.setPlan( undefined );
-
     }
 
     refreshlist() {
-        this.setState( { selectedRow: undefined } )
+        this.editor.setPlan( undefined );
         this.lister.reload();
     }
 
