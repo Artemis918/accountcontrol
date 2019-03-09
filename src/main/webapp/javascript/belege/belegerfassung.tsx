@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { BelegEditor } from './belegeditor'
 import { BuchungsBeleg } from '../utils/dtos'
@@ -11,24 +12,26 @@ interface BelegErfassungProps {
 }
 
 interface IState {
+    month: number;
+    year: number;
 }
 
 export class BelegErfassung extends React.Component<BelegErfassungProps, IState> {
 
     lister: SingleSelectLister<BuchungsBeleg>;
     editor: BelegEditor;
-    columns: ColumnInfo<BuchungsBeleg>[] = [ {
+    columns: ColumnInfo<BuchungsBeleg>[] = [{
         header: 'Datum',
-        getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE',{day: '2-digit', month: '2-digit'}) }
+        getdata: ( data: BuchungsBeleg ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
     }, {
         header: 'Absender',
-        getdata: ( data: BuchungsBeleg ):string => { return data.absender },
+        getdata: ( data: BuchungsBeleg ): string => { return data.absender },
     }, {
         header: 'Empfänger',
-        getdata: ( data: BuchungsBeleg ):string => { return data.empfaenger },
+        getdata: ( data: BuchungsBeleg ): string => { return data.empfaenger },
     }, {
         header: 'Details',
-        getdata: ( data: BuchungsBeleg ):string => { return data.details },
+        getdata: ( data: BuchungsBeleg ): string => { return data.details },
     }, {
         header: 'Betrag',
         cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
@@ -43,22 +46,30 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
         )
     }];
 
-
     constructor( props: BelegErfassungProps ) {
         super( props );
-        this.state = {};
+        var currentTime = new Date();
+        this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
+        this.setFilter=this.setFilter.bind(this);
         this.lister = undefined;
         this.editor = undefined;
     }
 
+
+    setFilter( m: number, y: number ): void {
+        this.setState( { year: y, month: m } )
+        this.editor.setBeleg( undefined );
+    }
+
     refreshlist(): void {
+        this.editor.setBeleg( undefined );
         this.lister.reload();
     }
 
     refresheditor( beleg: BuchungsBeleg ): void {
-        this.editor.setBeleg( beleg);
+        this.editor.setBeleg( beleg );
     }
 
     render(): JSX.Element {
@@ -70,9 +81,14 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                             <BelegEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
+                            <MonthSelect label='Monat:'
+                                year={this.state.year}
+                                month={this.state.month}
+                                onChange={this.setFilter} />
                             <SingleSelectLister<BuchungsBeleg> ref={( ref ) => { this.lister = ref; }}
+                                ext={this.state.year + '/' + this.state.month}
                                 handleChange={this.refresheditor}
-                                url='belege/manlist'
+                                url='belege/manlist/'
                                 columns={this.columns} />
                         </td>
                     </tr>

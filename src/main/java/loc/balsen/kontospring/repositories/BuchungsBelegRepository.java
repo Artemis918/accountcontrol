@@ -2,14 +2,12 @@ package loc.balsen.kontospring.repositories;
 
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.BuchungsBeleg.Art;
 
 public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, Integer> {
 
@@ -22,6 +20,10 @@ public interface BuchungsBelegRepository extends JpaRepository<BuchungsBeleg, In
 	       , nativeQuery = true)
 	public List<BuchungsBeleg> findUnresolvedBeleg();
 
-	public Collection<BuchungsBeleg> findByArt(Art art);
+	@Query(value = "select b.* from BuchungsBeleg b "
+            + "where b.wertstellung between ?1 and ?2 "
+			+"and b.art = ?3"
+    , nativeQuery = true)
+	public List<BuchungsBeleg> findByArtAndPeriod(LocalDate start, LocalDate end, Integer artId);
 	
 }

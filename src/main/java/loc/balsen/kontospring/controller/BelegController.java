@@ -34,10 +34,13 @@ public class BelegController {
 				.collect(Collectors.toList());
 	}
 	
-	@GetMapping("/manlist")
+	@GetMapping("/manlist/{year}/{month}")
 	@ResponseBody
-	List<BelegDTO> findManuelleBelege() {
-		return belegRepository.findByArt(BuchungsBeleg.Art.MANUELL)
+	List<BelegDTO> findManuelleBelege(@PathVariable Integer year, @PathVariable Integer month) {
+		LocalDate start = LocalDate.of(year, month, 1);
+		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
+		
+		return belegRepository.findByArtAndPeriod(start,end,BuchungsBeleg.Art.MANUELL.ordinal())
 				.stream()
 				.map((beleg) -> {return new BelegDTO(beleg);})
 				.collect(Collectors.toList());
