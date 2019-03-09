@@ -5,6 +5,7 @@ import { MonthSelect } from '../utils/monthselect'
 import { KontenSelector } from '../utils/kontenselector'
 import { Zuordnung, Template } from '../utils/dtos'
 import { myParseJson } from '../utils/misc'
+import * as css from './css/konten.css'
 
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -13,14 +14,14 @@ interface KontenProps {
     sendmessage: SendMessageCallback;
 }
 
-class CState {
+interface IState {
     selectedKonto: number;
     selectedGroup: number;
     month: number;
     year: number;
 }
 
-export class Konten extends React.Component<KontenProps, CState> {
+export class Konten extends React.Component<KontenProps, IState> {
 
     columns: ColumnInfo<Zuordnung>[];
     lister: React.RefObject<MultiSelectLister<Zuordnung>>;
@@ -110,10 +111,10 @@ export class Konten extends React.Component<KontenProps, CState> {
 
     commitAssignment( a: Zuordnung ): void {
         var self: Konten = this;
-        fetch( '/assign/invertcommit/' + a.id)
-        .then( function( response ) {
-            self.lister.current.reload();
-        } );
+        fetch( '/assign/invertcommit/' + a.id )
+            .then( function( response ) {
+                self.lister.current.reload();
+            } );
     }
 
     commitSelected(): void {
@@ -191,10 +192,7 @@ export class Konten extends React.Component<KontenProps, CState> {
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
-                    <MonthSelect label='Monat: '
-                        onChange={( m: number, y: number ) => this.setState( { month: m, year: y } )}
-                        month={this.state.month}
-                        year={this.state.year} />
+
                     <button onClick={() => this.commitSelected()}> Auswahl Bestätigen </button>
                     <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
                     <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
@@ -204,7 +202,13 @@ export class Konten extends React.Component<KontenProps, CState> {
                     <tbody>
                         <tr>
 
-                            <td style={{ width: '200px', border: '1px solid black' }}>
+                            <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
+                                <div className={css.monthselect}>
+                                    <MonthSelect label='Monat: '
+                                        onChange={( m: number, y: number ) => this.setState( { month: m, year: y } )}
+                                        month={this.state.month}
+                                        year={this.state.year} />
+                                </div>
                                 <KontenTree
                                     handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
                                     handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}
