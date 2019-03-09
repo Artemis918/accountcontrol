@@ -17,7 +17,6 @@ import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.dto.EnumDTO;
 import loc.balsen.kontospring.repositories.KontoGruppeRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
-import lombok.Data;
 
 @Component
 @RequestMapping("/collections")
@@ -28,18 +27,6 @@ public class CollectionsController {
 
 	@Autowired
 	KontoRepository kontoRepository;
-
-	@Data
-	class ProdDTO {
-		private Boolean production;
-		public ProdDTO(Boolean b) {production = b;}
-	}
-	
-	@GetMapping("/production")
-	@ResponseBody
-	 ProdDTO isProduction() {
-		return new ProdDTO(System.getProperty("local.server.port") != "8080");
-	}
 	
 	@GetMapping("/matchstyle")
 	@ResponseBody

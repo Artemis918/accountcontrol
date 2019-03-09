@@ -77,7 +77,7 @@ class Main extends React.Component<{}, IState> {
 
     componentDidMount() {
         var self = this;
-        fetch( "collections/production" )
+        fetch( "production" )
             .then( ( response: Response ) => response.json() )
             .then( ( json ) => { self.setState( { production: json.production } ) } )
     }

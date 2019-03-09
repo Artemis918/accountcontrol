@@ -1,13 +1,9 @@
 package loc.balsen.kontospring.dto;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.BuchungsBeleg.Art;
-import loc.balsen.kontospring.repositories.KontoRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
 import lombok.Data;
 
 @Data

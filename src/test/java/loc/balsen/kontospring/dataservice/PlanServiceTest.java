@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-import org.h2.util.LocalDateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.util.comparator.Comparators;
 
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
