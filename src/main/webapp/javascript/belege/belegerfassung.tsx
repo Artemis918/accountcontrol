@@ -52,7 +52,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
         this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
-        this.setFilter=this.setFilter.bind(this);
+        this.setFilter = this.setFilter.bind( this );
         this.lister = undefined;
         this.editor = undefined;
     }
@@ -81,10 +81,12 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                             <BelegEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
-                            <MonthSelect label='Monat:'
-                                year={this.state.year}
-                                month={this.state.month}
-                                onChange={this.setFilter} />
+                            <div style={{ border: '1px solid black', padding: '3px' }} >
+                                <MonthSelect label='Monat:'
+                                    year={this.state.year}
+                                    month={this.state.month}
+                                    onChange={this.setFilter} />
+                            </div>
                             <SingleSelectLister<BuchungsBeleg> ref={( ref ) => { this.lister = ref; }}
                                 ext={this.state.year + '/' + this.state.month}
                                 handleChange={this.refresheditor}
