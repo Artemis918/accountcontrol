@@ -121,7 +121,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     renderDataCol( col: ColumnInfo<D>, data: D, index: number ): JSX.Element {
         return (
-            <td key={col.header + index}>
+            <td key={col.header + index} className={css.singledata}>
                 {this.renderCell( col, data, index )}
             </td>
         );

@@ -130,14 +130,12 @@ export class Planen extends React.Component<PlanenProps, IState> {
                                 <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                             </td>
                             <td style={{ width: '80%' }}>
-                                <div>
                                     <MonthSelect label='Pläne für:' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
                                     <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                         ext={this.state.year + '/' + this.state.month}
                                         handleChange={( data: Plan ) => this.refresheditor( data )}
                                         columns={this.columns}
                                         url='plans/list/' />
-                                </div>
                             </td>
                         </tr>
                     </tbody>

@@ -18,7 +18,7 @@ const rythmNames: string[] = ['Tag', 'Woche', 'Monat', 'Jahr'];
 
 
 export class Templates extends React.Component<TemplateProps, IState> {
-    
+
 
     lister: SingleSelectLister<Template>;
     editor: TemplateEditor;
@@ -33,7 +33,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
         this.editor = undefined;
         this.columns = [{
             header: 'Start Tag',
-            getdata: ( d: Template ): string => { return d.start.toLocaleDateString( 'de-DE', {day: '2-digit', month: '2-digit'} ).substr( 0, 6 ) },
+            getdata: ( d: Template ): string => { return d.start.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ).substr( 0, 6 ) },
         }, {
             header: 'Gültig bis',
             getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
@@ -72,7 +72,8 @@ export class Templates extends React.Component<TemplateProps, IState> {
             <table style={{ border: '1px solid black' }}>
                 <tbody>
                     <tr>
-                        <td style={{ width: '20%', border: '1px solid black' }}>
+                        <td style={{ width: '20%', border: '1px solid black', verticalAlign: 'top' }}>
+                            <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Vorlagedaten </div>
                             <TemplateEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
@@ -83,7 +84,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
                                 handleChange={this.refresheditor}
                                 url='templates/listgroup/'
-                                ext={this.state.group.toString(10)}
+                                ext={this.state.group.toString( 10 )}
                                 columns={this.columns} />
                         </td>
                     </tr>

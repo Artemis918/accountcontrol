@@ -4,12 +4,16 @@
 	color: #000000;
 }
 
+.singledata {
+	padding: 3px 1px 3px 1px;
+}
+
 .unselectedrow {
 	background: lightsteelblue;
 }
 
 .selectlister {
-	height: 700px;
+	height: 670px;
 	display: block;
 	overflow: auto;
 }

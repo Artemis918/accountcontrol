@@ -30,8 +30,22 @@ interface Page {
 
 class Main extends React.Component<{}, IState> {
 
-    footer: Footer;
-    pages: Page[] = [
+    
+    footer: React.RefObject<Footer>;
+
+    pages: Page[];
+
+    constructor( props: any ) {
+        super( props );
+        this.state = { value: -1, production: false };
+        this.footer = React.createRef();
+        this.changeValue = this.changeValue.bind( this );
+        this.sendMessage = this.sendMessage.bind( this );
+        this.createPages();
+    }
+    
+    createPages(): void { 
+        this.pages = [
         {
             title: "Planen", tasks:
                 [
@@ -56,7 +70,7 @@ class Main extends React.Component<{}, IState> {
         {
             title: "Konten Kontrolle", tasks:
                 [
-                    { name: 'Belegliste', comp: ( <Konten sendmessage={this.sendMessage} /> ) },
+                    { name: 'Alle Konten', comp: ( <Konten sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
@@ -66,14 +80,8 @@ class Main extends React.Component<{}, IState> {
             ]
         }
     ];
-
-    constructor( props: any ) {
-        super( props );
-        this.state = { value: -1, production: false };
-        this.footer = undefined;
-        this.changeValue = this.changeValue.bind( this );
-        this.sendMessage = this.sendMessage.bind( this );
     }
+
 
     componentDidMount() {
         var self = this;
@@ -86,7 +94,7 @@ class Main extends React.Component<{}, IState> {
     }
 
     sendMessage( msg: string, error: boolean ): void {
-        this.footer.setmessage( msg, error );
+        this.footer.current.setmessage( msg, error );
     }
 
     renderPage (page: Page): JSX.Element {
@@ -99,7 +107,7 @@ class Main extends React.Component<{}, IState> {
         if ( this.pages[index] == undefined ) {
             return ( <div className={cname}>
                 <InitialPage changeValue={this.changeValue} />
-                <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+                <Footer ref={this.footer} />
             </div> );
         }
         else {
@@ -107,7 +115,7 @@ class Main extends React.Component<{}, IState> {
                 <div className={cname}>
                     <Header changeValue={this.changeValue} value={index} title={this.pages[index].title} />
                     {this.renderPage(this.pages[index])}
-                    <Footer ref={( refFooter ) => { this.footer = refFooter; }} />
+                    <Footer ref={this.footer} />
                 </div>
             )
         }

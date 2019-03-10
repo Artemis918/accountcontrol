@@ -50,7 +50,8 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
             <table style={{ width: '100%', border: '1px solid black' }}>
                 <tbody>
                     <tr>
-                        <td style={{ width: '20%', border: '1px solid black' }}>
+                        <td style={{ width: '20%', border: '1px solid black', verticalAlign: 'top' }}>
+                            <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Musterdaten </div>
                             <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ width: '80%' }}>
