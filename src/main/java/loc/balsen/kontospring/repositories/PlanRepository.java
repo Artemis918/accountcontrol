@@ -51,5 +51,4 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	        + " inner join Zuordnung z on z.plan=p.id"
 			+ " where p.template = ?1",nativeQuery = true)
 	LocalDate findMaxAssignedPlanDateByTemplate(int id);
-
 }

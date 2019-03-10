@@ -127,6 +127,15 @@ public class TemplateServiceTest extends TestContext {
 		template1.setKonto(konto2);
 		template1.setValue(100);
 	}
+	
+	@Test 
+	public void testDeleteTemplate( ) {
+		Template template_loc = new Template();
+		templateService.deleteTemplate(template_loc);
+		
+		verify(planService,times(1)).detachPlans(template_loc);
+		verify(templateRepository,times(1)).delete(template_loc);
+	}
 
 	private Plan createPlan(Template template, LocalDate plandate, BuchungsBeleg beleg) {
 		Plan plan = new Plan();

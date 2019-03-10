@@ -84,4 +84,9 @@ public class TemplateService {
 		}
 		return new Template();
 	}
+	
+	public void deleteTemplate(Template template) {
+		planService.detachPlans(template);
+		templateRepository.delete(template);
+	}
 }

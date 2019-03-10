@@ -32,28 +32,12 @@ public class TemplateController {
 	@Autowired
 	TemplateService templateService;
 
-	@GetMapping("/list")
-	@ResponseBody
-	List<TemplateDTO> findTemplates() {
-		return templateRepository.findValid().stream().map((template) -> {
-			return new TemplateDTO(template);
-		}).collect(Collectors.toList());
-	}
-
 	@GetMapping("/listgroup/{group}")
 	@ResponseBody
 	List<TemplateDTO> findGroupTemplates(@PathVariable int group) {
 		return templateRepository.findValid().stream().filter((template) -> {
 			return template.getKonto().getKontoGruppe().getId() == group;
 		}).map((template) -> {
-			return new TemplateDTO(template);
-		}).collect(Collectors.toList());
-	}
-
-	@GetMapping("/listall")
-	@ResponseBody
-	List<TemplateDTO> findAllTemplates() {
-		return templateRepository.findAll().stream().map((template) -> {
 			return new TemplateDTO(template);
 		}).collect(Collectors.toList());
 	}
@@ -65,21 +49,12 @@ public class TemplateController {
 		return new KontoSpringResult(false, "Gespeichert");
 	}
 
-	@GetMapping("/id/{id}")
-	@ResponseBody
-	TemplateDTO findTemplate(@PathVariable Integer id) {
-		Optional<Template> template = templateRepository.findById(id);
-		if (template.isPresent()) {
-			return (new TemplateDTO(template.get()));
-		} else {
-			return null;
-		}
-	}
-
 	@GetMapping("/delete/{id}")
 	@ResponseBody
 	KontoSpringResult deleteTemplate(@PathVariable Integer id) {
-		templateRepository.deleteById(id);
+		Optional<Template> template = templateRepository.findById(id);
+		if (template.isPresent()) 
+			templateService.deleteTemplate(template.get());;
 		return new KontoSpringResult(false, "gelöscht");
 	}
 
@@ -88,5 +63,4 @@ public class TemplateController {
 	TemplateDTO createTemplateFromBeleg(@PathVariable Integer id) {
 		return new TemplateDTO(templateService.createFromBeleg(id));
 	}
-
 }

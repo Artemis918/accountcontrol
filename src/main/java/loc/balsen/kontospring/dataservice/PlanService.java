@@ -16,16 +16,18 @@ import loc.balsen.kontospring.repositories.TemplateRepository;
 @Component
 public class PlanService {
 
-	@Autowired
 	private TemplateRepository templateRepository;
-
-	@Autowired
 	private PlanRepository planRepository;
 
 	private LocalDate end;
-
 	private LocalDate start;
 
+	@Autowired
+	public PlanService( PlanRepository planRepository, TemplateRepository templateRepository) {
+		this.planRepository = planRepository;
+		this.templateRepository = templateRepository;
+	}
+	
 	public void createPlansfromTemplatesUntil(int month, int year) {
 
 		LocalDate last = planRepository.findMaxPlanDate();
@@ -109,6 +111,10 @@ public class PlanService {
 	public void deactivatePlan(Plan p) {
 		p.setDeactivateDate(LocalDate.now());
 		planRepository.save(p);
+	}
+	
+	public void detachPlans ( Template template ) {
+		planRepository.findByTemplate(template).forEach((p) -> { p.setTemplate(null); planRepository.save(p);});
 	}
 
 	private boolean isTemplateRange(Template template) {

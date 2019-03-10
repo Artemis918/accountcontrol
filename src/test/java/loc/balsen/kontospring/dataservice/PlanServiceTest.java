@@ -2,8 +2,13 @@ package loc.balsen.kontospring.dataservice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -11,6 +16,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -19,6 +26,8 @@ import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.repositories.PlanRepository;
+import loc.balsen.kontospring.repositories.TemplateRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
@@ -27,25 +36,35 @@ import loc.balsen.kontospring.testutil.TestContext;
 public class PlanServiceTest extends TestContext {
 
 	@Autowired
-	PlanService planService;
-	
+	private PlanService planService;
+
 	@Autowired
-	ZuordnungRepository zuordnungRepository;
+	private ZuordnungRepository zuordnungRepository;
+
+	private PlanService planService_mocked;
+
+	@Mock
+	private PlanRepository mockPlanRepository;
+
+	@Mock
+	private TemplateRepository mockTemplateRepository;
 
 	@Before
 	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		createKontoData();
-	    createTestData();
+		createTestData();
+		planService_mocked = new PlanService(mockPlanRepository, mockTemplateRepository);
 	}
-	
+
 	@After
 	public void teardown() {
 		clearRepos();
 	}
-	
-	private Plan latestPlan; 
+
+	private Plan latestPlan;
 	private Template template;
-	
+
 	@Test
 	public void testSimpleCreatePlansfromTemplate() {
 
@@ -86,14 +105,14 @@ public class PlanServiceTest extends TestContext {
 		plans = planRepository.findAll();
 		assertEquals(5, plans.size()); // 3 new plans, 1 by the former call, 1 latestPlan
 	}
-		
+
 	@Test
 	public void testValidPeriod() {
 		template.setValidUntil(LocalDate.of(1999, 6, 2));
 		templateRepository.save(template);
 		latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
 		planRepository.save(latestPlan);
-		
+
 		planService.createPlansfromTemplate(template);
 		List<Plan> plans = planRepository.findAll();
 		assertEquals(6, plans.size());
@@ -101,38 +120,37 @@ public class PlanServiceTest extends TestContext {
 
 	@Test
 	public void testLastPlanOfTemplate() {
-		
+
 		latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
 		planRepository.save(latestPlan);
 		template.setValidUntil(null);
 		templateRepository.save(template);
-		planService.createPlansfromTemplatesUntil(05,2000);
-		
+		planService.createPlansfromTemplatesUntil(05, 2000);
+
 		List<Plan> plans = planRepository.findByTemplate(template);
 		plans.sort(Comparator.comparing(Plan::getId));
-		
+
 		LocalDate last = planService.getLastPlanOf(template);
 		assertNull(last);
 
 		LocalDate plandate = createZuordnung(plans.get(1));
 		last = planService.getLastPlanOf(template);
-		assertEquals(plandate,last);
+		assertEquals(plandate, last);
 
 		plandate = createZuordnung(plans.get(2));
 		last = planService.getLastPlanOf(template);
-		assertEquals(plandate,last);
+		assertEquals(plandate, last);
 
 		plandate = createZuordnung(plans.get(4));
 		last = planService.getLastPlanOf(template);
-		assertEquals(plandate,last);
+		assertEquals(plandate, last);
 
 		createZuordnung(plans.get(3));
 		last = planService.getLastPlanOf(template);
-		assertEquals(plandate,last);
+		assertEquals(plandate, last);
 
 	}
 
-	
 	private LocalDate createZuordnung(Plan plan) {
 		Zuordnung zuordnung = new Zuordnung();
 		zuordnung.setPlan(plan);
@@ -142,59 +160,92 @@ public class PlanServiceTest extends TestContext {
 
 	@Test
 	public void testCreateUntil() {
-		
+
 		latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
 		planRepository.save(latestPlan);
-		
+
 		template.setValidUntil(null);
 		templateRepository.save(template);
-		
-		planService.createPlansfromTemplatesUntil(8,1999);
+
+		planService.createPlansfromTemplatesUntil(8, 1999);
 		List<Plan> plans = planRepository.findAll();
 		assertEquals(1, plans.size());
-		
-		planService.createPlansfromTemplatesUntil(9,1999);
+
+		planService.createPlansfromTemplatesUntil(9, 1999);
 		plans = planRepository.findAll();
 		assertEquals(3, plans.size());
 
-		planService.createPlansfromTemplatesUntil(12,1999);
+		planService.createPlansfromTemplatesUntil(12, 1999);
 		plans = planRepository.findAll();
 		assertEquals(9, plans.size());
 	}
-	
+
 	@Test
 	public void testDeactivatePlans() {
 
-		planService.createPlansfromTemplatesUntil(9,1999);
-		
+		planService.createPlansfromTemplatesUntil(9, 1999);
+
 		// deactivate plans
-		template.setValidUntil(LocalDate.of(1999,9,15));
+		template.setValidUntil(LocalDate.of(1999, 9, 15));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		List<Plan> plans = planRepository.findAll();
-		long deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
+		long deactivated = plans.stream().filter((p) -> {
+			return p.getDeactivateDate() != null;
+		}).count();
 		assertEquals(0, deactivated);
 
-		template.setValidUntil(LocalDate.of(1999,9,2));
+		template.setValidUntil(LocalDate.of(1999, 9, 2));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
-		deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
+		deactivated = plans.stream().filter((p) -> {
+			return p.getDeactivateDate() != null;
+		}).count();
 		assertEquals(0, deactivated);
 
-		template.setValidUntil(LocalDate.of(1999,9,1));
+		template.setValidUntil(LocalDate.of(1999, 9, 1));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
-		deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
+		deactivated = plans.stream().filter((p) -> {
+			return p.getDeactivateDate() != null;
+		}).count();
 		assertEquals(1, deactivated);
-		
-		template.setValidUntil(LocalDate.of(1999,7,1));
+
+		template.setValidUntil(LocalDate.of(1999, 7, 1));
 		templateRepository.save(template);
 		planService.deactivatePlans(template);
 		plans = planRepository.findAll();
-		deactivated = plans.stream().filter((p)->{return p.getDeactivateDate()!=null;}).count();
+		deactivated = plans.stream().filter((p) -> {
+			return p.getDeactivateDate() != null;
+		}).count();
 		assertEquals(3, deactivated);
+
+	}
+
+	@Test
+	public void testDetachPlans() {
+		Template tempdel = new Template();
+		tempdel.setId(3);
+
+		List<Plan> plans = new ArrayList<Plan>();
+		for (int i = 0; i < 10; i++) {
+			Plan plan = new Plan();
+			plan.setTemplate(tempdel);
+			plan.setId(i);
+			plans.add(plan);
+		}
+
+		when(mockPlanRepository.findByTemplate(tempdel)).thenReturn(plans);
+
+		planService_mocked.detachPlans(tempdel);
+
+		for (int i = 0; i < 10; i++) {
+			Plan plan = plans.get(i);
+			verify(mockPlanRepository, times(1)).save(plan);
+			assertEquals(null, plan.getTemplate());
+		}
 
 	}
 
