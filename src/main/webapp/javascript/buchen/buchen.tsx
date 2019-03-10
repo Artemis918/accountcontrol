@@ -31,7 +31,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     columns: ColumnInfo<BuchungsBeleg>[] = [
         {
             header: 'Datum',
-            getdata: ( data: BuchungsBeleg ):string => { return data.wertstellung.toLocaleDateString('de-DE',{day: '2-digit', month: '2-digit'}) }
+            getdata: ( data: BuchungsBeleg ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
             header: 'Empf./Absender',
             cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
@@ -69,11 +69,11 @@ export class Buchen extends React.Component<BuchenProps, IState> {
 
     assignAuto(): void {
         fetch( 'assign/all' )
-        .then( response => {
-            response.json() 
-            this.lister.reload();
-        }
-        );
+            .then( response => {
+                response.json()
+                this.lister.reload();
+            }
+            );
     }
 
     assignKonto(): void {
@@ -109,7 +109,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
             } );
         }
         else {
-            self.setState( { kontoassign: false } ); 
+            self.setState( { kontoassign: false } );
         }
     }
 
@@ -174,15 +174,16 @@ export class Buchen extends React.Component<BuchenProps, IState> {
         return (
             <div>
                 <div className={css.actionbar}>
-                <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>Automatisch</button>
-                <button className={css.actionbutton} onClick={( e ) => this.assignKonto()}>Konto</button>
-                <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>Manuell</button>
-                <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
-                <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>Automatisch</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignKonto()}>Konto</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>Manuell</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
                 </div>
                 <div>
                     <MultiSelectLister<BuchungsBeleg> columns={this.columns}
                         url='belege/unassigned'
+                        lines={28}
                         ref={( ref ) => { this.lister = ref }} />
                 </div>
                 {this.state.kontoassign ? <KontoAssign

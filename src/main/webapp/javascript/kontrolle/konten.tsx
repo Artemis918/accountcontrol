@@ -218,7 +218,7 @@ export class Konten extends React.Component<KontenProps, IState> {
                                 <MultiSelectLister<Zuordnung>
                                     createFooter={this.createFooter}
                                     url='assign/'
-                                    lines={20}
+                                    lines={28}
                                     ext={this.createExt()}
                                     columns={this.columns}
                                     ref={this.lister} />

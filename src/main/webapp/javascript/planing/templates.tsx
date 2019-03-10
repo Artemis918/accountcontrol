@@ -72,16 +72,19 @@ export class Templates extends React.Component<TemplateProps, IState> {
             <table style={{ border: '1px solid black' }}>
                 <tbody>
                     <tr>
-                        <td style={{ width: '20%', border: '1px solid black', verticalAlign: 'top' }}>
+                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Vorlagedaten </div>
                             <TemplateEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
-                        <td style={{ width: '80%' }}>
-                            <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
-                                url='collections/kontogroups'
-                                value={this.state.group}
-                            />
+                        <td style={{ verticalAlign: 'top' }} >
+                            <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
+                                <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
+                                    url='collections/kontogroups'
+                                    value={this.state.group}
+                                />
+                            </div>
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
+                                lines={28}
                                 handleChange={this.refresheditor}
                                 url='templates/listgroup/'
                                 ext={this.state.group.toString( 10 )}

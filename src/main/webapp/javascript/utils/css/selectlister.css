@@ -5,7 +5,8 @@
 }
 
 .singledata {
-	padding: 3px 1px 3px 1px;
+	padding: 3px 5px;
+	font-size: 14px;
 }
 
 .unselectedrow {
@@ -13,7 +14,6 @@
 }
 
 .selectlister {
-	height: 670px;
 	display: block;
 	overflow: auto;
 }

@@ -61,25 +61,25 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
                     margin: '15% auto',
                     padding: '20px',
                     border: '2px',
+                    width: '300px',
                     borderStyle: 'double',
-                    width: '500px',
-                    background: 'gray'
+                    background: 'gray',
+                    textAlign: 'center'
                 }}>
-                    <span>
-                        <MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
-                        <button onClick={() => this.props.onSelect( undefined )}>Cancel</button>
-                    </span>
-                    <SingleSelectLister<Plan>
-                        ext={this.state.year + '/' + this.state.month}
-                        url='plans/unassigned/'
-                        handleSelect={this.props.onSelect}
-                        columns={this.columns}
-                        ref={( ref ) => { this.lister = ref }} />
+                    <MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
+                    <div style={{ padding: '10px' }}>
+                        <SingleSelectLister<Plan>
+                            ext={this.state.year + '/' + this.state.month}
+                            url='plans/unassigned/'
+                            lines={12}
+                            handleSelect={this.props.onSelect}
+                            columns={this.columns}
+                            ref={( ref ) => { this.lister = ref }} />
+                    </div>
+                    <button onClick={() => this.props.onSelect( undefined )}>Cancel</button>
                 </div>
             </div>
         )
-
-
     }
 
 }

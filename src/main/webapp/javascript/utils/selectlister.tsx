@@ -120,21 +120,13 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
     }
 
     renderDataCol( col: ColumnInfo<D>, data: D, index: number ): JSX.Element {
-        return (
-            <td key={col.header + index} className={css.singledata}>
-                {this.renderCell( col, data, index )}
-            </td>
-        );
-    }
-
-    renderCell( col: ColumnInfo<D>, data: D, index: number ): JSX.Element {
         if ( col.cellrender != undefined )
-            return ( col.cellrender( { data: data, rownum: index, col: col } ) );
+            return ( <td key={col.header + index}> {col.cellrender( { data: data, rownum: index, col: col } )} </td>);
         else if ( col.getdata != undefined ) {
-            return ( <div> {col.getdata( data )} </div> );
+            return ( <td className={css.singledata} key={col.header + index}> {col.getdata( data )} </td> );
         }
         else
-            return null;
+            return (<td> </td>);
     }
 
     renderFooter(): JSX.Element {
@@ -154,7 +146,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     render(): JSX.Element {
         return (
-            <table className={css.selectlister}>
+            <table className={css.selectlister} style= {{height: '' + (this.props.lines * 24 + 22) + 'px' }}>
                 <thead>
                     <tr>
                         {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderHeadCol( col ) )}

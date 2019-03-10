@@ -119,23 +119,28 @@ export class Planen extends React.Component<PlanenProps, IState> {
     render(): JSX.Element {
         return (
             <div>
-                <div style={{ width: '100%', border: '1px solid black', padding: '2px', margin: '3px' }}>
-                    <button onClick={() => this.openCreatePopup( true )}>Aus Vorlagen erstellen</button>
-                </div>
-                <table style={{ width: '100%', border: '1px solid black' }}>
+                <table style={{ border: '1px solid black' }}>
                     <tbody>
                         <tr>
-                            <td style={{ width: '20%', border: '1px solid black', verticalAlign: 'top' }}>
-                                <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Planungsdaten </div>
-                                <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
+                            <td style={{ verticalAlign: 'top'}} >
+                                <div style={{ border: '1px solid black', verticalAlign: 'top', paddingBottom: '160px'}}>
+                                    <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Planungsdaten </div>
+                                    <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
+                                </div>
+                                <div style={{ border: '1px solid black', marginTop: '5px', padding: '30px', textAlign: 'center'}}>
+                                    <button onClick={() => this.openCreatePopup( true )}>Aus Vorlagen erstellen</button>
+                                </div>
                             </td>
-                            <td style={{ width: '80%' }}>
+                            <td style={{ verticalAlign: 'top' }}>
+                                <div style={{ padding: '3px', borderBottom: '1px solid black' }}>
                                     <MonthSelect label='Pläne für:' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
-                                    <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
-                                        ext={this.state.year + '/' + this.state.month}
-                                        handleChange={( data: Plan ) => this.refresheditor( data )}
-                                        columns={this.columns}
-                                        url='plans/list/' />
+                                </div>
+                                <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
+                                    lines={28}
+                                    ext={this.state.year + '/' + this.state.month}
+                                    handleChange={( data: Plan ) => this.refresheditor( data )}
+                                    columns={this.columns}
+                                    url='plans/list/' />
                             </td>
                         </tr>
                     </tbody>

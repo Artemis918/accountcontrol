@@ -38,8 +38,12 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 
 	List<Plan> findByTemplate(Template template);
 
-	@Query(value = "select * from Plan p where match_style = 3 and deactivate_date is null", nativeQuery = true)
-	Collection<Plan> findByPatternPlans();
+	@Query(value = "select * from Plan p"
+			+ " inner join Konto k on p.konto = k.id"
+			+ " where p.match_style = 3"
+			+ " and k.id_gruppe = ?1"
+			+ " and deactivate_date is null", nativeQuery = true)
+	Collection<Plan> findByPatternPlansAndKontogroup(Integer gruppe);
 
 	@Query(value= "select max(p.plan_date) from Plan p where p.template = ?1" , nativeQuery = true)
 	LocalDate findMaxPlanDateByTemplate(Integer templateid);

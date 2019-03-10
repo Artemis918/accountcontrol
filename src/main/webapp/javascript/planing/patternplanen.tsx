@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { PlanEditor } from './planeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
+import { DropdownService } from '../utils/dropdownservice'
 import { Plan } from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
@@ -10,7 +11,7 @@ interface PatternPlanenProps {
 }
 
 interface IState {
-    selectedRow: number
+    group: number;
 }
 
 export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
@@ -23,6 +24,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
         super( props );
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
+        this.state= {group: 1};
 
         this.columns = [{
             header: 'Beschreibung',
@@ -37,7 +39,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
     }
 
     refreshlist() {
-        this.setState( { selectedRow: undefined } )
+        this.editor.setPlan( null );
         this.lister.reload();
     }
 
@@ -47,18 +49,26 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
 
     render(): JSX.Element {
         return (
-            <table style={{ width: '100%', border: '1px solid black' }}>
+            <table style={{ border: '1px solid black' }}>
                 <tbody>
                     <tr>
-                        <td style={{ width: '20%', border: '1px solid black', verticalAlign: 'top' }}>
+                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Musterdaten </div>
                             <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                         </td>
-                        <td style={{ width: '80%' }}>
+                        <td style={{ verticalAlign: 'top' }}>
+                            <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
+                            <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
+                                url='collections/kontogroups'
+                                value={this.state.group}
+                            />
+                        </div>
                             <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
+                                lines={30}
                                 handleChange={( data: Plan ) => this.refresheditor( data )}
                                 columns={this.columns}
-                                url='plans/patternplans' />
+                                ext={this.state.group.toString( 10 )}
+                                url='plans/patternplans/' />
                         </td>
                     </tr>
                 </tbody>

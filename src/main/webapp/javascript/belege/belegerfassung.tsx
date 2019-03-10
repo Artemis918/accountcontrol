@@ -77,11 +77,12 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
             <table style={{ border: '1px solid black' }}>
                 <tbody>
                     <tr>
-                        <td style={{ width: '20%', border: '1px solid black' }}>
+                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
+                            <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Belegdaten </div>
                             <BelegEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
-                        <td style={{ width: '80%' }}>
-                            <div style={{ border: '1px solid black', padding: '3px' }} >
+                        <td >
+                            <div style={{ borderBottom: '1px solid black', padding: '3px' }} >
                                 <MonthSelect label='Monat:'
                                     year={this.state.year}
                                     month={this.state.month}
@@ -91,6 +92,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                                 ext={this.state.year + '/' + this.state.month}
                                 handleChange={this.refresheditor}
                                 url='belege/manlist/'
+                                lines={28}
                                 columns={this.columns} />
                         </td>
                     </tr>
