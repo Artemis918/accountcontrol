@@ -1,6 +1,6 @@
 before_script:
-  -echo "hallo"
+  - echo "hallo"
 
 build:
   script:
-    -echo script
+    -i echo script
