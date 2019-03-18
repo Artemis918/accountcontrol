@@ -4,6 +4,11 @@ before_script:
 build:
   script:
   - ./gradlew build
+  cache:
+    paths:
+	  - mode_modules
+	  - .gradle
+	  - gradle
 
 variables:
   GIT_STRATEGY: fetch
