@@ -3,12 +3,12 @@ before_script:
 
 build:
   script:
-  - ./gradlew build
+    - ./gradlew build
   cache:
     paths:
-	  - mode_modules
-	  - .gradle
-	  - gradle
+      - mode_modules
+      - .gradle
+      - gradle
 
 variables:
   GIT_STRATEGY: fetch
