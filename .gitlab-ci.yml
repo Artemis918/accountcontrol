@@ -1,14 +1,37 @@
 before_script:
 - export GRADLE_USER_HOME=`pwd`/.gradle
 
-build:
+cache:
+  paths:
+    - node_modules
+    - .gradle
+    - gradle
+
+stages:
+  - setup
+  - build
+  - deploy
+
+
+setup:npm:
+  stage: setup
   script:
-    - ./gradlew build
-  cache:
-    paths:
-      - node_modules
-      - .gradle
-      - gradle
+    - ./gradlew npmInstall
+
+build:java:
+  stage: build
+  script:
+    - ./gradlew buildJava
+
+build:npm:
+  stage: build
+  script:
+    - ./gradlew webpack
+
+test:
+  stage: deploy
+  script:
+    - ./gradlew jar
 
 variables:
   GIT_STRATEGY: fetch

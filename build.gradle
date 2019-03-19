@@ -73,8 +73,6 @@ task webpack(type: NodeTask, dependsOn: 'npmInstall') {
 	script = project.file('node_modules/.bin/webpack')
 }
 
-processResources.dependsOn 'webpack'
-
 clean.delete << file('src/main/webapp/dist')
 
 jar {
