@@ -70,7 +70,7 @@ task webpack(type: NodeTask, dependsOn: 'npmInstall') {
 clean.delete << file('src/main/webapp/dist')
 
 jar {
-    eanabled = true
+    enabled = true
     baseName = 'kontospring'
     version =  '0.5.0'
     from('src/main/webapp') {
