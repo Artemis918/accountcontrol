@@ -23,7 +23,7 @@ build:java:
   script:
     - ./gradlew compileJava
 
-build:javaTest
+build:javaTest:
   stage: build
   script:
     - ./gradlew compileJavaTest
