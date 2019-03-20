@@ -10,6 +10,7 @@ cache:
 stages:
   - setup
   - build
+  - test
   - deploy
 
 
@@ -34,7 +35,12 @@ build:npm:
     - ./gradlew webpack
 
 test:
-  stage: deploy
+  stage: test 
+  script:
+    - ./gradlew test
+
+deploy:
+  stage: deploy 
   script:
     - ./gradlew jar
 
