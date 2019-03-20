@@ -16,7 +16,7 @@ stages:
 setup:npm:
   stage: setup
   script:
-    - ./gradlew -d npmInstall
+    - ./gradlew npmInstall
 
 build:java:
   stage: build
