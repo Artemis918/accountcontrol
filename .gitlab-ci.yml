@@ -21,7 +21,7 @@ setup:npm:
 build:java:
   stage: build
   script:
-    - ./gradlew buildJava
+    - ./gradlew compile
 
 build:npm:
   stage: build
