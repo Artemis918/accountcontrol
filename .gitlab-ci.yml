@@ -43,7 +43,10 @@ test:
 deploy:
   stage: deploy 
   script:
-    - ./gradlew jar
+    - ./gradlew build copyDocker
+	- docker login --username $REGISTRY_USER --passwd $REGISTRY_PASSWORD && \
+	  docker build -t gitlab.balsen.loc:4901/balsen/kontospring build/docker && \
+	  docker push gitlab.balsen.loc:4901/balsen/kontospring
 
 variables:
   GIT_STRATEGY: fetch

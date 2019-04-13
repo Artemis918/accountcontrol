@@ -52,37 +52,36 @@ node {
   download = true
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-        resources {
-            srcDir 'src/main/webapp'
-        }
-    }
-}
-
 task webpack(type: NodeTask, dependsOn: 'npmInstall') {
 	script = project.file('node_modules/.bin/webpack')
 }
 
-clean.delete << file('src/main/webapp/dist')
+processResources.dependsOn 'webpack'
 
-jar {
-    enabled = true
-    baseName = 'kontospring'
-    version =  '0.5.0'
-    from('src/main/webapp') {
-      include 'dist/bundle.js'
-   }
+processResources {
+  with copySpec {
+      from "${buildDir}/js"
+      include "**/*.js"
+      into "static"
+  }
 }
 
+clean.delete << file('src/main/webapp/dist')
+
 task install(type: Copy) {
-    from "$buildDir/build/libs/kontospring.jar"
+	dependsOn 'jar'
+    from "$buildDir/libs/kontospring.jar"
     into "/home/webproject/kontospring.jar"
 }
 
-install.dependsOn 'jar'
+task copyDockerJar(type: Copy) {
+	dependsOn "jar"
+    from "$buildDir/libs/kontospring.jar"
+    into "$buildDir/docker"
+}
 
-
+task copyDocker(type: Copy) {
+	dependsOn "copyDockerJar"
+    from "$projectDir/docker"
+    into "$buildDir/docker"
+}
