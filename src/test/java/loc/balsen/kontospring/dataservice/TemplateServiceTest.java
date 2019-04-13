@@ -1,7 +1,9 @@
 package loc.balsen.kontospring.dataservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,7 @@ import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.TemplateRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
@@ -45,7 +48,10 @@ public class TemplateServiceTest extends TestContext {
 
 	@Mock
 	public PlanService planService;
-
+	
+	@Autowired
+	public TemplateRepository templateRepository;
+	
 	public TemplateService templateService;
 
 	Plan latestPlan;
@@ -113,7 +119,7 @@ public class TemplateServiceTest extends TestContext {
 		template.setKonto(konto2);
 		template.setValue(100);
 		templateRepository.save(template);
-
+		
 		template1 = new Template();
 		template1.setId(template.getId());
 		template1.setShortDescription("tester");
@@ -130,11 +136,10 @@ public class TemplateServiceTest extends TestContext {
 	
 	@Test 
 	public void testDeleteTemplate( ) {
-		Template template_loc = new Template();
-		templateService.deleteTemplate(template_loc);
+		templateService.deleteTemplate(template1);
 		
-		verify(planService,times(1)).detachPlans(template_loc);
-		verify(templateRepository,times(1)).delete(template_loc);
+		verify(planService,times(1)).detachPlans(template1);
+		assertFalse(templateRepository.findById(template.getId()).isPresent());
 	}
 
 	private Plan createPlan(Template template, LocalDate plandate, BuchungsBeleg beleg) {

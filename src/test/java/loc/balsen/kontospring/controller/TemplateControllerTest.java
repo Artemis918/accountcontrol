@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,12 +81,8 @@ public class TemplateControllerTest extends TestContext {
 		assertEquals(100, template.getValue());
 		assertEquals(konto1.getId(), template.getKonto().getId());
 		
-		mvc.perform(get("/templates/list"))
+		mvc.perform(get("/templates/listgroup/1"))
 		   .andExpect(jsonPath("$.[*]", hasSize(1)));
-		
-		mvc.perform(get("/templates/id/" + template.getId()))
-		   .andExpect(jsonPath("$.shortdescription").value("Kurz"));
-		
 	}
 
 
