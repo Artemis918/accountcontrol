@@ -3,6 +3,7 @@ before_script:
 
 cache:
   paths:
+    - build
     - node_modules
     - .gradle
     - gradle
