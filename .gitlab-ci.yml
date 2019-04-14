@@ -45,9 +45,9 @@ deploy:
   stage: deploy 
   script:
     - ./gradlew build copyDocker
-    - docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD $CI_REGISTRY && \
-      docker build -t gitlab.balsen.loc:4901/balsen/kontospring build/docker && \
-      docker push gitlab.balsen.loc:4901/balsen/kontospring
+    - docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD $CI_REGISTRY 
+    - docker build -t gitlab.balsen.loc:4901/balsen/kontospring build/docker 
+    - docker push gitlab.balsen.loc:4901/balsen/kontospring
 
 variables:
   GIT_STRATEGY: fetch
