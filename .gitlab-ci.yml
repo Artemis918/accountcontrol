@@ -39,7 +39,7 @@ test:
   stage: test 
   script:
     - ./gradlew test
-  allow_failure: true
+  allow_failure: false
 
 deploy:
   stage: deploy 
