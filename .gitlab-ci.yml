@@ -1,0 +1,53 @@
+before_script:
+- export GRADLE_USER_HOME=~/.gradle
+
+cache:
+  paths:
+    - build
+    - node_modules
+    - .gradle
+    - gradle
+
+stages:
+  - setup
+  - build
+  - test
+  - deploy
+
+
+setup:npm:
+  stage: setup
+  script:
+    - ./gradlew npmInstall
+
+build:java:
+  stage: build
+  script:
+    - ./gradlew compileJava
+
+build:javaTest:
+  stage: build
+  script:
+    - ./gradlew compileTestJava
+
+build:npm:
+  stage: build
+  script:
+    - ./gradlew webpack
+
+test:
+  stage: test 
+  script:
+    - ./gradlew test
+  allow_failure: false
+
+deploy:
+  stage: deploy 
+  script:
+    - ./gradlew build copyDocker
+    - docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD $CI_REGISTRY 
+    - docker build -t gitlab.balsen.loc:4901/balsen/kontospring build/docker 
+    - docker push gitlab.balsen.loc:4901/balsen/kontospring
+
+variables:
+  GIT_STRATEGY: fetch

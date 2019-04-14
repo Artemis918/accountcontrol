@@ -3,7 +3,7 @@ var webpack = require('webpack')
 var cssloader = require('css-loader')
 var ROOT = path.resolve(__dirname, 'src/main/webapp');
 var SRC  = path.resolve( ROOT, 'javascript');
-var DEST = path.resolve( ROOT, 'dist');
+var DEST = path.resolve( __dirname , 'build/js');
 
 module.exports = {
   devtool: 'source-map',
@@ -25,8 +25,7 @@ module.exports = {
   ],
   output: {
     path: DEST,
-    filename: 'bundle.js',
-    publicPath: '/dist/'
+    filename: 'dist/bundle.js',
   },
   module: {
     rules: [
