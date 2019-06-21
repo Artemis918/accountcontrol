@@ -27,7 +27,8 @@ public class BuchungsBeleg {
 		ENTGELT,
 		AUSZAHLUNG,
 		DAUERAUFTRAG,
-		MANUELL
+		MANUELL,
+		UMBUCHUNG
 	}
 	
 	public static int LEN_DETAIL = 512;
