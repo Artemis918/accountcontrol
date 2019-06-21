@@ -36,6 +36,7 @@ public class ImportXML extends Importbase {
 			put("NDDT+106", Art.KARTE);
 			put("NDDT+083", Art.AUSZAHLUNG);
 			put("NCMI+117", Art.DAUERAUFTRAG);
+			put("NCMI+083", Art.UMBUCHUNG);
 			put("NDDT+107", Art.LASTSCHRIFTKARTE);
 		}
 	};
