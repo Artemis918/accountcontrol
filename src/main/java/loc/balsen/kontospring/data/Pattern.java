@@ -78,6 +78,6 @@ public class Pattern {
 	}
 
 	private boolean matches(String pattern, String text) {
-		return ((text  == null || text.isEmpty()) && pattern.isEmpty()) || text.contains(pattern);
+		return ((text  == null || text.isEmpty()) && (pattern == null || pattern.isEmpty()) ) || text.contains(pattern);
 	}
 }
