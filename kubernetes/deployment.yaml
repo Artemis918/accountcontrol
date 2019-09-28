@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    app: kontospring
+  name: kontospring-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kontospring
+  template:
+    metadata:
+      labels:
+        app: kontospring
+    spec:
+      containers:
+      - image: gitlab.balsen.loc:4901/balsen/kontospring
+        imagePullPolicy: Always
+        name: kontospring
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+      imagePullSecrets:
+      - name: regcred

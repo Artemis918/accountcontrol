@@ -24,16 +24,31 @@ build:java:
   stage: build
   script:
     - ./gradlew compileJava
+  artefacts:
+    paths:
+    - build/libs
+	- build/resources/main
+	- build/classes/main
+    expire_in: 1 day 
 
 build:javaTest:
   stage: build
   script:
     - ./gradlew compileTestJava
+  artefacts:
+    paths:
+	- build/resources/test
+	- build/classes/test
+    expire_in: 1 day 
 
 build:npm:
   stage: build
   script:
     - ./gradlew webpack
+  artefacts:
+    paths:
+	- build/js
+    expire_in: 1 day 
 
 test:
   stage: test 
@@ -48,6 +63,8 @@ deploy:
     - docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD $CI_REGISTRY 
     - docker build -t gitlab.balsen.loc:4901/balsen/kontospring build/docker 
     - docker push gitlab.balsen.loc:4901/balsen/kontospring
+  only:
+    - master
 
 variables:
   GIT_STRATEGY: fetch

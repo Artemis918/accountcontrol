@@ -38,6 +38,8 @@ public class ImportXML extends Importbase {
 			put("NCMI+117", Art.DAUERAUFTRAG);
 			put("NCMI+083", Art.UMBUCHUNG);
 			put("NDDT+107", Art.LASTSCHRIFTKARTE);
+			put("NCHG+805", Art.ZINSEN);
+			put("NCMI+082", Art.UMBUCHUNG);
 		}
 	};
 
