@@ -27,8 +27,8 @@ build:java:
   artefacts:
     paths:
     - build/libs
-	- build/resources/main
-	- build/classes/main
+    - build/resources/main
+    - build/classes/main
     expire_in: 1 day 
 
 build:javaTest:
@@ -37,8 +37,8 @@ build:javaTest:
     - ./gradlew compileTestJava
   artefacts:
     paths:
-	- build/resources/test
-	- build/classes/test
+    - build/resources/test
+    - build/classes/test
     expire_in: 1 day 
 
 build:npm:
@@ -47,7 +47,7 @@ build:npm:
     - ./gradlew webpack
   artefacts:
     paths:
-	- build/js
+    - build/js
     expire_in: 1 day 
 
 test:
