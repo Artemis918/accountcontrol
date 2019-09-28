@@ -24,7 +24,7 @@ build:java:
   stage: build
   script:
     - ./gradlew compileJava
-  artefacts:
+  artifacts:
     paths:
     - build/libs
     - build/resources/main
@@ -35,7 +35,7 @@ build:javaTest:
   stage: build
   script:
     - ./gradlew compileTestJava
-  artefacts:
+  artifacts:
     paths:
     - build/resources/test
     - build/classes/test
@@ -45,7 +45,7 @@ build:npm:
   stage: build
   script:
     - ./gradlew webpack
-  artefacts:
+  artifacts:
     paths:
     - build/js
     expire_in: 1 day 
