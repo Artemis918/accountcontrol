@@ -81,6 +81,19 @@ public class PlanController {
 		return new KontoSpringResult(false, "Gespeichert");
 	}
 
+	@PostMapping("/savePattern")
+	@ResponseBody
+	KontoSpringResult savePattern(@RequestBody PlanDTO plandto) {
+		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
+		plan.setCreationDate(LocalDate.now());
+		plan.setStartDate(null);
+		plan.setEndDate(null);
+		plan.setMatchStyle(MatchStyle.PATTERN);
+		plan.setWert(0);
+		planRepository.save(plan);
+		return new KontoSpringResult(false, "Gespeichert");
+	}
+
 	@GetMapping("/id/{id}")
 	@ResponseBody
 	PlanDTO findPlan(@PathVariable Integer id) {

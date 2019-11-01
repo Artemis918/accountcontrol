@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { PlanEditor } from './planeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { DropdownService } from '../utils/dropdownservice'
 import { Plan } from '../utils/dtos'
+import { PatternPlanEditor } from './patternplaneneditor'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
@@ -17,7 +17,7 @@ interface IState {
 export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
 
     lister: SingleSelectLister<Plan>;
-    editor: PlanEditor;
+    editor: PatternPlanEditor;
     columns: ColumnInfo<Plan>[];
 
     constructor( props: PatternPlanenProps ) {
@@ -54,7 +54,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Musterdaten </div>
-                            <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
+                            <PatternPlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                         </td>
                         <td style={{ verticalAlign: 'top' }}>
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>

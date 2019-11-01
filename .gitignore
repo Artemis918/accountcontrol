@@ -8,3 +8,5 @@ bin
 /node_modules/
 /.project
 /.factorypath
+.vscode/settings.json
+dist

@@ -12,6 +12,7 @@ stages:
   - setup
   - build
   - test
+  - publish
   - deploy
 
 
@@ -56,8 +57,8 @@ test:
     - ./gradlew test
   allow_failure: false
 
-deploy:
-  stage: deploy 
+publish:
+  stage: publish 
   script:
     - ./gradlew build copyDocker
     - docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD $CI_REGISTRY 
@@ -66,5 +67,11 @@ deploy:
   only:
     - master
 
+deploy:
+  stage: deploy 
+  script:
+  	- kubectl apply
+  only:
+    - master
 variables:
   GIT_STRATEGY: fetch
