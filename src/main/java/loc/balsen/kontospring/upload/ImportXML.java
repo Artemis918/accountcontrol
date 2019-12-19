@@ -57,11 +57,9 @@ public class ImportXML extends Importbase {
 			org.w3c.dom.Document w3cDocument = documentBuilder.parse(data);
 			document = new DOMBuilder().build(w3cDocument);
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ParseException("Error in configuration while reading xml: " + e.getMessage(), 0 );
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ParseException("Error in sax reader while reading xml: " + e.getMessage(), 0 );
 		}
 		
 		Element root = document.getRootElement();
