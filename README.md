@@ -3,7 +3,9 @@ A small tool for supervising activities on your bank account
 
 ## History
 
-At first i just want to track where all my money is lost :-). After trying this with and good old Excel sheet i moved over to some JSP (Primefaces) and J2EE Stuff. Teh result was a more helpfull supervising tool with a little forecast, where i end up at the end of the year. This works for me some years.   But after all I was interrested in all the new stuff around there in the world and i was searching for a small project to try out all that fancy stuff with browsers and containers. So refactored my previous project. While reusing the database anid some small business code I ended up in completly rewriting the code. 
+At first, I just wanted to track, where all my money is lost :-). After trying this with and good old Excel sheet i moved over to some JSP (Primefaces) and J2EE stuff. The result was a more helpfull supervising tool with a little forecast, where I will end up at the end of the year. This works for me some years.   
+
+But after all I was interrested in all the new stuff around there in the world and i was searching for a small project to try out all that fancy stuff with browsers and containers. So refactored my previous project. While reusing the database and some small business code I ended up in completly rewriting everything. 
 
 ## Technologies
 
@@ -19,7 +21,7 @@ Here some Buzzwords of the used tools and stuff:
 * docker
 
 ## Current state
-This can be called as 'works for me' :-). There are lot of bugs and improvements remaining, as I wrote this programm for learning react and java. But some of my colleagues were intereested in it so I pushed it up to github
+This can be called as 'works for me' :-). There are lot of bugs and improvements remaining, as I wrote this programm for learning react and java. But some of my colleagues were interested in it, so I pushed it up to github
 
 Comments and contributions are welcome 
 
@@ -52,4 +54,4 @@ My idea of filling the empty database:
 4. if you upload the second month go again to "Buchen" and press again "Automatisch". All the previous created revovling plans will dispear into the Konto-Section
 5. In the Konto-Section now you can control all the revolving data and commit them with "bestätigen". Then the data will get into account for the statistical overview wich contains also asmall forecast
 
-There are some more functions and buttons, helping me planing and supervising my money, but i currently have no time to write a complete handbook. Fell free to look at the source code :-)
+There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)
