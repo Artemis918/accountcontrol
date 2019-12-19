@@ -1,11 +1,11 @@
 # kontospring
 A small tool for supervising activities on your bank account
 
-#History
+## History
 
 At first i just want to track where all my money is lost :-). After trying this with and good old Excel sheet i moved over to some JSP (Primefaces) and J2EE Stuff to create a more helpfull supervising tool with a little forecast, where i end up at hte end of the year. This works for me some years.   But after all I was interrested in all the new stuff around there in the world and i was searching for a small project to try out all that fancy stuff with browsers and containers. So refytored my previous project. While reusing the database adn some small business code I ended up ni completly rewriting the code. 
 
-#Technologies
+## Technologies
 
 Here some Buzzwords of the used tools and stuff:
 
@@ -18,12 +18,12 @@ Here some Buzzwords of the used tools and stuff:
 * gradle
 * docker
 
-# Current state
+## Current state
 This can be called as 'works for me' :-). There are lot of bugs and improvements remaining, as I wrote this programm for learning react and java. But some of my colleagues were intereested in it so I pushed it up to github
 
 Comments and contributions are welcome 
 
-# Setup
+## Setup
 1. Database: 
     * I use postgresql. But should work with other databases too. 
    	* create a database 
@@ -37,7 +37,7 @@ Comments and contributions are welcome
     * docker run <image id>
 4. Work: You should now be able to connect to localhost:8080 and see the first page
 
-# A small How to use 
+## A small How to use 
 
 My idea of filling the empty database:
 1. Download the account data of your acount as xml (hopefully, I implemented CAMT format)
