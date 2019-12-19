@@ -3,7 +3,7 @@ A small tool for supervising activities on your bank account
 
 ## History
 
-At first i just want to track where all my money is lost :-). After trying this with and good old Excel sheet i moved over to some JSP (Primefaces) and J2EE Stuff to create a more helpfull supervising tool with a little forecast, where i end up at hte end of the year. This works for me some years.   But after all I was interrested in all the new stuff around there in the world and i was searching for a small project to try out all that fancy stuff with browsers and containers. So refytored my previous project. While reusing the database adn some small business code I ended up ni completly rewriting the code. 
+At first i just want to track where all my money is lost :-). After trying this with and good old Excel sheet i moved over to some JSP (Primefaces) and J2EE Stuff. Teh result was a more helpfull supervising tool with a little forecast, where i end up at the end of the year. This works for me some years.   But after all I was interrested in all the new stuff around there in the world and i was searching for a small project to try out all that fancy stuff with browsers and containers. So refactored my previous project. While reusing the database anid some small business code I ended up in completly rewriting the code. 
 
 ## Technologies
 
