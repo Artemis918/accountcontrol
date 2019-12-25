@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FormattedMessage } from 'react-intl'
 
 class CState {
     message: string = "";
@@ -15,14 +16,26 @@ export class Footer extends React.PureComponent<any, CState> {
     this.setmessage = this.setmessage.bind(this);
   }
 
-  setmessage(m: string, e: boolean) {
+  setmessage(m: string, e: boolean) : void {
       this.setState( {message: m, error: e });
-  }  
-    
-  render() {
+  }
+  
+  getLabel() : JSX.Element {
+      if ( this.state.error ) {
+          return ( <FormattedMessage  defaultMessage="!! ERROR !!" id="footer.error" /> );
+      }
+      else {
+         return ( <FormattedMessage id="footer.state" defaultMessage="state" />)
+      }
+                  
+  }
+  
+  render():JSX.Element {
     return (
       <div>
-             <label> status: </label> {this.state.message}
+             <label>
+                { this.getLabel() }  
+             </label> : {this.state.message}
       </div>
     );
   }

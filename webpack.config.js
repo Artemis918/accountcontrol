@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const ROOT = path.resolve(__dirname, 'src/main/webapp');
 const SRC  = path.resolve( ROOT, 'javascript');
 const DEST = path.resolve( __dirname , 'build/js');
+const ReactIntlPlugin=require('react-intl-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -20,6 +21,7 @@ module.exports = {
       extensions: [".ts",".tsx",".js",".jsx" ]
   },
   plugins: [
+		new ReactIntlPlugin()
   ],
   output: {
     path: DEST,
@@ -29,10 +31,10 @@ module.exports = {
     rules: [
       {
          test: /\.tsx?$/,
-		 loader: "awesome-typescript-loader"
-	  },
+         loader: "awesome-typescript-loader"
+      },
 	  { test: /\.css$/,
-    	include: [SRC],
+        include: [SRC],
         use: [
           'style-loader',
           {

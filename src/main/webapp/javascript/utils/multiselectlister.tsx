@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from "./selectlister";
+import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './selectlister';
+
+export { ColumnInfo, CellInfo } from './selectlister';
 
 export { ColumnInfo, CellInfo } from "./selectlister";
 

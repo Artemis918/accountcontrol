@@ -1,5 +1,6 @@
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
+import { IntlProvider } from 'react-intl'
 import { InitialPage } from './initial'
 import { Header } from './header'
 import { TaskSelector, Task } from './utils/taskselector'
@@ -100,7 +101,7 @@ class Main extends React.Component<{}, IState> {
     renderPage (page: Page): JSX.Element {
         return ( <TaskSelector tasks={page.tasks} currenttask={0} tasksname={page.title} /> );
     }
-
+    
     render(): JSX.Element {
         var cname: string = this.state.production ? css.production : css.testing;
         var index = this.state.value;
@@ -122,4 +123,9 @@ class Main extends React.Component<{}, IState> {
     }
 }
 
-ReactDOM.render( ( <Main /> ), document.getElementById( 'react' ) );
+ReactDOM.render( 
+        (<IntlProvider locale="de" >
+         <Main />
+         </IntlProvider> )
+        , document.getElementById( 'react' )
+      );
