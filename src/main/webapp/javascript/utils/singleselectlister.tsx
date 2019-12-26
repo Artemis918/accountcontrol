@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './selectlister'
 
-export type HandleSingleSelectCallback<D> = ( data: D ) => void;
+export { ColumnInfo, CellInfo } from './selectlister'
 
-export type ColumnInfo<D> = ColumnInfo<D>;
-export type CellInfo<D> = CellInfo<D>;
+export type HandleSingleSelectCallback<D> = ( data: D ) => void;
 
 export interface SingleSelectlisterProps<D> {
     ext?: string;

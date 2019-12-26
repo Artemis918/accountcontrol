@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from "./selectlister";
 
+export { ColumnInfo, CellInfo } from "./selectlister";
+
 export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
-export type ColumnInfo<D> = ColumnInfo<D>;
-export type CellInfo<D> = CellInfo<D>;
 
 export interface MultiSelectlisterProps<D> {
     ext?: string;

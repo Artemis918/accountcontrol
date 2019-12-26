@@ -1,9 +1,8 @@
-var path = require('path');
-var webpack = require('webpack')
-var cssloader = require('css-loader')
-var ROOT = path.resolve(__dirname, 'src/main/webapp');
-var SRC  = path.resolve( ROOT, 'javascript');
-var DEST = path.resolve( __dirname , 'build/js');
+const path = require('path');
+const webpack = require('webpack');
+const ROOT = path.resolve(__dirname, 'src/main/webapp');
+const SRC  = path.resolve( ROOT, 'javascript');
+const DEST = path.resolve( __dirname , 'build/js');
 
 module.exports = {
   devtool: 'source-map',
@@ -18,10 +17,9 @@ module.exports = {
 		  path.resolve(ROOT, 'javascript/utils'),
 		  path.resolve(ROOT, 'css')
 	  ],
-      extensions: [".ts", ".tsx", ".js", ".jsx"]
+      extensions: [".ts",".tsx",".js",".jsx" ]
   },
   plugins: [
-	    new webpack.WatchIgnorePlugin([/css\.d\.ts$/])
   ],
   output: {
     path: DEST,
@@ -30,27 +28,19 @@ module.exports = {
   module: {
     rules: [
       {
-	    test: /\.jsx?$/,
-        include: [SRC],
-        loader: 'babel-loader',
-		options: {
-           presets: [ "@babel/env", "@babel/react" ]
-		}
-      },
-
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-      { test: /\.css$/,
+         test: /\.tsx?$/,
+		 loader: "awesome-typescript-loader"
+	  },
+	  { test: /\.css$/,
     	include: [SRC],
         use: [
           'style-loader',
           {
             loader: 'css-loader',
-            // loader: 'typings-for-css-modules-loader',
             options: {
               camelCase: false,
               modules: true,
               localIdentName: '[name]__[local]___[hash:base64:5]',
-              //namedExport: true
             }
           }
         ]
@@ -66,8 +56,7 @@ module.exports = {
             }
           }
           ]
-        },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+        }
     ]
   }
 };
