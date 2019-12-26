@@ -3,8 +3,6 @@ import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './sele
 
 export { ColumnInfo, CellInfo } from './selectlister';
 
-export { ColumnInfo, CellInfo } from "./selectlister";
-
 export type HandleMultiSelectCallback<D> = ( data: D[] ) => void;
 
 export interface MultiSelectlisterProps<D> {
