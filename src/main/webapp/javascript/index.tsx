@@ -16,6 +16,9 @@ import { Footer } from './footer'
 
 import * as css from './css/index.css'
 
+import messages_de from "./i18n/de.json";
+import messages_en from "./i18n/en.json";
+
 type renderMethod = () => JSX.Element;
 
 
@@ -29,9 +32,14 @@ interface Page {
     tasks: Task[];
 }
 
-class Main extends React.Component<{}, IState> {
+const messages: { [key: string]: Record<string,string> } = {
+    "de": messages_de,
+    "en": messages_en
+};
 
-    
+
+class Main extends React.Component<{}, IState> {
+  
     footer: React.RefObject<Footer>;
 
     pages: Page[];
@@ -43,7 +51,7 @@ class Main extends React.Component<{}, IState> {
         this.changeValue = this.changeValue.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
         this.createPages();
-    }
+    }    
     
     createPages(): void { 
         this.pages = [
@@ -124,7 +132,7 @@ class Main extends React.Component<{}, IState> {
 }
 
 ReactDOM.render( 
-        (<IntlProvider locale="de" >
+        (<IntlProvider locale="de" messages={messages["de"]} >
          <Main />
          </IntlProvider> )
         , document.getElementById( 'react' )

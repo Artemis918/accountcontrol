@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const ROOT = path.resolve(__dirname, 'src/main/webapp');
 const SRC  = path.resolve( ROOT, 'javascript');
 const DEST = path.resolve( __dirname , 'build/js');
-const ReactIntlPlugin=require('react-intl-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -16,12 +15,10 @@ module.exports = {
 		  "node_modules",
 		  path.resolve(ROOT, 'javascript'),
 		  path.resolve(ROOT, 'javascript/utils'),
-		  path.resolve(ROOT, 'css')
 	  ],
       extensions: [".ts",".tsx",".js",".jsx" ]
   },
   plugins: [
-		new ReactIntlPlugin()
   ],
   output: {
     path: DEST,
@@ -57,8 +54,8 @@ module.exports = {
               modules: false,
             }
           }
-          ]
-        }
+        ]
+      }
     ]
   }
 };
