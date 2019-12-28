@@ -3,10 +3,16 @@ import * as css from './css/index.css'
 
 type HandleChange = ( index: number ) => void;
 
+interface Page {
+    index: number
+    name: string;
+}
+
 interface HeaderProps {
-    changeValue: HandleChange;
+    changePage: HandleChange;
     title: string;
-    value: number;
+    currentpage: number;
+    pages: Page[];
 }
 
 
@@ -18,7 +24,7 @@ export class Header extends React.Component<HeaderProps, {}> {
     }
 
     handleChange( event: React.ChangeEvent<HTMLSelectElement> ): void {
-        this.props.changeValue( parseInt( event.target.value ) );
+        this.props.changePage( parseInt( event.target.value ) );
     }
 
     render(): JSX.Element {

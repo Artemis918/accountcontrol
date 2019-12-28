@@ -1,10 +1,12 @@
 import * as React from 'react';
-import * as css from './css/initial.css'
+import { FormattedMessage } from 'react-intl';
 
-type ChangeValue = ( index: number ) => void;
+import * as css from './css/initial.css';
+
+type SetPage = ( page: number ) => void;
 
 interface InitialProps {
-    changeValue: ChangeValue;
+    setPage: SetPage;
 }
 
 export class InitialPage extends React.Component<InitialProps, {}> {
@@ -12,20 +14,43 @@ export class InitialPage extends React.Component<InitialProps, {}> {
     constructor( props: InitialProps ) {
         super( props );
     }
-
+    
     render(): JSX.Element {
         return (
             <table className={css.maintable}>
                 <tbody>
                     <tr>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 0 )}> Planen </button>  </td>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 1 )}> Belege </button>  </td>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 2 )}> Buchen </button>  </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 0 )}> 
+                              <FormattedMessage id="page.plan" defaultMessage="planing"/>
+                            </button>
+                        </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 1 )}> 
+                              <FormattedMessage id="page.accountRecords" defaultMessage="accountRecords"/>
+                            </button>
+                        </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 2 )}> 
+                                <FormattedMessage id="page.assign" defaultMessage="assign"/>
+                            </button>  </td>
                     </tr>
                     <tr>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 3 )}> Konten </button>  </td>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 4 )}> Übersicht </button>  </td>
-                        <td> <button className={css.ksbutton} onClick={() => this.props.changeValue( 5 )}> Stammdaten </button> </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 3 )}> 
+                                <FormattedMessage id="page.check" defaultMessage="check"/>
+                            </button>
+                        </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 4 )}> 
+                                 <FormattedMessage id="page.overview" defaultMessage="overview"/>
+                            </button>
+                        </td>
+                        <td> 
+                            <button className={css.ksbutton} onClick={() => this.props.setPage( 5 )}>
+                                <FormattedMessage id="page.configuration" defaultMessage="configuration"/>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -136,7 +136,6 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
                 yDomainRange={[this.state.rangemin, this.state.rangemax]}
                 axes
                 xType='time'
-                datePattern='%Y-%m-%d'
                 data={[
                     this.state.plandata,
                     this.state.realdata,

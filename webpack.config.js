@@ -5,7 +5,7 @@ const SRC  = path.resolve( ROOT, 'javascript');
 const DEST = path.resolve( __dirname , 'build/js');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   mode: 'development',
   entry: {
      app: SRC + '/index.tsx',
@@ -16,7 +16,7 @@ module.exports = {
 		  path.resolve(ROOT, 'javascript'),
 		  path.resolve(ROOT, 'javascript/utils'),
 	  ],
-      extensions: [".ts",".tsx",".js",".jsx" ]
+      extensions: [".ts",".tsx",".js" ]
   },
   plugins: [
   ],

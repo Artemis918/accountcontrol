@@ -1,4 +1,11 @@
 {
 	"footer.state": "state",
-	"footer.error": "error" 
+	"footer.error": "error",
+	
+	"page.plan": "Planing",
+	"page.accountRecords": "Account Records",
+	"page.assign": "Assign",
+	"page.check": "Check Categories",
+	"page.overview": "Overview/Forecast",
+	"page.configuration": "Configuration"
 }
