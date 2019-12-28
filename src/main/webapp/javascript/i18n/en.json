@@ -3,9 +3,24 @@
 	"footer.error": "error",
 	
 	"page.plan": "Planing",
+	"task.template": "Templates",
+	"task.plan" : "Plan",
+	"task.pattern" : "Pattern",
+	
 	"page.accountRecords": "Account Records",
+	"task.create": "Create",
+	"task.upload": "Upload",
+	
 	"page.assign": "Assign",
-	"page.check": "Check Categories",
+	"task.recordlist": "Record list",
+	
+	"page.check": "Check",
+	"task.categories": "Categories",
+	
 	"page.overview": "Overview/Forecast",
-	"page.configuration": "Configuration"
+	"task.graph": "Graph",
+	"task.table" : "Table",
+	
+	"page.configuration": "Configuration",
+	"task.catconfig" : "Categories"
 }

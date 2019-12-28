@@ -67,41 +67,52 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
         })
     }
     
+    label(id: string) : string {
+        return this.props.intl.formatMessage({id: id});
+    }
+    
     createPages(): void {
 
         this.pages = [
         {
-            title: this.props.intl.formatMessage({id: "page.plan"}), tasks:
+            title: this.label("page.plan"), tasks:
                 [
-                    { name: 'Vorlagen', comp: ( <Templates sendmessage={this.sendMessage} /> ) },
-                    { name: 'Planen', comp: ( <Planen sendmessage={this.sendMessage} /> ) },
-                    { name: 'Muster', comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.template"), comp: ( <Templates sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.plan"), comp: ( <Planen sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.pattern"), comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.props.intl.formatMessage({id: "page.accountRecords"}), tasks:
+            title: this.label("page.accountRecords"), tasks:
                 [
-                    { name: 'Laden', comp: ( <BelegUploader sendmessage={this.sendMessage} /> ) },
-                    { name: 'Erfassen', comp: ( <BelegErfassung sendmessage={this.sendMessage} /> ) }
+                    { name: this.label("task.upload"), comp: ( <BelegUploader sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.create"), comp: ( <BelegErfassung sendmessage={this.sendMessage} /> ) }
                 ]
         },
         {
-            title: this.props.intl.formatMessage({id: "page.assign"}), tasks:
+            title: this.label("page.assign"), tasks:
                 [
-                    { name: 'Belegliste', comp: ( <Buchen sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.recordlist"), comp: ( <Buchen sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.props.intl.formatMessage({id: "page.check"}), tasks:
+            title: this.label("page.check"), tasks:
                 [
-                    { name: 'Alle Konten', comp: ( <Konten sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.categories"), comp: ( <Konten sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.props.intl.formatMessage({id: "page.overview"}), tasks: [
-                { name: 'Grafisch', comp: ( <OverviewGFX /> ) },
-                { name: 'Tabelle', comp: ( <div /> ) }
-            ]
+            title: this.label("page.overview"), tasks: 
+                [
+                    { name: this.label("task.graph"), comp: ( <OverviewGFX /> ) },
+                    { name: this.label("task.table"), comp: ( <div /> ) }
+                ]
+        }
+        {
+            title: this.label("page.configuration"), tasks: 
+                [
+                    { name: this.label("task.catconfig"), comp: ( <div /> ) },
+                ]
         }
     ];
     }

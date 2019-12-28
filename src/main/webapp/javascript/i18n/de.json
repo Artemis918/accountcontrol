@@ -3,9 +3,24 @@
 	"footer.error": "Fehler",
 	
 	"page.plan": "Planen",
+	"task.template": "Vorlagen",
+	"task.plan" : "Plan",
+	"task.pattern" : "Muster",
+	
 	"page.accountRecords": "Belege",
+	"task.create": "Erfassen",
+	"task.upload": "Laden",
+	
 	"page.assign": "Kategorisieren",
+	"task.recordlist": "Belegliste",
+	
 	"page.check": "Prüfen",
+	"task.categories": "Kategorien",
+	
 	"page.overview": "Übersicht / Schätzung",
-	"page.configuration": "Konfiguration"
+	"task.graph": "Grafisch",
+	"task.table" : "Tabelle",
+	
+	"page.configuration": "Konfiguration",
+	"task.catconfig": "Kategorien"
 }
