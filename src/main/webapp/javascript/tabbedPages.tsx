@@ -107,7 +107,7 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
                     { name: this.label("task.graph"), comp: ( <OverviewGFX /> ) },
                     { name: this.label("task.table"), comp: ( <div /> ) }
                 ]
-        }
+        },
         {
             title: this.label("page.configuration"), tasks: 
                 [
