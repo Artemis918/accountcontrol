@@ -16,6 +16,7 @@ type renderMethod = () => JSX.Element;
 interface IState {
     production: boolean;
     startpage: number;
+    locale: string;
 }
 
 const messages: { [key: string]: Record<string,string> } = {
@@ -23,14 +24,13 @@ const messages: { [key: string]: Record<string,string> } = {
     "en": messages_en
 };
 
-var curlocale:string = "en";
-
 class Main extends React.Component<{}, IState> {
   
     constructor( props: any ) {
         super( props );
-        this.state = { production: false, startpage: -1 };
+        this.state = { production: false, startpage: -1,  locale: "de" };
         this.setPage = this.setPage.bind( this );
+        this.setLang = this.setLang.bind( this );
     }     
 
     componentDidMount() {
@@ -43,31 +43,46 @@ class Main extends React.Component<{}, IState> {
     setPage( val: number ): void {
         this.setState( { startpage: val } );
     }
-    
-    changeLang(local:string) {
-        
+
+    setLang(event: React.ChangeEvent<HTMLSelectElement> ): void {
+        this.setState( { locale: event.target.value } );
     }
     
-    render(): JSX.Element {
+    createLangSelector(): JSX.Element {
+        return (
+                <div style={{textAlign: "right"}}> 
+                    <select value={this.state.locale} onChange={this.setLang} className={css.langselector} >
+                       <option key="en" value="en"> en </option>
+                       <option key="de" value="de"> de </option>
+                     </select>
+                </div>
+        )
+    }
+
+    render():JSX.Element {
+        return (<IntlProvider locale={this.state.locale} messages={messages[this.state.locale]} >
+                   {this.renderContent()}
+                </IntlProvider>
+               )
+    }
+    
+    renderContent(): JSX.Element {
         var cname: string = this.state.production ? css.production : css.testing;
         if ( this.state.startpage == -1 ) {
             return ( <div className={cname}>
-                <InitialPage setPage={this.setPage} />
-            </div> );
+                       <InitialPage setPage={this.setPage} />
+                       {this.createLangSelector()}
+                    </div> );
         }
         else {
             return (
                 <div className={cname}>
                     <TabbedPages page={this.state.startpage} />
+                    {this.createLangSelector()}
                 </div>
             )
         }
     }
 }
 
-ReactDOM.render( 
-        (<IntlProvider locale={curlocale} messages={messages[curlocale]} >
-         <Main />
-         </IntlProvider> )
-        , document.getElementById( 'react' )
-      );
+ReactDOM.render( <Main /> , document.getElementById( 'react' )  );

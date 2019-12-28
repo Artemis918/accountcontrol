@@ -46,7 +46,7 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
     constructor( props: TabbedPagesPropsIntl ) {
         super( props );
         this.state = { curpage: props.page };
-        this.changePage = this.changePage.bind( this );
+        this.setPage = this.setPage.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
         this.createPages();
         this.createHeaderData();
@@ -57,7 +57,7 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
         this.footer.current.setmessage( msg, error );
     }
     
-    changePage( page: number ): void {
+    setPage( page: number ): void {
         this.setState( { curpage: page } );
     }
     
@@ -111,9 +111,11 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
     }
 
     render(): JSX.Element {
+        this.createPages();
+        this.createHeaderData();
         return (
               <div>
-                <Header changePage={this.changePage} 
+                <Header setPage={this.setPage} 
                         currentpage={this.state.curpage} 
                         title={this.pages[this.state.curpage].title} 
                         pages = {this.headerpages}
