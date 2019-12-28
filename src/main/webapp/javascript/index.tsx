@@ -23,6 +23,8 @@ const messages: { [key: string]: Record<string,string> } = {
     "en": messages_en
 };
 
+var curlocale:string = "en";
+
 class Main extends React.Component<{}, IState> {
   
     constructor( props: any ) {
@@ -40,6 +42,10 @@ class Main extends React.Component<{}, IState> {
     
     setPage( val: number ): void {
         this.setState( { startpage: val } );
+    }
+    
+    changeLang(local:string) {
+        
     }
     
     render(): JSX.Element {
@@ -60,7 +66,7 @@ class Main extends React.Component<{}, IState> {
 }
 
 ReactDOM.render( 
-        (<IntlProvider locale="en" messages={messages["en"]} >
+        (<IntlProvider locale={curlocale} messages={messages[curlocale]} >
          <Main />
          </IntlProvider> )
         , document.getElementById( 'react' )

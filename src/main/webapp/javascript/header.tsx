@@ -3,7 +3,7 @@ import * as css from './css/index.css'
 
 type HandleChange = ( index: number ) => void;
 
-interface Page {
+export interface Page {
     index: number
     name: string;
 }
@@ -11,7 +11,8 @@ interface Page {
 interface HeaderProps {
     changePage: HandleChange;
     title: string;
-    value: number;
+    currentpage: number;
+    pages: Page[];
 }
 
 
@@ -31,13 +32,8 @@ export class Header extends React.Component<HeaderProps, {}> {
             <div className={css.header}>
 
                 <div className={css.headerselector}>
-                    <select value={this.props.value} onChange={this.handleChange}>
-                        <option value="0">Planen</option>
-                        <option value="1">Belege</option>
-                        <option value="2">Buchen</option>
-                        <option value="3">Konten</option>
-                        <option value="4">Übersicht</option>
-                        <option value="5">Stammdaten</option>
+                    <select value={this.props.currentpage} onChange={this.handleChange}>
+                          {this.props.pages.map((page:Page) => <option value={page.index}>{page.name}</option>)}
                     </select>
                 </div>
                 <div className={css.title}> -- {this.props.title} --</div>

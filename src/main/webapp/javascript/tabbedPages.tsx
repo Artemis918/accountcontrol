@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useIntl, IntlShape, WrappedComponentProps } from 'react-intl';
 
-import { Header } from './header'
+import { Header, Page as HeaderPage } from './header'
 import { Footer } from './footer'
 import { TaskSelector, Task } from './utils/taskselector'
 import { BelegUploader } from './belege/beleguploader'
@@ -12,6 +12,7 @@ import { PatternPlanen } from './planing/patternplanen'
 import { Buchen } from './buchen/buchen'
 import { Konten } from './kontrolle/konten'
 import { OverviewGFX } from './overviewgfx'
+
 
 
 type ChangeValue = ( index: number ) => void;
@@ -40,13 +41,15 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
 
     footer: React.RefObject<Footer>;
     pages: Page[];
-    
+    headerpages: HeaderPage[];
+
     constructor( props: TabbedPagesPropsIntl ) {
         super( props );
         this.state = { curpage: props.page };
         this.changePage = this.changePage.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
         this.createPages();
+        this.createHeaderData();
     }  
     
 
@@ -56,6 +59,12 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
     
     changePage( page: number ): void {
         this.setState( { curpage: page } );
+    }
+    
+    createHeaderData():void {
+        this.headerpages = this.pages.map((page:Page,index:number) => {
+            return { index: index, name: page.title};
+        })
     }
     
     createPages(): void {
@@ -89,7 +98,7 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
                 ]
         },
         {
-            title: this.props.intl.formatMessage({id: "page.owverview"}), tasks: [
+            title: this.props.intl.formatMessage({id: "page.overview"}), tasks: [
                 { name: 'Grafisch', comp: ( <OverviewGFX /> ) },
                 { name: 'Tabelle', comp: ( <div /> ) }
             ]
@@ -104,7 +113,11 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
     render(): JSX.Element {
         return (
               <div>
-                <Header changePage={this.changePage} value={this.state.curpage} title={this.pages[this.state.curpage].title} />
+                <Header changePage={this.changePage} 
+                        currentpage={this.state.curpage} 
+                        title={this.pages[this.state.curpage].title} 
+                        pages = {this.headerpages}
+                />
                 {this.renderPage(this.pages[this.state.curpage])}
                 <Footer ref={this.footer} />
               </div>
