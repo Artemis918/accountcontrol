@@ -11,8 +11,7 @@ interface Page {
 interface HeaderProps {
     changePage: HandleChange;
     title: string;
-    currentpage: number;
-    pages: Page[];
+    value: number;
 }
 
 
