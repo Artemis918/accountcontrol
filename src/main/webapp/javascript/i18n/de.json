@@ -22,5 +22,7 @@
 	"task.table" : "Tabelle",
 	
 	"page.configuration": "Konfiguration",
-	"task.catconfig": "Kategorien"
+	"task.catconfig": "Kategorien",
+	"config.category": "Kategorien",
+	"config.subcategory": "Unterkategorien"
 }

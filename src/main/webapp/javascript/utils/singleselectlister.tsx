@@ -58,7 +58,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
             <SelectLister<D>
                 columns={this.props.columns}
                 createFooter={this.props.createFooter}
-                ext={this.props.ext}
+                ext={(this.props.ext==undefined)?undefined:this.props.ext}
                 url={this.props.url}
                 lines={this.props.lines}
                 handleSelect={( s, c, d, i ) => this.changeSelected( d, i )}

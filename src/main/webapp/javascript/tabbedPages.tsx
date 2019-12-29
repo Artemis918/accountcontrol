@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useIntl, IntlShape, WrappedComponentProps } from 'react-intl';
+import {useIntl, WrappedComponentProps } from 'react-intl';
 
 import { Header, Page as HeaderPage } from './header'
 import { Footer } from './footer'
@@ -12,19 +12,15 @@ import { PatternPlanen } from './planing/patternplanen'
 import { Buchen } from './buchen/buchen'
 import { Konten } from './kontrolle/konten'
 import { OverviewGFX } from './overviewgfx'
+import CategoriesConfig from './configuration/categoriesconfig'
 
 
 
 type ChangeValue = ( index: number ) => void;
-type CreateTabbedPages = (props:TabbedPagesProps) => JSX.Element;
+
 
 interface TabbedPagesProps {
     page: number;
-}
-
-interface TabbedPagesPropsIntl {
-    page: number;
-    intl: IntlShape;
 }
 
 interface IState {
@@ -37,13 +33,13 @@ interface Page {
 }
 
 
-class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
+class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentProps, IState> {
 
     footer: React.RefObject<Footer>;
     pages: Page[];
     headerpages: HeaderPage[];
 
-    constructor( props: TabbedPagesPropsIntl ) {
+    constructor( props: TabbedPagesProps &  WrappedComponentProps) {
         super( props );
         this.state = { curpage: props.page };
         this.setPage = this.setPage.bind( this );
@@ -111,14 +107,14 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
         {
             title: this.label("page.configuration"), tasks: 
                 [
-                    { name: this.label("task.catconfig"), comp: ( <div /> ) },
+                    { name: this.label("task.catconfig"), comp: ( <CategoriesConfig sendmessage={this.sendMessage} /> ) },
                 ]
         }
     ];
     }
 
     renderPage (page: Page): JSX.Element {
-        return ( <TaskSelector tasks={page.tasks} currenttask={0} tasksname={page.title} /> );
+        return ( <TaskSelector tasks={page.tasks} currenttask={0} pagename={page.title} /> );
     }
 
     render(): JSX.Element {
@@ -138,9 +134,10 @@ class _TabbedPages extends React.Component<TabbedPagesPropsIntl, IState> {
     }
 }
 
+type CreateTabbedPages = (props:TabbedPagesProps) => JSX.Element;
+
 const TabbedPages:CreateTabbedPages = (props : TabbedPagesProps) => {
-    const intl:IntlShape = useIntl();
-    return (<_TabbedPages page={props.page} intl={intl}/>);
+    return (<_TabbedPages {...props} intl={useIntl()}/>);
 }
 
 export default TabbedPages;

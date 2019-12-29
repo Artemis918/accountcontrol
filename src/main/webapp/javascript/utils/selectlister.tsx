@@ -21,6 +21,11 @@ export interface CellInfo<D> {
     col: ColumnInfo<D>;
 }
 
+// ext can have three states
+// ext == value --> extend url to urlext
+// ext == '' --> dont extend url
+// ext == undefined -> dont call fetch at all
+
 export interface SelectListerProps<D> {
     ext?: string;
     url: string;
@@ -39,13 +44,12 @@ class CState<D> {
 export class SelectLister<D> extends React.Component<SelectListerProps<D>, CState<D>> {
 
     static defaultProps = {
-        ext: '',
-        lines: 10,
+        lines: 10
     }
 
     constructor( props: SelectListerProps<D> ) {
         super( props );
-        this.state = { data: [] };
+        this.state = { data: undefined };
         this.renderRow = this.renderRow.bind( this );
         this.renderHeadCol = this.renderHeadCol.bind( this );
         this.renderDataCol = this.renderDataCol.bind( this );
@@ -79,9 +83,14 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
     reload(): void {
         var self = this;
-        fetch( this.props.url + this.props.ext )
-            .then( ( response: Response ) => response.text() )
-            .then( ( text ) => { self.setState( { data: myParseJson( text ) } ) } )
+        if (this.props.ext == undefined) {
+            self.setState( { data: undefined } )
+        } 
+        else {
+            fetch( this.props.url + this.props.ext )
+                 .then( ( response: Response ) => response.text() )
+                 .then( ( text ) => { self.setState( { data: myParseJson( text ) } ) } )
+        }
     }
 
     renderHeadCol( col: ColumnInfo<D> ): JSX.Element {
@@ -143,6 +152,19 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
         else
             return null;
     }
+    
+    renderData() :JSX.Element {
+        if ( this.state.data == undefined ) {
+            return (<tbody/>);
+        }
+        else {
+            return (
+                 <tbody>
+                     { this.state.data.map( this.renderRow ) }
+                 </tbody>
+            );
+        }
+    }
 
     render(): JSX.Element {
         return (
@@ -152,9 +174,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
                         {this.props.columns.map( ( col: ColumnInfo<D> ) => this.renderHeadCol( col ) )}
                     </tr>
                 </thead>
-                <tbody >
-                    {this.state.data.map( this.renderRow )}
-                </tbody>
+                {this.renderData()}
                 {this.renderFooter()}
             </table>
         );

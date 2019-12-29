@@ -9,25 +9,27 @@ export interface Task {
 interface TaskSelectorProps {
     tasks: Task[];
     currenttask: number;
-    tasksname: string
+    pagename: string
 }
 
 interface IState {
     currenttask: number;
+    pagename: string
 }
 
 export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
 
     constructor( props: TaskSelectorProps ) {
         super( props );
-        this.state = { currenttask: this.props.currenttask};
+        this.state = { currenttask: this.props.currenttask, pagename: this.props.pagename};
         this.selectTask = this.selectTask.bind( this );
     }
 
-    componentDidUpdate(prevProps :TaskSelectorProps) :void {
-         if (this.props.tasksname !== prevProps.tasksname) {
-             this.selectTask ( this.props.currenttask );
-         }
+    static getDerivedStateFromProps(nextProps:TaskSelectorProps, prevState:IState): IState {
+        if(nextProps.pagename !== prevState.pagename)
+          return {currenttask: nextProps.currenttask, pagename: nextProps.pagename};
+        else
+          return null;
     }
     
     selectTask( i: number ): void {
