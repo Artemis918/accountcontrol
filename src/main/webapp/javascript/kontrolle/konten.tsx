@@ -167,13 +167,13 @@ export class Konten extends React.Component<KontenProps, IState> {
     createExt(): string {
         var date: string = '/' + this.state.year + '/' + this.state.month + '/';
         if ( this.state.selectedKonto != undefined ) {
-            return 'getKonto' + date + this.state.selectedKonto;
+            return '/getKonto' + date + this.state.selectedKonto;
         }
         else if ( this.state.selectedGroup != undefined ) {
-            return 'getKontoGroup' + date + this.state.selectedGroup;
+            return '/getKontoGroup' + date + this.state.selectedGroup;
         }
         else {
-            return 'getKontoGroup' + date + '1';
+            return '/getKontoGroup' + date + '1';
         }
     }
 

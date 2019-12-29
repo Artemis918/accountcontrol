@@ -139,7 +139,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
     }
 
     renderFooter(): JSX.Element {
-        if ( this.props.createFooter != undefined ) {
+        if ( this.props.createFooter != undefined && this.state.data != undefined ) {
             var data: D = this.props.createFooter( this.state.data );
             return (
                 <tfoot>
