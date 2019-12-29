@@ -20,16 +20,12 @@ interface Category {
 
 export class _CategoriesConfig extends React.Component<CategoryConfigProps & WrappedComponentProps, IState> {
 
-    columnsCat: ColumnInfo<EnumDTO>[];
-    columnsSub: ColumnInfo<EnumDTO>[];
+
     lister: SingleSelectLister<EnumDTO>;
 
     constructor( props: CategoryConfigProps & WrappedComponentProps) {
         super( props );
         this.state = { category: undefined };
-        this.columnsCat = [ { header: this.label("config.category"), getdata: ( c: EnumDTO ) => { return c.text; } } ];
-        this.columnsSub = [ { header: this.label("config.subcategory"), getdata: ( c: EnumDTO ) => { return c.text; } } ];
-
         this.setCategory = this.setCategory.bind( this );
     }
 
@@ -42,6 +38,8 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     }
 
     render(): JSX.Element {
+        var columnsCat: ColumnInfo<EnumDTO>[] = [ { header: this.label("config.category"), getdata: ( c: EnumDTO ) => { return c.text; } } ];
+        var columnsSub: ColumnInfo<EnumDTO>[] = [ { header: this.label("config.subcategory"), getdata: ( c: EnumDTO ) => { return c.text; } } ]; 
         return (
             <table>
                 <tbody>
@@ -50,16 +48,16 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
                                 <SingleSelectLister<EnumDTO>
                                     url='collections/kontogroups'
                                     ext=''
-                                    lines={28}
+                                    lines={15}
                                     handleChange={this.setCategory}
-                                    columns={this.columnsCat} />
+                                    columns={columnsCat} />
                         </td>
                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                  <SingleSelectLister<EnumDTO>
                                      url='collections/konto'
-                                     lines={28}
+                                     lines={15}
                                      ext={(this.state.category == undefined)?undefined : "/" + this.state.category.value.toString()}
-                                     columns={this.columnsSub}
+                                     columns={columnsSub}
                                      ref={(ref) =>(this.lister=ref)} />
                             </td>
                         </tr>
