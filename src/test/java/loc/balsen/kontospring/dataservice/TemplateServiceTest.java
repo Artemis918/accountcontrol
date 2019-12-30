@@ -27,7 +27,7 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -43,7 +43,7 @@ public class TemplateServiceTest extends TestContext {
 	public ZuordnungRepository zuordnungRepository;
 
 	@Autowired
-	public KontoRepository kontoRepository;
+	public SubCategoryRepository kontoRepository;
 
 	@Mock
 	public PlanService planService;
@@ -115,7 +115,7 @@ public class TemplateServiceTest extends TestContext {
 		template.setValidFrom(LocalDate.of(1999, 1, 3));
 		template.setStart(LocalDate.of(1998, 10, 2));
 		template.setPattern(new Pattern("\"sender\": \"gulli1\""));
-		template.setKonto(konto2);
+		template.setSubCategory(subCategory2);
 		template.setValue(100);
 		templateRepository.save(template);
 		
@@ -129,7 +129,7 @@ public class TemplateServiceTest extends TestContext {
 		template1.setValidFrom(LocalDate.of(1999, 1, 3));
 		template1.setStart(LocalDate.of(1998, 10, 2));
 		template1.setPattern(new Pattern("\"sender\": \"gulli1\""));
-		template1.setKonto(konto2);
+		template1.setSubCategory(subCategory2);
 		template1.setValue(100);
 	}
 	
@@ -146,7 +146,7 @@ public class TemplateServiceTest extends TestContext {
 		plan.setPlanDate(plandate);
 		plan.setDescription("templatetest");
 		plan.setPattern(new Pattern("\"sender\": \"gulli0\""));
-		plan.setKonto(konto1);
+		plan.setSubCategory(subCategory1);
 		plan.setTemplate(template);
 		planRepository.save(plan);
 

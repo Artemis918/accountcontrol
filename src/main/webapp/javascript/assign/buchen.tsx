@@ -188,8 +188,8 @@ export class Buchen extends React.Component<BuchenProps, IState> {
                 </div>
                 {this.state.kontoassign ? <KontoAssign
                     text={this.state.deftext}
-                    konto={this.state.defkonto}
-                    group={this.state.defgroup}
+                    subcategory={this.state.defkonto}
+                    category={this.state.defgroup}
                     handleAssign={( k, t ) => { this.assignSelected( k, t ) }} />
                     : null
                 }

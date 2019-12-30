@@ -23,7 +23,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 			       + "left outer join plan p on z.plan = p.id "
 			       + "where (( p.id is null and b.wertstellung between ?1 and ?2 ) or p.plan_date between ?1 and ?2 ) " 
 		           + "and z.konto = ?3", nativeQuery=true)
-	public List<Zuordnung> findByKontoAndMonth(LocalDate start, LocalDate end, int id);
+	public List<Zuordnung> findBySubCategoryAndMonth(LocalDate start, LocalDate end, int id);
 
 	@Modifying
 	@Transactional
@@ -45,5 +45,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 		       + "  and z.committed = true "
 		       + "order by p.plan_date" , nativeQuery=true)
 	public List<Zuordnung> findAllPlannedByPeriod(LocalDate start, LocalDate end);
+	
+	public int countBySubCategory(int id);
 
 }

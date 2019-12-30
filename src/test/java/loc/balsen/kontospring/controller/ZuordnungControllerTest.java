@@ -30,7 +30,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
@@ -117,23 +117,23 @@ public class ZuordnungControllerTest extends TestContext {
 		createBeleg("test2 blabla");
 		createBeleg("test3 bleble");
 		createBeleg("test4 bleble");
-		createPlan("1", konto1);
-		createPlan("2", konto2);
-		createPlan("3", konto5);
+		createPlan("1", subCategory1);
+		createPlan("2", subCategory2);
+		createPlan("3", subCategory5);
 
 		mvc.perform(get("/assign/all")).andExpect(status().isOk());
 		assertEquals(3, zuordnungRepository.findAll().size());
 
-		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + kontogruppe1.getId()))
+		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + category1.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(2)));
 
-		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + kontogruppe2.getId()))
+		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + category2.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(1)));
 
 		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + kontogruppe3.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(0)));
 
-		mvc.perform(get("/assign/getKonto/" + year + "/" + month + "/" + konto1.getId())).andExpect(status().isOk())
+		mvc.perform(get("/assign/getKonto/" + year + "/" + month + "/" + subCategory1.getId())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.[*]", hasSize(1)));
 
 	}
@@ -145,7 +145,7 @@ public class ZuordnungControllerTest extends TestContext {
 		BuchungsBeleg beleg1 =createBeleg("test6 bleble");
 		
 		String json = "{ \"text\": \"helpme\""
-				    + ", \"konto\": " + konto4.getId() 
+				    + ", \"konto\": " + subCategory4.getId() 
 				    + ", \"ids\": [ " + beleg1.getId() +"," +beleg2.getId() + " ] }";
 		
 		mvc.perform(post("/assign/tokonto")
@@ -166,13 +166,13 @@ public class ZuordnungControllerTest extends TestContext {
 		return result;
 	}
 
-	private Plan createPlan(String detailmatch, Konto konto) {
+	private Plan createPlan(String detailmatch, SubCategory subCategory) {
 		Plan plan = new Plan();
 		plan.setDescription("short: " + detailmatch);
 		plan.setStartDate(LocalDate.now().minusDays(2));
 		plan.setPlanDate(LocalDate.now());
 		plan.setEndDate(LocalDate.now().plusDays(2));
-		plan.setKonto(konto);
+		plan.setSubCategory(subCategory);
 		plan.setPattern(new Pattern("{\"details\": \"" + detailmatch + "\"}"));
 		planRepository.save(plan);
 		return plan;

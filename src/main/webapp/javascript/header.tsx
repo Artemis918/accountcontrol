@@ -30,9 +30,8 @@ export class Header extends React.Component<HeaderProps, {}> {
     render(): JSX.Element {
         return (
             <div className={css.header}>
-
-                <div className={css.headerselector}>
-                    <select value={this.props.currentpage} onChange={this.setPage}>
+                <div>
+                    <select value={this.props.currentpage} onChange={this.setPage} className={css.headerselector}>
                           {this.props.pages.map((page:Page) => <option key={page.index} value={page.index}>{page.name}</option>)}
                     </select>
                 </div>

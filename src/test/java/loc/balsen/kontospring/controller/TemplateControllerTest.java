@@ -70,7 +70,7 @@ public class TemplateControllerTest extends TestContext {
 	@Test
 	public void testSaveAndList() throws Exception {
 		
-		String tempjson1 = templatejson.replace("KONTO", Integer.toString(konto1.getId()));
+		String tempjson1 = templatejson.replace("KONTO", Integer.toString(subCategory1.getId()));
 		
 		mvc.perform(post("/templates/save").content(tempjson1).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
@@ -78,7 +78,7 @@ public class TemplateControllerTest extends TestContext {
 		assertEquals(1,templates.size());
 		Template template = templates.get(0);
 		assertEquals(100, template.getValue());
-		assertEquals(konto1.getId(), template.getKonto().getId());
+		assertEquals(subCategory1.getId(), template.getSubCategory().getId());
 		
 		mvc.perform(get("/templates/listgroup/1"))
 		   .andExpect(jsonPath("$.[*]", hasSize(1)));

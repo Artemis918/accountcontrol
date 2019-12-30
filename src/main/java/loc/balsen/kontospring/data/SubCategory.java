@@ -7,12 +7,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
 @Entity
-public class Konto {
+@Table(name = "konto")
+public class SubCategory {
 
 	public static final int LEN_DESCRIPTION = 512;
 	public static final int LEN_SHORTDESCRIPTIION = 80;
@@ -30,5 +32,5 @@ public class Konto {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_gruppe")
-	private Kontogruppe kontoGruppe;
+	private Category category;
 }

@@ -46,7 +46,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                 <SingleSelectLister<EnumDTO>
-                                    url='collections/kontogroups'
+                                    url='category/cat'
                                     ext=''
                                     lines={15}
                                     handleChange={this.setCategory}
@@ -54,7 +54,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
                         </td>
                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                  <SingleSelectLister<EnumDTO>
-                                     url='collections/konto'
+                                     url='category/sub/'
                                      lines={15}
                                      ext={(this.state.category == undefined)?undefined : "/" + this.state.category.value.toString()}
                                      columns={columnsSub}

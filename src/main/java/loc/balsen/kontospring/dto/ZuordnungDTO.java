@@ -1,10 +1,10 @@
 package loc.balsen.kontospring.dto;
 
-import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import lombok.Data;
 
@@ -39,9 +39,9 @@ public class ZuordnungDTO {
 			position = p.getPosition();
 		}
 
-		Konto k = z.getKonto();
+		SubCategory k = z.getSubCategory();
 		if (k != null) {
-			group = k.getKontoGruppe().getId();
+			group = k.getCategory().getId();
 			konto = k.getId();
 		}
 	}
@@ -55,12 +55,12 @@ public class ZuordnungDTO {
 		beleg = 0;
 		committed = false;
 		plan=p.getId();
-		Konto k = p.getKonto();
-		group = k.getKontoGruppe().getId();
-		konto = k.getId();
+		SubCategory s = p.getSubCategory();
+		group = s.getCategory().getId();
+		konto = s.getId();
 	}
 
-	public Zuordnung toZuordnung(PlanRepository planRepository, KontoRepository kontoRepository,
+	public Zuordnung toZuordnung(PlanRepository planRepository, SubCategoryRepository subCategoryRepository,
 			BuchungsBelegRepository belegRepository) {
 		Zuordnung res = new Zuordnung();
 		res.setId(id);
@@ -76,7 +76,7 @@ public class ZuordnungDTO {
 			res.setBuchungsbeleg(belegRepository.getOne(beleg));
 
 		if (konto != 0) 
-			res.setKonto(kontoRepository.getOne(konto));
+			res.setSubCategory(subCategoryRepository.getOne(konto));
 		return res;
 	}
 	

@@ -1,33 +1,33 @@
 import * as React from 'react'
-import { KontenSelector } from '../utils/kontenselector'
+import { CategorySelector } from '../utils/categoryselector'
 
 
-type HandleAssignCallback = ( konto: number, text: string ) => void;
+type HandleAssignCallback = ( subCategory: number, text: string ) => void;
 
 export interface KontoAssignProps {
     handleAssign: HandleAssignCallback;
     text: string;
-    group?: number;
-    konto?: number;
+    category?: number;
+    subcategory?: number;
 }
 
 
 export class KontoAssign extends React.Component<KontoAssignProps, {}> {
 
-    kontoselector: React.RefObject<KontenSelector>;
+    categoryselector: React.RefObject<CategorySelector>;
     comment: React.RefObject<HTMLInputElement>;
 
     constructor( props: KontoAssignProps ) {
         super( props );
         this.state = {};
-        this.kontoselector = React.createRef();
+        this.categoryselector = React.createRef();
         this.comment = React.createRef();
         this.assign = this.assign.bind( this );
         this.cancel = this.cancel.bind( this );
     }
 
     assign() :void {
-        this.props.handleAssign( this.kontoselector.current.getKonto(), this.comment.current.value );
+        this.props.handleAssign( this.categoryselector.current.getSubCategory(), this.comment.current.value );
     }
     
     cancel() : void {
@@ -50,10 +50,10 @@ export class KontoAssign extends React.Component<KontoAssignProps, {}> {
                 }}>
                     <div>Zuweisen auf Konto </div>
                     <div>
-                        <KontenSelector
-                            group={this.props.group}
-                            konto={this.props.konto}
-                            ref={this.kontoselector}
+                        <CategorySelector
+                            category={this.props.category}
+                            subcategory={this.props.subcategory}
+                            ref={this.categoryselector}
                             horiz={true}
                         />
                     </div>

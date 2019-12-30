@@ -11,7 +11,7 @@ interface TemplateProps {
 }
 
 interface IState {
-    group: number;
+    category: number;
 }
 
 const rythmNames: string[] = ['Tag', 'Woche', 'Monat', 'Jahr'];
@@ -26,7 +26,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
 
     constructor( props: TemplateProps ) {
         super( props );
-        this.state = { group: 1 };
+        this.state = { category: 1 };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.lister = undefined;
@@ -60,9 +60,6 @@ export class Templates extends React.Component<TemplateProps, IState> {
         this.lister.reload();
     }
 
-    setKontoGroup( val: number ) {
-    }
-
     refresheditor( template: Template ): void {
         this.editor.setTemplate( template );
     }
@@ -78,16 +75,16 @@ export class Templates extends React.Component<TemplateProps, IState> {
                         </td>
                         <td style={{ verticalAlign: 'top' }} >
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
-                                <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
-                                    url='collections/kontogroups'
-                                    value={this.state.group}
+                                <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
+                                    url='category/cat'
+                                    value={this.state.category}
                                 />
                             </div>
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
                                 lines={28}
                                 handleChange={this.refresheditor}
                                 url='templates/listgroup/'
-                                ext={this.state.group.toString( 10 )}
+                                ext={this.state.category.toString( 10 )}
                                 columns={this.columns} />
                         </td>
                     </tr>

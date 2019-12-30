@@ -18,7 +18,7 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.dataservice.PlanService;
 import loc.balsen.kontospring.dto.PlanDTO;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
@@ -30,7 +30,7 @@ public class PlanController {
 	private PlanRepository planRepository;
 
 	@Autowired
-	private KontoRepository kontoRepository;
+	private SubCategoryRepository kontoRepository;
 
 	@Autowired
 	private TemplateRepository templateRepository;

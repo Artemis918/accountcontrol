@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
@@ -24,7 +24,7 @@ import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dataservice.ZuordnungService;
 import loc.balsen.kontospring.dto.ZuordnungDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
 import lombok.Data;
@@ -33,7 +33,7 @@ import lombok.Data;
 @RequestMapping("/assign")
 public class ZuordnungController {
 
-	private KontoRepository kontoRepository;
+	private SubCategoryRepository subCategoryRepository;
 	private ZuordnungRepository zuordnungRepository;
 	private ZuordnungService zuordnungService;
 	private TemplateService templateService;
@@ -42,13 +42,13 @@ public class ZuordnungController {
 
 	@Autowired
 	public ZuordnungController(	
-			KontoRepository kontoRepository,
+			SubCategoryRepository subCategoryRepository,
 			ZuordnungRepository zuordnungRepository,
 			ZuordnungService zuordnungService,
 			TemplateService templateService,
 			BuchungsBelegRepository buchungsBelegRepository,
 			PlanRepository planRepository) {
-		this.kontoRepository = kontoRepository;
+		this.subCategoryRepository = subCategoryRepository;
 		this.zuordnungRepository = zuordnungRepository;
 		this.zuordnungService = zuordnungService;
 		this.templateService = templateService;
@@ -68,11 +68,11 @@ public class ZuordnungController {
 	@ResponseBody
 	public List<ZuordnungDTO> getKontoGroup(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		List<Zuordnung> zuordnungen = new ArrayList<>();
-		List<Konto> kontolist = kontoRepository.findByKontoGruppeId(id);
+		List<SubCategory> kontolist = subCategoryRepository.findByCategoryId(id);
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
-		for (Konto konto : kontolist) {
-			zuordnungen.addAll(zuordnungRepository.findByKontoAndMonth(start, end, konto.getId()));
+		for (SubCategory konto : kontolist) {
+			zuordnungen.addAll(zuordnungRepository.findBySubCategoryAndMonth(start, end, konto.getId()));
 		}
 
 		List<ZuordnungDTO> zdtos = zuordnungen.stream().map(z -> {
@@ -89,8 +89,8 @@ public class ZuordnungController {
 		return zdtos;
 	}
 
-	private boolean contains(Plan p, List<Konto> kontolist) {
-		return kontolist.contains(p.getKonto());
+	private boolean contains(Plan p, List<SubCategory> kontolist) {
+		return kontolist.contains(p.getSubCategory());
 	}
 
 	@GetMapping("/getKonto/{year}/{month}/{id}")
@@ -99,12 +99,12 @@ public class ZuordnungController {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 
-		List<ZuordnungDTO> zuordnungen = zuordnungRepository.findByKontoAndMonth(start, end, id).stream().map(z -> {
+		List<ZuordnungDTO> zuordnungen = zuordnungRepository.findBySubCategoryAndMonth(start, end, id).stream().map(z -> {
 			return new ZuordnungDTO(z);
 		}).collect(Collectors.toList());
 
 		zuordnungen.addAll(
-				planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> p.getKonto().getId() == id).map(p -> {
+				planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> p.getSubCategory().getId() == id).map(p -> {
 					return new ZuordnungDTO(p);
 				}).collect(Collectors.toList()));
 
@@ -157,7 +157,7 @@ public class ZuordnungController {
 	@PostMapping("/tokonto")
 	@ResponseBody
 	public KontoSpringResult assignToKonto(@RequestBody ToKontoRequestDTO request) {
-		Konto konto = kontoRepository.getOne(request.konto);
+		SubCategory konto = subCategoryRepository.getOne(request.konto);
 
 		request.ids.forEach(
 				(Integer z) -> zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));
@@ -178,7 +178,7 @@ public class ZuordnungController {
 		request.forEach((ZuordnungDTO z) -> {
 			if (z.getIstwert()!= 0) 
 				zuordnungRepository.save(
-						z.toZuordnung(planRepository, kontoRepository, buchungsBelegRepository));
+						z.toZuordnung(planRepository, subCategoryRepository, buchungsBelegRepository));
 		});
 		return new KontoSpringResult(false, "zugeordnet");
 	}

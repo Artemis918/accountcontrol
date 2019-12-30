@@ -50,7 +50,7 @@ public class Plan {
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "konto")
-	private Konto konto;
+	private SubCategory subCategory;
 
 	@Transient
 	private Pattern matcher;
@@ -66,7 +66,7 @@ public class Plan {
 		planDate = date;
 		endDate = date.plusDays(templ.getVardays());
 
-		konto = templ.getKonto();
+		subCategory = templ.getSubCategory();
 		position = templ.getPosition();
 		wert = templ.getValue();
 		pattern = templ.getPattern();

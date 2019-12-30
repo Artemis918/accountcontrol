@@ -2,7 +2,7 @@ import * as React from 'react'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { DropdownService } from '../utils/dropdownservice'
-import { KontenSelector } from '../utils/kontenselector'
+import { CategorySelector } from '../utils/categoryselector'
 import { Template, Pattern } from '../utils/dtos'
 
 type OnChangeCallback = () => void;
@@ -190,10 +190,10 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                             </td>
                         </tr>
                         <tr><td>Konto</td>
-                            <td><KontenSelector
+                            <td><CategorySelector
                                 onChange={( k, g ) => this.setKonto( k, g )}
-                                konto={this.state.template.konto}
-                                group={this.state.template.kontogroup} /></td>
+                                subcategory={this.state.template.konto}
+                                category={this.state.template.kontogroup} /></td>
                         </tr>
                         <tr><td>MatchArt</td>
                             <td>

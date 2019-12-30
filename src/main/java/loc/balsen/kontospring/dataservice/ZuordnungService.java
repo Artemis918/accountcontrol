@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
@@ -96,7 +96,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setKonto(plan.getKonto());
+		zuordnung.setSubCategory(plan.getSubCategory());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(wert);
 		zuordnung.setCommitted(false);
@@ -120,7 +120,7 @@ public class ZuordnungService {
 		return result;
 	}
 
-	public void assignToKonto(Konto konto, String text, BuchungsBeleg beleg) {
+	public void assignToKonto(SubCategory subCategory, String text, BuchungsBeleg beleg) {
 		if (text.isEmpty())
 			text = beleg.getPartner();
 
@@ -128,7 +128,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(text);
-		zuordnung.setKonto(konto);
+		zuordnung.setSubCategory(subCategory);
 		zuordnung.setShortdescription(text);
 		zuordnung.setWert(beleg.getWert());
 		zuordnung.setCommitted(false);
@@ -140,7 +140,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setKonto(plan.getKonto());
+		zuordnung.setSubCategory(plan.getSubCategory());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(beleg.getWert());
 		zuordnung.setPlan(plan);

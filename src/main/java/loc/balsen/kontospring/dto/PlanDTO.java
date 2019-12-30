@@ -6,7 +6,7 @@ import java.util.Optional;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 import lombok.Data;
 
@@ -44,10 +44,10 @@ public class PlanDTO {
 		this.shortdescription=plan.getShortDescription();
 		this.description=plan.getDescription();
 		this.matchstyle=plan.getMatchStyle().ordinal();
-		this.konto=plan.getKonto().getId();
-		this.kontogroup=plan.getKonto().getKontoGruppe().getId();
-		this.kontoname=plan.getKonto().getShortdescription();
-		this.kontogroupname=plan.getKonto().getKontoGruppe().getShortdescription();
+		this.konto=plan.getSubCategory().getId();
+		this.kontogroup=plan.getSubCategory().getCategory().getId();
+		this.kontoname=plan.getSubCategory().getShortdescription();
+		this.kontogroupname=plan.getSubCategory().getCategory().getShortdescription();
 		
 		if(plan.getTemplate() != null)
 			this.template=plan.getTemplate().getId();
@@ -55,7 +55,7 @@ public class PlanDTO {
 			this.template = 0;
 	}
 	
-	public Plan toPlan(	TemplateRepository templateRepository, 	KontoRepository kontoRepository) {
+	public Plan toPlan(	TemplateRepository templateRepository, 	SubCategoryRepository subCategoryRepository) {
 		Plan plan = new Plan();
 		plan.setId(id);
 		plan.setCreationDate(creationdate);
@@ -68,7 +68,7 @@ public class PlanDTO {
 		plan.setShortDescription(shortdescription);
 		plan.setDescription(description);
 		plan.setMatchStyle(MatchStyle.values()[matchstyle]);
-		plan.setKonto(kontoRepository.findById(konto).get());
+		plan.setSubCategory(subCategoryRepository.findById(konto).get());
 		Optional<Template> otemp = templateRepository.findById(template);
 		if (otemp.isPresent())
 			plan.setTemplate(otemp.get());

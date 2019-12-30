@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Template.Rythmus;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import lombok.Data;
 
 @Data
@@ -43,10 +43,10 @@ public class TemplateDTO {
 		this.rythmus = template.getRythmus().ordinal();
 		this.description = template.getDescription();
 		this.position= template.getPosition();
-		this.konto=template.getKonto().getId();		
-		this.kontogroup=template.getKonto().getKontoGruppe().getId();
-		this.kontoname=template.getKonto().getShortdescription();		
-		this.kontogroupname=template.getKonto().getKontoGruppe().getShortdescription();
+		this.konto=template.getSubCategory().getId();		
+		this.kontogroup=template.getSubCategory().getCategory().getId();
+		this.kontoname=template.getSubCategory().getShortdescription();		
+		this.kontogroupname=template.getSubCategory().getCategory().getShortdescription();
 		this.value = template.getValue();
 		this.pattern = new PatternDTO(template.getPatternObject());
 		this.shortdescription = template.getShortDescription();
@@ -54,7 +54,7 @@ public class TemplateDTO {
 		this.previous = template.getNext();
 	}
 	
-	public Template toTemplate(KontoRepository kontoRepository) {
+	public Template toTemplate(SubCategoryRepository subCategoryRepository) {
 		Template template = new Template();
 
 		template.setId(this.getId());
@@ -67,7 +67,7 @@ public class TemplateDTO {
 		template.setDescription(this.getDescription());
 		template.setPosition(this.getPosition());
 		template.setValue(this.getValue());
-		template.setKonto(kontoRepository.getOne(this.konto));
+		template.setSubCategory(subCategoryRepository.getOne(this.konto));
 		template.setPattern(pattern.toPattern());
 		template.setShortDescription(this.getShortdescription());
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);

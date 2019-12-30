@@ -65,7 +65,7 @@ public class BelegControllerTest extends TestContext {
 	private void createZuordnung(BuchungsBeleg beleg) {
 		Plan plan =  new Plan();
 		plan.setPattern(new Pattern("\"sender\": \"help\""));
-		plan.setKonto(konto1);
+		plan.setSubCategory(subCategory1);
 		planRepository.save(plan);
 		Zuordnung zuordnung = new Zuordnung();
 		zuordnung.setBuchungsbeleg(beleg);

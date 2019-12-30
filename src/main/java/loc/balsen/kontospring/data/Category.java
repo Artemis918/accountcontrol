@@ -5,12 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
 @Entity
-public class Kontogruppe {
+@Table(name="kontogruppe")
+public class Category {
 
 	public static int LEN_DESCRIPTION = 512;
 	public static int LEN_SHORTDESCRIPTIION = 80;

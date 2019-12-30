@@ -120,7 +120,7 @@ public class ZuordnungServiceTest extends TestContext {
 		plan.setEndDate(LocalDate.parse(end));
 		plan.setPattern(new Pattern(pattern));
 		plan.setWert(25);
-		plan.setKonto(konto1);
+		plan.setSubCategory(subCategory1);
 		planRepository.save(plan);
 		plans.add(plan);
 	}
@@ -132,7 +132,7 @@ public class ZuordnungServiceTest extends TestContext {
 		plan.setPattern(new Pattern(pattern));
 		plan.setMatchStyle(MatchStyle.PATTERN);
 		plan.setWert(25);
-		plan.setKonto(konto2);
+		plan.setSubCategory(subCategory2);
 		planRepository.save(plan);
 		plans.add(plan);
 	}

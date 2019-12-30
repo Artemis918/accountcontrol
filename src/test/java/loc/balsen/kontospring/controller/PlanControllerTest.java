@@ -73,14 +73,14 @@ public class PlanControllerTest extends TestContext {
 	@Test
 	public void testSaveAndList() throws Exception {
 		
-		String planjsonk = planjson.replace("KONTO", Integer.toString(konto1.getId()));
+		String planjsonk = planjson.replace("KONTO", Integer.toString(subCategory1.getId()));
 		mvc.perform(post("/plans/save").content(planjsonk).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
 		List<Plan> plans =planRepository.findAll();
 		assertEquals(1,plans.size());
 		Plan plan  = plans.get(0);
 		assertEquals(100, plan.getWert());
-		assertEquals(konto1.getId(), plan.getKonto().getId());
+		assertEquals(subCategory1.getId(), plan.getSubCategory().getId());
 
 		mvc.perform(get("/plans/list/1797/11"))
 		   .andExpect(jsonPath("$.[*]", hasSize(0)));
@@ -119,7 +119,7 @@ public class PlanControllerTest extends TestContext {
 		template.setVardays(5);
 		template.setAnzahlRythmus(1);
 		template.setRythmus(Rythmus.MONTH);
-		template.setKonto(konto1);
+		template.setSubCategory(subCategory1);
 		template.setDescription("Beschreibung");
 		template.setShortDescription("Kurz1234");
 		template.setValue(100);

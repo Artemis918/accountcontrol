@@ -253,7 +253,7 @@ public class PlanServiceTest extends TestContext {
 		latestPlan.setPlanDate(LocalDate.of(1997, 5, 14));
 		latestPlan.setDescription("templatetest");
 		latestPlan.setPattern(new Pattern("\"sender\": \"gulli0\""));
-		latestPlan.setKonto(konto1);
+		latestPlan.setSubCategory(subCategory1);
 		planRepository.save(latestPlan);
 
 		template = new Template();
@@ -264,7 +264,7 @@ public class PlanServiceTest extends TestContext {
 		template.setValidFrom(LocalDate.of(1999, 1, 3));
 		template.setStart(LocalDate.of(1998, 10, 2));
 		template.setPattern(new Pattern("\"sender\": \"gulli1\""));
-		template.setKonto(konto2);
+		template.setSubCategory(subCategory2);
 		templateRepository.save(template);
 
 		Template template2 = new Template();
@@ -275,7 +275,7 @@ public class PlanServiceTest extends TestContext {
 		template2.setValidFrom(LocalDate.of(1999, 1, 3));
 		template2.setStart(LocalDate.of(1998, 10, 2));
 		template2.setPattern(new Pattern("\"sender\": \"gulli2\""));
-		template2.setKonto(konto5);
+		template2.setSubCategory(subCategory5);
 		templateRepository.save(template2);
 	}
 }

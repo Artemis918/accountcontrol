@@ -2,7 +2,7 @@ import * as React from 'react'
 import { DropdownService } from '../utils/dropdownservice'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
-import { KontenSelector } from '../utils/kontenselector'
+import { CategorySelector } from '../utils/categoryselector'
 import { Plan, Pattern } from '../utils/dtos'
 import 'react-day-picker/lib/style.css'
 
@@ -133,10 +133,10 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                         </tr>
                         <tr>
                             <td>Konto</td>
-                            <td><KontenSelector
-                                onChange={( k, g ) => this.setKonto( k, g )}
-                                konto={this.state.plan.konto}
-                                group={this.state.plan.kontogroup} />
+                            <td><CategorySelector
+                                onChange={( s, c ) => this.setKonto( s, c )}
+                                subcategory={this.state.plan.konto}
+                                category={this.state.plan.kontogroup} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

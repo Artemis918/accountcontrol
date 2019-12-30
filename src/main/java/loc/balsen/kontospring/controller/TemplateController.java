@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.TemplateDTO;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Controller
@@ -27,7 +27,7 @@ public class TemplateController {
 	TemplateRepository templateRepository;
 
 	@Autowired
-	KontoRepository kontoRepository;
+	SubCategoryRepository kontoRepository;
 
 	@Autowired
 	TemplateService templateService;
@@ -36,7 +36,7 @@ public class TemplateController {
 	@ResponseBody
 	List<TemplateDTO> findGroupTemplates(@PathVariable int group) {
 		return templateRepository.findValid().stream().filter((template) -> {
-			return template.getKonto().getKontoGruppe().getId() == group;
+			return template.getSubCategory().getCategory().getId() == group;
 		}).map((template) -> {
 			return new TemplateDTO(template);
 		}).collect(Collectors.toList());

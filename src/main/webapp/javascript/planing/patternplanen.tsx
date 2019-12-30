@@ -11,7 +11,7 @@ interface PatternPlanenProps {
 }
 
 interface IState {
-    group: number;
+    category: number;
 }
 
 export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
@@ -24,7 +24,7 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
         super( props );
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
-        this.state= {group: 1};
+        this.state= {category: 1};
 
         this.columns = [{
             header: 'Beschreibung',
@@ -58,16 +58,16 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
                         </td>
                         <td style={{ verticalAlign: 'top' }}>
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
-                            <DropdownService onChange={( val: number ): void => this.setState( { group: val } )}
-                                url='collections/kontogroups'
-                                value={this.state.group}
+                            <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
+                                url='category/cat'
+                                value={this.state.category}
                             />
                         </div>
                             <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                 lines={30}
                                 handleChange={( data: Plan ) => this.refresheditor( data )}
                                 columns={this.columns}
-                                ext={this.state.group.toString( 10 )}
+                                ext={this.state.category.toString( 10 )}
                                 url='plans/patternplans/' />
                         </td>
                     </tr>

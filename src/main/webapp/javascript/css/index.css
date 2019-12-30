@@ -18,13 +18,14 @@
 
 .title {
 	font-size: 36px;
-	font-style: bold;
+	font-style: italic;
+	font-weight: bolder;
 }
 
 .headerselector {
 	float: right;
 	padding: 5px;
-	font-size: 20px;
+	font-size: 15px;
 }
 
 .langselector {

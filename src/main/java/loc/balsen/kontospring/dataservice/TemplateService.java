@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.Konto;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
-import loc.balsen.kontospring.repositories.KontoRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Component
@@ -22,17 +22,17 @@ public class TemplateService {
 	PlanService planService;
 	TemplateRepository templateRepository;
 	BuchungsBelegRepository buchungsBelegRepository;
-	KontoRepository kontoRepository;
+	SubCategoryRepository subCategoryRepository;
 	
 	@Autowired
 	public TemplateService(PlanService planService,
 			               TemplateRepository templateRepository,
 			               BuchungsBelegRepository buchungsBelegRepository,
-			               KontoRepository kontoRepository) {
+			               SubCategoryRepository kontoRepository) {
 		this.planService = planService;
 		this.templateRepository = templateRepository;
 		this.buchungsBelegRepository = buchungsBelegRepository;
-		this.kontoRepository = kontoRepository;
+		this.subCategoryRepository = kontoRepository;
 	}
 
 	public void saveTemplate(Template template) {
@@ -77,9 +77,9 @@ public class TemplateService {
 	public Template createFromBeleg(Integer id) {
 		Optional<BuchungsBeleg> beleg = buchungsBelegRepository.findById(id);
 		if (beleg.isPresent()) {
-			Konto konto = kontoRepository.findById(KONTO_DEFAULT).get();
+			SubCategory subCategory = subCategoryRepository.findById(KONTO_DEFAULT).get();
 			Template template = new Template(beleg.get());
-			template.setKonto(konto);
+			template.setSubCategory(subCategory);
 			return template;
 		}
 		return new Template();

@@ -45,7 +45,7 @@ public class Template {
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "konto")
-	private Konto konto;
+	private SubCategory subCategory;
 
 	public Template() {
 		this.id = 0;
@@ -62,7 +62,7 @@ public class Template {
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
 		this.next=0;
-		this.konto=null;		
+		this.subCategory=null;		
 	}
 	
 	public Template (BuchungsBeleg buchungsBeleg) {
@@ -81,7 +81,7 @@ public class Template {
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
 		this.next=0;
-		this.konto=null;	
+		this.subCategory=null;	
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Template {
 		this.shortDescription= t.shortDescription;
 		this.matchStyle= t.matchStyle;
 		this.next= t.next;
-		this.konto= t.konto;
+		this.subCategory= t.subCategory;
 	}
 
 	public LocalDate increaseDate(LocalDate last) {
@@ -150,6 +150,6 @@ public class Template {
                 && this.shortDescription.equals(t.shortDescription)
                 && this.matchStyle == t.matchStyle
                 && this.next == t.next
-                && this.konto == t.konto;
+                && this.subCategory == t.subCategory;
 	}
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { KontenSelector } from '../utils/kontenselector'
+import { CategorySelector } from '../utils/categoryselector'
 import { BuchungsBeleg, Plan, Zuordnung } from '../utils/dtos'
 import { PlanSelect } from './planselect'
 import * as mcss from './css/manuellbuchen.css'
@@ -19,15 +19,15 @@ interface IState {
 class TeilBuchung {
     betrag: number;
     details: string;
-    konto: number;
-    group: number;
+    subcategory: number;
+    category: number;
     wertstring: string;
     plan?: Plan;
 
-    constructor( details: string, wert: number, konto: number, group: number, plan?: Plan ) {
+    constructor( details: string, wert: number, subcategory: number, category: number, plan?: Plan ) {
         this.setBetrag( wert );
-        this.konto = konto;
-        this.group = group;
+        this.subcategory = subcategory;
+        this.category = category;
         this.details = details;
         this.plan = plan;
     }
@@ -46,7 +46,7 @@ class TeilBuchung {
             committed: false,
             plan: ( this.plan == undefined ) ? undefined : this.plan.id,
             beleg: beleg.id,
-            konto: this.konto
+            konto: this.subcategory
         }
     }
 }
@@ -98,8 +98,8 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     setKonto( index: number, konto: number, group: number ): void {
         const data: TeilBuchung[] = this.state.data;
-        data[index].konto = konto;
-        data[index].group = group;
+        data[index].subcategory = konto;
+        data[index].category = group;
         this.setState( { data: data } );
     }
 
@@ -125,7 +125,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                 result[result.length - 1].setBetrag( result[result.length - 1].betrag + belegwert - sum );
             }
             else {
-                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', belegwert - sum, result[result.length - 1].konto, result[result.length - 1].group )
+                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', belegwert - sum, result[result.length - 1].subcategory, result[result.length - 1].category )
                 result.push( newbuch );
             }
         }
@@ -162,10 +162,10 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     renderKonto( index: number ): JSX.Element {
         return (
-            <KontenSelector horiz={true}
-                konto={this.state.data[index].konto}
-                group={this.state.data[index].group}
-                onChange={( konto, group ) => this.setKonto( index, konto, group )} />
+            <CategorySelector horiz={true}
+                subcategory={this.state.data[index].subcategory}
+                category={this.state.data[index].category}
+                onChange={( subcategory, category ) => this.setKonto( index, subcategory, category)} />
         )
     }
 
@@ -224,7 +224,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                     <thead>
                         <tr>
                             <th>Details</th>
-                            <th>Konto</th>
+                            <th>Subkategorie</th>
                             <th>Betrag</th>
                             <th>-</th>
                         </tr>

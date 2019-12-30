@@ -22,7 +22,7 @@ import loc.balsen.kontospring.testutil.TestContext;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @WebAppConfiguration
-public class CollectionsControllerTest extends TestContext {
+public class CategoryControllerTest extends TestContext {
 
 	@Autowired
 	private MockMvc mvc;
@@ -38,18 +38,31 @@ public class CollectionsControllerTest extends TestContext {
 	}
 	
 	@Test
-	public void testPlanart() throws Exception {
-		mvc.perform(get("/collections/matchstyle"))
-		   .andExpect(status().isOk())
-		   .andExpect(jsonPath("$.[0].text", is("Genau")))
-		   .andExpect(jsonPath("$.[3].value", is(3)));
+	public void testKontoGroups() throws Exception {
+		mvc.perform(get("/category/cat")
+				   .contentType(MediaType.APPLICATION_JSON))
+				   .andExpect(status().isOk())
+				   .andExpect(jsonPath("$.[2].text", is("KontoG3")))
+				   .andExpect(jsonPath("$.[0].value", is(1)))
+				   .andExpect(jsonPath("$.[2].value", is(3)));
+		
+	}
+	
+	@Test
+	public void testKontos() throws Exception {
+		mvc.perform(get("/category/sub/1")
+				   .contentType(MediaType.APPLICATION_JSON))
+				   .andExpect(status().isOk())
+				   .andExpect(jsonPath("$[*]", hasSize(4)))
+				   .andExpect(jsonPath("$.[0].text", is("k1shortDesc")))
+				   .andExpect(jsonPath("$.[2].value", is(3)));
+
+		mvc.perform(get("/category/sub/2")
+				   .contentType(MediaType.APPLICATION_JSON))
+				   .andExpect(status().isOk())
+				   .andExpect(jsonPath("$[*]", hasSize(1)))
+				   .andExpect(jsonPath("$.[0].text", is("k5shortDesc")))
+				   .andExpect(jsonPath("$.[0].value", is(5)));		
 	}
 
-	@Test
-	public void testRhytmus() throws Exception {
-		mvc.perform(get("/collections/rythmus"))
-		   .andExpect(status().isOk())
-		   .andExpect(jsonPath("$.[3].text", is("Jahr")))
-		   .andExpect(jsonPath("$.[0].value", is(0)));
-	}
 }

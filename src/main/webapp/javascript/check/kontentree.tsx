@@ -53,10 +53,10 @@ export class KontenTree extends React.Component<KontenTreeProps, IState> {
 
     getURL( level: number, id: number) :string {
         if (level == 0) {
-            return 'collections/kontogroups';
+            return 'category/cat';
         } 
         else if (level == 1 ) {
-            return 'collections/konto/' + id;
+            return 'category/sub/' + id;
         }
         else return undefined;
     }
