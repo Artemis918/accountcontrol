@@ -64,7 +64,7 @@ public class ZuordnungController {
 		return new KontoSpringResult(false, "Alles zugeordnet");
 	}
 
-	@GetMapping("/getKontoGroup/{year}/{month}/{id}")
+	@GetMapping("/getcategory/{year}/{month}/{id}")
 	@ResponseBody
 	public List<ZuordnungDTO> getKontoGroup(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		List<Zuordnung> zuordnungen = new ArrayList<>();
@@ -93,7 +93,7 @@ public class ZuordnungController {
 		return kontolist.contains(p.getSubCategory());
 	}
 
-	@GetMapping("/getKonto/{year}/{month}/{id}")
+	@GetMapping("/getsubcategory/{year}/{month}/{id}")
 	@ResponseBody
 	public List<ZuordnungDTO> getKonto(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		LocalDate start = LocalDate.of(year, month, 1);
@@ -149,15 +149,15 @@ public class ZuordnungController {
 
 	@Data
 	static class ToKontoRequestDTO {
-		public int konto;
+		public int subcategory;
 		public String text;
 		public List<Integer> ids;
 	}
 
-	@PostMapping("/tokonto")
+	@PostMapping("/tosubcategory")
 	@ResponseBody
 	public KontoSpringResult assignToKonto(@RequestBody ToKontoRequestDTO request) {
-		SubCategory konto = subCategoryRepository.getOne(request.konto);
+		SubCategory konto = subCategoryRepository.getOne(request.subcategory);
 
 		request.ids.forEach(
 				(Integer z) -> zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));

@@ -107,9 +107,9 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         this.setState( { patternEdit: false, template: this.template, message: '' } );
     }
 
-    setKonto( konto: number, group: number ) {
-        this.template.kontogroup = group;
-        this.template.konto = konto;
+    setSubCategory( sub: number, cat: number ) {
+        this.template.category = cat;
+        this.template.subcategory = sub;
         this.setTemplateState();
     }
 
@@ -189,11 +189,11 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                 onChange={( e ) => { this.template.position = e.target.valueAsNumber; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Konto</td>
+                        <tr><td>Kategorie</td>
                             <td><CategorySelector
-                                onChange={( k, g ) => this.setKonto( k, g )}
-                                subcategory={this.state.template.konto}
-                                category={this.state.template.kontogroup} /></td>
+                                onChange={( k, g ) => this.setSubCategory( k, g )}
+                                subcategory={this.state.template.subcategory}
+                                category={this.state.template.category} /></td>
                         </tr>
                         <tr><td>MatchArt</td>
                             <td>

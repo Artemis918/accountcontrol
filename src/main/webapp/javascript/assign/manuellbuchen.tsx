@@ -46,7 +46,7 @@ class TeilBuchung {
             committed: false,
             plan: ( this.plan == undefined ) ? undefined : this.plan.id,
             beleg: beleg.id,
-            konto: this.subcategory
+            subcategory: this.subcategory
         }
     }
 }
@@ -58,9 +58,9 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
         super( props )
         var initial: TeilBuchung = new TeilBuchung( props.beleg.details, props.beleg.wert, 1, 1 );
         this.state = { data: [initial], planselect: false };
-        this.setKonto = this.setKonto.bind( this );
+        this.setSubCategory = this.setSubCategory.bind( this );
         this.renderDetails = this.renderDetails.bind( this );
-        this.renderKonto = this.renderKonto.bind( this );
+        this.renderSubCategory = this.renderSubCategory.bind( this );
         this.renderValue = this.renderValue.bind( this );
         this.addPlan = this.addPlan.bind( this );
         this.renderPlanSelect = this.renderPlanSelect.bind( this );
@@ -87,7 +87,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     addPlan( plan: Plan ): void {
         if ( plan != undefined ) {
-            var planbuchung: TeilBuchung = new TeilBuchung( plan.shortdescription, plan.wert, plan.konto, plan.kontogroup, plan )
+            var planbuchung: TeilBuchung = new TeilBuchung( plan.shortdescription, plan.wert, plan.subcategory, plan.category, plan )
             var data: TeilBuchung[] = this.state.data;
             data.splice( 0, 0, planbuchung );
             this.setState( { data: this.recalcData( data ), planselect: false } );
@@ -96,9 +96,9 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
             this.setState( { planselect: false } );
     }
 
-    setKonto( index: number, konto: number, group: number ): void {
+    setSubCategory( index: number, subcategory: number, group: number ): void {
         const data: TeilBuchung[] = this.state.data;
-        data[index].subcategory = konto;
+        data[index].subcategory = subcategory;
         data[index].category = group;
         this.setState( { data: data } );
     }
@@ -160,12 +160,12 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
         )
     }
 
-    renderKonto( index: number ): JSX.Element {
+    renderSubCategory( index: number ): JSX.Element {
         return (
             <CategorySelector horiz={true}
                 subcategory={this.state.data[index].subcategory}
                 category={this.state.data[index].category}
-                onChange={( subcategory, category ) => this.setKonto( index, subcategory, category)} />
+                onChange={( subcategory, category ) => this.setSubCategory( index, subcategory, category)} />
         )
     }
 
@@ -211,7 +211,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
         return (
             <tr key={'row' + index}>
                 <td>{this.renderDetails( index )}</td>
-                <td>{this.renderKonto( index )}</td>
+                <td>{this.renderSubCategory( index )}</td>
                 <td>{this.renderValue( index )}</td>
                 <td>{this.renderDelButton( index )}</td>
             </tr> )

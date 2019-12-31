@@ -30,11 +30,11 @@ export class PatternPlanen extends React.Component<PatternPlanenProps, IState> {
             header: 'Beschreibung',
             getdata: ( data: Plan ): string => { return data.shortdescription }
         }, {
-            header: 'kontogruppe',
-            getdata: ( data: Plan ): string => { return data.kontogroupname }
+            header: 'Kategorie',
+            getdata: ( data: Plan ): string => { return data.categoryname }
         }, {
-            header: 'konto',
-            getdata: ( data: Plan ): string => { return data.kontoname }
+            header: 'Unterkategorie',
+            getdata: ( data: Plan ): string => { return data.subcategoryname }
         }]
     }
 

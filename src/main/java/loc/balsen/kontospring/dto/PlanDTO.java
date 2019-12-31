@@ -25,10 +25,11 @@ public class PlanDTO {
 	private String description;
 	private int matchstyle;
 	private int template;
-	private int konto;
-	private int kontogroup;
-	private String kontoname;
-	private String kontogroupname;	
+	private int subcategory;
+	private int category;
+	private String subcategoryname;
+	private String categoryname;
+	
 	public PlanDTO() {
 	}
 	
@@ -44,10 +45,10 @@ public class PlanDTO {
 		this.shortdescription=plan.getShortDescription();
 		this.description=plan.getDescription();
 		this.matchstyle=plan.getMatchStyle().ordinal();
-		this.konto=plan.getSubCategory().getId();
-		this.kontogroup=plan.getSubCategory().getCategory().getId();
-		this.kontoname=plan.getSubCategory().getShortdescription();
-		this.kontogroupname=plan.getSubCategory().getCategory().getShortdescription();
+		this.subcategory=plan.getSubCategory().getId();
+		this.category=plan.getSubCategory().getCategory().getId();
+		this.subcategoryname=plan.getSubCategory().getShortdescription();
+		this.categoryname=plan.getSubCategory().getCategory().getShortdescription();
 		
 		if(plan.getTemplate() != null)
 			this.template=plan.getTemplate().getId();
@@ -68,7 +69,7 @@ public class PlanDTO {
 		plan.setShortDescription(shortdescription);
 		plan.setDescription(description);
 		plan.setMatchStyle(MatchStyle.values()[matchstyle]);
-		plan.setSubCategory(subCategoryRepository.findById(konto).get());
+		plan.setSubCategory(subCategoryRepository.findById(subcategory).get());
 		Optional<Template> otemp = templateRepository.findById(template);
 		if (otemp.isPresent())
 			plan.setTemplate(otemp.get());

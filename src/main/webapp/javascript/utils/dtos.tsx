@@ -60,10 +60,10 @@ export class Plan {
     position: number;
     description: string;
     shortdescription: string;
-    kontogroup: number;
-    konto: number;
-    kontogroupname: string;
-    kontoname: string;
+    category: number;
+    subcategory: number;
+    categoryname: string;
+    subcategoryname: string;
     wert: number;
     patterndto: Pattern;
     matchstyle: number;
@@ -77,10 +77,10 @@ export class Plan {
         this.position = 0;
         this.description = 'Neuer Plan';
         this.shortdescription = 'neu';
-        this.kontogroup = 1;
-        this.konto = 1;
-        this.kontogroupname = '';
-        this.kontoname = '';
+        this.category = 1;
+        this.subcategory = 1;
+        this.categoryname = '';
+        this.subcategoryname = '';
         this.wert = 0;
         this.patterndto = new Pattern();
         this.matchstyle = 0;
@@ -97,10 +97,10 @@ export class Template {
     anzahl: number;
     rythmus: number;
     description: string;
-    kontogroup: number;
-    konto: number;
-    kontogroupname: string;
-    kontoname: string;
+    category: number;
+    subcategory: number;
+    categoryname: string;
+    subcategoryname: string;
     position: number;
     value: number;
     pattern: Pattern;
@@ -118,10 +118,10 @@ export class Template {
         this.anzahl = 1;
         this.rythmus = 2;
         this.description = 'Neue Vorlage';
-        this.kontogroup = 1;
-        this.konto = 1;
-        this.kontogroupname = '';
-        this.kontoname = '';
+        this.category = 1;
+        this.subcategory = 1;
+        this.categoryname = '';
+        this.subcategoryname = '';
         this.position = 1;
         this.value = 0;
         this.pattern = new Pattern();
@@ -155,8 +155,8 @@ export class  Zuordnung {
     committed: boolean;
     plan?: number;
     beleg: number;
-    konto: number;
-    group?: number;
+    subcategory: number;
+    category?: number;
 }
 
 

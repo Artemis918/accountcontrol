@@ -2,52 +2,52 @@ import * as React from 'react';
 import {TreeView} from '../utils/treeview'
 
 
-export type HandleSelectKontoGroupCallback = ( kontogroupid: number ) => void;
-export type HandleSelectKontoCallback = ( kontoid: number ) => void;
+export type HandleSelectCatCallback = ( categoryid: number ) => void;
+export type HandleSelectSubCallback = ( subcategoryid: number ) => void;
 
-export interface KontenTreeProps {
-    handleKGSelect: HandleSelectKontoGroupCallback;
-    handleKontoSelect: HandleSelectKontoCallback;
+export interface CategoryTreeProps {
+    handleCatSelect: HandleSelectCatCallback;
+    handleSubSelect: HandleSelectSubCallback;
 }
 
-interface Konto {
+interface SubCategory {
     name:string;
     id: number;
 }
 
-interface Group {
+interface Category {
     name:string;
     expanded: boolean;
     id: number;
-    konten: Konto[];
+    subcategory: SubCategory[];
 }
 
 
 interface IState {
-    data : Group[];  
+    data : Category[];  
 }
 
 
-export class KontenTree extends React.Component<KontenTreeProps, IState> {
+export class CategoryTree extends React.Component<CategoryTreeProps, IState> {
 
-    data: Group[];
+    data: Category[];
     
-    constructor (props: KontenTreeProps) {
+    constructor (props: CategoryTreeProps) {
         super (props);
         this.data = undefined;
         this.state = { data: this.data };
         this.handleSelect = this.handleSelect.bind(this);
     }
     
-    createKonten (kg : Group) {
-        return (<button> {kg.name} </button>);
+    createKonten (cat : Category) {
+        return (<button> {cat.name} </button>);
     }
     
     handleSelect( level: number, id: number) :void {
         if (level == 1)
-            this.props.handleKGSelect(id);
+            this.props.handleCatSelect(id);
         else
-            this.props.handleKontoSelect(id);
+            this.props.handleSubSelect(id);
         
     }
 

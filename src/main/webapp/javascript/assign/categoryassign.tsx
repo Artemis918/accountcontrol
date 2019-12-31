@@ -4,7 +4,7 @@ import { CategorySelector } from '../utils/categoryselector'
 
 type HandleAssignCallback = ( subCategory: number, text: string ) => void;
 
-export interface KontoAssignProps {
+export interface CategoryAssignProps {
     handleAssign: HandleAssignCallback;
     text: string;
     category?: number;
@@ -12,12 +12,12 @@ export interface KontoAssignProps {
 }
 
 
-export class KontoAssign extends React.Component<KontoAssignProps, {}> {
+export class CategoryAssign extends React.Component<CategoryAssignProps, {}> {
 
     categoryselector: React.RefObject<CategorySelector>;
     comment: React.RefObject<HTMLInputElement>;
 
-    constructor( props: KontoAssignProps ) {
+    constructor( props: CategoryAssignProps ) {
         super( props );
         this.state = {};
         this.categoryselector = React.createRef();
@@ -48,7 +48,7 @@ export class KontoAssign extends React.Component<KontoAssignProps, {}> {
                     width: '300px', height: '180px',
                     background: 'darkgray'
                 }}>
-                    <div>Zuweisen auf Konto </div>
+                    <div>Zuweisen an Kategorie </div>
                     <div>
                         <CategorySelector
                             category={this.props.category}

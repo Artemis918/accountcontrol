@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import { KontoAssign } from './kontoassign'
+import { CategoryAssign } from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { ManuellBuchen } from './manuellbuchen';
 import { PlanSelect } from './planselect';
@@ -20,10 +20,10 @@ interface IState {
     plan: number;
     planassign: number;
     beleg: BuchungsBeleg;
-    kontoassign: boolean;
+    categoryassign: boolean;
     deftext: string;
-    defkonto: number;
-    defgroup: number
+    defsubcategory: number;
+    defcategory: number
 }
 
 export class Buchen extends React.Component<BuchenProps, IState> {
@@ -60,7 +60,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     constructor( props: BuchenProps ) {
         super( props )
         this.lister = undefined;
-        this.state = { plan: undefined, planassign: undefined, beleg: undefined, kontoassign: false, deftext: "", defkonto: 1, defgroup: 1 }
+        this.state = { plan: undefined, planassign: undefined, beleg: undefined, categoryassign: false, deftext: "", defsubcategory: 1, defcategory: 1 }
         this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
@@ -76,9 +76,9 @@ export class Buchen extends React.Component<BuchenProps, IState> {
             );
     }
 
-    assignKonto(): void {
+    assignCategory(): void {
         if ( this.lister.hasSelectedData() )
-            this.setState( { kontoassign: true } );
+            this.setState( { categoryassign: true } );
     }
 
     assignManuell(): void {
@@ -91,25 +91,25 @@ export class Buchen extends React.Component<BuchenProps, IState> {
         }
     }
 
-    assignSelected( k: number, t: string ): void {
+    assignSelected( sub: number, t: string ): void {
         var self = this;
-        if ( k != undefined ) {
-            var request = { text: t, konto: k, ids: this.lister.getSelectedData().map( d => d.id ) };
+        if ( sub != undefined ) {
+            var request = { text: t, subcategory: sub, ids: this.lister.getSelectedData().map( d => d.id ) };
             var self = this;
             var jsonbody = JSON.stringify( request );
-            fetch( '/assign/tokonto', {
+            fetch( '/assign/tosubcategory', {
                 method: 'post',
                 body: jsonbody,
                 headers: {
                     "Content-Type": "application/json"
                 }
             } ).then( function( response ) {
-                self.setState( { kontoassign: false } );
+                self.setState( { categoryassign: false } );
                 self.lister.reload();
             } );
         }
         else {
-            self.setState( { kontoassign: false } );
+            self.setState( { categoryassign: false } );
         }
     }
 
@@ -175,7 +175,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
             <div>
                 <div className={css.actionbar}>
                     <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>Automatisch</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignKonto()}>Konto</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignCategory()}>Kategorie</button>
                     <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>Manuell</button>
                     <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
                     <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
@@ -184,13 +184,14 @@ export class Buchen extends React.Component<BuchenProps, IState> {
                     <MultiSelectLister<BuchungsBeleg> columns={this.columns}
                         url='belege/unassigned'
                         lines={28}
+                        ext=''
                         ref={( ref ) => { this.lister = ref }} />
                 </div>
-                {this.state.kontoassign ? <KontoAssign
+                {this.state.categoryassign ? <CategoryAssign
                     text={this.state.deftext}
-                    subcategory={this.state.defkonto}
-                    category={this.state.defgroup}
-                    handleAssign={( k, t ) => { this.assignSelected( k, t ) }} />
+                    subcategory={this.state.defsubcategory}
+                    category={this.state.defcategory}
+                    handleAssign={( sub, text ) => { this.assignSelected( sub, text ) }} />
                     : null
                 }
                 {this.renderPlanSelect()}

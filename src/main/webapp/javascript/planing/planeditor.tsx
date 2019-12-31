@@ -95,9 +95,9 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setState( { plan: this.plan, message: '' } );
     }
 
-    setKonto( konto: number, group: number ): void {
-        this.plan.kontogroup = group;
-        this.plan.konto = konto;
+    setSubCategory( sub: number, cat: number ): void {
+        this.plan.category = cat;
+        this.plan.subcategory = sub;
         this.setState( { plan: this.plan, message: '' } );
     }
 
@@ -153,11 +153,11 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             </td>
                         </tr>
                         <tr>
-                            <td>Konto</td>
+                            <td>Unterkategorie</td>
                             <td><CategorySelector
-                                onChange={( k, g ) => this.setKonto( k, g )}
-                                subcategory={this.state.plan.konto}
-                                category={this.state.plan.kontogroup} />
+                                onChange={( k, g ) => this.setSubCategory( k, g )}
+                                subcategory={this.state.plan.subcategory}
+                                category={this.state.plan.category} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

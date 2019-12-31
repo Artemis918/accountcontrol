@@ -19,8 +19,8 @@ public class ZuordnungDTO {
 	boolean committed;
 	int plan;
 	int beleg;
-	int konto;
-	int group;
+	int subcategory;
+	int category;
 	int position;
 	
 	public ZuordnungDTO() {}
@@ -39,10 +39,10 @@ public class ZuordnungDTO {
 			position = p.getPosition();
 		}
 
-		SubCategory k = z.getSubCategory();
-		if (k != null) {
-			group = k.getCategory().getId();
-			konto = k.getId();
+		SubCategory s = z.getSubCategory();
+		if (s != null) {
+			category = s.getCategory().getId();
+			subcategory = s.getId();
 		}
 	}
 
@@ -56,8 +56,8 @@ public class ZuordnungDTO {
 		committed = false;
 		plan=p.getId();
 		SubCategory s = p.getSubCategory();
-		group = s.getCategory().getId();
-		konto = s.getId();
+		category = s.getCategory().getId();
+		subcategory = s.getId();
 	}
 
 	public Zuordnung toZuordnung(PlanRepository planRepository, SubCategoryRepository subCategoryRepository,
@@ -75,8 +75,8 @@ public class ZuordnungDTO {
 		if (beleg != 0)
 			res.setBuchungsbeleg(belegRepository.getOne(beleg));
 
-		if (konto != 0) 
-			res.setSubCategory(subCategoryRepository.getOne(konto));
+		if (subcategory != 0) 
+			res.setSubCategory(subCategoryRepository.getOne(subcategory));
 		return res;
 	}
 	
@@ -89,7 +89,7 @@ public class ZuordnungDTO {
 	}
 
 	public int compareGroup(ZuordnungDTO z) {
-		int res = Long.compare(konto, z.konto);
+		int res = Long.compare(subcategory, z.subcategory);
 		if (res != 0)
 			return res;
 

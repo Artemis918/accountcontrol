@@ -51,7 +51,7 @@ My idea of filling the empty database:
 	* back on the Tab "Buchen", you should now press "automatisch". Your entry should disappear from the list.
 	* you can find it now assigned to your previous selected type in Tab "Konten"
 	* ...
-4. if you upload the second month go again to "Buchen" and press again "Automatisch". All the previous created revovling plans will dispear into the Konto-Section
-5. In the Konto-Section now you can control all the revolving data and commit them with "bestätigen". Then the data will get into account for the statistical overview wich contains also asmall forecast
+4. if you upload the second month go again to "Buchen" and press again "Automatisch". All the previous created revovling plans will dispear into the category section
+5. In the category section now you can control all the revolving data and commit them with "bestätigen". Then the data will get into account for the statistical overview wich contains also asmall forecast
 
 There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)

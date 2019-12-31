@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
-import { KontenTree } from './kontentree'
+import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
 import { CategorySelector } from '../utils/categoryselector'
 import { Zuordnung, Template } from '../utils/dtos'
@@ -10,28 +10,28 @@ import * as css from './css/konten.css'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
-interface KontenProps {
+interface CategoriesProps {
     sendmessage: SendMessageCallback;
 }
 
 interface IState {
-    selectedKonto: number;
-    selectedGroup: number;
+    selectedSubCategory: number;
+    selectedCategory: number;
     month: number;
     year: number;
 }
 
-export class Konten extends React.Component<KontenProps, IState> {
+export class Categories extends React.Component<CategoriesProps, IState> {
 
     columns: ColumnInfo<Zuordnung>[];
     lister: React.RefObject<MultiSelectLister<Zuordnung>>;
 
-    constructor( props: KontenProps ) {
+    constructor( props: CategoriesProps ) {
         super( props );
         var currentTime = new Date();
         this.state = {
-            selectedKonto: undefined,
-            selectedGroup: undefined,
+            selectedSubCategory: undefined,
+            selectedCategory: undefined,
             month: currentTime.getMonth() + 1,
             year: currentTime.getFullYear()
         };
@@ -97,7 +97,7 @@ export class Konten extends React.Component<KontenProps, IState> {
 
     commit( z: Zuordnung[] ): void {
         var ids: number[] = z.map( ( za: Zuordnung ) => { return za.id; } );
-        var self: Konten = this;
+        var self: Categories = this;
         fetch( '/assign/commit', {
             method: 'post',
             body: JSON.stringify( ids ),
@@ -110,7 +110,7 @@ export class Konten extends React.Component<KontenProps, IState> {
     }
 
     commitAssignment( a: Zuordnung ): void {
-        var self: Konten = this;
+        var self: Categories = this;
         fetch( '/assign/invertcommit/' + a.id )
             .then( function( response ) {
                 self.lister.current.reload();
@@ -142,7 +142,7 @@ export class Konten extends React.Component<KontenProps, IState> {
             }
 
             if ( id != undefined ) {
-                var self: Konten = this;
+                var self: Categories = this;
                 fetch( url + id, { headers: { "Content-Type": "application/json" } } )
                     .then( ( response: Response ) => response.text() )
                     .then( () => self.lister.current.reload() );
@@ -152,7 +152,7 @@ export class Konten extends React.Component<KontenProps, IState> {
 
     removeAssignment(): void {
         var ids: number[] = this.lister.current.getSelectedData().map( ( za: Zuordnung ) => { return za.beleg; } );
-        var self: Konten = this;
+        var self: Categories = this;
         fetch( '/assign/remove', {
             method: 'post',
             body: JSON.stringify( ids ),
@@ -166,14 +166,14 @@ export class Konten extends React.Component<KontenProps, IState> {
 
     createExt(): string {
         var date: string = '/' + this.state.year + '/' + this.state.month + '/';
-        if ( this.state.selectedKonto != undefined ) {
-            return '/getKonto' + date + this.state.selectedKonto;
+        if ( this.state.selectedSubCategory != undefined ) {
+            return '/getsubcategory' + date + this.state.selectedSubCategory;
         }
-        else if ( this.state.selectedGroup != undefined ) {
-            return '/getKontoGroup' + date + this.state.selectedGroup;
+        else if ( this.state.selectedCategory != undefined ) {
+            return '/getcategory' + date + this.state.selectedCategory;
         }
         else {
-            return '/getKontoGroup' + date + '1';
+            return '/getcategory' + date + '1';
         }
     }
 
@@ -209,9 +209,9 @@ export class Konten extends React.Component<KontenProps, IState> {
                                         month={this.state.month}
                                         year={this.state.year} />
                                 </div>
-                                <KontenTree
-                                    handleKGSelect={( kg: number ) => this.setState( { selectedGroup: kg, selectedKonto: undefined } )}
-                                    handleKontoSelect={( k: number ) => this.setState( { selectedGroup: undefined, selectedKonto: k } )}
+                                <CategoryTree
+                                    handleCatSelect={( kg: number ) => this.setState( { selectedCategory: kg, selectedSubCategory: undefined } )}
+                                    handleSubSelect={( k: number ) => this.setState( { selectedCategory: undefined, selectedSubCategory: k } )}
                                 />
                             </td>
                             <td style={{ border: '1px solid black' }}>

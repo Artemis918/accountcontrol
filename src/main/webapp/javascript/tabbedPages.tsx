@@ -10,7 +10,7 @@ import { Templates } from './planing/templates'
 import { Planen } from './planing/planen'
 import { PatternPlanen } from './planing/patternplanen'
 import { Buchen } from './assign/buchen'
-import { Konten } from './check/konten'
+import { Categories } from './check/categories'
 import { OverviewGFX } from './overviewgfx'
 import CategoriesConfig from './configuration/categoriesconfig'
 
@@ -94,7 +94,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
         {
             title: this.label("page.check"), tasks:
                 [
-                    { name: this.label("task.categories"), comp: ( <Konten sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.categories"), comp: ( <Categories sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {

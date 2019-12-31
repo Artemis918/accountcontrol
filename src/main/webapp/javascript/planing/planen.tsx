@@ -47,8 +47,8 @@ export class Planen extends React.Component<PlanenProps, IState> {
             header: 'Beschreibung',
             getdata: ( data: Plan ): string => { return data.shortdescription }
         }, {
-            header: 'Konto',
-            getdata: ( data: Plan ): string => { return data.kontogroupname + "/" + data.kontoname }
+            header: 'Kategorie',
+            getdata: ( data: Plan ): string => { return data.categoryname + "/" + data.subcategoryname }
         }, {
             header: 'Betrag',
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => (

@@ -17,10 +17,10 @@ public class TemplateDTO {
 	private int vardays;
 	private int anzahl;
 	private int rythmus;
-	private int konto;
-	private int kontogroup;
-	private String kontoname;
-	private String kontogroupname;
+	private int subcategory;
+	private int category;
+	private String subcategoryname;
+	private String categoryname;
 	private String description;
 	private int position;
 	private int value;
@@ -43,10 +43,10 @@ public class TemplateDTO {
 		this.rythmus = template.getRythmus().ordinal();
 		this.description = template.getDescription();
 		this.position= template.getPosition();
-		this.konto=template.getSubCategory().getId();		
-		this.kontogroup=template.getSubCategory().getCategory().getId();
-		this.kontoname=template.getSubCategory().getShortdescription();		
-		this.kontogroupname=template.getSubCategory().getCategory().getShortdescription();
+		this.subcategory=template.getSubCategory().getId();
+		this.category=template.getSubCategory().getCategory().getId();
+		this.subcategoryname=template.getSubCategory().getShortdescription();
+		this.categoryname=template.getSubCategory().getCategory().getShortdescription();
 		this.value = template.getValue();
 		this.pattern = new PatternDTO(template.getPatternObject());
 		this.shortdescription = template.getShortDescription();
@@ -67,7 +67,7 @@ public class TemplateDTO {
 		template.setDescription(this.getDescription());
 		template.setPosition(this.getPosition());
 		template.setValue(this.getValue());
-		template.setSubCategory(subCategoryRepository.getOne(this.konto));
+		template.setSubCategory(subCategoryRepository.getOne(this.subcategory));
 		template.setPattern(pattern.toPattern());
 		template.setShortDescription(this.getShortdescription());
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);

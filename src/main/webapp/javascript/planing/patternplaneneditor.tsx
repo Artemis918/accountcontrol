@@ -95,9 +95,9 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
         this.setState( { plan: this.plan, message: '' } );
     }
 
-    setKonto( konto: number, group: number ): void {
-        this.plan.kontogroup = group;
-        this.plan.konto = konto;
+    setSubCategory( subcategory: number, category: number ): void {
+        this.plan.category = category;
+        this.plan.subcategory = subcategory;
         this.setState( { plan: this.plan, message: '' } );
     }
 
@@ -132,11 +132,11 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr>
-                            <td>Konto</td>
+                            <td>Kategorie</td>
                             <td><CategorySelector
-                                onChange={( s, c ) => this.setKonto( s, c )}
-                                subcategory={this.state.plan.konto}
-                                category={this.state.plan.kontogroup} />
+                                onChange={( s, c ) => this.setSubCategory( s, c )}
+                                subcategory={this.state.plan.subcategory}
+                                category={this.state.plan.category} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
