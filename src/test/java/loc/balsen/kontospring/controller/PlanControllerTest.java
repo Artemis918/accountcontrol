@@ -40,7 +40,7 @@ public class PlanControllerTest extends TestContext {
 			"\"startdate\": \"1797-10-03\", " +
 			"\"plandate\": \"1797-10-31\", " +
 			"\"enddate\": \"1797-10-03\", " +
-			"\"konto\": KONTO, " +
+			"\"subcategory\": SUBCATEGORY, " +
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
@@ -60,7 +60,7 @@ public class PlanControllerTest extends TestContext {
 
 	@Before
 	public void setup() {
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After
@@ -73,7 +73,7 @@ public class PlanControllerTest extends TestContext {
 	@Test
 	public void testSaveAndList() throws Exception {
 		
-		String planjsonk = planjson.replace("KONTO", Integer.toString(subCategory1.getId()));
+		String planjsonk = planjson.replace("SUBCATEGORY", Integer.toString(subCategory1.getId()));
 		mvc.perform(post("/plans/save").content(planjsonk).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		
 		List<Plan> plans =planRepository.findAll();
@@ -100,7 +100,7 @@ public class PlanControllerTest extends TestContext {
 	@Test
 	public void testCreateFromTemplate() throws Exception {
 		int year = LocalDate.now().getYear() +1 ;
-		createKontoData();
+		createCategoryData();
 		createTemplate(year);
 
 		mvc.perform(get("/plans/createFromTemplates/11/" + year))

@@ -159,9 +159,22 @@ export class  Zuordnung {
     category?: number;
 }
 
+export interface SubCategory {
+    id: number;
+    shortdescription: string;
+    description:string;
+    art: number;
+    category:number;
+}
+
+export interface Category {
+    id: number;
+    shortdescription: string;
+    description: string;
+}
 
 //=====================================================
-export interface EnumDTO {
+export interface EnumsDTO {
     text: string;
     value: number;
 }

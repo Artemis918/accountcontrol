@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,12 +65,33 @@ public class ZuordnungControllerTest extends TestContext {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After
 	public void teardown() {
 		clearRepos();
+	}
+	
+	
+	@Test
+	public void testCount() throws Exception {
+		BuchungsBeleg bubel = new BuchungsBeleg();
+		bubel.setReferenz("testbubel");
+		buchungsbelegRepository.save(bubel);
+		Zuordnung assignment =  new Zuordnung();
+		assignment.setBuchungsbeleg(bubel);
+		assignment.setSubcategory(subCategory1);
+		
+		zuordnungRepository.save(assignment);
+    	mvc.perform(get("/assign/countsubcategory/" + Integer.toString(subCategory1.getId())).contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().string("1"));
+				
+		zuordnungRepository.save(assignment);
+		mvc.perform(get("/assign/countsubcategory/" + Integer.toString(subCategory2.getId())).contentType(MediaType.APPLICATION_JSON))
+		   .andExpect(status().isOk())
+		   .andExpect(content().string("0"));
 	}
 	
 	@Test
@@ -124,16 +146,16 @@ public class ZuordnungControllerTest extends TestContext {
 		mvc.perform(get("/assign/all")).andExpect(status().isOk());
 		assertEquals(3, zuordnungRepository.findAll().size());
 
-		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + category1.getId()))
+		mvc.perform(get("/assign/getcategory/" + year + "/" + month + "/" + category1.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(2)));
 
-		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + category2.getId()))
+		mvc.perform(get("/assign/getcategory/" + year + "/" + month + "/" + category2.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(1)));
 
-		mvc.perform(get("/assign/getKontoGroup/" + year + "/" + month + "/" + kontogruppe3.getId()))
+		mvc.perform(get("/assign/getcategory/" + year + "/" + month + "/" + category3.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(0)));
 
-		mvc.perform(get("/assign/getKonto/" + year + "/" + month + "/" + subCategory1.getId())).andExpect(status().isOk())
+		mvc.perform(get("/assign/getsubcategory/" + year + "/" + month + "/" + subCategory1.getId())).andExpect(status().isOk())
 				.andExpect(jsonPath("$.[*]", hasSize(1)));
 
 	}
@@ -145,10 +167,10 @@ public class ZuordnungControllerTest extends TestContext {
 		BuchungsBeleg beleg1 =createBeleg("test6 bleble");
 		
 		String json = "{ \"text\": \"helpme\""
-				    + ", \"konto\": " + subCategory4.getId() 
+				    + ", \"subcategory\": " + subCategory4.getId() 
 				    + ", \"ids\": [ " + beleg1.getId() +"," +beleg2.getId() + " ] }";
 		
-		mvc.perform(post("/assign/tokonto")
+		mvc.perform(post("/assign/tosubcategory")
 				.content(json)
 				.contentType(MediaType.APPLICATION_JSON))
 		        .andExpect(status().isOk());

@@ -33,7 +33,7 @@ public class ZuordnungServiceTest extends TestContext {
 	@Before
 	public void setup() {
 		plans =  new ArrayList<>();
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After

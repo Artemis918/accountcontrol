@@ -37,8 +37,8 @@ public class TemplateControllerTest extends TestContext {
 			"\"vardays\": 5, " +
 			"\"anzahl\": 1," +
 			"\"rythmus\": 2, " +
-			"\"konto\": KONTO, " +
-			"\"kontogroup\": 1, "+
+			"\"subcategory\": SUBCATEGORY, " +
+			"\"category\": 1, "+
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
@@ -58,7 +58,7 @@ public class TemplateControllerTest extends TestContext {
 
 	@Before
 	public void setup() {
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After
@@ -70,7 +70,7 @@ public class TemplateControllerTest extends TestContext {
 	@Test
 	public void testSaveAndList() throws Exception {
 		
-		String tempjson1 = templatejson.replace("KONTO", Integer.toString(subCategory1.getId()));
+		String tempjson1 = templatejson.replace("SUBCATEGORY", Integer.toString(subCategory1.getId()));
 		
 		mvc.perform(post("/templates/save").content(tempjson1).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 		

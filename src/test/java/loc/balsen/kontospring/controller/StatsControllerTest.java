@@ -42,7 +42,7 @@ public class StatsControllerTest extends TestContext {
 	public void setup() {
 		
 		MockitoAnnotations.initMocks(this);
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After

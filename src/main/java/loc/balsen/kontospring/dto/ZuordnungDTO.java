@@ -39,7 +39,7 @@ public class ZuordnungDTO {
 			position = p.getPosition();
 		}
 
-		SubCategory s = z.getSubCategory();
+		SubCategory s = z.getSubcategory();
 		if (s != null) {
 			category = s.getCategory().getId();
 			subcategory = s.getId();
@@ -76,11 +76,11 @@ public class ZuordnungDTO {
 			res.setBuchungsbeleg(belegRepository.getOne(beleg));
 
 		if (subcategory != 0) 
-			res.setSubCategory(subCategoryRepository.getOne(subcategory));
+			res.setSubcategory(subCategoryRepository.getOne(subcategory));
 		return res;
 	}
 	
-	public int compareKonto(ZuordnungDTO z) {
+	public int compareSubCategory(ZuordnungDTO z) {
 		int res = Long.compare(position, z.position);
 		if (res != 0)
 			return res;
@@ -88,7 +88,7 @@ public class ZuordnungDTO {
 		return Long.compare(id,z.id);
 	}
 
-	public int compareGroup(ZuordnungDTO z) {
+	public int compareCategory(ZuordnungDTO z) {
 		int res = Long.compare(subcategory, z.subcategory);
 		if (res != 0)
 			return res;

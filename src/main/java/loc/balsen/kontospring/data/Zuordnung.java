@@ -37,7 +37,7 @@ public class Zuordnung {
 	
 	@ManyToOne
 	@JoinColumn(name = "konto")	
-	private SubCategory subCategory;
+	private SubCategory subcategory;
 
 	public Double getEuroWert() {
 		double res = getWert();

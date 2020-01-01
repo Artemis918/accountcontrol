@@ -37,7 +37,7 @@ public class StatsServiceTest extends TestContext {
 	
 	@Before
 	public void setUp() throws Exception {
-		createKontoData();
+		createCategoryData();
 		statsService = new StatsService(zuordnungRepository, planRepository);
 	}
 

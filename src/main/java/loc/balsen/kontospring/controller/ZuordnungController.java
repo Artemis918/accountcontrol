@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,7 +86,7 @@ public class ZuordnungController {
 			return new ZuordnungDTO(p);
 		}).collect(Collectors.toList()));
 
-		zdtos.sort((z1, z2) -> z1.compareGroup(z2));
+		zdtos.sort((z1, z2) -> z1.compareCategory(z2));
 		return zdtos;
 	}
 
@@ -108,10 +109,17 @@ public class ZuordnungController {
 					return new ZuordnungDTO(p);
 				}).collect(Collectors.toList()));
 
-		zuordnungen.sort((z1, z2) -> z1.compareKonto(z2));
+		zuordnungen.sort((z1, z2) -> z1.compareSubCategory(z2));
 		return zuordnungen;
 	}
 
+	
+	@GetMapping(path="/countsubcategory/{id}",produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	String countAssignForSubCategory(@PathVariable Integer id) {
+		return Integer.toString(zuordnungService.getAssignCount(id));
+	}
+	
 	@PostMapping("/commit")
 	@ResponseBody
 	public KontoSpringResult commit(@RequestBody List<Integer> ids) {

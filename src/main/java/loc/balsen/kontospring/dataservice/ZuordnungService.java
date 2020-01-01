@@ -45,12 +45,16 @@ public class ZuordnungService {
 		assign(belege, planRepository.findByPeriodNotAssigned(mindate, maxdate));
 	}
 
+	public int getAssignCount(int subcategoryid) {
+		return zuordnungRepository.countBySubcategoryId(subcategoryid);
+	}
+	
 	public void assign(List<BuchungsBeleg> belege, List<Plan> plans) {
 
 		for (BuchungsBeleg buchungsbeleg : belege)
 			assign(buchungsbeleg, plans);
 	}
-
+	
 	public boolean assign(BuchungsBeleg beleg, List<Plan> plans) {
 
 		List<Plan> plansForBeleg = new ArrayList<>();
@@ -96,7 +100,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setSubCategory(plan.getSubCategory());
+		zuordnung.setSubcategory(plan.getSubCategory());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(wert);
 		zuordnung.setCommitted(false);
@@ -128,7 +132,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(text);
-		zuordnung.setSubCategory(subCategory);
+		zuordnung.setSubcategory(subCategory);
 		zuordnung.setShortdescription(text);
 		zuordnung.setWert(beleg.getWert());
 		zuordnung.setCommitted(false);
@@ -140,7 +144,7 @@ public class ZuordnungService {
 
 		zuordnung.setBuchungsbeleg(beleg);
 		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setSubCategory(plan.getSubCategory());
+		zuordnung.setSubcategory(plan.getSubCategory());
 		zuordnung.setShortdescription(plan.getShortDescription());
 		zuordnung.setWert(beleg.getWert());
 		zuordnung.setPlan(plan);

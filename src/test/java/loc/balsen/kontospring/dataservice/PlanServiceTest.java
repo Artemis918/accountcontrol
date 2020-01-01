@@ -51,7 +51,7 @@ public class PlanServiceTest extends TestContext {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		createKontoData();
+		createCategoryData();
 		createTestData();
 		planService_mocked = new PlanService(mockPlanRepository, mockTemplateRepository);
 	}

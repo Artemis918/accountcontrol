@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { DropdownService } from '../utils/dropdownservice'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { CategorySelector } from '../utils/categoryselector'

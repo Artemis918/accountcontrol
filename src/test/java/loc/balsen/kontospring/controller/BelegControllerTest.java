@@ -32,7 +32,7 @@ public class BelegControllerTest extends TestContext {
 	
 	@Before
 	public void setup() {
-		createKontoData();
+		createCategoryData();
 	}
 	
 	@After

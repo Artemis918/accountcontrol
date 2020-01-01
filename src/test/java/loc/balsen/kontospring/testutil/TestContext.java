@@ -25,10 +25,10 @@ public class TestContext {
 	protected PlanRepository planRepository;
 
 	@Autowired
-	protected CategoryRepository kontogruppeRepository;
+	protected CategoryRepository categoryRepository;
 
 	@Autowired
-	protected SubCategoryRepository kontoRepository;
+	protected SubCategoryRepository subCategoryRepository;
 
 	@Autowired
 	protected ZuordnungRepository zuordnungRepository;
@@ -44,7 +44,7 @@ public class TestContext {
 
 	protected Category category1;
 	protected Category category2;
-	protected Category kontogruppe3;
+	protected Category category3;
 
 	public void clearRepos() {
 		zuordnungRepository.deleteAll();
@@ -53,29 +53,29 @@ public class TestContext {
 		templateRepository.deleteAll();
 	}
 	
-	protected void createKontoData() {
+	protected void createCategoryData() {
 
-		if (kontogruppeRepository.findById(1).isPresent()) {
-			category1 = kontogruppeRepository.findById(1).get();
-			category2 = kontogruppeRepository.findById(2).get();
-			kontogruppe3 = kontogruppeRepository.findById(3).get();
+		if (categoryRepository.findById(1).isPresent()) {
+			category1 = categoryRepository.findById(1).get();
+			category2 = categoryRepository.findById(2).get();
+			category3 = categoryRepository.findById(3).get();
 
-			subCategory1 = kontoRepository.findById(1).get();
-			subCategory2 = kontoRepository.findById(2).get();
-			subCategory3 = kontoRepository.findById(3).get();
-			subCategory4 = kontoRepository.findById(4).get();
-			subCategory5 = kontoRepository.findById(5).get();
+			subCategory1 = subCategoryRepository.findById(1).get();
+			subCategory2 = subCategoryRepository.findById(2).get();
+			subCategory3 = subCategoryRepository.findById(3).get();
+			subCategory4 = subCategoryRepository.findById(4).get();
+			subCategory5 = subCategoryRepository.findById(5).get();
 		} else {
 
 			category1 = new Category();
 			category2 = new Category();
-			kontogruppe3 = new Category();
-			category1.setShortdescription("KontoG1");
-			category2.setShortdescription("KontoG2");
-			kontogruppe3.setShortdescription("KontoG3");
-			kontogruppeRepository.save(category1);
-			kontogruppeRepository.save(category2);
-			kontogruppeRepository.save(kontogruppe3);
+			category3 = new Category();
+			category1.setShortdescription("Category1");
+			category2.setShortdescription("Category2");
+			category3.setShortdescription("Category3");
+			categoryRepository.save(category1);
+			categoryRepository.save(category2);
+			categoryRepository.save(category3);
 
 			subCategory1 = new SubCategory();
 			subCategory2 = new SubCategory();
@@ -83,24 +83,24 @@ public class TestContext {
 			subCategory4 = new SubCategory();
 			subCategory5 = new SubCategory();
 
-			subCategory1.setShortdescription("k1shortDesc");
-			subCategory2.setShortdescription("k2shortDesc");
-			subCategory3.setShortdescription("k3shortDesc");
-			subCategory4.setShortdescription("k4shortDesc");
-			subCategory5.setShortdescription("k5shortDesc");
+			subCategory1.setShortdescription("s1shortDesc");
+			subCategory2.setShortdescription("s2shortDesc");
+			subCategory3.setShortdescription("s3shortDesc");
+			subCategory4.setShortdescription("s4shortDesc");
+			subCategory5.setShortdescription("s5shortDesc");
 
-			subCategory1.setDescription("k1LangDesc");
+			subCategory1.setDescription("s1LangDesc");
 			subCategory1.setCategory(category1);
 			subCategory2.setCategory(category1);
 			subCategory3.setCategory(category1);
 			subCategory4.setCategory(category1);
 			subCategory5.setCategory(category2);
 
-			kontoRepository.save(subCategory1);
-			kontoRepository.save(subCategory2);
-			kontoRepository.save(subCategory3);
-			kontoRepository.save(subCategory4);
-			kontoRepository.save(subCategory5);
+			subCategoryRepository.save(subCategory1);
+			subCategoryRepository.save(subCategory2);
+			subCategoryRepository.save(subCategory3);
+			subCategoryRepository.save(subCategory4);
+			subCategoryRepository.save(subCategory5);
 		}
 	}
 }

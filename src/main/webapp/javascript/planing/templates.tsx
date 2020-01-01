@@ -76,7 +76,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
                         <td style={{ verticalAlign: 'top' }} >
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
                                 <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
-                                    url='category/cat'
+                                    url='category/catenum'
                                     value={this.state.category}
                                 />
                             </div>

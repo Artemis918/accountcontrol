@@ -61,7 +61,7 @@ public class TemplateServiceTest extends TestContext {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		createKontoData();
+		createCategoryData();
 		createTestData();
 		templateService = new TemplateService(planService, templateRepository, buchungsBelegRepository,
 				kontoRepository);

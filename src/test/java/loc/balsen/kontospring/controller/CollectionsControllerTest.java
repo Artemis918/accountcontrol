@@ -29,7 +29,7 @@ public class CollectionsControllerTest extends TestContext {
 
 	@Before
 	public void setup() {
-		createKontoData();
+		createCategoryData();
 	}
 
 	@After
