@@ -174,7 +174,7 @@ export interface Category {
 }
 
 //=====================================================
-export interface EnumsDTO {
+export interface EnumDTO {
     text: string;
     value: number;
 }
