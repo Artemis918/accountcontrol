@@ -72,10 +72,16 @@ public class CategoryController {
 		return list;
 	}
 	
-	@GetMapping(path="/addsub",produces = MediaType.TEXT_PLAIN_VALUE)
+	@GetMapping(path="/savesub",produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
-	String addSubCategory(@RequestBody SubCategoryDTO request) {
-		return Integer.toString(categoryService.addSubCategory(request.toSubCategory(categoryRepository)));
+	String saveSubCategory(@RequestBody SubCategoryDTO request) {
+		return Integer.toString(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
+	}
+	
+	@GetMapping(path="/savecat",produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	String saveCategory(@RequestBody CategoryDTO request) {
+		return Integer.toString(categoryService.saveCategory(request.toCategory()));
 	}
 
 }

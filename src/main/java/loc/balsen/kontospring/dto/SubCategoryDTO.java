@@ -1,5 +1,7 @@
 package loc.balsen.kontospring.dto;
 
+import java.util.Optional;
+
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.repositories.CategoryRepository;
@@ -26,8 +28,10 @@ public class SubCategoryDTO {
 		sub.setShortdescription(shortdescription);
 		sub.setDescription(description);
 		sub.setArt(art);
-		if (category != 0)
-			sub.setCategory(categoryRepository.getOne(category));
+		if (category != 0) {
+			Optional<Category> cat = categoryRepository.findById(category);
+			sub.setCategory(cat.isPresent() ? cat.get():null);			
+		}
 		return sub;
 	}
 	
