@@ -168,7 +168,7 @@ public class ZuordnungController {
 		SubCategory konto = subCategoryRepository.getOne(request.subcategory);
 
 		request.ids.forEach(
-				(Integer z) -> zuordnungService.assignToKonto(konto, request.text, buchungsBelegRepository.getOne(z)));
+				(Integer z) -> zuordnungService.assignToSubCategory(konto, request.text, buchungsBelegRepository.getOne(z)));
 		return new KontoSpringResult(false, "zugeordnet");
 	}
 

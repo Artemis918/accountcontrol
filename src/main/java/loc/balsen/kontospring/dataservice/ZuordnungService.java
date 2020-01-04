@@ -124,7 +124,7 @@ public class ZuordnungService {
 		return result;
 	}
 
-	public void assignToKonto(SubCategory subCategory, String text, BuchungsBeleg beleg) {
+	public void assignToSubCategory(SubCategory subCategory, String text, BuchungsBeleg beleg) {
 		if (text.isEmpty())
 			text = beleg.getPartner();
 
@@ -150,6 +150,10 @@ public class ZuordnungService {
 		zuordnung.setPlan(plan);
 		zuordnung.setCommitted(true);
 		zuordnungRepository.save(zuordnung);
+	}
+
+	public void deleteBySubCategoryId(int subCategory) {
+		zuordnungRepository.deleteBySubcategoryId(subCategory);
 	}
 
 }

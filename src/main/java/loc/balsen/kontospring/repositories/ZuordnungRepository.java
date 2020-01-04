@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Zuordnung;
 
 public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
@@ -47,5 +48,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 	public List<Zuordnung> findAllPlannedByPeriod(LocalDate start, LocalDate end);
 	
 	public int countBySubcategoryId(int id);
+
+	public void deleteBySubcategoryId(int subCategory);
 
 }

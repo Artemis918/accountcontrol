@@ -2,6 +2,7 @@ package loc.balsen.kontospring.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.dto.CategoryDTO;
@@ -36,11 +38,14 @@ import loc.balsen.kontospring.testutil.TestContext;
 @WebAppConfiguration
 public class CategoryControllerTest extends TestContext {
 
+	private Gson gson;
+	
 	@Autowired
 	private MockMvc mvc;
 
 	@Before
 	public void setup() {
+		gson = new Gson();
 		createCategoryData();
 	}
 
@@ -93,7 +98,6 @@ public class CategoryControllerTest extends TestContext {
 	
 	@Test
 	public void addSubCategory() throws Exception {
-		Gson gson = new Gson();
 		
 		SubCategoryDTO testsub = new SubCategoryDTO();
 		testsub.setArt(1);
@@ -159,9 +163,8 @@ public class CategoryControllerTest extends TestContext {
 	    .andExpect(content().string("-2")); // wrong category 
 	}
 
-		@Test
+	@Test
 	public void addCategory() throws Exception {
-		Gson gson = new Gson();
 		
 		CategoryDTO testcat = new CategoryDTO();
 
@@ -176,7 +179,7 @@ public class CategoryControllerTest extends TestContext {
 				.andReturn();
 		int res = Integer.valueOf(result.getResponse().getContentAsString());
 		assertTrue(res>0);
-		assertTrue(subCategoryRepository.findById(res).isPresent());
+		assertTrue(categoryRepository.findById(res).isPresent());
 
 		// same cat again
 		mvc.perform(get("/category/savecat")
@@ -202,5 +205,73 @@ public class CategoryControllerTest extends TestContext {
 		assertEquals("testingNew", categoryRepository.findById(res).get().getShortdescription());
 		
    }
+
+	@Test
+	public void delUnassignedSubCategory() throws Exception {
 		
+		Category delcat = new Category();
+		delcat.setShortdescription("toDelete2");
+		categoryRepository.save(delcat);
+
+		SubCategory delsub1 = new SubCategory();
+		delsub1.setCategory(delcat);
+		delsub1.setShortdescription("toDelete2");
+		subCategoryRepository.save(delsub1);
+		
+		mvc.perform(get("/category/delsub/" + Integer.toString(delsub1.getId()))
+				    .contentType(MediaType.APPLICATION_JSON)
+			)
+			.andExpect(status().isOk());
+		assertFalse(categoryRepository.findById(delsub1.getId()).isPresent());
+	}
+
+	@Test
+	public void delCategory() throws Exception {
+		
+			Category delcat = new Category();
+			delcat.setShortdescription("toDelete");
+			categoryRepository.save(delcat);
+			
+			mvc.perform(get("/category/delcat/" + delcat.getId())
+					    .contentType(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isOk());
+			assertFalse(categoryRepository.findById(delcat.getId()).isPresent());
+	}
+
+	@Test
+	public void delCategoryTree() throws Exception {
+		
+		Category delcat = new Category();
+		delcat.setShortdescription("toDelete1");
+		categoryRepository.save(delcat);
+
+		SubCategory delsub1 = new SubCategory();
+		delsub1.setCategory(delcat);
+		delsub1.setShortdescription("toDelete1");
+		subCategoryRepository.save(delsub1);
+		
+		SubCategory delsub2 = new SubCategory();
+		delsub2.setCategory(delcat);
+		delsub2.setShortdescription("toDelete2");
+		subCategoryRepository.save(delsub2);
+		
+		BuchungsBeleg beleg = new BuchungsBeleg();
+		buchungsbelegRepository.save(beleg);
+		
+		Zuordnung assign = new Zuordnung();
+		assign.setBuchungsbeleg(beleg);
+		assign.setSubcategory(delsub1);
+		
+		mvc.perform(get("/category/delcat/" + delcat.getId())
+					    .contentType(MediaType.APPLICATION_JSON)
+				)
+			.andExpect(status().isOk());
+
+		assertFalse(categoryRepository.findById(delcat.getId()).isPresent());
+		assertFalse(subCategoryRepository.findById(delsub1.getId()).isPresent());
+		assertFalse(subCategoryRepository.findById(delsub2.getId()).isPresent());
+		assertFalse(zuordnungRepository.findById(assign.getId()).isPresent());
+		assertTrue(buchungsbelegRepository.findById(beleg.getId()).isPresent());
+	}
 }

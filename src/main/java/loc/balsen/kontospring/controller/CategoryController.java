@@ -83,5 +83,19 @@ public class CategoryController {
 	String saveCategory(@RequestBody CategoryDTO request) {
 		return Integer.toString(categoryService.saveCategory(request.toCategory()));
 	}
+	
+	@GetMapping(path="/delsub/{sub}")
+	@ResponseBody
+	KontoSpringResult delSubCategory(@PathVariable Integer sub) {
+		categoryService.delSubCategory(sub);
+		return new KontoSpringResult(false, "OK");
+	}
+	
+	@GetMapping(path="/delcat/{cat}")
+	@ResponseBody
+	KontoSpringResult delCategory(@PathVariable Integer cat) {
+		categoryService.delCategory(cat);
+		return new KontoSpringResult(false, "OK");
+	}	
 
 }

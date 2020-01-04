@@ -19,8 +19,10 @@ public class CategoryService {
 	
 	private CategoryRepository categoryRepository;
 	private SubCategoryRepository subCategoryRepository;
+	private ZuordnungService assignService;
 
-	public CategoryService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository) {
+	public CategoryService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository, ZuordnungService zuordnungService) {
+		this.assignService= zuordnungService;
 		this.categoryRepository = categoryRepository;
 		this.subCategoryRepository = subCategoryRepository;
 	}
@@ -80,5 +82,18 @@ public class CategoryService {
 		}
 		categoryRepository.save(toSave);
 		return category.getId();
+	}
+
+	public void delSubCategory(int subCategory) {
+		assignService.deleteBySubCategoryId(subCategory);
+		subCategoryRepository.deleteById(subCategory);
+	}
+
+	public void delCategory(int category) {
+		List<SubCategory> subs = subCategoryRepository.findByCategoryId(category);
+		for (SubCategory sub : subs) {
+			delSubCategory(sub.getId());
+		}
+		categoryRepository.deleteById(category);
 	}
 }
