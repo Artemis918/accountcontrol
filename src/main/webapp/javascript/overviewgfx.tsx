@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LineChart } from 'react-easy-chart'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,} from 'recharts';
 import { MonthSelect } from './utils/monthselect'
 import { StatsDTO, StatsMonthDTO } from './utils/dtos'
 import { myParseJson } from './utils/misc'
@@ -12,6 +12,17 @@ interface LineData {
     y: string;
 }
 
+interface GraphData {
+    month:string;
+    value:number;
+}
+
+interface GraphSeries {
+    name:string;
+    color:string;
+    data:GraphData[];
+}
+
 interface IState {
     startYear: number;
     endYear: number;
@@ -20,9 +31,7 @@ interface IState {
     tillEndOfYear: boolean;
     rangemin: number;
     rangemax: number;
-    plandata: LineData[];
-    realdata: LineData[];
-    forecastdata: LineData[];
+    graphdata:GraphSeries[];
 }
 
 export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
@@ -36,9 +45,7 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
             endYear: today.getFullYear(),
             startMonth: 1,
             endMonth: today.getMonth(),
-            plandata: [],
-            realdata: [],
-            forecastdata: [],
+            graphdata: [],
             rangemin: -2000,
             rangemax: 4000
         }
@@ -69,34 +76,42 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
 
         fetch( url )
             .then( ( response: Response ) => response.text() )
-            .then( ( text ) => { self.setData( myParseJson( text ) as StatsDTO ) } )
+            .then( ( text ) => { self.setData( myParseJson( text )) } )
     }
-
+    
     setData( stats: StatsDTO ): void {
         var endofreal: boolean = false;
-        var plandata: LineData[] = [];
-        var realdata: LineData[] = [];
-        var forecastdata: LineData[] = [];
+        var plandata: GraphData[] = [];
+        var forecastdata: GraphData[] = [];
+        var realdata: GraphData[] = [];
         var statsdata: StatsMonthDTO[] = stats.data;
 
         for ( var i: number = 0; i < statsdata.length; i++ ) {
 
             var stat = statsdata[i];
-            var daystring: string = stat.day.toISOString().split( "T" )[0];
+            var month: string = stat.day.toLocaleDateString(undefined, {year:"2-digit", month:"short"});
 
             if ( stat.forecast != 0 ) {
-                forecastdata.push( { x: daystring, y: ( stat.forecast / 100 ).toFixed( 2 ) } )
+                forecastdata.push( { month: month, value: stat.forecast / 100 } )
             }
 
-            plandata.push( { x: daystring, y: ( stat.planvalue / 100 ).toFixed( 2 ) } );
+            plandata.push( { month: month, value: stat.planvalue / 100  } );
             if ( stat.value != 0 ) {
-                realdata.push( { x: daystring, y: ( stat.value / 100 ).toFixed( 2 ) } )
+                realdata.push( { month: month, value: stat.value / 100 } );
             }
         }
 
         var minval: number = Math.floor(stats.min/10000)*100;
         var maxval: number = Math.ceil(stats.max/10000)*100;
-        this.setState( { plandata: plandata, forecastdata: forecastdata, realdata: realdata, rangemin: minval, rangemax: maxval } );
+        this.setState( { graphdata: [
+                             { name: "Plan"    , data: plandata ,    color: "black"},
+                             { name: "Forecast", data: forecastdata, color: "green" },
+                             { name: "Real"    , data: realdata,     color: "red" }
+                         ],
+                         rangemin: minval,
+                         rangemax: maxval 
+                        }
+                      );
     }
 
     changeStart( month: number, year: number ): void {
@@ -131,17 +146,21 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
             <MonthSelect label='Startmonat' onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
             {this.renderEnde()}
             <LineChart
-                width={750}
-                height={500}
-                yDomainRange={[this.state.rangemin, this.state.rangemax]}
-                axes
-                xType='time'
-                data={[
-                    this.state.plandata,
-                    this.state.realdata,
-                    this.state.forecastdata
-                ]}
-            />
+            width={750}
+            height={500}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" type="category" allowDuplicatedCategory={false}/>
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {this.state.graphdata.map(s => (
+                    <Line type="monotone" stroke={s.color} activeDot={{ r: 8 }} dataKey="value" data={s.data} name={s.name} key={s.name} />
+                    ))}
+          </LineChart>
         </div>
         )
     }
