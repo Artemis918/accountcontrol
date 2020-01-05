@@ -44,18 +44,18 @@ public class TemplateController {
 
 	@PostMapping("/save")
 	@ResponseBody
-	KontoSpringResult saveTemplate(@RequestBody TemplateDTO template) {
+	StandardResult saveTemplate(@RequestBody TemplateDTO template) {
 		templateService.saveTemplate(template.toTemplate(kontoRepository));
-		return new KontoSpringResult(false, "Gespeichert");
+		return new StandardResult(false, "Gespeichert");
 	}
 
 	@GetMapping("/delete/{id}")
 	@ResponseBody
-	KontoSpringResult deleteTemplate(@PathVariable Integer id) {
+	StandardResult deleteTemplate(@PathVariable Integer id) {
 		Optional<Template> template = templateRepository.findById(id);
 		if (template.isPresent()) 
 			templateService.deleteTemplate(template.get());;
-		return new KontoSpringResult(false, "gelöscht");
+		return new StandardResult(false, "gelöscht");
 	}
 
 	@GetMapping("/beleg/{id}")

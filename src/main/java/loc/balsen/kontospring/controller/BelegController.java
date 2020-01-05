@@ -48,16 +48,16 @@ public class BelegController {
 	
 	@PostMapping("/save")
 	@ResponseBody
-	KontoSpringResult saveBeleg(@RequestBody BelegDTO belegdto) {
+	StandardResult saveBeleg(@RequestBody BelegDTO belegdto) {
 		if (belegdto.getId() == 0 || belegdto.getArt()==BuchungsBeleg.Art.MANUELL) {
 			BuchungsBeleg beleg = belegdto.toBeleg();
 			beleg.setArt(BuchungsBeleg.Art.MANUELL);
 			beleg.setEingang(LocalDate.now());
 			belegRepository.save(beleg);
-			return new KontoSpringResult(false,"Gespeichert");
+			return new StandardResult(false,"Gespeichert");
 		}
 		else
-			return new KontoSpringResult(true,"kein manueller Beleg");
+			return new StandardResult(true,"kein manueller Beleg");
 	}
 	
 	@GetMapping("/id/{id}")
@@ -74,10 +74,10 @@ public class BelegController {
 	
 	@GetMapping("/delete/{id}")
 	@ResponseBody
-	KontoSpringResult deleteTemplate(@PathVariable Integer id) {
+	StandardResult deleteTemplate(@PathVariable Integer id) {
 		Optional<BuchungsBeleg> beleg = belegRepository.findById(id);
 		if (beleg.isPresent() && beleg.get().getArt() == BuchungsBeleg.Art.MANUELL)
 			belegRepository.deleteById(id);
-		return new KontoSpringResult(false,"gelöscht");
+		return new StandardResult(false,"gelöscht");
 	}
 }

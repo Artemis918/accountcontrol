@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import loc.balsen.kontospring.controller.ZuordnungController.ToKontoRequestDTO;
+import loc.balsen.kontospring.controller.ZuordnungController.ToCategoryRequestDTO;
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.dataservice.CategoryService;
@@ -87,16 +87,16 @@ public class CategoryController {
 	
 	@GetMapping(path="/delsub/{sub}")
 	@ResponseBody
-	KontoSpringResult delSubCategory(@PathVariable Integer sub) {
+	StandardResult delSubCategory(@PathVariable Integer sub) {
 		categoryService.delSubCategory(sub);
-		return new KontoSpringResult(false, "OK");
+		return new StandardResult(false, "OK");
 	}
 	
 	@GetMapping(path="/delcat/{cat}")
 	@ResponseBody
-	KontoSpringResult delCategory(@PathVariable Integer cat) {
+	StandardResult delCategory(@PathVariable Integer cat) {
 		categoryService.delCategory(cat);
-		return new KontoSpringResult(false, "OK");
+		return new StandardResult(false, "OK");
 	}	
 
 }

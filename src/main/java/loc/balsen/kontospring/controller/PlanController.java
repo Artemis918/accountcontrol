@@ -74,16 +74,16 @@ public class PlanController {
 
 	@PostMapping("/save")
 	@ResponseBody
-	KontoSpringResult savePlan(@RequestBody PlanDTO plandto) {
+	StandardResult savePlan(@RequestBody PlanDTO plandto) {
 		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
 		plan.setCreationDate(LocalDate.now());
 		planRepository.save(plan);
-		return new KontoSpringResult(false, "Gespeichert");
+		return new StandardResult(false, "Gespeichert");
 	}
 
 	@PostMapping("/savePattern")
 	@ResponseBody
-	KontoSpringResult savePattern(@RequestBody PlanDTO plandto) {
+	StandardResult savePattern(@RequestBody PlanDTO plandto) {
 		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
 		plan.setCreationDate(LocalDate.now());
 		plan.setStartDate(null);
@@ -91,7 +91,7 @@ public class PlanController {
 		plan.setMatchStyle(MatchStyle.PATTERN);
 		plan.setWert(0);
 		planRepository.save(plan);
-		return new KontoSpringResult(false, "Gespeichert");
+		return new StandardResult(false, "Gespeichert");
 	}
 
 	@GetMapping("/id/{id}")
@@ -107,16 +107,16 @@ public class PlanController {
 
 	@GetMapping("/delete/{id}")
 	@ResponseBody
-	KontoSpringResult deletePlan(@PathVariable Integer id) {
+	StandardResult deletePlan(@PathVariable Integer id) {
 		Plan plan = planRepository.findById(id).get();
 		planService.deactivatePlan(plan);
-		return new KontoSpringResult(false, "gelöscht");
+		return new StandardResult(false, "gelöscht");
 	}
 
 	@GetMapping("createFromTemplates/{month}/{year}")
 	@ResponseBody
-	KontoSpringResult createFromTemplates(@PathVariable Integer month, @PathVariable Integer year) {
+	StandardResult createFromTemplates(@PathVariable Integer month, @PathVariable Integer year) {
 		planService.createPlansfromTemplatesUntil(month, year);
-		return new KontoSpringResult(false, "erzeugt");
+		return new StandardResult(false, "erzeugt");
 	}
 }
