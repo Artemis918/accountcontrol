@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -29,6 +30,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.google.gson.Gson;
 
 import loc.balsen.kontospring.data.BuchungsBeleg;
 import loc.balsen.kontospring.data.SubCategory;
@@ -76,6 +79,8 @@ public class ZuordnungControllerTest extends TestContext {
 	
 	@Test
 	public void testCount() throws Exception {
+		Gson gson =  new Gson();
+				
 		BuchungsBeleg bubel = new BuchungsBeleg();
 		bubel.setReferenz("testbubel");
 		buchungsbelegRepository.save(bubel);
@@ -83,15 +88,22 @@ public class ZuordnungControllerTest extends TestContext {
 		assignment.setBuchungsbeleg(bubel);
 		assignment.setSubcategory(subCategory1);
 		
+		List<SubCategory> list =  new ArrayList<>();
+		list.add(subCategory1);
+		
 		zuordnungRepository.save(assignment);
-    	mvc.perform(get("/assign/countsubcategory/" + Integer.toString(subCategory1.getId())).contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andExpect(content().string("1"));
-				
-		zuordnungRepository.save(assignment);
-		mvc.perform(get("/assign/countsubcategory/" + Integer.toString(subCategory2.getId())).contentType(MediaType.APPLICATION_JSON))
-		   .andExpect(status().isOk())
-		   .andExpect(content().string("0"));
+    	mvc.perform(post("/assign/countsubcategory/")
+			    .contentType(MediaType.APPLICATION_JSON)
+			    .content(gson.toJson(list))
+		).andExpect(status().isOk())
+		 .andExpect(content().string("1"));
+
+    	list.add(subCategory2);
+    	mvc.perform(post("/assign/countsubcategory/")
+			    .contentType(MediaType.APPLICATION_JSON)
+			    .content(gson.toJson(list))
+		).andExpect(status().isOk())
+		 .andExpect(content().string("1"));
 	}
 	
 	@Test

@@ -114,10 +114,14 @@ public class ZuordnungController {
 	}
 
 	
-	@GetMapping(path="/countsubcategory/{id}",produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(path="/countsubcategory",produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
-	String countAssignForSubCategory(@PathVariable Integer id) {
-		return Integer.toString(assignService.getAssignCount(id));
+	String countAssignForSubCategory(@RequestBody List<SubCategory> subs) {
+		int result = 0;
+		for (SubCategory sub: subs) {
+			result += assignService.getAssignCount(sub);
+		}
+		return Integer.toString(result);
 	}
 	
 	@PostMapping("/commit")

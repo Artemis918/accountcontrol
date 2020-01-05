@@ -47,7 +47,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 		       + "order by p.plan_date" , nativeQuery=true)
 	public List<Zuordnung> findAllPlannedByPeriod(LocalDate start, LocalDate end);
 	
-	public int countBySubcategoryId(int id);
+	public int countBySubcategory(SubCategory subCategory);
 
 	public void deleteBySubcategoryId(int subCategory);
 
