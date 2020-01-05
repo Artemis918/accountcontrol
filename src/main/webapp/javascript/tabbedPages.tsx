@@ -42,6 +42,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
     constructor( props: TabbedPagesProps &  WrappedComponentProps) {
         super( props );
         this.state = { curpage: props.page };
+        this.footer = React.createRef();
         this.setPage = this.setPage.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
         this.createPages();
