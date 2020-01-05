@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -106,7 +107,7 @@ public class CategoryControllerTest extends TestContext {
 		//some subcategory
 		testsub.setCategory(category2.getId());
 		MvcResult result = 
-			mvc.perform(get("/category/savesub")
+			mvc.perform(post("/category/savesub")
 					    .contentType(MediaType.APPLICATION_JSON)
 					    .content(gson.toJson(testsub))
 				)
@@ -119,7 +120,7 @@ public class CategoryControllerTest extends TestContext {
 		// same sub in other category
 		testsub.setCategory(category3.getId());
 		result = 
-			mvc.perform(get("/category/savesub")
+			mvc.perform(post("/category/savesub")
 					    .contentType(MediaType.APPLICATION_JSON)
 					    .content(gson.toJson(testsub))
 				)
@@ -130,7 +131,7 @@ public class CategoryControllerTest extends TestContext {
 		assertTrue(subCategoryRepository.findById(res).isPresent());
 		
 		// same sub and category
-		mvc.perform(get("/category/savesub")
+		mvc.perform(post("/category/savesub")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(testsub))
 		)
@@ -141,7 +142,7 @@ public class CategoryControllerTest extends TestContext {
 		testsub.setId(res);
 		testsub.setDescription("testingNew");
 		result = 
-			mvc.perform(get("/category/savesub")
+			mvc.perform(post("/category/savesub")
 					    .contentType(MediaType.APPLICATION_JSON)
 					    .content(gson.toJson(testsub))
 				)
@@ -155,7 +156,7 @@ public class CategoryControllerTest extends TestContext {
 		
 		// illegal cat
 		testsub.setCategory(20);
-		mvc.perform(get("/category/savesub")
+		mvc.perform(post("/category/savesub")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(testsub))
 		)
@@ -171,7 +172,7 @@ public class CategoryControllerTest extends TestContext {
 		// insert some cat
 		testcat.setDescription("testing");
 		MvcResult result = 
-			mvc.perform(get("/category/savecat")
+			mvc.perform(post("/category/savecat")
 					    .contentType(MediaType.APPLICATION_JSON)
 					    .content(gson.toJson(testcat))
 				)
@@ -182,7 +183,7 @@ public class CategoryControllerTest extends TestContext {
 		assertTrue(categoryRepository.findById(res).isPresent());
 
 		// same cat again
-		mvc.perform(get("/category/savecat")
+		mvc.perform(post("/category/savecat")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(testcat))
 		)
@@ -193,7 +194,7 @@ public class CategoryControllerTest extends TestContext {
 		testcat.setId(res);
 		testcat.setShortdescription("testingNew");
 		result = 
-			mvc.perform(get("/category/savecat")
+			mvc.perform(post("/category/savecat")
 					    .contentType(MediaType.APPLICATION_JSON)
 					    .content(gson.toJson(testcat))
 				)

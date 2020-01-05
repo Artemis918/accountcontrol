@@ -45,8 +45,8 @@ public class ZuordnungService {
 		assign(belege, planRepository.findByPeriodNotAssigned(mindate, maxdate));
 	}
 
-	public int getAssignCount(SubCategory subcategory) {
-		return zuordnungRepository.countBySubcategory(subcategory);
+	public int getAssignCount(int subcategory) {
+		return zuordnungRepository.countBySubcategoryId(subcategory);
 	}
 	
 	public void assign(List<BuchungsBeleg> belege, List<Plan> plans) {

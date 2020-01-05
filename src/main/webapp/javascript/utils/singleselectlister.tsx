@@ -52,6 +52,10 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
     isSelected( index: number ): boolean {
         return this.state.selectedRow === index;
     }
+    
+    getData(): D[] {
+        return this.lister.getDataAll();
+    }
 
     render(): JSX.Element {
         return (

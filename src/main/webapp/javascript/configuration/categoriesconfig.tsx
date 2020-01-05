@@ -4,6 +4,7 @@ import { useIntl, WrappedComponentProps,IntlShape } from 'react-intl'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Category, SubCategory } from '../utils/dtos'
 import { AddTool } from './addtool'
+import { YesNo } from '../utils/yesno'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
@@ -14,6 +15,7 @@ interface CategoryConfigProps {
 interface IState {
     category: Category;
     subcategory: SubCategory;
+    numassigns: number;
     addcat: boolean;
     addsub: boolean;
     delcat: boolean;
@@ -30,6 +32,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         super( props );
         this.state = { category: undefined,
                        subcategory: undefined,
+                       numassigns: 0,
                        addcat: false,
                        addsub: false,
                        delcat: false,
@@ -41,6 +44,8 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         this.saveSub = this.saveSub.bind( this );
         this.delCat = this.delCat.bind( this );
         this.delSub = this.delSub.bind( this );
+        this.fetchCatInfo = this.fetchCatInfo.bind( this );
+        this.fetchSubInfo = this.fetchSubInfo.bind( this );
         this.catlister = React.createRef();
         this.sublister = React.createRef();
     }
@@ -57,27 +62,33 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         this.setState({subcategory: subcategory})
     }
 
-    delSub():void {
+    delSub(b: boolean):void {
         var self = this;
-        if (this.state.subcategory != undefined) {
+        if (b) {
             fetch( '/category/delsub/' +this.state.subcategory.id ) 
                  .then( function( response ) {
-                    self.setState({delsub: false});
+                    self.setState({delsub: false, subcategory: undefined});
                     self.sublister.current.reload();
                 }
             );
         }
+        else {
+            self.setState({delsub: false}); 
+        }
     }
     
-    delCat(short: string, desc: string):void {
+    delCat(b: boolean):void {
         var self = this;
-        if (this.state.category != undefined) {
+        if (b) {
             fetch( '/category/delcat/' +this.state.category.id ) 
                  .then( function( response ) {
-                    self.setState({delcat: false});
-                    self.sublister.current.reload();
+                    self.setState({delcat: false, subcategory: undefined, category: undefined});
+                    self.catlister.current.reload();
                 }
             );
+        }
+        else {
+            self.setState({delcat: false}); 
         }
     }
 
@@ -127,9 +138,9 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     }
     
     renderAdd(): JSX.Element {
-        var create: string = this.props.intl.formatMessage({id: "create"});
-        var cancel: string = this.props.intl.formatMessage({id: "cancel"});
-        var dellabel: string = this.props.intl.formatMessage({id: "delete"});
+        var create: string = this.label("create");
+        var cancel: string = this.label("cancel");
+        var dellabel: string = this.label("delete");
     
         if (this.state.addcat) {
             return ( <AddTool save={this.saveCat} createlabel={create} cancellabel={cancel}/> )
@@ -137,8 +148,57 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         else if (this.state.addsub) {
             return ( <AddTool save={this.saveSub} createlabel={create} cancellabel={cancel} category={this.state.category.shortdescription}/> )
         }
-        else {
-            return null;
+        else if (this.state.delcat) {
+            var infotext: string[] = [];
+                infotext[0] = this.label("category.woulddelete");
+                infotext[1] = this.label("categories") + ": 1";
+                infotext[2] = this.label("subcategories") + ": " + this.sublister.current.getData().length;
+                infotext[3] = this.label("assingments") + ": " + this.state.numassigns;
+            return ( <YesNo answer={this.delCat} 
+                            yeslabel={dellabel}
+                            nolabel={cancel}
+                            request={infotext}/>);
+        }
+        else if (this.state.delsub) {
+                var infotext: string[] = [];
+                    infotext[0] = this.label("category.woulddelete");
+                    infotext[1] = this.label("subcategories") + ": 1";
+                    infotext[2] = this.label("assingments") + ": " + this.state.numassigns;
+            return ( <YesNo answer={this.delSub}
+                            yeslabel={dellabel}
+                            nolabel={cancel}
+                            request={infotext}/>);
+        }
+    }
+    
+    fetchCatInfo(): void {
+        if (this.state.category != undefined ) {
+            var self: _CategoriesConfig = this;
+            fetch( '/assign/countsubcategory', {
+                method: 'post',
+                body: JSON.stringify( this.sublister.current.getData().map((s:SubCategory)=>{return (s.id)}) ),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then( ( response: Response ) => response.text() )
+            .then( ( text ) => { self.setState( { numassigns: parseInt(text), delcat: true } ) } );
+        }
+    }
+    
+    fetchSubInfo(): void {
+        if (this.state.subcategory != undefined ) {
+            var self: _CategoriesConfig = this;
+            var list:number[] = [ this.state.subcategory.id ];
+            fetch( '/assign/countsubcategory', {
+                method: 'post',
+                body: JSON.stringify( list ),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then( ( response: Response ) => response.text() )
+            .then( ( text ) => { self.setState( { numassigns: parseInt(text), delsub: true } ) } );
         }
     }
 
@@ -162,21 +222,22 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
                        </td>
                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                  <SingleSelectLister<SubCategory>
-                                     url='category/sub/'
-                                     lines={15}
-                                     ext={(this.state.category == undefined)?undefined : "/" + this.state.category.id.toString()}
-                                     columns={columnsSub}
-                                     ref={this.sublister}/>
+                                    url='category/sub/'
+                                    lines={15}
+                                    handleChange={this.setSubCategory}
+                                    ext={(this.state.category == undefined)?undefined : "/" + this.state.category.id.toString()}
+                                    columns={columnsSub}
+                                    ref={this.sublister}/>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                     <button onClick={()=>this.setState({addcat: true})}> + </button>
-                                    <button> - </button>
+                                    <button onClick={()=>this.fetchCatInfo()}> - </button>
                             </td>
                             <td>
                                     <button onClick={()=>this.setState({addsub: true})} disabled={this.state.category==undefined}> + </button>
-                                    <button> - </button>
+                                    <button onClick={()=>this.fetchSubInfo()}> - </button>
                             </td>
                         </tr>
                 </tbody>

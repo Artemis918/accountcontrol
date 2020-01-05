@@ -37,10 +37,10 @@ export class AddTool extends React.Component<AddToolProps, {}> {
         if (this.props.category == undefined ) {
             return ( <p style={{ textAlign: 'center' }} ><FormattedMessage id="category.createcat" /> </p>)
         }
-        else return ( <p style={{ textAlign: 'center' }}>
+        else return ( <div style={{ textAlign: 'center' }}>
                     <FormattedMessage id="category.createsub"/>
                     <p> {this.props.category} </p>
-                </p>
+                </div>
         );
     }
 

@@ -25,8 +25,8 @@ export class YesNo extends React.Component<YesNoProps, {}> {
         this.props.answer( b );
     }
     
-    createLine(s: string): JSX.Element {
-            return ( <p style={{ textAlign: 'center', fontSize: '15px' }} > {s} </p>)
+    createLine(s: string, i:number): JSX.Element {
+            return ( <p key={"info"+i} style={{ textAlign: 'center', fontSize: '15px' }} > {s} </p>)
     }
 
     render() {

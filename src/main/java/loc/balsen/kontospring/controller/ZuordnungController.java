@@ -23,6 +23,7 @@ import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dataservice.ZuordnungService;
+import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.dto.ZuordnungDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
@@ -116,9 +117,9 @@ public class ZuordnungController {
 	
 	@PostMapping(path="/countsubcategory",produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
-	String countAssignForSubCategory(@RequestBody List<SubCategory> subs) {
+	String countAssignForSubCategory(@RequestBody List<Integer> subs) {
 		int result = 0;
-		for (SubCategory sub: subs) {
+		for (Integer sub: subs) {
 			result += assignService.getAssignCount(sub);
 		}
 		return Integer.toString(result);

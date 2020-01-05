@@ -2,6 +2,9 @@
 	"create": "Anlegen",
 	"cancel": "Abbrechen",
 	"delete": "Löschen",
+	"categories": "Kategorien",
+	"subcategories": "Unterkategorien",
+	"assingments": "Zuordnungen",
 
 	"footer.state": "Status",
 	"footer.error": "Fehler",
@@ -33,6 +36,7 @@
 	"category.createcat": "Neue Kategorie",
 	"category.createsub": "Neue Unterategorie für",
 	"category.shortdescription": "Name",
-	"category.description": "Beschreibung"
+	"category.description": "Beschreibung",
+	"category.woulddelete": "Diese Aktion löscht folgendes:"
 	
 }

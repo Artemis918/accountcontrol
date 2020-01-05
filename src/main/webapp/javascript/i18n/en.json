@@ -2,6 +2,9 @@
 	"create": "Create",
 	"cancel": "Cancel",
 	"delete": "Delete",
+	"categories": "Categories",
+	"subcategories": "Subcategories",
+	"assingments": "Assignments",
 
 	"footer.state": "state",
 	"footer.error": "error",
@@ -33,5 +36,6 @@
 	"category.createcat": "New category",
 	"category.createsub": "New subcategory in",
 	"category.shortdescription": "name",
-	"category.description": "Description"	
+	"category.description": "Description",
+	"category.woulddelete": "This will delete :"
 }
