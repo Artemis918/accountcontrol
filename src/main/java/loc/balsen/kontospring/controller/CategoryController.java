@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,13 +73,13 @@ public class CategoryController {
 		return list;
 	}
 	
-	@GetMapping(path="/savesub",produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(path="/savesub",produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	String saveSubCategory(@RequestBody SubCategoryDTO request) {
 		return Integer.toString(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
 	}
 	
-	@GetMapping(path="/savecat",produces = MediaType.TEXT_PLAIN_VALUE)
+	@PostMapping(path="/savecat",produces = MediaType.TEXT_PLAIN_VALUE)
 	@ResponseBody
 	String saveCategory(@RequestBody CategoryDTO request) {
 		return Integer.toString(categoryService.saveCategory(request.toCategory()));

@@ -1,4 +1,8 @@
 {
+	"create": "Create",
+	"cancel": "Cancel",
+	"delete": "Delete",
+
 	"footer.state": "state",
 	"footer.error": "error",
 	
@@ -24,6 +28,10 @@
 	"page.configuration": "Configuration",
 	"task.catconfig" : "Categories",
 	"config.category": "Categories",
-	"config.subcategory": "SubCategories"
-	
+	"config.subcategory": "SubCategories",
+
+	"category.createcat": "New category",
+	"category.createsub": "New subcategory in",
+	"category.shortdescription": "name",
+	"category.description": "Description"	
 }
