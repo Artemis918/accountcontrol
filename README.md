@@ -42,16 +42,30 @@ Comments and contributions are welcome
 ## A small How to use 
 
 My idea of filling the empty database:
+0. select language. there is a small doropdown in the right lower corner. Default is german, cause i'm using it this way
+1. Add your categories and subcategories on 'Configruation page'. I am using asomethign like this
+    * daily
+	** food
+	** drugs
+	* home
+	** monthly
+	** misc
+	** repair
+	* income
+	** salary
+	* misc
+	** doctor
+	** ...
 1. Download the account data of your acount as xml (hopefully, I implemented CAMT format)
-2. Upload this file int your database with Tab "Belege"
-3. Now begin your journey through the first month in Tab "Buchen"
+2. Upload this file int your database with page "Account Records"
+3. Now begin your journey through the first month in Tab "Assign"
     * Select an entry which is revolving
 	* Press "Planen"
-	* Choose type an Subtype of the entry, edit pattern to match future occurences of this entry and press save
-	* back on the Tab "Buchen", you should now press "automatisch". Your entry should disappear from the list.
-	* you can find it now assigned to your previous selected type in Tab "Konten"
+	* Choose categroy an subcategory of the entry, edit pattern to match future occurences of this entry and press save
+	* back on the page "Assign", you should now press "automatisch". Your entry should disappear from the list.
+	* you can find it now assigned to your previous selected type in Tab "Check"
 	* ...
-4. if you upload the second month go again to "Buchen" and press again "Automatisch". All the previous created revovling plans will dispear into the category section
+4. if you upload the second month go again to "Assign" and press again "Automatisch". All the previous created revovling plans will dispear into the category section
 5. In the category section now you can control all the revolving data and commit them with "bestätigen". Then the data will get into account for the statistical overview wich contains also asmall forecast
 
 There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)
