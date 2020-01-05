@@ -74,8 +74,10 @@ export class BelegEditor extends React.Component<BelegEditorProps, IState> {
     copy(): void {
         this.beleg.id = undefined;
         this.beleg.details = "copy of " + this.beleg.details;
-        this.setState( { beleg: this.beleg } );
+        var curbeleg = this.beleg;
         this.props.onChange();
+        this.beleg=curbeleg;
+        this.setState( { beleg: this.beleg } );
     }
 
     render(): JSX.Element {
