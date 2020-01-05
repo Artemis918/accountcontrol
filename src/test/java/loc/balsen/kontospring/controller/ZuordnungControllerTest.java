@@ -88,18 +88,18 @@ public class ZuordnungControllerTest extends TestContext {
 		assignment.setBuchungsbeleg(bubel);
 		assignment.setSubcategory(subCategory1);
 		
-		List<SubCategory> list =  new ArrayList<>();
-		list.add(subCategory1);
+		List<Integer> list =  new ArrayList<>();
+		list.add(new Integer(subCategory1.getId()));
 		
 		zuordnungRepository.save(assignment);
-    	mvc.perform(post("/assign/countsubcategory/")
+    	mvc.perform(post("/assign/countsubcategory")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(list))
 		).andExpect(status().isOk())
 		 .andExpect(content().string("1"));
 
-    	list.add(subCategory2);
-    	mvc.perform(post("/assign/countsubcategory/")
+		list.add(new Integer(subCategory2.getId()));
+    	mvc.perform(post("/assign/countsubcategory")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(list))
 		).andExpect(status().isOk())
