@@ -50,10 +50,10 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                 <div>
                     <DropdownService value={this.state.category}
                         onChange={this.setCategory}
-                        url='category/cat' />
+                        url='category/catenum' />
                     <DropdownService value={this.state.subcategory}
                         onChange={this.setSubCategory}
-                        url='category/sub'
+                        url='category/subenum'
                         param={'' + this.state.category} />
                 </div> )
         }

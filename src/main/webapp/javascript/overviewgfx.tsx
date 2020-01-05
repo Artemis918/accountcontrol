@@ -146,7 +146,7 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
             <MonthSelect label='Startmonat' onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
             {this.renderEnde()}
             <LineChart
-            width={750}
+            width={1000}
             height={500}
             margin={{
               top: 5, right: 30, left: 20, bottom: 5,
