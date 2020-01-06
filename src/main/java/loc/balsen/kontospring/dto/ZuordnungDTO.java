@@ -18,7 +18,7 @@ public class ZuordnungDTO {
 	int istwert;
 	boolean committed;
 	int plan;
-	int beleg;
+	int accountrecord;
 	int subcategory;
 	int category;
 	int position;
@@ -29,7 +29,7 @@ public class ZuordnungDTO {
 		id = z.getId();
 		detail = z.getShortdescription();
 		istwert = z.getWert();
-		beleg = z.getBuchungsbeleg().getId();
+		accountrecord = z.getBuchungsbeleg().getId();
 		committed = z.isCommitted();
 		position = 2000;
 		Plan p = z.getPlan();
@@ -52,7 +52,7 @@ public class ZuordnungDTO {
 		sollwert = p.getWert();
 		position = p.getPosition();
 		istwert=0;
-		beleg = 0;
+		accountrecord = 0;
 		committed = false;
 		plan=p.getId();
 		SubCategory s = p.getSubCategory();
@@ -72,8 +72,8 @@ public class ZuordnungDTO {
 		if (plan != 0)
 			res.setPlan(planRepository.getOne(plan));
 
-		if (beleg != 0)
-			res.setBuchungsbeleg(belegRepository.getOne(beleg));
+		if (accountrecord != 0)
+			res.setBuchungsbeleg(belegRepository.getOne(accountrecord));
 
 		if (subcategory != 0) 
 			res.setSubcategory(subCategoryRepository.getOne(subcategory));

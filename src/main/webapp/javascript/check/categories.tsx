@@ -61,7 +61,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 cellrender: ( cell: CellInfo<Zuordnung> ) => {
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
-                            {( cell.data.beleg == 0 ) ? '--' : ( cell.data.istwert / 100 ).toFixed( 2 )}
+                            {( cell.data.accountrecord == 0 ) ? '--' : ( cell.data.istwert / 100 ).toFixed( 2 )}
                         </div>
                     )
                 },
@@ -69,7 +69,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             {
                 header: 'ok',
                 cellrender: ( cell: CellInfo<Zuordnung> ) => {
-                    if ( cell.data.beleg != 0 && cell.rownum != -1 )
+                    if ( cell.data.accountrecord != 0 && cell.rownum != -1 )
                         return (
                             <input type='checkbox'
                                 checked={cell.data.committed}
@@ -87,7 +87,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     getColor( z: Zuordnung ): string {
-        if ( z.beleg == 0 || z.plan == 0 )
+        if ( z.accountrecord == 0 || z.plan == 0 )
             return 'lightgrey';
         else if ( z.sollwert > z.istwert )
             return 'red';
@@ -151,7 +151,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Zuordnung ) => { return za.beleg; } );
+        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Zuordnung ) => { return za.accountrecord; } );
         var self: Categories = this;
         fetch( '/assign/remove', {
             method: 'post',

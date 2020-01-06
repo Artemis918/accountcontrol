@@ -1,22 +1,22 @@
 import * as React from 'react'
 import { CategorySelector } from '../utils/categoryselector'
-import { BuchungsBeleg, Plan, Zuordnung } from '../utils/dtos'
+import { AccountRecord, Plan, Zuordnung } from '../utils/dtos'
 import { PlanSelect } from './planselect'
-import * as mcss from './css/manuellbuchen.css'
+import * as mcss from './css/guidedassign.css'
 
 type onCommitCallback = () => void;
 
-export interface ManuellBuchenProps {
-    beleg: BuchungsBeleg;
+export interface GuidedAssignProps {
+    accountRecord: AccountRecord;
     onCommit: onCommitCallback;
 }
 
 interface IState {
-    data: TeilBuchung[];
+    data: AssignPart[];
     planselect: boolean;
 }
 
-class TeilBuchung {
+class AssignPart {
     betrag: number;
     details: string;
     subcategory: number;
@@ -37,26 +37,26 @@ class TeilBuchung {
         this.betrag = Math.abs(wert);
     }
 
-    getZuordnung( beleg: BuchungsBeleg ): Zuordnung {
+    getZuordnung( accountRecord: AccountRecord ): Zuordnung {
         return {
             id: undefined,
             detail: this.details,
             description: this.details,
-            istwert: beleg.wert >=0 ? this.betrag: this.betrag*-1,
+            istwert: accountRecord.wert >=0 ? this.betrag: this.betrag*-1,
             committed: false,
             plan: ( this.plan == undefined ) ? undefined : this.plan.id,
-            beleg: beleg.id,
+            accountrecord: accountRecord.id,
             subcategory: this.subcategory
         }
     }
 }
 
 
-export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
+export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
 
-    constructor( props: ManuellBuchenProps ) {
+    constructor( props: GuidedAssignProps ) {
         super( props )
-        var initial: TeilBuchung = new TeilBuchung( props.beleg.details, props.beleg.wert, 1, 1 );
+        var initial: AssignPart = new AssignPart( props.accountRecord.details, props.accountRecord.wert, 1, 1 );
         this.state = { data: [initial], planselect: false };
         this.setSubCategory = this.setSubCategory.bind( this );
         this.renderDetails = this.renderDetails.bind( this );
@@ -69,10 +69,10 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     save(): void {
-        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: TeilBuchung ) => { return t.getZuordnung( this.props.beleg) } );
+        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: AssignPart ) => { return t.getZuordnung( this.props.accountRecord) } );
         zuordnungen.forEach( ( z: Zuordnung ) => { z.committed = true } );
 
-        var self: ManuellBuchen = this;
+        var self: GuidedAssign = this;
         fetch( '/assign/parts', {
             method: 'post',
             body: JSON.stringify( zuordnungen ),
@@ -87,8 +87,8 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
 
     addPlan( plan: Plan ): void {
         if ( plan != undefined ) {
-            var planbuchung: TeilBuchung = new TeilBuchung( plan.shortdescription, plan.wert, plan.subcategory, plan.category, plan )
-            var data: TeilBuchung[] = this.state.data;
+            var planbuchung: AssignPart = new AssignPart( plan.shortdescription, plan.wert, plan.subcategory, plan.category, plan )
+            var data: AssignPart[] = this.state.data;
             data.splice( 0, 0, planbuchung );
             this.setState( { data: this.recalcData( data ), planselect: false } );
         }
@@ -97,21 +97,21 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     setSubCategory( index: number, subcategory: number, group: number ): void {
-        const data: TeilBuchung[] = this.state.data;
+        const data: AssignPart[] = this.state.data;
         data[index].subcategory = subcategory;
         data[index].category = group;
         this.setState( { data: data } );
     }
 
 
-    recalcData( data: TeilBuchung[] ): TeilBuchung[] {
-        var result: TeilBuchung[] = [];
+    recalcData( data: AssignPart[] ): AssignPart[] {
+        var result: AssignPart[] = [];
         var sum: number = 0
-        var belegwert = Math.abs(this.props.beleg.wert);
+        var recordValue = Math.abs(this.props.accountRecord.wert);
 
         for ( var row of data ) {
-            if ( sum + row.betrag > belegwert ) {
-                var betrag: number = belegwert - sum;
+            if ( sum + row.betrag > recordValue ) {
+                var betrag: number = recordValue - sum;
                 row.betrag = betrag > 0 ? betrag : 0;
                 row.wertstring = ( row.betrag / 100 ).toFixed( 2 );
             }
@@ -119,13 +119,13 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
             sum += row.betrag;
         }
 
-        if ( sum < belegwert ) {
+        if ( sum < recordValue ) {
 
             if ( result[result.length - 1].details == 'Rest' ) {
-                result[result.length - 1].setBetrag( result[result.length - 1].betrag + belegwert - sum );
+                result[result.length - 1].setBetrag( result[result.length - 1].betrag + recordValue - sum );
             }
             else {
-                var newbuch: TeilBuchung = new TeilBuchung( 'Rest', belegwert - sum, result[result.length - 1].subcategory, result[result.length - 1].category )
+                var newbuch: AssignPart = new AssignPart( 'Rest', recordValue - sum, result[result.length - 1].subcategory, result[result.length - 1].category )
                 result.push( newbuch );
             }
         }
@@ -133,14 +133,14 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
     }
 
     removeLastRow(): void {
-        var data: TeilBuchung[] = this.state.data;
+        var data: AssignPart[] = this.state.data;
         data[data.length - 2].setBetrag( data[data.length - 2].betrag + data[data.length - 1].betrag )
         data.splice( data.length - 1 , 1 );
         this.setState( { data: data } );
     }
 
     removeRow( index: number ): void {
-        var data: TeilBuchung[] = this.state.data;
+        var data: AssignPart[] = this.state.data;
         data.splice( index, 1 );
         this.setState( { data: this.recalcData( data ) } );
 
@@ -152,7 +152,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                 value={this.state.data[index].details}
                 className={mcss.maninput}
                 onChange={e => {
-                    const data: TeilBuchung[] = this.state.data;
+                    const data: AssignPart[] = this.state.data;
                     data[index].details = e.target.value;
                     this.setState( { data } );
                 }}
@@ -175,14 +175,14 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                 value={this.state.data[index].wertstring}
                 className={mcss.maninput}
                 onChange={( e: React.ChangeEvent<HTMLInputElement> ) => {
-                    const data: TeilBuchung[] = this.state.data;
+                    const data: AssignPart[] = this.state.data;
                     data[index].wertstring = e.target.value;
                     this.setState( { data } );
 
                 }}
                 onBlur={( e: React.FocusEvent<HTMLInputElement> ) => {
                     var newval: number = parseFloat( e.target.value.replace( ',', '.' ) ) * 100;
-                    const data: TeilBuchung[] = this.state.data;
+                    const data: AssignPart[] = this.state.data;
                     data[index].setBetrag( newval == NaN ? data[index].betrag : newval );
                     this.setState( { data: this.recalcData( this.state.data ) } );
                 }}
@@ -230,7 +230,7 @@ export class ManuellBuchen extends React.Component<ManuellBuchenProps, IState> {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.map( ( d: TeilBuchung, i: number ) => this.renderRow( i ) )}
+                        {this.state.data.map( ( d: AssignPart, i: number ) => this.renderRow( i ) )}
                     </tbody>
                 </table>
                 <span style={{ width: '30%' }}><button onClick={( e ) => this.setState( { planselect: true } )} > Select Plan </button> </span>

@@ -1,27 +1,27 @@
 import * as React from 'react'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
-import { BuchungsBeleg } from '../utils/dtos'
+import { AccountRecord } from '../utils/dtos'
 
 type OnChangeCallback = () => void;
 type SendMessage = ( message: string, error: boolean ) => void;
 
-interface BelegEditorProps {
+interface RecordEditorProps {
     onChange: OnChangeCallback;
 }
 
 interface IState {
-    beleg: BuchungsBeleg;
+    record: AccountRecord;
 }
 
 
-export class BelegEditor extends React.Component<BelegEditorProps, IState> {
+export class RecordEditor extends React.Component<RecordEditorProps, IState> {
 
-    beleg: BuchungsBeleg;
+    record: AccountRecord;
 
-    constructor( props: BelegEditorProps ) {
+    constructor( props: RecordEditorProps ) {
         super( props );
-        this.beleg = this.createEmptyBeleg();
-        this.state = { beleg: this.beleg };
+        this.record = this.createEmptyRecord();
+        this.state = { record: this.record };
         this.cleanup = this.cleanup.bind( this );
         this.save = this.save.bind( this );
         this.delete = this.delete.bind( this );
@@ -29,22 +29,22 @@ export class BelegEditor extends React.Component<BelegEditorProps, IState> {
         this.setAnswer = this.setAnswer.bind( this );
     }
 
-    createEmptyBeleg(): BuchungsBeleg {
-        return new BuchungsBeleg();
+    createEmptyRecord(): AccountRecord {
+        return new AccountRecord();
     }
     
-    setBeleg( beleg: BuchungsBeleg ): void {
-        if ( beleg == undefined )
-            this.beleg = this.createEmptyBeleg();
+    setRecord( record: AccountRecord ): void {
+        if ( record == undefined )
+            this.record = this.createEmptyRecord();
         else
-            this.beleg = beleg;
-        this.setState( { beleg: this.beleg } );
+            this.record = record;
+        this.setState( { record: this.record } );
     }
 
     save(): void {
         var self = this;
-        var jsonbody = JSON.stringify( self.state.beleg );
-        fetch( '/belege/save', {
+        var jsonbody = JSON.stringify( self.state.record );
+        fetch( '/record/save', {
             method: 'post',
             body: jsonbody,
             headers: {
@@ -60,24 +60,24 @@ export class BelegEditor extends React.Component<BelegEditorProps, IState> {
     }
 
     cleanup(): void {
-        this.beleg = this.createEmptyBeleg();
+        this.record = this.createEmptyRecord();
         this.props.onChange();
-        this.setState( { beleg: this.beleg } );
+        this.setState( { record: this.record } );
     }
 
     delete(): void {
         var self = this;
-        fetch( '/belege/delete/' + this.state.beleg.id, { method: 'get' } )
+        fetch( '/recorde/delete/' + this.state.record.id, { method: 'get' } )
             .then( function( response ) { self.setAnswer( response.json() ); } );
     }
 
     copy(): void {
-        this.beleg.id = undefined;
-        this.beleg.details = "copy of " + this.beleg.details;
-        var curbeleg = this.beleg;
+        this.record.id = undefined;
+        this.record.details = "copy of " + this.record.details;
+        var currecord = this.record;
         this.props.onChange();
-        this.beleg=curbeleg;
-        this.setState( { beleg: this.beleg } );
+        this.record=currecord;
+        this.setState( { record: this.record } );
     }
 
     render(): JSX.Element {
@@ -88,37 +88,37 @@ export class BelegEditor extends React.Component<BelegEditorProps, IState> {
                         <tr>
                             <td>Absender</td>
                             <td>
-                                <input value={this.state.beleg.absender}
-                                    onChange={( e ) => { this.beleg.absender = e.target.value; this.setState( { beleg: this.beleg } ) }} />
+                                <input value={this.state.record.absender}
+                                    onChange={( e ) => { this.record.absender = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>Empfänger</td>
                             <td>
-                                <input value={this.state.beleg.empfaenger}
-                                    onChange={( e ) => { this.beleg.empfaenger = e.target.value; this.setState( { beleg: this.beleg } ) }} />
+                                <input value={this.state.record.empfaenger}
+                                    onChange={( e ) => { this.record.empfaenger = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>Beschreibung</td>
                             <td>
-                                <input value={this.state.beleg.details}
-                                    onChange={( e ) => { this.beleg.details = e.target.value; this.setState( { beleg: this.beleg } ) }} />
+                                <input value={this.state.record.details}
+                                    onChange={( e ) => { this.record.details = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>Wert</td>
                             <td>
-                                <input step="0.01" value={this.state.beleg.wert / 100}
+                                <input step="0.01" value={this.state.record.wert / 100}
                                     type='number'
-                                    onChange={( e ) => { this.beleg.wert = e.target.valueAsNumber * 100; this.setState( { beleg: this.beleg } ) }} />
+                                    onChange={( e ) => { this.record.wert = e.target.valueAsNumber * 100; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>WertStellung</td>
                             <td><KSDayPickerInput
-                                onChange={( d ) => { this.beleg.wertstellung = d; this.setState( { beleg: this.beleg } ) }}
-                                startdate={this.state.beleg.wertstellung} />
+                                onChange={( d ) => { this.record.wertstellung = d; this.setState( { record: this.record } ) }}
+                                startdate={this.state.record.wertstellung} />
                             </td>
                         </tr>
                     </tbody>

@@ -2,9 +2,9 @@ import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
 import { CategoryAssign } from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
-import { ManuellBuchen } from './manuellbuchen';
+import { GuidedAssign } from './guidedassign';
 import { PlanSelect } from './planselect';
-import { BuchungsBeleg, Plan } from '../utils/dtos'
+import { AccountRecord, Plan } from '../utils/dtos'
 
 import * as css from '../css/index.css'
 
@@ -12,39 +12,39 @@ type SendMessage = ( m: string, error: boolean ) => void
 
 
 
-interface BuchenProps {
+interface AssignProps {
     sendmessage: SendMessage;
 }
 
 interface IState {
     plan: number;
     planassign: number;
-    beleg: BuchungsBeleg;
+    accountRecord: AccountRecord;
     categoryassign: boolean;
     deftext: string;
     defsubcategory: number;
     defcategory: number
 }
 
-export class Buchen extends React.Component<BuchenProps, IState> {
+export class Assign extends React.Component<AssignProps, IState> {
 
-    columns: ColumnInfo<BuchungsBeleg>[] = [
+    columns: ColumnInfo<AccountRecord>[] = [
         {
             header: 'Datum',
-            getdata: ( data: BuchungsBeleg ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
+            getdata: ( data: AccountRecord ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
             header: 'Empf./Absender',
-            cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
+            cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
                 <div>
                     {( cellinfo.data.wert > 0 ) ? cellinfo.data.absender : cellinfo.data.empfaenger}
                 </div>
             )
         }, {
             header: 'Detail',
-            getdata: ( data: BuchungsBeleg ) => { return data.details },
+            getdata: ( data: AccountRecord ) => { return data.details },
         }, {
             header: 'Betrag',
-            cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
+            cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
                 <div style={{
                     color: cellinfo.data.wert >= 0 ? 'green' : 'red',
@@ -55,12 +55,12 @@ export class Buchen extends React.Component<BuchenProps, IState> {
 
             )
         }];
-    lister: MultiSelectLister<BuchungsBeleg>;
+    lister: MultiSelectLister<AccountRecord>;
 
-    constructor( props: BuchenProps ) {
+    constructor( props: AssignProps ) {
         super( props )
         this.lister = undefined;
-        this.state = { plan: undefined, planassign: undefined, beleg: undefined, categoryassign: false, deftext: "", defsubcategory: 1, defcategory: 1 }
+        this.state = { plan: undefined, planassign: undefined, accountRecord: undefined, categoryassign: false, deftext: "", defsubcategory: 1, defcategory: 1 }
         this.createPlan = this.createPlan.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
@@ -82,12 +82,12 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     }
 
     assignManuell(): void {
-        var data: BuchungsBeleg[] = this.lister.getSelectedData();
+        var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
         else {
-            this.setState( { beleg: data[0] } )
+            this.setState( { accountRecord: data[0] } )
         }
     }
 
@@ -114,7 +114,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     }
 
     createPlan(): void {
-        var data: BuchungsBeleg[] = this.lister.getSelectedData();
+        var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
@@ -124,7 +124,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     }
 
     onChange(): void {
-        this.setState( { plan: undefined, beleg: undefined } );
+        this.setState( { plan: undefined, accountRecord: undefined } );
         this.lister.reload();
     }
 
@@ -143,7 +143,7 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     }
 
     assignPlan(): void {
-        var data: BuchungsBeleg[] = this.lister.getSelectedData();
+        var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
         }
@@ -164,11 +164,11 @@ export class Buchen extends React.Component<BuchenProps, IState> {
     render(): JSX.Element {
 
         if ( this.state.plan !== undefined ) {
-            return <TemplateEditor beleg={this.state.plan} onChange={() => this.onChange()} />
+            return <TemplateEditor accountRecord={this.state.plan} onChange={() => this.onChange()} />
         }
 
-        if ( this.state.beleg !== undefined ) {
-            return <ManuellBuchen beleg={this.state.beleg} onCommit={() => this.onChange()} />
+        if ( this.state.accountRecord !== undefined ) {
+            return <GuidedAssign accountRecord={this.state.accountRecord} onCommit={() => this.onChange()} />
         }
 
         return (
@@ -181,8 +181,8 @@ export class Buchen extends React.Component<BuchenProps, IState> {
                     <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
                 </div>
                 <div>
-                    <MultiSelectLister<BuchungsBeleg> columns={this.columns}
-                        url='belege/unassigned'
+                    <MultiSelectLister<AccountRecord> columns={this.columns}
+                        url='record/unassigned'
                         lines={28}
                         ext=''
                         ref={( ref ) => { this.lister = ref }} />

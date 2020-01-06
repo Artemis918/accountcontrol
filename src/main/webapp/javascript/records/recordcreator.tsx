@@ -2,12 +2,12 @@ import * as React from 'react';
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
-import { BelegEditor } from './belegeditor'
-import { BuchungsBeleg } from '../utils/dtos'
+import { RecordEditor } from './recordeditor'
+import { AccountRecord } from '../utils/dtos'
 
 type SendMessageCallback = ( msg: string, error: boolean ) => void;
 
-interface BelegErfassungProps {
+interface RecordCreatorProps {
     sendmessage: SendMessageCallback;
 }
 
@@ -16,25 +16,25 @@ interface IState {
     year: number;
 }
 
-export class BelegErfassung extends React.Component<BelegErfassungProps, IState> {
+export class RecordCreator extends React.Component<RecordCreatorProps, IState> {
 
-    lister: SingleSelectLister<BuchungsBeleg>;
-    editor: BelegEditor;
-    columns: ColumnInfo<BuchungsBeleg>[] = [{
+    lister: SingleSelectLister<AccountRecord>;
+    editor: RecordEditor;
+    columns: ColumnInfo<AccountRecord>[] = [{
         header: 'Datum',
-        getdata: ( data: BuchungsBeleg ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
+        getdata: ( data: AccountRecord ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
     }, {
         header: 'Absender',
-        getdata: ( data: BuchungsBeleg ): string => { return data.absender },
+        getdata: ( data: AccountRecord ): string => { return data.absender },
     }, {
         header: 'Empfänger',
-        getdata: ( data: BuchungsBeleg ): string => { return data.empfaenger },
+        getdata: ( data: AccountRecord ): string => { return data.empfaenger },
     }, {
         header: 'Details',
-        getdata: ( data: BuchungsBeleg ): string => { return data.details },
+        getdata: ( data: AccountRecord ): string => { return data.details },
     }, {
         header: 'Betrag',
-        cellrender: ( cellinfo: CellInfo<BuchungsBeleg> ) => (
+        cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
             <div style={{
                 color: cellinfo.data.wert >= 0 ? 'green' : 'red',
@@ -46,7 +46,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
         )
     }];
 
-    constructor( props: BelegErfassungProps ) {
+    constructor( props: RecordCreatorProps ) {
         super( props );
         var currentTime = new Date();
         this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear() };
@@ -60,16 +60,16 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
 
     setFilter( m: number, y: number ): void {
         this.setState( { year: y, month: m } )
-        this.editor.setBeleg( undefined );
+        this.editor.setRecord( undefined );
     }
 
     refreshlist(): void {
-        this.editor.setBeleg( undefined );
+        this.editor.setRecord( undefined );
         this.lister.reload();
     }
 
-    refresheditor( beleg: BuchungsBeleg ): void {
-        this.editor.setBeleg( beleg );
+    refresheditor( record: AccountRecord ): void {
+        this.editor.setRecord( record );
     }
 
     render(): JSX.Element {
@@ -79,7 +79,7 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Belegdaten </div>
-                            <BelegEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
+                            <RecordEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
                         </td>
                         <td >
                             <div style={{ borderBottom: '1px solid black', padding: '3px' }} >
@@ -88,10 +88,10 @@ export class BelegErfassung extends React.Component<BelegErfassungProps, IState>
                                     month={this.state.month}
                                     onChange={this.setFilter} />
                             </div>
-                            <SingleSelectLister<BuchungsBeleg> ref={( ref ) => { this.lister = ref; }}
+                            <SingleSelectLister<AccountRecord> ref={( ref ) => { this.lister = ref; }}
                                 ext={this.state.year + '/' + this.state.month}
                                 handleChange={this.refresheditor}
-                                url='belege/manlist/'
+                                url='record/manlist/'
                                 lines={28}
                                 columns={this.columns} />
                         </td>

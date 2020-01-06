@@ -1,9 +1,9 @@
 
 // =====================================================
-export class BuchungsBeleg {
+export class AccountRecord {
     id: number;
     eingang: Date;
-    beleg: Date;
+    creation: Date;
     wertstellung: Date;
     art: number;
     absender: string;
@@ -17,7 +17,7 @@ export class BuchungsBeleg {
     constructor() {
         this.id = undefined;
         this.eingang = new Date();
-        this.beleg = new Date();
+        this.creation = new Date();
         this.wertstellung = new Date();
         this.art = 8;
         this.absender = '';
@@ -154,7 +154,7 @@ export class  Zuordnung {
     istwert: number;
     committed: boolean;
     plan?: number;
-    beleg: number;
+    accountrecord: number;
     subcategory: number;
     category?: number;
 }

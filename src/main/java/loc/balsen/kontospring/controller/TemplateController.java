@@ -58,7 +58,7 @@ public class TemplateController {
 		return new StandardResult(false, "gelöscht");
 	}
 
-	@GetMapping("/beleg/{id}")
+	@GetMapping("/accountrecord/{id}")
 	@ResponseBody
 	TemplateDTO createTemplateFromBeleg(@PathVariable Integer id) {
 		return new TemplateDTO(templateService.createFromBeleg(id));

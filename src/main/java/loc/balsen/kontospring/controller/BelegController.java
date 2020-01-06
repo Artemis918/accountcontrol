@@ -19,7 +19,7 @@ import loc.balsen.kontospring.dto.BelegDTO;
 import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 
 @Controller
-@RequestMapping("/belege")
+@RequestMapping("/record")
 public class BelegController {
 	
 	@Autowired

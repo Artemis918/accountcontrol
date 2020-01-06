@@ -47,7 +47,7 @@ public class BelegControllerTest extends TestContext {
 		mvc.perform(get("/belege/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize)));
 
-		BuchungsBeleg beleg = createBeleg("beleg");
+		BuchungsBeleg beleg = createBeleg("accountrecord");
 		
 		mvc.perform(get("/belege/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 1)));

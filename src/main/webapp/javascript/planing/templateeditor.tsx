@@ -10,7 +10,7 @@ type OnChangeCallback = () => void;
 
 interface TemplateEditorProps {
     onChange: OnChangeCallback;
-    beleg?: number;
+    accountRecord?: number;
 }
 
 interface IState {
@@ -37,14 +37,13 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     }
 
     componentDidMount() {
-        if ( this.props.beleg != undefined ) {
+        if ( this.props.accountRecord != undefined ) {
             var self = this;
-            fetch( 'templates/beleg/' + this.props.beleg )
+            fetch( 'templates/accountrecord/' + this.props.accountRecord )
                 .then( response => response.json() )
                 .then( t => { self.template = t; self.setState( { template: self.template } ) } );
         }
     }
-
 
     resetEditor(): void {
         this.template = new Template();
@@ -114,7 +113,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     }
 
     renderButton(): JSX.Element {
-        if ( this.props.beleg == undefined ) {
+        if ( this.props.accountRecord == undefined ) {
             return (
                 <div>
                     <button onClick={this.save}>Save</button>
@@ -171,7 +170,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                 </span>
                             </td>
                         </tr>
-                        <tr style={{ background: 'darkgray' }}><td>Erste Buchung</td>
+                        <tr style={{ background: 'darkgray' }}><td>Starttag</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.start = d; this.setTemplateState() }}
                                 startdate={this.state.template.start} />

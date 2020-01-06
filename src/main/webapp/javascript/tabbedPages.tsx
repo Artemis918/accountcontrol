@@ -4,12 +4,12 @@ import {useIntl, WrappedComponentProps } from 'react-intl';
 import { Header, Page as HeaderPage } from './header'
 import { Footer } from './footer'
 import { TaskSelector, Task } from './utils/taskselector'
-import { BelegUploader } from './records/beleguploader'
-import { BelegErfassung } from './records/belegerfassung'
+import { RecordUploader } from './records/recorduploader'
+import { RecordCreator } from './records/recordcreator'
 import { Templates } from './planing/templates'
 import { Planen } from './planing/planen'
 import { PatternPlanen } from './planing/patternplanen'
-import { Buchen } from './assign/buchen'
+import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
 import { OverviewGFX } from './overviewgfx'
 import CategoriesConfig from './configuration/categoriesconfig'
@@ -82,14 +82,14 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
         {
             title: this.label("page.accountRecords"), tasks:
                 [
-                    { name: this.label("task.upload"), comp: ( <BelegUploader sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.create"), comp: ( <BelegErfassung sendmessage={this.sendMessage} /> ) }
+                    { name: this.label("task.upload"), comp: ( <RecordUploader sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.create"), comp: ( <RecordCreator sendmessage={this.sendMessage} /> ) }
                 ]
         },
         {
             title: this.label("page.assign"), tasks:
                 [
-                    { name: this.label("task.recordlist"), comp: ( <Buchen sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.recordlist"), comp: ( <Assign sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {

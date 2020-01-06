@@ -100,7 +100,7 @@ public class TemplateControllerTest extends TestContext {
 		beleg.setWertstellung(LocalDate.of(2000, 4, 2));
 		buchungsbelegRepository.save(beleg);
 		
-		mvc.perform(get("/templates/beleg/" + beleg.getId()))
+		mvc.perform(get("/templates/accountrecord/" + beleg.getId()))
 		   .andExpect(jsonPath("$.pattern.sender").value("hallo"))
 		   .andExpect(jsonPath("$.pattern.details").value("whatever you will"))
 		   .andExpect(jsonPath("$.pattern.senderID").value("einreicherID"))

@@ -10,13 +10,13 @@ interface IState {
     fileerr: string[];
 }
 
-interface BuchungsBelegeProps {
+interface RecordUploaderProps {
     sendmessage: SendMessageCallback;
 }
 
-export class BelegUploader extends React.Component<BuchungsBelegeProps, IState> {
+export class RecordUploader extends React.Component<RecordUploaderProps, IState> {
 
-    constructor( props: BuchungsBelegeProps ) {
+    constructor( props: RecordUploaderProps ) {
         super( props );
         this.uploadit = this.uploadit.bind( this );
         this.buttonClear = this.buttonClear.bind( this );
