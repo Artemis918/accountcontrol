@@ -24,8 +24,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 
 public class ImportPBTest {
 
@@ -43,7 +43,7 @@ public class ImportPBTest {
 			+ "\"10.657,00 €\"";
 
 	@Mock
-	BuchungsBelegRepository belegRepository;
+	AccountRecordRepository belegRepository;
 
 	@InjectMocks
 	ImportPB importer = new ImportPB(".csv", "UTF-8", ';', 2);
@@ -61,15 +61,15 @@ public class ImportPBTest {
 		ByteArrayInputStream input =  new ByteArrayInputStream((HEADER + TESTDATA).getBytes("UTF-8"));		
 		importer.ImportFile("test.csv", input);
 		
-		ArgumentCaptor<BuchungsBeleg> argcap =  ArgumentCaptor.forClass(BuchungsBeleg.class);
+		ArgumentCaptor<AccountRecord> argcap =  ArgumentCaptor.forClass(AccountRecord.class);
 		verify(belegRepository).save(argcap.capture());
-		BuchungsBeleg beleg = argcap.getValue();
+		AccountRecord beleg = argcap.getValue();
 		
 		LocalDate eingang = beleg.getEingang();
 		assertTrue(!eingang.isBefore(start) && !eingang.isAfter(LocalDate.now()));
-		assertEquals(LocalDate.parse("2018-08-30"),beleg.getBeleg());
+		assertEquals(LocalDate.parse("2018-08-30"),beleg.getCreation());
 		assertEquals(LocalDate.parse("2018-08-31"),beleg.getWertstellung());
-		assertEquals(BuchungsBeleg.Art.LASTSCHRIFT,beleg.getArt());
+		assertEquals(AccountRecord.Type.LASTSCHRIFT,beleg.getType());
 		assertEquals("Marion Balsen Dieter Balsen",beleg.getAbsender());
 		assertEquals("Telekom Deutschland GmbH",beleg.getEmpfaenger());
 		assertEquals(-4280,beleg.getWert());
@@ -93,17 +93,17 @@ public class ImportPBTest {
 	@Test
 	public void testInsertTwice() throws ParseException, IOException {
 
-		List<BuchungsBeleg> belegList = new ArrayList<>();
-		belegList.add(new BuchungsBeleg());
-		when(belegRepository.findByWertAndBelegAndAbsenderAndEmpfaenger(eq(-4280), any(LocalDate.class), any(String.class), any(String.class))).thenReturn(belegList );
+		List<AccountRecord> belegList = new ArrayList<>();
+		belegList.add(new AccountRecord());
+		when(belegRepository.findByWertAndCreationAndAbsenderAndEmpfaenger(eq(-4280), any(LocalDate.class), any(String.class), any(String.class))).thenReturn(belegList );
 
 		String testData2 = new String(TESTDATA).replace("-42,80","-42,90");
 		ByteArrayInputStream input =  new ByteArrayInputStream((HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2).getBytes("UTF-8"));		
 		importer.ImportFile("test.csv", input);
 		
-		ArgumentCaptor<BuchungsBeleg> argcap =  ArgumentCaptor.forClass(BuchungsBeleg.class);
+		ArgumentCaptor<AccountRecord> argcap =  ArgumentCaptor.forClass(AccountRecord.class);
 		verify(belegRepository,times(2)).save(argcap.capture());
-		List<BuchungsBeleg> res = argcap.getAllValues();
+		List<AccountRecord> res = argcap.getAllValues();
 		
 		assertEquals(-4290, res.get(0).getWert());
 		assertEquals(-4290, res.get(1).getWert());

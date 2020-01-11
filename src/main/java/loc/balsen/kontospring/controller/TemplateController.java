@@ -15,25 +15,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.dataservice.TemplateService;
+import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.TemplateDTO;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Controller
 @RequestMapping("/templates")
+@ResponseBody
 public class TemplateController {
 
 	@Autowired
 	TemplateRepository templateRepository;
 
 	@Autowired
-	SubCategoryRepository kontoRepository;
+	SubCategoryRepository subcategoryRepository;
 
 	@Autowired
 	TemplateService templateService;
 
 	@GetMapping("/listgroup/{group}")
-	@ResponseBody
 	List<TemplateDTO> findGroupTemplates(@PathVariable int group) {
 		return templateRepository.findValid().stream().filter((template) -> {
 			return template.getSubCategory().getCategory().getId() == group;
@@ -43,24 +44,21 @@ public class TemplateController {
 	}
 
 	@PostMapping("/save")
-	@ResponseBody
-	StandardResult saveTemplate(@RequestBody TemplateDTO template) {
-		templateService.saveTemplate(template.toTemplate(kontoRepository));
-		return new StandardResult(false, "Gespeichert");
+	MessageID saveTemplate(@RequestBody TemplateDTO template) {
+		templateService.saveTemplate(template.toTemplate(subcategoryRepository));
+		return MessageID.ok;
 	}
 
 	@GetMapping("/delete/{id}")
-	@ResponseBody
-	StandardResult deleteTemplate(@PathVariable Integer id) {
+	MessageID deleteTemplate(@PathVariable Integer id) {
 		Optional<Template> template = templateRepository.findById(id);
 		if (template.isPresent()) 
 			templateService.deleteTemplate(template.get());;
-		return new StandardResult(false, "gelöscht");
+		return MessageID.ok;
 	}
 
 	@GetMapping("/accountrecord/{id}")
-	@ResponseBody
-	TemplateDTO createTemplateFromBeleg(@PathVariable Integer id) {
-		return new TemplateDTO(templateService.createFromBeleg(id));
+	TemplateDTO createTemplateFromRecord(@PathVariable Integer id) {
+		return new TemplateDTO(templateService.createFromRecord(id));
 	}
 }

@@ -2,6 +2,7 @@ package loc.balsen.kontospring.data;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,11 +15,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name="buchungsbeleg")
-public class BuchungsBeleg {
+public class AccountRecord {
 
 	public static String LF= " | ";
 	
-	public enum Art {
+	public enum Type {
 		GUTSCHRIFT ,
 		LASTSCHRIFT ,
 		LASTSCHRIFTKARTE ,
@@ -43,9 +44,14 @@ public class BuchungsBeleg {
 	private int id;
 	
 	private LocalDate eingang;
-	private LocalDate beleg;
+	
+	@Column(name = "beleg")
+	private LocalDate creation;
+	
 	private LocalDate wertstellung;
-	private Art art;
+	
+	@Column(name = "art")	
+	private Type type;
 	private String absender;
 	private String empfaenger;
 	private int wert;

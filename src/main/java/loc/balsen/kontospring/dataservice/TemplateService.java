@@ -6,11 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
@@ -21,17 +21,17 @@ public class TemplateService {
 
 	PlanService planService;
 	TemplateRepository templateRepository;
-	BuchungsBelegRepository buchungsBelegRepository;
+	AccountRecordRepository accountRecordRepository;
 	SubCategoryRepository subCategoryRepository;
 	
 	@Autowired
 	public TemplateService(PlanService planService,
 			               TemplateRepository templateRepository,
-			               BuchungsBelegRepository buchungsBelegRepository,
+			               AccountRecordRepository accountRecordRepository,
 			               SubCategoryRepository kontoRepository) {
 		this.planService = planService;
 		this.templateRepository = templateRepository;
-		this.buchungsBelegRepository = buchungsBelegRepository;
+		this.accountRecordRepository = accountRecordRepository;
 		this.subCategoryRepository = kontoRepository;
 	}
 
@@ -74,11 +74,11 @@ public class TemplateService {
 		}
 	}
 	
-	public Template createFromBeleg(Integer id) {
-		Optional<BuchungsBeleg> beleg = buchungsBelegRepository.findById(id);
-		if (beleg.isPresent()) {
+	public Template createFromRecord(Integer id) {
+		Optional<AccountRecord> record = accountRecordRepository.findById(id);
+		if (record.isPresent()) {
 			SubCategory subCategory = subCategoryRepository.findById(KONTO_DEFAULT).get();
-			Template template = new Template(beleg.get());
+			Template template = new Template(record.get());
 			template.setSubCategory(subCategory);
 			return template;
 		}

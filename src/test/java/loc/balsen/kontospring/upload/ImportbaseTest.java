@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import loc.balsen.kontospring.Application;
-import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -29,7 +29,7 @@ import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
 public class ImportbaseTest {
 	
 	@Autowired
-	private BuchungsBelegRepository belegRepository;
+	private AccountRecordRepository accountRecordRepository;
 	
 	@Autowired
 	private ImportTest importer;
@@ -37,40 +37,40 @@ public class ImportbaseTest {
 	@Test
 	public void testSave() {
 
-		List<BuchungsBeleg> result = null;
+		List<AccountRecord> result = null;
 		
 		LocalDate now = LocalDate.now();
 		LocalDate later = now.plusDays(5);
 
-		BuchungsBeleg beleg1 = createBeleg ("ich", "du", now, 100);
-		BuchungsBeleg beleg2 = createBeleg ("ich", "du", now, 100);
+		AccountRecord record1 = createRecord ("ich", "du", now, 100);
+		AccountRecord record2 = createRecord ("ich", "du", now, 100);
 
 		
-		assertTrue(importer.save(beleg1));
-		result = belegRepository.findAll();
+		assertTrue(importer.save(record1));
+		result = accountRecordRepository.findAll();
 		assertEquals(1,result.size());
 		assertNotNull( result.get(0).getId());
-		assertNotNull( beleg1.getId());
+		assertNotNull( record1.getId());
 		
 		assertFalse(importer.save(null));
-		assertFalse(importer.save(beleg2));
+		assertFalse(importer.save(record2));
 		assertEquals(1,result.size());
 		
-		assertTrue(importer.save(createBeleg ("ich", "du", now, 101)));
-		assertTrue(importer.save(createBeleg ("ich", "du", later, 100)));
-		assertTrue(importer.save(createBeleg ("er", "du", now, 100)));
-		assertTrue(importer.save(createBeleg ("ich", "er", now, 100)));
-		result = belegRepository.findAll();
+		assertTrue(importer.save(createRecord ("ich", "du", now, 101)));
+		assertTrue(importer.save(createRecord ("ich", "du", later, 100)));
+		assertTrue(importer.save(createRecord ("er", "du", now, 100)));
+		assertTrue(importer.save(createRecord ("ich", "er", now, 100)));
+		result = accountRecordRepository.findAll();
 		assertEquals(5,result.size());
 		
 	}
 
-	private BuchungsBeleg createBeleg(String absender, String empfaenger, LocalDate beleg, int wert) {
-		BuchungsBeleg res  =  new BuchungsBeleg();
+	private AccountRecord createRecord(String absender, String empfaenger, LocalDate date, int wert) {
+		AccountRecord res  =  new AccountRecord();
 		res.setAbsender(absender);
 		res.setEmpfaenger(empfaenger);
 		res.setWert(wert);
-		res.setBeleg(beleg);
+		res.setCreation(date);
 		return res;
 	}
 

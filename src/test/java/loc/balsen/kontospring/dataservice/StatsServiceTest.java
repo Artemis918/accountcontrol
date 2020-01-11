@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -97,50 +97,50 @@ public class StatsServiceTest extends TestContext {
 		List<Zuordnung> zgeplantlist=  new ArrayList<>();
 		List<Zuordnung> zungeplantlist=  new ArrayList<>();
 		
-		BuchungsBeleg beleg1 = new BuchungsBeleg();
-		beleg1.setWertstellung(LocalDate.of(2018, 12, 1));
+		AccountRecord record1 = new AccountRecord();
+		record1.setWertstellung(LocalDate.of(2018, 12, 1));
 		
 		Zuordnung zuordnung1 = new Zuordnung();
-		zuordnung1.setBuchungsbeleg(beleg1);
+		zuordnung1.setAccountrecord(record1);
 		zuordnung1.setWert(100);
 		zungeplantlist.add(zuordnung1);
 
-		BuchungsBeleg beleg2 = new BuchungsBeleg();
-		beleg2.setWertstellung(LocalDate.of(2019, 1, 4));
+		AccountRecord record2 = new AccountRecord();
+		record2.setWertstellung(LocalDate.of(2019, 1, 4));
 
 		Plan plan2 = new Plan();
 		plan2.setPlanDate(LocalDate.of(2018, 12, 3));
 
 		Zuordnung zuordnung2 = new Zuordnung();
-		zuordnung2.setBuchungsbeleg(beleg2);
+		zuordnung2.setAccountrecord(record2);
 		zuordnung2.setWert(110);
 		zuordnung2.setPlan(plan2);
 		zgeplantlist.add(zuordnung2);
 
-		BuchungsBeleg beleg3 = new BuchungsBeleg();
-		beleg3.setWertstellung(LocalDate.of(2019, 2, 2));
+		AccountRecord record3 = new AccountRecord();
+		record3.setWertstellung(LocalDate.of(2019, 2, 2));
 
 		Zuordnung zuordnung3 = new Zuordnung();
-		zuordnung3.setBuchungsbeleg(beleg3);
+		zuordnung3.setAccountrecord(record3);
 		zuordnung3.setWert(-2);
 		zungeplantlist.add(zuordnung3);
 
-		BuchungsBeleg beleg4 = new BuchungsBeleg();
-		beleg4.setWertstellung(LocalDate.of(2019, 2, 28));
+		AccountRecord record4 = new AccountRecord();
+		record4.setWertstellung(LocalDate.of(2019, 2, 28));
 
 		Zuordnung zuordnung4 = new Zuordnung();
-		zuordnung4.setBuchungsbeleg(beleg4);
+		zuordnung4.setAccountrecord(record4);
 		zuordnung4.setWert(-12);
 		zungeplantlist.add(zuordnung4);
 
-		BuchungsBeleg beleg5 = new BuchungsBeleg();
-		beleg5.setWertstellung(LocalDate.of(2019, 1, 1));
+		AccountRecord record5 = new AccountRecord();
+		record5.setWertstellung(LocalDate.of(2019, 1, 1));
 		
 		Plan plan5 = new Plan();
 		plan5.setPlanDate(LocalDate.of(2019, 3, 1));
 		
 		Zuordnung zuordnung5 = new Zuordnung();
-		zuordnung5.setBuchungsbeleg(beleg5);
+		zuordnung5.setAccountrecord(record5);
 		zuordnung5.setWert(17);
 		zuordnung5.setPlan(plan5);
 		zgeplantlist.add(zuordnung5);

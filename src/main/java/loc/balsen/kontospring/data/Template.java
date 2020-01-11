@@ -65,8 +65,8 @@ public class Template {
 		this.subCategory=null;		
 	}
 	
-	public Template (BuchungsBeleg buchungsBeleg) {
-		LocalDate plandate = buchungsBeleg.getWertstellung(); 
+	public Template (AccountRecord accountRecord) {
+		LocalDate plandate = accountRecord.getWertstellung(); 
 		this.id = 0;
 		this.validFrom = plandate;
 		this.validUntil= null;
@@ -76,8 +76,8 @@ public class Template {
 		this.rythmus= Rythmus.MONTH;
 		this.description= null;
 		this.position= 0;
-		this.value= buchungsBeleg.getWert();
-		this.pattern= (new Pattern(buchungsBeleg)).toJson();
+		this.value= accountRecord.getWert();
+		this.pattern= (new Pattern(accountRecord)).toJson();
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
 		this.next=0;

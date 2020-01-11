@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Zuordnung;
@@ -257,11 +257,11 @@ public class CategoryControllerTest extends TestContext {
 		delsub2.setShortdescription("toDelete2");
 		subCategoryRepository.save(delsub2);
 		
-		BuchungsBeleg beleg = new BuchungsBeleg();
-		buchungsbelegRepository.save(beleg);
+		AccountRecord record = new AccountRecord();
+		assignRecordRepository.save(record);
 		
 		Zuordnung assign = new Zuordnung();
-		assign.setBuchungsbeleg(beleg);
+		assign.setAccountrecord(record);
 		assign.setSubcategory(delsub1);
 		
 		mvc.perform(get("/category/delcat/" + delcat.getId())
@@ -273,6 +273,6 @@ public class CategoryControllerTest extends TestContext {
 		assertFalse(subCategoryRepository.findById(delsub1.getId()).isPresent());
 		assertFalse(subCategoryRepository.findById(delsub2.getId()).isPresent());
 		assertFalse(zuordnungRepository.findById(assign.getId()).isPresent());
-		assertTrue(buchungsbelegRepository.findById(beleg.getId()).isPresent());
+		assertTrue(assignRecordRepository.findById(record.getId()).isPresent());
 	}
 }

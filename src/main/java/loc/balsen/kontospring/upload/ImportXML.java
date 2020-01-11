@@ -18,28 +18,28 @@ import org.jdom2.input.DOMBuilder;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
-import loc.balsen.kontospring.data.BuchungsBeleg.Art;
+import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.kontospring.data.AccountRecord.Type;
 
 @Component
 public class ImportXML extends Importbase {
 
 	static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	static private final HashMap<String, Art> belegArtenMap = new HashMap<String, Art>() {
+	static private final HashMap<String, Type> recordTypesMap = new HashMap<String, Type>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("NTRF+166", Art.GUTSCHRIFT);
-			put("NDDT+105", Art.LASTSCHRIFT);
-			put("NCMI+116", Art.UEBERWEISUNG);
-			put("NTRF+153", Art.ENTGELT);
-			put("NDDT+106", Art.KARTE);
-			put("NDDT+083", Art.AUSZAHLUNG);
-			put("NCMI+117", Art.DAUERAUFTRAG);
-			put("NCMI+083", Art.UMBUCHUNG);
-			put("NDDT+107", Art.LASTSCHRIFTKARTE);
-			put("NCHG+805", Art.ZINSEN);
-			put("NCMI+082", Art.UMBUCHUNG);
+			put("NTRF+166", Type.GUTSCHRIFT);
+			put("NDDT+105", Type.LASTSCHRIFT);
+			put("NCMI+116", Type.UEBERWEISUNG);
+			put("NTRF+153", Type.ENTGELT);
+			put("NDDT+106", Type.KARTE);
+			put("NDDT+083", Type.AUSZAHLUNG);
+			put("NCMI+117", Type.DAUERAUFTRAG);
+			put("NCMI+083", Type.UMBUCHUNG);
+			put("NDDT+107", Type.LASTSCHRIFTKARTE);
+			put("NCHG+805", Type.ZINSEN);
+			put("NCMI+082", Type.UMBUCHUNG);
 		}
 	};
 
@@ -71,7 +71,7 @@ public class ImportXML extends Importbase {
 		for (Element entry : entryList) {
 			entryNum++;
 			try {
-				save(createBeleg(entry));
+				save(createRecord(entry));
 			} catch (ParseException e) {
 				throw new ParseException(e.getMessage() + ": Entry " + entryNum, 0);
 			}
@@ -80,8 +80,8 @@ public class ImportXML extends Importbase {
 		return true;
 	}
 
-	private BuchungsBeleg createBeleg(Element entry) throws ParseException {
-		BuchungsBeleg beleg = new BuchungsBeleg();
+	private AccountRecord createRecord(Element entry) throws ParseException {
+		AccountRecord record = new AccountRecord();
 
 		int amount = (int) (Double.parseDouble(getChild(entry, "Amt").getValue()) * 100);
 
@@ -92,15 +92,15 @@ public class ImportXML extends Importbase {
 		else if (!cdtDbtInd.equals("CRDT"))
 			throw new ParseException("Unknown Indicator :" + cdtDbtInd, 0);
 		
-		beleg.setWert(amount);
-		beleg.setBeleg(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt",null),dateformater));
-		beleg.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt",null),dateformater));
+		record.setWert(amount);
+		record.setCreation(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt",null),dateformater));
+		record.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt",null),dateformater));
 
 		Element details = getChild(entry, "NtryDtls").getChild("TxDtls",null);
 
 		Element parties = getChild(details, "RltdPties");
-		beleg.setAbsender(getChild(parties, "Dbtr").getChildText("Nm",null));
-		beleg.setEmpfaenger(getChild(parties, "Cdtr").getChildText("Nm",null));
+		record.setAbsender(getChild(parties, "Dbtr").getChildText("Nm",null));
+		record.setEmpfaenger(getChild(parties, "Cdtr").getChildText("Nm",null));
 
 		Element infoElement = getChild(details, "RmtInf");
 
@@ -109,27 +109,27 @@ public class ImportXML extends Importbase {
 		for (Element line : infolines) {
 			String text = line.getValue();
 			if (text.startsWith("Referenz"))
-				beleg.setReferenz(text.substring(9));
+				record.setReferenz(text.substring(9));
 			else if (text.startsWith("Mandat"))
-				beleg.setMandat(text.substring(7));
+				record.setMandat(text.substring(7));
 			else if (text.startsWith("Einreicher-ID"))
-				beleg.setEinreicherId(text.substring(14));
+				record.setEinreicherId(text.substring(14));
 			else {
-				beleg.addDetailLine(text);
+				record.addDetailLine(text);
 			}
 		}
 
-		beleg.setArt(getArt(details));
-		beleg.setEingang(LocalDate.now());
-		return beleg;
+		record.setType(getType(details));
+		record.setEingang(LocalDate.now());
+		return record;
 	}
 
-	private Art getArt(Element details) throws ParseException {
-		String arttext = getChild(details, "BkTxCd").getChild("Prtry",null).getChildText("Cd",null);
-		Art art =  belegArtenMap.get(arttext);
-		if (art == null)
-			throw new ParseException("unknown Arttext: " + arttext, 0 );
-		return art;
+	private Type getType(Element details) throws ParseException {
+		String typetext = getChild(details, "BkTxCd").getChild("Prtry",null).getChildText("Cd",null);
+		Type type =  recordTypesMap.get(typetext);
+		if (type == null)
+			throw new ParseException("unknown Arttext: " + typetext, 0 );
+		return type;
 	}
 
 	private Element getChild(Element entry, String childKey) throws ParseException {

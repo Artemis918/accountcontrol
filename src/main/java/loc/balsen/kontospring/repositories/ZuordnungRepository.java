@@ -29,7 +29,7 @@ public interface ZuordnungRepository extends JpaRepository<Zuordnung, Integer> {
 	@Modifying
 	@Transactional
 	@Query( value="delete from Zuordnung z where z.buchungsbeleg = ?1", nativeQuery=true)
-	public void deleteByBelegId(Integer id);
+	public void deleteByRecordId(Integer id);
 	
 	@Query(value = "select * from Zuordnung z "
 		       + "inner join buchungsbeleg b on z.buchungsbeleg = b.id "

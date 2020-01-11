@@ -7,7 +7,7 @@ import org.springframework.test.context.TestPropertySource;
 import loc.balsen.kontospring.Application;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Category;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.CategoryRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -34,7 +34,7 @@ public class TestContext {
 	protected ZuordnungRepository zuordnungRepository;
 
 	@Autowired
-	protected BuchungsBelegRepository buchungsbelegRepository;
+	protected AccountRecordRepository assignRecordRepository;
 
 	protected SubCategory subCategory1;
 	protected SubCategory subCategory2;
@@ -48,7 +48,7 @@ public class TestContext {
 
 	public void clearRepos() {
 		zuordnungRepository.deleteAll();
-		buchungsbelegRepository.deleteAll();
+		assignRecordRepository.deleteAll();
 		planRepository.deleteAll();
 		templateRepository.deleteAll();
 	}

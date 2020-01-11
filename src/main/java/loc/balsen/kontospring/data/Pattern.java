@@ -49,13 +49,13 @@ public class Pattern {
 		}
 	}
 	
-	public Pattern(BuchungsBeleg buchungsBeleg) {
-		this.sender = buchungsBeleg.getAbsender();
-		this.receiver = buchungsBeleg.getEmpfaenger();
-		this.referenceID = buchungsBeleg.getReferenz();
-		this.senderID = buchungsBeleg.getEinreicherId();
-		this.details = buchungsBeleg.getDetails();
-		this.mandat = buchungsBeleg.getMandat();
+	public Pattern(AccountRecord accountRecord) {
+		this.sender = accountRecord.getAbsender();
+		this.receiver = accountRecord.getEmpfaenger();
+		this.referenceID = accountRecord.getReferenz();
+		this.senderID = accountRecord.getEinreicherId();
+		this.details = accountRecord.getDetails();
+		this.mandat = accountRecord.getMandat();
 	}
 
 	public String toJson() {
@@ -68,13 +68,13 @@ public class Pattern {
 		return "";
 	}
 
-	public boolean matches(BuchungsBeleg beleg) {
-		return matches(sender,beleg.getAbsender()) 
-				&& matches(receiver, beleg.getEmpfaenger())
-				&& matches(referenceID , beleg.getReferenz())
-				&& matches(senderID , beleg.getEinreicherId())
-				&& matches(details , beleg.getDetailsNOLF())
-				&& matches(mandat , beleg.getMandat());
+	public boolean matches(AccountRecord record) {
+		return matches(sender,record.getAbsender()) 
+				&& matches(receiver, record.getEmpfaenger())
+				&& matches(referenceID , record.getReferenz())
+				&& matches(senderID , record.getEinreicherId())
+				&& matches(details , record.getDetailsNOLF())
+				&& matches(mandat , record.getMandat());
 	}
 
 	private boolean matches(String pattern, String text) {

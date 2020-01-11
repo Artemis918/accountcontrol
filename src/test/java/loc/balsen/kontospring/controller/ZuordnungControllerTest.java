@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.Gson;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
@@ -63,7 +63,7 @@ public class ZuordnungControllerTest extends TestContext {
 	
 	
 	@Captor
-	private ArgumentCaptor<List<BuchungsBeleg>> captor;
+	private ArgumentCaptor<List<AccountRecord>> captor;
 	
 	@Before
 	public void setup() {
@@ -81,11 +81,11 @@ public class ZuordnungControllerTest extends TestContext {
 	public void testCount() throws Exception {
 		Gson gson =  new Gson();
 				
-		BuchungsBeleg bubel = new BuchungsBeleg();
-		bubel.setReferenz("testbubel");
-		buchungsbelegRepository.save(bubel);
+		AccountRecord record = new AccountRecord();
+		record.setReferenz("testrec");
+		assignRecordRepository.save(record);
 		Zuordnung assignment =  new Zuordnung();
-		assignment.setBuchungsbeleg(bubel);
+		assignment.setAccountrecord(record);
 		assignment.setSubcategory(subCategory1);
 		
 		List<Integer> list =  new ArrayList<>();
@@ -108,13 +108,13 @@ public class ZuordnungControllerTest extends TestContext {
 	
 	@Test
 	public void testReplan() {
-		BuchungsBeleg beleg =  new BuchungsBeleg();
+		AccountRecord record =  new AccountRecord();
 		Plan plan = new Plan();
 		Template template = new Template();
 		
 		Zuordnung zuordnung =  new Zuordnung();
 		zuordnung.setId(1200);
-		zuordnung.setBuchungsbeleg(beleg);
+		zuordnung.setAccountrecord(record);
 
 
 		when(mockZuordnungRepository.getOne(Integer.valueOf(100))).thenReturn(zuordnung);
@@ -136,7 +136,7 @@ public class ZuordnungControllerTest extends TestContext {
 		
 		verify(mockZuordnungsService,times(1)).assign(captor.capture());
 		
-		assertSame(beleg, captor.getValue().get(0));
+		assertSame(record, captor.getValue().get(0));
 
 	}
 
@@ -147,10 +147,10 @@ public class ZuordnungControllerTest extends TestContext {
 		int month = today.getMonthValue();
 		int year = today.getYear();
 
-		createBeleg("test1 blabla");
-		createBeleg("test2 blabla");
-		createBeleg("test3 bleble");
-		createBeleg("test4 bleble");
+		createRecord("test1 blabla");
+		createRecord("test2 blabla");
+		createRecord("test3 bleble");
+		createRecord("test4 bleble");
 		createPlan("1", subCategory1);
 		createPlan("2", subCategory2);
 		createPlan("3", subCategory5);
@@ -175,12 +175,12 @@ public class ZuordnungControllerTest extends TestContext {
 	@Test
 	public void testAssignKonto() throws Exception {
 		
-		BuchungsBeleg beleg2 = createBeleg("test5 bleble");
-		BuchungsBeleg beleg1 =createBeleg("test6 bleble");
+		AccountRecord record2 = createRecord("test5 bleble");
+		AccountRecord record1 =createRecord("test6 bleble");
 		
 		String json = "{ \"text\": \"helpme\""
 				    + ", \"subcategory\": " + subCategory4.getId() 
-				    + ", \"ids\": [ " + beleg1.getId() +"," +beleg2.getId() + " ] }";
+				    + ", \"ids\": [ " + record1.getId() +"," +record2.getId() + " ] }";
 		
 		mvc.perform(post("/assign/tosubcategory")
 				.content(json)
@@ -191,12 +191,12 @@ public class ZuordnungControllerTest extends TestContext {
 		assertEquals(2, assignList.size());
 	}
 	
-	private BuchungsBeleg createBeleg(String description) {
-		BuchungsBeleg result = new BuchungsBeleg();
+	private AccountRecord createRecord(String description) {
+		AccountRecord result = new AccountRecord();
 		result.setDetails(description);
 		result.setWertstellung(LocalDate.now());
-		result.setBeleg(LocalDate.now());
-		buchungsbelegRepository.save(result);
+		result.setCreation(LocalDate.now());
+		assignRecordRepository.save(result);
 		return result;
 	}
 

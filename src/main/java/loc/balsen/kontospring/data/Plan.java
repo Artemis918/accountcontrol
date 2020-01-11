@@ -19,10 +19,10 @@ import lombok.Data;
 public class Plan {
 
 	public enum MatchStyle {
-		EXACT, /// Der Wert des Belegs muß identisch sein
-		MAX, /// Der Wert des Belegs darf nicht höher sein
-		SUMMAX, /// Der Wert wird nur in der Summe berücksichtigt
-		PATTERN /// Es wird nur das Pattern für die Zuordnung verwendet
+		EXACT, /// value of record must match
+		MAX, /// value of record musn't exxed
+		SUMMAX, /// value of record is added to suim but there will be no assignment
+		PATTERN /// value is ignored. Just use to automatically assign records to category
 	}
 
 	@Id
@@ -78,14 +78,14 @@ public class Plan {
 		matcher = null;
 	}
 
-	public boolean isInPeriod(LocalDate beleg) {
-		return (startDate==null || !beleg.isBefore(startDate)) && (endDate==null || !beleg.isAfter(endDate));
+	public boolean isInPeriod(LocalDate date) {
+		return (startDate==null || !date.isBefore(startDate)) && (endDate==null || !date.isAfter(endDate));
 	}
 
-	public boolean matches(BuchungsBeleg beleg) {
+	public boolean matches(AccountRecord record) {
 		if (matcher == null)
 			matcher = new Pattern(pattern);
-		return matcher.matches(beleg);
+		return matcher.matches(record);
 	}
 
 	public Pattern getPatternObject() {

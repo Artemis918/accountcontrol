@@ -16,16 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dataservice.ZuordnungService;
+import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.dto.ZuordnungDTO;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
@@ -33,13 +34,14 @@ import lombok.Data;
 
 @Controller
 @RequestMapping("/assign")
+@ResponseBody
 public class ZuordnungController {
 
 	private SubCategoryRepository subCategoryRepository;
 	private ZuordnungRepository assignRepository;
 	private ZuordnungService assignService;
 	private TemplateService templateService;
-	private BuchungsBelegRepository buchungsBelegRepository;
+	private AccountRecordRepository accountRecordRepository;
 	private PlanRepository planRepository;
 
 	@Autowired
@@ -48,26 +50,24 @@ public class ZuordnungController {
 			ZuordnungRepository zuordnungRepository,
 			ZuordnungService zuordnungService,
 			TemplateService templateService,
-			BuchungsBelegRepository buchungsBelegRepository,
+			AccountRecordRepository accountRecordRepository,
 			PlanRepository planRepository) {
 		this.subCategoryRepository = subCategoryRepository;
 		this.assignRepository = zuordnungRepository;
 		this.assignService = zuordnungService;
 		this.templateService = templateService;
-		this.buchungsBelegRepository = buchungsBelegRepository;
+		this.accountRecordRepository = accountRecordRepository;
 		this.planRepository = planRepository;
 	}
 
 	@GetMapping("/all")
-	@ResponseBody
-	public StandardResult assignAll() {
-		List<BuchungsBeleg> belege = buchungsBelegRepository.findUnresolvedBeleg();
-		assignService.assign(belege);
-		return new StandardResult(false, "Alles zugeordnet");
+	public Integer assignAll() {
+		List<AccountRecord> records = accountRecordRepository.findUnresolvedRecords();
+		int count = assignService.assign(records);
+		return new Integer(count);
 	}
 
 	@GetMapping("/getcategory/{year}/{month}/{id}")
-	@ResponseBody
 	public List<ZuordnungDTO> getCategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		List<Zuordnung> zuordnungen = new ArrayList<>();
 		List<SubCategory> kontolist = subCategoryRepository.findByCategoryId(id);
@@ -96,7 +96,6 @@ public class ZuordnungController {
 	}
 
 	@GetMapping("/getsubcategory/{year}/{month}/{id}")
-	@ResponseBody
 	public List<ZuordnungDTO> getSubcategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
@@ -116,7 +115,6 @@ public class ZuordnungController {
 
 	
 	@PostMapping(path="/countsubcategory",produces = MediaType.TEXT_PLAIN_VALUE)
-	@ResponseBody
 	String countAssignForSubCategory(@RequestBody List<Integer> subs) {
 		int result = 0;
 		for (Integer sub: subs) {
@@ -126,8 +124,7 @@ public class ZuordnungController {
 	}
 	
 	@PostMapping("/commit")
-	@ResponseBody
-	public StandardResult commit(@RequestBody List<Integer> ids) {
+	public MessageID commit(@RequestBody List<Integer> ids) {
 		for (Integer id : ids) {
 			Optional<Zuordnung> zuordnung = assignRepository.findById(id);
 			if (zuordnung.isPresent()) {
@@ -136,28 +133,26 @@ public class ZuordnungController {
 				assignRepository.save(z);
 			}
 		}
-		return new StandardResult(false, "ok");
+		return MessageID.ok;
 	}
 	
 	@GetMapping("/invertcommit/{id}")
-	@ResponseBody
-	public StandardResult invertCommit(@PathVariable int id) {
+	public MessageID invertCommit(@PathVariable int id) {
 		Optional<Zuordnung> zuordnung = assignRepository.findById(id);
 		if (zuordnung.isPresent()) {
 			Zuordnung z = zuordnung.get();
 			z.setCommitted(!z.isCommitted());
 			assignRepository.save(z);
 		}
-		return new StandardResult(false, "ok");	
+		return MessageID.ok;	
 	}
 
 	@PostMapping("/remove")
-	@ResponseBody
-	public StandardResult remove(@RequestBody List<Integer> ids) {
+	public MessageID remove(@RequestBody List<Integer> ids) {
 		for (Integer id : ids) {
-			assignRepository.deleteByBelegId(id);
+			assignRepository.deleteByRecordId(id);
 		}
-		return new StandardResult(false, "ok");
+		return MessageID.ok;
 	}
 
 	@Data
@@ -168,61 +163,56 @@ public class ZuordnungController {
 	}
 
 	@PostMapping("/tosubcategory")
-	@ResponseBody
-	public StandardResult assignToCategory(@RequestBody ToCategoryRequestDTO request) {
+	public MessageID assignToCategory(@RequestBody ToCategoryRequestDTO request) {
 		SubCategory konto = subCategoryRepository.getOne(request.subcategory);
 
 		request.ids.forEach(
-				(Integer z) -> assignService.assignToSubCategory(konto, request.text, buchungsBelegRepository.getOne(z)));
-		return new StandardResult(false, "zugeordnet");
+				(Integer z) -> assignService.assignToSubCategory(konto, request.text, accountRecordRepository.getOne(z)));
+		return MessageID.ok;
 	}
 
-	@GetMapping("/toplan/{planid}/{belegid}")
-	@ResponseBody
-	public StandardResult assignToPlan(@PathVariable int planid, @PathVariable int belegid) {
-		assignService.assignToPlan(planRepository.getOne(planid), buchungsBelegRepository.getOne(belegid));
-		return new StandardResult(false, "zugeordnet");
+	@GetMapping("/toplan/{planid}/{recordid}")
+	public MessageID assignToPlan(@PathVariable int planid, @PathVariable int recordid) {
+		assignService.assignToPlan(planRepository.getOne(planid), accountRecordRepository.getOne(recordid));
+		return MessageID.ok;
 	}
 
 	@PostMapping("/parts")
-	@ResponseBody
-	public StandardResult assignParts(@RequestBody List<ZuordnungDTO> request) {
+	public MessageID assignParts(@RequestBody List<ZuordnungDTO> request) {
 
 		request.forEach((ZuordnungDTO z) -> {
 			if (z.getIstwert()!= 0) 
 				assignRepository.save(
-						z.toZuordnung(planRepository, subCategoryRepository, buchungsBelegRepository));
+						z.toZuordnung(planRepository, subCategoryRepository, accountRecordRepository));
 		});
-		return new StandardResult(false, "zugeordnet");
+		return MessageID.ok;
 	}
 
 	@GetMapping("/endplan/{id}")
-	@ResponseBody
-	StandardResult endplan(@PathVariable Integer id) {
+	MessageID endplan(@PathVariable Integer id) {
 		Plan plan = planRepository.getOne(id);
 		if ( plan.getTemplate() != null ) {
 			Template template = plan.getTemplate();
 			template.setValidUntil(plan.getStartDate());
 			templateService.saveTemplate(template);
 		} 		
-		return new StandardResult(false, "Gespeichert");
+		return MessageID.ok;
 	}
 	
 	@GetMapping("/replan/{id}")
-	@ResponseBody
-	StandardResult replan(@PathVariable Integer id) {
+	MessageID replan(@PathVariable Integer id) {
 		Zuordnung zuordnung = assignRepository.getOne(id);
 		if (zuordnung.getPlan() != null && zuordnung.getPlan().getTemplate() != null ) {
-			BuchungsBeleg beleg = zuordnung.getBuchungsbeleg();
+			AccountRecord record = zuordnung.getAccountrecord();
 			Template template = zuordnung.getPlan().getTemplate().copy(zuordnung.getWert(),zuordnung.getPlan().getStartDate());
 			
 			assignRepository.delete(zuordnung);
 			templateService.saveTemplate(template);
 			
-			List<BuchungsBeleg> list = new ArrayList<BuchungsBeleg>();
-			list.add(beleg);
+			List<AccountRecord> list = new ArrayList<AccountRecord>();
+			list.add(record);
 			assignService.assign(list);
 		} 		
-		return new StandardResult(false, "Gespeichert");
+		return MessageID.ok;
 	}
 }

@@ -19,6 +19,7 @@ import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.dataservice.CategoryService;
 import loc.balsen.kontospring.dto.CategoryDTO;
 import loc.balsen.kontospring.dto.EnumDTO;
+import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.repositories.CategoryRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
@@ -26,6 +27,7 @@ import lombok.Data;
 
 @Controller
 @RequestMapping("/category")
+@ResponseBody
 public class CategoryController {
 	
 	private CategoryService categoryService;
@@ -38,7 +40,6 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/catenum")
-	@ResponseBody
 	List<EnumDTO> findCategoriesEnum() {
 		List<EnumDTO> list = new ArrayList<>();
 		for(Category cat: categoryService.getAllCategories())
@@ -47,7 +48,6 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/subenum/{id}")
-	@ResponseBody
 	List<EnumDTO> findSubCategoryEnum(@PathVariable Integer id) {
 		List<EnumDTO> list = new ArrayList<>();
 		for(SubCategory sub: categoryService.getSubCategories(id))
@@ -56,7 +56,6 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/cat")
-	@ResponseBody
 	List<CategoryDTO> findCategories() {
 		List<CategoryDTO> list = new ArrayList<>();
 		for(Category cat: categoryService.getAllCategories())
@@ -65,7 +64,6 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/sub/{id}")
-	@ResponseBody
 	List<SubCategoryDTO> findSubCategory(@PathVariable Integer id) {
 		List<SubCategoryDTO> list = new ArrayList<>();
 		for(SubCategory sub: categoryService.getSubCategories(id))
@@ -73,30 +71,25 @@ public class CategoryController {
 		return list;
 	}
 	
-	@PostMapping(path="/savesub",produces = MediaType.TEXT_PLAIN_VALUE)
-	@ResponseBody
-	String saveSubCategory(@RequestBody SubCategoryDTO request) {
-		return Integer.toString(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
+	@PostMapping(path="/savesub")
+	Integer saveSubCategory(@RequestBody SubCategoryDTO request) {
+		return new Integer(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
 	}
 	
-	@PostMapping(path="/savecat",produces = MediaType.TEXT_PLAIN_VALUE)
-	@ResponseBody
-	String saveCategory(@RequestBody CategoryDTO request) {
-		return Integer.toString(categoryService.saveCategory(request.toCategory()));
+	@PostMapping(path="/savecat")
+	Integer saveCategory(@RequestBody CategoryDTO request) {
+		return new Integer(categoryService.saveCategory(request.toCategory()));
 	}
 	
 	@GetMapping(path="/delsub/{sub}")
-	@ResponseBody
-	StandardResult delSubCategory(@PathVariable Integer sub) {
+	MessageID delSubCategory(@PathVariable Integer sub) {
 		categoryService.delSubCategory(sub);
-		return new StandardResult(false, "OK");
+		return MessageID.ok;
 	}
 	
 	@GetMapping(path="/delcat/{cat}")
-	@ResponseBody
-	StandardResult delCategory(@PathVariable Integer cat) {
+	MessageID delCategory(@PathVariable Integer cat) {
 		categoryService.delCategory(cat);
-		return new StandardResult(false, "OK");
-	}	
-
+		return MessageID.ok;	
+	}
 }

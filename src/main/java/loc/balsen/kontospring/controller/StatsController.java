@@ -16,6 +16,7 @@ import lombok.Data;
 
 @Controller
 @RequestMapping("/stats")
+@ResponseBody
 public class StatsController {
 	
 	private StatsService statistikService;
@@ -44,7 +45,6 @@ public class StatsController {
 	}
 	
 	@GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}")
-	@ResponseBody
 	public StatsDTO getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth, @PathVariable Integer endyear, @PathVariable Integer endmonth) {
 		LocalDate curDate = LocalDate.of(startyear, startmonth, 1);
 		LocalDate endDate = LocalDate.of(endyear, endmonth, 28);

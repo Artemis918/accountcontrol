@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.testutil.TestContext;
 
@@ -87,20 +87,20 @@ public class TemplateControllerTest extends TestContext {
 
 	
 	@Test
-	public void testCreateFromBeleg() throws Exception {
-		BuchungsBeleg beleg =  new BuchungsBeleg();
-		beleg.setAbsender("hallo");
-		beleg.setBeleg(LocalDate.of(1998, 4, 2));
-		beleg.setDetails("whatever you will");
-		beleg.setEinreicherId("einreicherID");
-		beleg.setEmpfaenger("empfänger");
-		beleg.setMandat("mandat");
-		beleg.setReferenz("refernzID");
-		beleg.setWert(200);
-		beleg.setWertstellung(LocalDate.of(2000, 4, 2));
-		buchungsbelegRepository.save(beleg);
+	public void testCreateFromAccountRecord() throws Exception {
+		AccountRecord record =  new AccountRecord();
+		record.setAbsender("hallo");
+		record.setCreation(LocalDate.of(1998, 4, 2));
+		record.setDetails("whatever you will");
+		record.setEinreicherId("einreicherID");
+		record.setEmpfaenger("empfänger");
+		record.setMandat("mandat");
+		record.setReferenz("refernzID");
+		record.setWert(200);
+		record.setWertstellung(LocalDate.of(2000, 4, 2));
+		assignRecordRepository.save(record);
 		
-		mvc.perform(get("/templates/accountrecord/" + beleg.getId()))
+		mvc.perform(get("/templates/accountrecord/" + record.getId()))
 		   .andExpect(jsonPath("$.pattern.sender").value("hallo"))
 		   .andExpect(jsonPath("$.pattern.details").value("whatever you will"))
 		   .andExpect(jsonPath("$.pattern.senderID").value("einreicherID"))

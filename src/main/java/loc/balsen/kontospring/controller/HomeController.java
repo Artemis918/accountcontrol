@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.Data;
 
 @Controller
+@ResponseBody
 public class HomeController {
 
 	@Autowired
@@ -27,7 +28,6 @@ public class HomeController {
 	}
 	
 	@GetMapping("/production")
-	@ResponseBody
 	 ProdDTO isProduction() {
 		return new ProdDTO(env.getActiveProfiles().length <= 0);
 	}

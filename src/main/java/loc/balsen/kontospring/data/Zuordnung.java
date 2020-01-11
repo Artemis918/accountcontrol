@@ -33,7 +33,7 @@ public class Zuordnung {
 	
 	@OneToOne
 	@JoinColumn(name = "buchungsbeleg")
-	private BuchungsBeleg buchungsbeleg;
+	private AccountRecord accountrecord;
 	
 	@ManyToOne
 	@JoinColumn(name = "konto")	
@@ -51,7 +51,7 @@ public class Zuordnung {
 	}
 	
 	public LocalDate getStatsDay()  {
-		return plan == null ? buchungsbeleg.getWertstellung() : plan.getPlanDate();
+		return plan == null ? accountrecord.getWertstellung() : plan.getPlanDate();
 		
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.dataservice.PlanService;
+import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.PlanDTO;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -24,6 +25,7 @@ import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Controller
 @RequestMapping("/plans")
+@ResponseBody
 public class PlanController {
 
 	@Autowired
@@ -40,7 +42,6 @@ public class PlanController {
 
 	
 	@GetMapping("/list/{year}/{month}")
-	@ResponseBody
 	List<PlanDTO> findPlans(@PathVariable Integer year, @PathVariable Integer month) {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
@@ -51,7 +52,6 @@ public class PlanController {
 	}
 
 	@GetMapping("/unassigned/{year}/{month}")
-	@ResponseBody
 	List<PlanDTO> findUnassignedPlans(@PathVariable Integer year, @PathVariable Integer month) {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
@@ -64,7 +64,6 @@ public class PlanController {
 	}
 	
 	@GetMapping("/patternplans/{groupid}")
-	@ResponseBody
 	List<PlanDTO> findPatternPlans(@PathVariable Integer groupid) {
 
 		return planRepository.findByPatternPlansAndKontogroup(groupid).stream().map((plan) -> {
@@ -73,17 +72,15 @@ public class PlanController {
 	}
 
 	@PostMapping("/save")
-	@ResponseBody
-	StandardResult savePlan(@RequestBody PlanDTO plandto) {
+	MessageID savePlan(@RequestBody PlanDTO plandto) {
 		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
 		plan.setCreationDate(LocalDate.now());
 		planRepository.save(plan);
-		return new StandardResult(false, "Gespeichert");
+		return MessageID.ok;
 	}
 
 	@PostMapping("/savePattern")
-	@ResponseBody
-	StandardResult savePattern(@RequestBody PlanDTO plandto) {
+	MessageID savePattern(@RequestBody PlanDTO plandto) {
 		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
 		plan.setCreationDate(LocalDate.now());
 		plan.setStartDate(null);
@@ -91,11 +88,10 @@ public class PlanController {
 		plan.setMatchStyle(MatchStyle.PATTERN);
 		plan.setWert(0);
 		planRepository.save(plan);
-		return new StandardResult(false, "Gespeichert");
+		return MessageID.ok;
 	}
 
 	@GetMapping("/id/{id}")
-	@ResponseBody
 	PlanDTO findPlan(@PathVariable Integer id) {
 		Optional<Plan> plan = planRepository.findById(id);
 		if (plan.isPresent()) {
@@ -106,17 +102,15 @@ public class PlanController {
 	}
 
 	@GetMapping("/delete/{id}")
-	@ResponseBody
-	StandardResult deletePlan(@PathVariable Integer id) {
+	MessageID deletePlan(@PathVariable Integer id) {
 		Plan plan = planRepository.findById(id).get();
 		planService.deactivatePlan(plan);
-		return new StandardResult(false, "gelöscht");
+		return MessageID.ok;
 	}
 
 	@GetMapping("createFromTemplates/{month}/{year}")
-	@ResponseBody
-	StandardResult createFromTemplates(@PathVariable Integer month, @PathVariable Integer year) {
+	MessageID createFromTemplates(@PathVariable Integer month, @PathVariable Integer year) {
 		planService.createPlansfromTemplatesUntil(month, year);
-		return new StandardResult(false, "erzeugt");
+		return MessageID.ok;
 	}
 }

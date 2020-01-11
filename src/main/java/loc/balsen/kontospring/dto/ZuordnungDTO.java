@@ -3,7 +3,7 @@ package loc.balsen.kontospring.dto;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Zuordnung;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import lombok.Data;
@@ -29,7 +29,7 @@ public class ZuordnungDTO {
 		id = z.getId();
 		detail = z.getShortdescription();
 		istwert = z.getWert();
-		accountrecord = z.getBuchungsbeleg().getId();
+		accountrecord = z.getAccountrecord().getId();
 		committed = z.isCommitted();
 		position = 2000;
 		Plan p = z.getPlan();
@@ -61,7 +61,7 @@ public class ZuordnungDTO {
 	}
 
 	public Zuordnung toZuordnung(PlanRepository planRepository, SubCategoryRepository subCategoryRepository,
-			BuchungsBelegRepository belegRepository) {
+			AccountRecordRepository accountRecordRepository) {
 		Zuordnung res = new Zuordnung();
 		res.setId(id);
 		res.setShortdescription(detail);
@@ -73,7 +73,7 @@ public class ZuordnungDTO {
 			res.setPlan(planRepository.getOne(plan));
 
 		if (accountrecord != 0)
-			res.setBuchungsbeleg(belegRepository.getOne(accountrecord));
+			res.setAccountrecord(accountRecordRepository.getOne(accountrecord));
 
 		if (subcategory != 0) 
 			res.setSubcategory(subCategoryRepository.getOne(subcategory));

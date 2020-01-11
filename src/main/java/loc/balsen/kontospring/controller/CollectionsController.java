@@ -20,10 +20,10 @@ import loc.balsen.kontospring.repositories.SubCategoryRepository;
 
 @Component
 @RequestMapping("/collections")
+@ResponseBody
 public class CollectionsController {
 
 	@GetMapping("/matchstyle")
-	@ResponseBody
 	List<EnumDTO> findPlanArtEnum() {
 		List<EnumDTO> list = new ArrayList<>();
 		list.add(new EnumDTO("Genau", Plan.MatchStyle.EXACT.ordinal()));
@@ -34,7 +34,6 @@ public class CollectionsController {
 	}
 
 	@GetMapping("/rythmus")
-	@ResponseBody
 	List<EnumDTO> findRythmusEnum() {
 		List<EnumDTO> list = new ArrayList<>();
 		list.add(new EnumDTO("Tag", Template.Rythmus.DAY.ordinal()));

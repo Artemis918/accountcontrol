@@ -21,12 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import loc.balsen.kontospring.data.BuchungsBeleg;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Zuordnung;
-import loc.balsen.kontospring.repositories.BuchungsBelegRepository;
+import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 import loc.balsen.kontospring.repositories.ZuordnungRepository;
@@ -37,7 +37,7 @@ import loc.balsen.kontospring.testutil.TestContext;
 public class TemplateServiceTest extends TestContext {
 
 	@Autowired
-	public BuchungsBelegRepository buchungsBelegRepository;
+	public AccountRecordRepository accountRecordRepository;
 
 	@Autowired
 	public ZuordnungRepository zuordnungRepository;
@@ -56,14 +56,14 @@ public class TemplateServiceTest extends TestContext {
 	Plan latestPlan;
 	Template template;
 	Template template1;
-	BuchungsBeleg beleg;
+	AccountRecord beleg;
 
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		createCategoryData();
 		createTestData();
-		templateService = new TemplateService(planService, templateRepository, buchungsBelegRepository,
+		templateService = new TemplateService(planService, templateRepository, accountRecordRepository,
 				kontoRepository);
 	}
 
@@ -101,8 +101,8 @@ public class TemplateServiceTest extends TestContext {
 
 	public void createTestData() {
 
-		BuchungsBeleg beleg = new BuchungsBeleg();
-		buchungsBelegRepository.save(beleg);
+		AccountRecord beleg = new AccountRecord();
+		accountRecordRepository.save(beleg);
 
 		latestPlan = createPlan(null, LocalDate.of(1997, 5, 14), null);
 
@@ -141,7 +141,7 @@ public class TemplateServiceTest extends TestContext {
 		assertFalse(templateRepository.findById(template.getId()).isPresent());
 	}
 
-	private Plan createPlan(Template template, LocalDate plandate, BuchungsBeleg beleg) {
+	private Plan createPlan(Template template, LocalDate plandate, AccountRecord record) {
 		Plan plan = new Plan();
 		plan.setPlanDate(plandate);
 		plan.setDescription("templatetest");
@@ -150,10 +150,10 @@ public class TemplateServiceTest extends TestContext {
 		plan.setTemplate(template);
 		planRepository.save(plan);
 
-		if (beleg != null) {
+		if (record != null) {
 			Zuordnung z = new Zuordnung();
 			z.setPlan(plan);
-			z.setBuchungsbeleg(beleg);
+			z.setAccountrecord(record);
 			zuordnungRepository.save(z);
 		}
 

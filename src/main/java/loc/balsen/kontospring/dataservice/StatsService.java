@@ -44,14 +44,14 @@ public class StatsService {
 		while (piter.hasNext() && uiter.hasNext()) {
 
 			Zuordnung plan = piter.next();
-			Zuordnung beleg = uiter.next();
+			Zuordnung record = uiter.next();
 
-			if (plan.getPlan().getPlanDate().isBefore(beleg.getBuchungsbeleg().getWertstellung())) {
+			if (plan.getPlan().getPlanDate().isBefore(record.getAccountrecord().getWertstellung())) {
 				resultlist.add(plan);
 				uiter.previous();
 			} else {
 				piter.previous();
-				resultlist.add(beleg);
+				resultlist.add(record);
 			}
 		}
 
