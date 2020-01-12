@@ -37,6 +37,10 @@
 	"category.createsub": "Neue Unterategorie für",
 	"category.shortdescription": "Name",
 	"category.description": "Beschreibung",
-	"category.woulddelete": "Diese Aktion löscht folgendes:"
+	"category.woulddelete": "Diese Aktion löscht folgendes:",
+	
+	"returncode_1": "OK",
+	"returncode_2": "Es fehlen Daten",
+	"returncode_3": "Einige Daten sind nicht korrekt"
 	
 }

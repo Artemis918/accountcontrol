@@ -15,11 +15,6 @@ public class HomeController {
 
 	@Autowired
 	Environment env;
-	
-	@GetMapping(value = "/")
-	public String index() {
-		return "index";
-	}
 
 	@Data
 	class ProdDTO {

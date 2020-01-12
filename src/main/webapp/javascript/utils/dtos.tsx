@@ -5,7 +5,7 @@ export class AccountRecord {
     eingang: Date;
     creation: Date;
     wertstellung: Date;
-    art: number;
+    type: number;
     absender: string;
     empfaenger: string;
     wert: number;
@@ -19,7 +19,7 @@ export class AccountRecord {
         this.eingang = new Date();
         this.creation = new Date();
         this.wertstellung = new Date();
-        this.art = 8;
+        this.type = 8;
         this.absender = '';
         this.empfaenger = '';
         this.wert = 0;

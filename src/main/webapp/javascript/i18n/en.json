@@ -37,5 +37,9 @@
 	"category.createsub": "New subcategory in",
 	"category.shortdescription": "name",
 	"category.description": "Description",
-	"category.woulddelete": "This will delete :"
+	"category.woulddelete": "This will delete :",
+	
+	"returncode_1": "ok",
+	"returncode_2": "some data is missing",
+	"returncode_3": "some data is invalid"
 }

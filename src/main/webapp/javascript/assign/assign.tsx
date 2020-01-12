@@ -5,11 +5,9 @@ import { TemplateEditor } from '../planing/templateeditor';
 import { GuidedAssign } from './guidedassign';
 import { PlanSelect } from './planselect';
 import { AccountRecord, Plan } from '../utils/dtos'
-
+import { SendMessage, MessageID } from '../utils/messageid'
+ 
 import * as css from '../css/index.css'
-
-type SendMessage = ( m: string, error: boolean ) => void
-
 
 
 interface AssignProps {
@@ -84,7 +82,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     assignManuell(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
+            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
         }
         else {
             this.setState( { accountRecord: data[0] } )
@@ -116,7 +114,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     createPlan(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
+            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
         }
         else {
             this.setState( { plan: data[0].id } )
@@ -145,7 +143,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     assignPlan(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", true );
+            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
         }
         else {
             this.setState( { planassign: data[0].id } )

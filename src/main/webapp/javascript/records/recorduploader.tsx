@@ -1,17 +1,16 @@
 import * as React from 'react'
 import * as Dropzone from 'react-dropzone'
 import * as axios from 'axios'
+import { SendMessage, MessageID } from '../utils/messageid'
 
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+interface RecordUploaderProps {
+    sendmessage: SendMessage;
+}
 
 interface IState {
     accepted: File[];
     fileok: string[];
     fileerr: string[];
-}
-
-interface RecordUploaderProps {
-    sendmessage: SendMessageCallback;
 }
 
 export class RecordUploader extends React.Component<RecordUploaderProps, IState> {

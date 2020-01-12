@@ -13,11 +13,10 @@ import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
 import { OverviewGFX } from './overviewgfx'
 import CategoriesConfig from './configuration/categoriesconfig'
-
+import { MessageID } from './utils/messageid';
 
 
 type ChangeValue = ( index: number ) => void;
-
 
 interface TabbedPagesProps {
     page: number;
@@ -50,7 +49,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
     }  
     
 
-    sendMessage( msg: string, error: boolean ): void {
+    sendMessage( msg: string, error: MessageID ): void {
         this.footer.current.setmessage( msg, error );
     }
     
@@ -129,7 +128,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
                         pages = {this.headerpages}
                 />
                 {this.renderPage(this.pages[this.state.curpage])}
-                <Footer ref={this.footer} />
+                <Footer intl={this.props.intl} ref={this.footer} />
               </div>
         )
     }

@@ -6,12 +6,10 @@ import { CategorySelector } from '../utils/categoryselector'
 import { Zuordnung, Template } from '../utils/dtos'
 import { myParseJson } from '../utils/misc'
 import * as css from './css/konten.css'
-
-
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface CategoriesProps {
-    sendmessage: SendMessageCallback;
+    sendmessage: SendMessage;
 }
 
 interface IState {
@@ -130,7 +128,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     replanAssignment(): void {
         var zuordnungen: Zuordnung[] = this.lister.current.getSelectedData();
         if ( zuordnungen.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Eintrag selektiert sein", true );
+            this.props.sendmessage( "es muss genau ein Eintrag selektiert sein", MessageID.INVALID_DATA );
         }
         else {
             var id: number = zuordnungen[0].id;

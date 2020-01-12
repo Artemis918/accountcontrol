@@ -4,11 +4,10 @@ import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { RecordEditor } from './recordeditor'
 import { AccountRecord } from '../utils/dtos'
-
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface RecordCreatorProps {
-    sendmessage: SendMessageCallback;
+    sendmessage: SendMessage;
 }
 
 interface IState {

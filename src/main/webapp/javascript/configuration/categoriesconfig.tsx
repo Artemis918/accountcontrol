@@ -5,11 +5,10 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { Category, SubCategory } from '../utils/dtos'
 import { AddTool } from './addtool'
 import { YesNo } from '../utils/yesno'
-
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface CategoryConfigProps { 
-    sendmessage: SendMessageCallback;
+    sendmessage: SendMessage;
 }
 
 interface IState {

@@ -3,8 +3,7 @@ import { TemplateEditor } from './templateeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Template } from '../utils/dtos'
 import { DropdownService } from '../utils/dropdownservice'
-
-type SendMessage = ( message: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface TemplateProps {
     sendmessage: SendMessage;

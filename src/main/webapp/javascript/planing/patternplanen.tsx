@@ -3,11 +3,10 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { DropdownService } from '../utils/dropdownservice'
 import { Plan } from '../utils/dtos'
 import { PatternPlanEditor } from './patternplaneneditor'
-
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface PatternPlanenProps {
-    sendmessage: SendMessageCallback;
+    sendmessage: SendMessage;
 }
 
 interface IState {

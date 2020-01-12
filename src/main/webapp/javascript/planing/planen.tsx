@@ -4,11 +4,10 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { MonthSelect } from '../utils//monthselect'
 import { Plan } from '../utils/dtos'
 import * as css from './css/planing.css'
-
-type SendMessageCallback = ( msg: string, error: boolean ) => void;
+import { SendMessage, MessageID } from '../utils/messageid'
 
 interface PlanenProps {
-    sendmessage: SendMessageCallback;
+    sendmessage: SendMessage;
 }
 
 interface IState {

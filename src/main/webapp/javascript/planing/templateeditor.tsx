@@ -75,7 +75,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     }
 
     setAnswer( data: any ): void {
-        this.setState( { message: data.message } );
+        var msg:string = "template saved"
+        this.setState( { message: msg } );
         if ( !data.error ) {
             this.clear();
         }
@@ -136,7 +137,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     render(): JSX.Element {
         return (
             <div>
-                <label>{this.state.message}</label>
+
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr><td>Name</td>
@@ -219,6 +220,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                     </tbody>
                 </table>
                 {this.renderButton()}
+                <label>{this.state.message}</label>
                 {this.state.patternEdit ?
                     <PatternEditor
                         pattern={this.state.template.pattern}
