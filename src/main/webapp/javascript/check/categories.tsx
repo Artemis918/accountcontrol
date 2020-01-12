@@ -3,7 +3,7 @@ import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlis
 import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
 import { CategorySelector } from '../utils/categoryselector'
-import { Zuordnung, Template } from '../utils/dtos'
+import { Assignment, Template } from '../utils/dtos'
 import { myParseJson } from '../utils/misc'
 import * as css from './css/konten.css'
 import { SendMessage, MessageID } from '../utils/messageid'
@@ -21,8 +21,8 @@ interface IState {
 
 export class Categories extends React.Component<CategoriesProps, IState> {
 
-    columns: ColumnInfo<Zuordnung>[];
-    lister: React.RefObject<MultiSelectLister<Zuordnung>>;
+    columns: ColumnInfo<Assignment>[];
+    lister: React.RefObject<MultiSelectLister<Assignment>>;
 
     constructor( props: CategoriesProps ) {
         super( props );
@@ -37,11 +37,11 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         this.columns = [
             {
                 header: 'Beschreibung',
-                getdata: ( z: Zuordnung ) => { return z.detail }
+                getdata: ( z: Assignment ) => { return z.detail }
             },
             {
                 header: 'Soll',
-                cellrender: ( cell: CellInfo<Zuordnung> ) => {
+                cellrender: ( cell: CellInfo<Assignment> ) => {
                     if ( cell.data.sollwert == 0 ) {
                         return null;
                     }
@@ -56,7 +56,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             },
             {
                 header: 'Ist',
-                cellrender: ( cell: CellInfo<Zuordnung> ) => {
+                cellrender: ( cell: CellInfo<Assignment> ) => {
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
                             {( cell.data.accountrecord == 0 ) ? '--' : ( cell.data.istwert / 100 ).toFixed( 2 )}
@@ -66,7 +66,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             },
             {
                 header: 'ok',
-                cellrender: ( cell: CellInfo<Zuordnung> ) => {
+                cellrender: ( cell: CellInfo<Assignment> ) => {
                     if ( cell.data.accountrecord != 0 && cell.rownum != -1 )
                         return (
                             <input type='checkbox'
@@ -84,7 +84,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         this.replanAssignment = this.replanAssignment.bind( this );
     }
 
-    getColor( z: Zuordnung ): string {
+    getColor( z: Assignment ): string {
         if ( z.accountrecord == 0 || z.plan == 0 )
             return 'lightgrey';
         else if ( z.sollwert > z.istwert )
@@ -93,8 +93,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             return 'green';
     }
 
-    commit( z: Zuordnung[] ): void {
-        var ids: number[] = z.map( ( za: Zuordnung ) => { return za.id; } );
+    commit( z: Assignment[] ): void {
+        var ids: number[] = z.map( ( za: Assignment ) => { return za.id; } );
         var self: Categories = this;
         fetch( '/assign/commit', {
             method: 'post',
@@ -107,7 +107,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         } );
     }
 
-    commitAssignment( a: Zuordnung ): void {
+    commitAssignment( a: Assignment ): void {
         var self: Categories = this;
         fetch( '/assign/invertcommit/' + a.id )
             .then( function( response ) {
@@ -126,16 +126,16 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     replanAssignment(): void {
-        var zuordnungen: Zuordnung[] = this.lister.current.getSelectedData();
-        if ( zuordnungen.length != 1 ) {
+        var assignments: Assignment[] = this.lister.current.getSelectedData();
+        if ( assignments.length != 1 ) {
             this.props.sendmessage( "es muss genau ein Eintrag selektiert sein", MessageID.INVALID_DATA );
         }
         else {
-            var id: number = zuordnungen[0].id;
+            var id: number = assignments[0].id;
             var url: string = '/assign/replan/';
 
             if ( id == 0 || id == undefined ) {
-                id = zuordnungen[0].plan;
+                id = assignments[0].plan;
                 url = '/assign/endplan/';
             }
 
@@ -149,7 +149,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Zuordnung ) => { return za.accountrecord; } );
+        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Assignment ) => { return za.accountrecord; } );
         var self: Categories = this;
         fetch( '/assign/remove', {
             method: 'post',
@@ -175,11 +175,11 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         }
     }
 
-    createFooter( z: Zuordnung[] ): Zuordnung {
-        var footer: Zuordnung = new Zuordnung();
+    createFooter( z: Assignment[] ): Assignment {
+        var footer: Assignment = new Assignment();
         var istwert: number = 0;
         var sollwert: number = 0;
-        z.map( ( zuordnung: Zuordnung ) => { istwert += zuordnung.istwert; if ( zuordnung.sollwert != undefined ) sollwert += zuordnung.sollwert; } )
+        z.map( ( assignment: Assignment ) => { istwert += assignment.istwert; if ( assignment.sollwert != undefined ) sollwert += assignment.sollwert; } )
         footer.detail = 'Summe';
         footer.istwert = istwert;
         footer.sollwert = sollwert;
@@ -213,7 +213,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                                 />
                             </td>
                             <td style={{ border: '1px solid black' }}>
-                                <MultiSelectLister<Zuordnung>
+                                <MultiSelectLister<Assignment>
                                     createFooter={this.createFooter}
                                     url='assign/'
                                     lines={28}

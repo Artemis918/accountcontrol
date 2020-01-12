@@ -38,28 +38,28 @@ import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.dataservice.TemplateService;
-import loc.balsen.kontospring.dataservice.ZuordnungService;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.dataservice.AssignmentService;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @WebAppConfiguration
-public class ZuordnungControllerTest extends TestContext {
+public class AssignmentControllerTest extends TestContext {
 
 	@Autowired
 	MockMvc mvc;
 
 	@Mock
-	private ZuordnungService mockZuordnungsService;
+	private AssignmentService mockAssignmentService;
 
 	@Mock
 	private TemplateService mockTemplateService;
 	
 	@Mock
-	private ZuordnungRepository mockZuordnungRepository;
+	private AssignmentRepository mockAssignmentRepository;
 	
 	
 	@Captor
@@ -84,14 +84,14 @@ public class ZuordnungControllerTest extends TestContext {
 		AccountRecord record = new AccountRecord();
 		record.setReferenz("testrec");
 		assignRecordRepository.save(record);
-		Zuordnung assignment =  new Zuordnung();
+		Assignment assignment =  new Assignment();
 		assignment.setAccountrecord(record);
 		assignment.setSubcategory(subCategory1);
 		
 		List<Integer> list =  new ArrayList<>();
 		list.add(new Integer(subCategory1.getId()));
 		
-		zuordnungRepository.save(assignment);
+		assignmentRepository.save(assignment);
     	mvc.perform(post("/assign/countsubcategory")
 			    .contentType(MediaType.APPLICATION_JSON)
 			    .content(gson.toJson(list))
@@ -112,29 +112,29 @@ public class ZuordnungControllerTest extends TestContext {
 		Plan plan = new Plan();
 		Template template = new Template();
 		
-		Zuordnung zuordnung =  new Zuordnung();
-		zuordnung.setId(1200);
-		zuordnung.setAccountrecord(record);
+		Assignment assignment =  new Assignment();
+		assignment.setId(1200);
+		assignment.setAccountrecord(record);
 
 
-		when(mockZuordnungRepository.getOne(Integer.valueOf(100))).thenReturn(zuordnung);
+		when(mockAssignmentRepository.getOne(Integer.valueOf(100))).thenReturn(assignment);
 		
-		ZuordnungController controller =  new ZuordnungController(null, mockZuordnungRepository, mockZuordnungsService, 
+		AssignmentController controller =  new AssignmentController(null, mockAssignmentRepository, mockAssignmentService, 
 				mockTemplateService, null, null);
 		
 		// do nothing
 		controller.replan(100);
 		
-		zuordnung.setPlan(plan);
+		assignment.setPlan(plan);
 		controller.replan(100);
 		
 		plan.setTemplate(template);	
 		controller.replan(100);
 
-		verify(mockZuordnungRepository,times(1)).delete(zuordnung);
+		verify(mockAssignmentRepository,times(1)).delete(assignment);
 		verify(mockTemplateService,times(1)).saveTemplate(template);
 		
-		verify(mockZuordnungsService,times(1)).assign(captor.capture());
+		verify(mockAssignmentService,times(1)).assign(captor.capture());
 		
 		assertSame(record, captor.getValue().get(0));
 
@@ -156,7 +156,7 @@ public class ZuordnungControllerTest extends TestContext {
 		createPlan("3", subCategory5);
 
 		mvc.perform(get("/assign/all")).andExpect(status().isOk());
-		assertEquals(3, zuordnungRepository.findAll().size());
+		assertEquals(3, assignmentRepository.findAll().size());
 
 		mvc.perform(get("/assign/getcategory/" + year + "/" + month + "/" + category1.getId()))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.[*]", hasSize(2)));
@@ -187,7 +187,7 @@ public class ZuordnungControllerTest extends TestContext {
 				.contentType(MediaType.APPLICATION_JSON))
 		        .andExpect(status().isOk());
 		
-		List<Zuordnung> assignList = zuordnungRepository.findByShortdescription("helpme");
+		List<Assignment> assignList = assignmentRepository.findByShortdescription("helpme");
 		assertEquals(2, assignList.size());
 	}
 	

@@ -24,10 +24,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -38,7 +38,7 @@ public class PlanServiceTest extends TestContext {
 	private PlanService planService;
 
 	@Autowired
-	private ZuordnungRepository zuordnungRepository;
+	private AssignmentRepository assignmentRepository;
 
 	private PlanService planService_mocked;
 
@@ -151,9 +151,9 @@ public class PlanServiceTest extends TestContext {
 	}
 
 	private LocalDate createZuordnung(Plan plan) {
-		Zuordnung zuordnung = new Zuordnung();
-		zuordnung.setPlan(plan);
-		zuordnungRepository.save(zuordnung);
+		Assignment assignment = new Assignment();
+		assignment.setPlan(plan);
+		assignmentRepository.save(assignment);
 		return plan.getPlanDate();
 	}
 

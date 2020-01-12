@@ -11,19 +11,19 @@ import java.util.function.ToIntFunction;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 
 
 @Component
 public class StatsService {
 
-	private ZuordnungRepository zuordnungRepository;
+	private AssignmentRepository assignmentRepository;
 	private PlanRepository planRepository;
 
-	public StatsService(ZuordnungRepository zuordnungRepository, PlanRepository planRepository) {
-		this.zuordnungRepository = zuordnungRepository;
+	public StatsService(AssignmentRepository assignmentRepository, PlanRepository planRepository) {
+		this.assignmentRepository = assignmentRepository;
 		this.planRepository = planRepository;
 	}
 
@@ -31,20 +31,20 @@ public class StatsService {
 		return getMonthlyCumulatedAssigns(start, LocalDate.now());
 	}
 
-	private List<Zuordnung> getZuordnungen(LocalDate start, LocalDate end) {
+	private List<Assignment> getAssignments(LocalDate start, LocalDate end) {
 
-		List<Zuordnung> resultlist = new ArrayList<Zuordnung>();
+		List<Assignment> resultlist = new ArrayList<Assignment>();
 
-		List<Zuordnung> planned = zuordnungRepository.findAllPlannedByPeriod(start, end);
-		List<Zuordnung> unplanned = zuordnungRepository.findAllNotPlannedByPeriod(start, end);
+		List<Assignment> planned = assignmentRepository.findAllPlannedByPeriod(start, end);
+		List<Assignment> unplanned = assignmentRepository.findAllNotPlannedByPeriod(start, end);
 
-		ListIterator<Zuordnung> piter = planned.listIterator();
-		ListIterator<Zuordnung> uiter = unplanned.listIterator();
+		ListIterator<Assignment> piter = planned.listIterator();
+		ListIterator<Assignment> uiter = unplanned.listIterator();
 
 		while (piter.hasNext() && uiter.hasNext()) {
 
-			Zuordnung plan = piter.next();
-			Zuordnung record = uiter.next();
+			Assignment plan = piter.next();
+			Assignment record = uiter.next();
 
 			if (plan.getPlan().getPlanDate().isBefore(record.getAccountrecord().getWertstellung())) {
 				resultlist.add(plan);
@@ -98,8 +98,8 @@ public class StatsService {
 	public List<Integer> getMonthlyCumulatedAssigns(LocalDate start, LocalDate end) {
 		LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
 		LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
-		List<Zuordnung> list = getZuordnungen(startDay, endDay);
-		return this.<Zuordnung>getMonthlyCumulated(list , startDay, endDay, Zuordnung::getStatsDay, Zuordnung::getWert);
+		List<Assignment> list = getAssignments(startDay, endDay);
+		return this.<Assignment>getMonthlyCumulated(list , startDay, endDay, Assignment::getStatsDay, Assignment::getWert);
 	}
 	
 	public List<Integer> getMonthlyCumulatedPlan(LocalDate start, LocalDate end) {
@@ -118,15 +118,15 @@ public class StatsService {
 		List<Integer> result = new ArrayList<>();
 		int sum = 0;
 
-		for (Zuordnung zuordnung : getZuordnungen(startDay, endDay)) {
-			LocalDate date = zuordnung.getStatsDay();
+		for (Assignment assignment : getAssignments(startDay, endDay)) {
+			LocalDate date = assignment.getStatsDay();
 
 			while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
 				result.add(new Integer(sum));
 				curDate = curDate.plusMonths(1);
 			}
 
-			sum += zuordnung.getWert();
+			sum += assignment.getWert();
 		}
 
 		while (curDate.isBefore(endDay)) {

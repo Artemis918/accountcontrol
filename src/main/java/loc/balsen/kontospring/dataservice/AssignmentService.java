@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 
 @Component
-public class ZuordnungService {
+public class AssignmentService {
 
 	@Autowired
-	ZuordnungRepository zuordnungRepository;
+	AssignmentRepository assignmentRepository;
 
 	@Autowired
 	PlanRepository planRepository;
@@ -46,7 +46,7 @@ public class ZuordnungService {
 	}
 
 	public int getAssignCount(int subcategory) {
-		return zuordnungRepository.countBySubcategoryId(subcategory);
+		return assignmentRepository.countBySubcategoryId(subcategory);
 	}
 	
 	private int assign(List<AccountRecord> records, List<Plan> plans) {
@@ -100,29 +100,29 @@ public class ZuordnungService {
 
 	private void assign(AccountRecord record, Plan plan, int wert) {
 
-		Zuordnung zuordnung = new Zuordnung();
+		Assignment assignment = new Assignment();
 
-		zuordnung.setAccountrecord(record);
-		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setSubcategory(plan.getSubCategory());
-		zuordnung.setShortdescription(plan.getShortDescription());
-		zuordnung.setWert(wert);
-		zuordnung.setCommitted(false);
+		assignment.setAccountrecord(record);
+		assignment.setDescription(plan.getDescription());
+		assignment.setSubcategory(plan.getSubCategory());
+		assignment.setShortdescription(plan.getShortDescription());
+		assignment.setWert(wert);
+		assignment.setCommitted(false);
 
 		if (plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
-			zuordnung.setPlan(plan);
+			assignment.setPlan(plan);
 		}
 
-		zuordnungRepository.save(zuordnung);
+		assignmentRepository.save(assignment);
 	}
 
 	public List<AccountRecord> deleteDeactivated(List<Plan> deactivatedPlans) {
 		List<AccountRecord> result = new ArrayList<>();
 		for (Plan plan : deactivatedPlans) {
-			Zuordnung zuordnung = zuordnungRepository.findByPlan(plan);
-			if (zuordnung != null) {
-				result.add(zuordnung.getAccountrecord());
-				zuordnungRepository.delete(zuordnung);
+			Assignment assignment = assignmentRepository.findByPlan(plan);
+			if (assignment != null) {
+				result.add(assignment.getAccountrecord());
+				assignmentRepository.delete(assignment);
 			}
 		}
 		return result;
@@ -132,32 +132,32 @@ public class ZuordnungService {
 		if (text.isEmpty())
 			text = record.getPartner();
 
-		Zuordnung zuordnung = new Zuordnung();
+		Assignment assignment = new Assignment();
 
-		zuordnung.setAccountrecord(record);
-		zuordnung.setDescription(text);
-		zuordnung.setSubcategory(subCategory);
-		zuordnung.setShortdescription(text);
-		zuordnung.setWert(record.getWert());
-		zuordnung.setCommitted(false);
-		zuordnungRepository.save(zuordnung);
+		assignment.setAccountrecord(record);
+		assignment.setDescription(text);
+		assignment.setSubcategory(subCategory);
+		assignment.setShortdescription(text);
+		assignment.setWert(record.getWert());
+		assignment.setCommitted(false);
+		assignmentRepository.save(assignment);
 	}
 
 	public void assignToPlan(Plan plan, AccountRecord record) {
-		Zuordnung zuordnung = new Zuordnung();
+		Assignment assignment = new Assignment();
 
-		zuordnung.setAccountrecord(record);
-		zuordnung.setDescription(plan.getDescription());
-		zuordnung.setSubcategory(plan.getSubCategory());
-		zuordnung.setShortdescription(plan.getShortDescription());
-		zuordnung.setWert(record.getWert());
-		zuordnung.setPlan(plan);
-		zuordnung.setCommitted(true);
-		zuordnungRepository.save(zuordnung);
+		assignment.setAccountrecord(record);
+		assignment.setDescription(plan.getDescription());
+		assignment.setSubcategory(plan.getSubCategory());
+		assignment.setShortdescription(plan.getShortDescription());
+		assignment.setWert(record.getWert());
+		assignment.setPlan(plan);
+		assignment.setCommitted(true);
+		assignmentRepository.save(assignment);
 	}
 
 	public void deleteBySubCategoryId(int subCategory) {
-		zuordnungRepository.deleteBySubcategoryId(subCategory);
+		assignmentRepository.deleteBySubcategoryId(subCategory);
 	}
 
 }

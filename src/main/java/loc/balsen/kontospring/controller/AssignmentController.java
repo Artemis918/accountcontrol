@@ -20,41 +20,41 @@ import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.dataservice.TemplateService;
-import loc.balsen.kontospring.dataservice.ZuordnungService;
+import loc.balsen.kontospring.dataservice.AssignmentService;
 import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
-import loc.balsen.kontospring.dto.ZuordnungDTO;
+import loc.balsen.kontospring.dto.AssignmentDTO;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import lombok.Data;
 
 @Controller
 @RequestMapping("/assign")
 @ResponseBody
-public class ZuordnungController {
+public class AssignmentController {
 
 	private SubCategoryRepository subCategoryRepository;
-	private ZuordnungRepository assignRepository;
-	private ZuordnungService assignService;
+	private AssignmentRepository assignRepository;
+	private AssignmentService assignService;
 	private TemplateService templateService;
 	private AccountRecordRepository accountRecordRepository;
 	private PlanRepository planRepository;
 
 	@Autowired
-	public ZuordnungController(	
+	public AssignmentController(	
 			SubCategoryRepository subCategoryRepository,
-			ZuordnungRepository zuordnungRepository,
-			ZuordnungService zuordnungService,
+			AssignmentRepository assignmentRepository,
+			AssignmentService assignmentService,
 			TemplateService templateService,
 			AccountRecordRepository accountRecordRepository,
 			PlanRepository planRepository) {
 		this.subCategoryRepository = subCategoryRepository;
-		this.assignRepository = zuordnungRepository;
-		this.assignService = zuordnungService;
+		this.assignRepository = assignmentRepository;
+		this.assignService = assignmentService;
 		this.templateService = templateService;
 		this.accountRecordRepository = accountRecordRepository;
 		this.planRepository = planRepository;
@@ -68,23 +68,23 @@ public class ZuordnungController {
 	}
 
 	@GetMapping("/getcategory/{year}/{month}/{id}")
-	public List<ZuordnungDTO> getCategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
-		List<Zuordnung> zuordnungen = new ArrayList<>();
+	public List<AssignmentDTO> getCategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
+		List<Assignment> assignments = new ArrayList<>();
 		List<SubCategory> kontolist = subCategoryRepository.findByCategoryId(id);
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 		for (SubCategory konto : kontolist) {
-			zuordnungen.addAll(assignRepository.findBySubCategoryAndMonth(start, end, konto.getId()));
+			assignments.addAll(assignRepository.findBySubCategoryAndMonth(start, end, konto.getId()));
 		}
 
-		List<ZuordnungDTO> zdtos = zuordnungen.stream().map(z -> {
-			return new ZuordnungDTO(z);
+		List<AssignmentDTO> zdtos = assignments.stream().map(z -> {
+			return new AssignmentDTO(z);
 		}).collect(Collectors.toList());
 
 		zdtos.addAll(planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> {
 			return contains(p, kontolist);
 		}).map(p -> {
-			return new ZuordnungDTO(p);
+			return new AssignmentDTO(p);
 		}).collect(Collectors.toList()));
 
 		zdtos.sort((z1, z2) -> z1.compareCategory(z2));
@@ -96,21 +96,21 @@ public class ZuordnungController {
 	}
 
 	@GetMapping("/getsubcategory/{year}/{month}/{id}")
-	public List<ZuordnungDTO> getSubcategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
+	public List<AssignmentDTO> getSubcategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 
-		List<ZuordnungDTO> zuordnungen = assignRepository.findBySubCategoryAndMonth(start, end, id).stream().map(z -> {
-			return new ZuordnungDTO(z);
+		List<AssignmentDTO> assignments = assignRepository.findBySubCategoryAndMonth(start, end, id).stream().map(z -> {
+			return new AssignmentDTO(z);
 		}).collect(Collectors.toList());
 
-		zuordnungen.addAll(
+		assignments.addAll(
 				planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> p.getSubCategory().getId() == id).map(p -> {
-					return new ZuordnungDTO(p);
+					return new AssignmentDTO(p);
 				}).collect(Collectors.toList()));
 
-		zuordnungen.sort((z1, z2) -> z1.compareSubCategory(z2));
-		return zuordnungen;
+		assignments.sort((z1, z2) -> z1.compareSubCategory(z2));
+		return assignments;
 	}
 
 	
@@ -126,9 +126,9 @@ public class ZuordnungController {
 	@PostMapping("/commit")
 	public MessageID commit(@RequestBody List<Integer> ids) {
 		for (Integer id : ids) {
-			Optional<Zuordnung> zuordnung = assignRepository.findById(id);
-			if (zuordnung.isPresent()) {
-				Zuordnung z = zuordnung.get();
+			Optional<Assignment> assignment = assignRepository.findById(id);
+			if (assignment.isPresent()) {
+				Assignment z = assignment.get();
 				z.setCommitted(true);
 				assignRepository.save(z);
 			}
@@ -138,9 +138,9 @@ public class ZuordnungController {
 	
 	@GetMapping("/invertcommit/{id}")
 	public MessageID invertCommit(@PathVariable int id) {
-		Optional<Zuordnung> zuordnung = assignRepository.findById(id);
-		if (zuordnung.isPresent()) {
-			Zuordnung z = zuordnung.get();
+		Optional<Assignment> assignment = assignRepository.findById(id);
+		if (assignment.isPresent()) {
+			Assignment z = assignment.get();
 			z.setCommitted(!z.isCommitted());
 			assignRepository.save(z);
 		}
@@ -178,12 +178,12 @@ public class ZuordnungController {
 	}
 
 	@PostMapping("/parts")
-	public MessageID assignParts(@RequestBody List<ZuordnungDTO> request) {
+	public MessageID assignParts(@RequestBody List<AssignmentDTO> request) {
 
-		request.forEach((ZuordnungDTO z) -> {
+		request.forEach((AssignmentDTO z) -> {
 			if (z.getIstwert()!= 0) 
 				assignRepository.save(
-						z.toZuordnung(planRepository, subCategoryRepository, accountRecordRepository));
+						z.toAssignment(planRepository, subCategoryRepository, accountRecordRepository));
 		});
 		return MessageID.ok;
 	}
@@ -201,12 +201,12 @@ public class ZuordnungController {
 	
 	@GetMapping("/replan/{id}")
 	MessageID replan(@PathVariable Integer id) {
-		Zuordnung zuordnung = assignRepository.getOne(id);
-		if (zuordnung.getPlan() != null && zuordnung.getPlan().getTemplate() != null ) {
-			AccountRecord record = zuordnung.getAccountrecord();
-			Template template = zuordnung.getPlan().getTemplate().copy(zuordnung.getWert(),zuordnung.getPlan().getStartDate());
+		Assignment assignment = assignRepository.getOne(id);
+		if (assignment.getPlan() != null && assignment.getPlan().getTemplate() != null ) {
+			AccountRecord record = assignment.getAccountrecord();
+			Template template = assignment.getPlan().getTemplate().copy(assignment.getWert(),assignment.getPlan().getStartDate());
 			
-			assignRepository.delete(zuordnung);
+			assignRepository.delete(assignment);
 			templateService.saveTemplate(template);
 			
 			List<AccountRecord> list = new ArrayList<AccountRecord>();

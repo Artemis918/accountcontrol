@@ -12,7 +12,7 @@ import loc.balsen.kontospring.repositories.CategoryRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 
 @SpringBootTest(classes = Application.class)
 @TestPropertySource("classpath:/h2database.properties")
@@ -31,7 +31,7 @@ public class TestContext {
 	protected SubCategoryRepository subCategoryRepository;
 
 	@Autowired
-	protected ZuordnungRepository zuordnungRepository;
+	protected AssignmentRepository assignmentRepository;
 
 	@Autowired
 	protected AccountRecordRepository assignRecordRepository;
@@ -47,7 +47,7 @@ public class TestContext {
 	protected Category category3;
 
 	public void clearRepos() {
-		zuordnungRepository.deleteAll();
+		assignmentRepository.deleteAll();
 		assignRecordRepository.deleteAll();
 		planRepository.deleteAll();
 		templateRepository.deleteAll();

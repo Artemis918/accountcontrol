@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import loc.balsen.kontospring.controller.ZuordnungController.ToCategoryRequestDTO;
+import loc.balsen.kontospring.controller.AssignmentController.ToCategoryRequestDTO;
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.dataservice.CategoryService;

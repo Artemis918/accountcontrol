@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.testutil.TestContext;
 
@@ -26,7 +26,7 @@ import loc.balsen.kontospring.testutil.TestContext;
 public class ZuordnungServiceTest extends TestContext {
 	
 	@Autowired
-	ZuordnungService zuordnungService;
+	AssignmentService assignmentService;
 	
 	List<Plan> plans;
 	
@@ -48,31 +48,31 @@ public class ZuordnungServiceTest extends TestContext {
 		// no match
 		List<AccountRecord> buchungen1 =  new ArrayList<>();
 		buchungen1.add(createRecord("2018-01-02","2345"));
-		zuordnungService.assign(buchungen1);
-		List<Zuordnung> zuordnungen = zuordnungRepository.findAll();
+		assignmentService.assign(buchungen1);
+		List<Assignment> zuordnungen = assignmentRepository.findAll();
 		assertEquals(0,zuordnungen.size());
 
 		//one match
 		List<AccountRecord> buchungen2 =  new ArrayList<>();
 		buchungen2.add(createRecord("2018-01-02","1234"));
-		zuordnungService.assign(buchungen2);
-		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assignmentService.assign(buchungen2);
+		zuordnungen = assignmentRepository.findAll(Sort.by("id"));
 		assertEquals(1,zuordnungen.size());
-		Zuordnung zuordnung = zuordnungen.get(0);
-		assertEquals(buchungen2.get(0), zuordnung.getAccountrecord());
-		assertEquals(plans.get(0),zuordnung.getPlan());
-		assertEquals(0.7, zuordnung.getEuroWert().doubleValue(),0);
+		Assignment assignment = zuordnungen.get(0);
+		assertEquals(buchungen2.get(0), assignment.getAccountrecord());
+		assertEquals(plans.get(0),assignment.getPlan());
+		assertEquals(0.7, assignment.getEuroWert().doubleValue(),0);
 
 		// second call -> no additional matches
-		zuordnungService.assign(buchungen2);
-		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assignmentService.assign(buchungen2);
+		zuordnungen = assignmentRepository.findAll(Sort.by("id"));
 		assertEquals(1,zuordnungen.size());
 
 		// two matches
 		List<AccountRecord> buchungen3 =  new ArrayList<>();
 		buchungen3.add(createRecord("2018-01-09","3456"));
-		zuordnungService.assign(buchungen3);
-		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assignmentService.assign(buchungen3);
+		zuordnungen = assignmentRepository.findAll(Sort.by("id"));
 		assertEquals(3,zuordnungen.size());
 		assertEquals(0.25, zuordnungen.get(1).getEuroWert().doubleValue(),0);
 		assertEquals(0.45, zuordnungen.get(2).getEuroWert().doubleValue(),0);
@@ -81,15 +81,15 @@ public class ZuordnungServiceTest extends TestContext {
 		List<AccountRecord> buchungen4 =  new ArrayList<>();
 		buchungen4.add(createRecord("2018-01-04","2345"));
 		buchungen4.add(createRecord("2018-01-25","5678"));
-		zuordnungService.assign(buchungen4);
-		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assignmentService.assign(buchungen4);
+		zuordnungen = assignmentRepository.findAll(Sort.by("id"));
 		assertEquals(5,zuordnungen.size());	
 				
 		// pattern
 		List<AccountRecord> buchungen5 =  new ArrayList<>();
 		buchungen5.add(createRecord("2018-01-04","a98765"));
-		zuordnungService.assign(buchungen5);
-		zuordnungen = zuordnungRepository.findAll(Sort.by("id"));
+		assignmentService.assign(buchungen5);
+		zuordnungen = assignmentRepository.findAll(Sort.by("id"));
 		assertEquals(6,zuordnungen.size());	
 		assertNull(zuordnungen.get(5).getPlan());
 	}

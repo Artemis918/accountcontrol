@@ -2,14 +2,14 @@ package loc.balsen.kontospring.dto;
 
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import lombok.Data;
 
 @Data
-public class ZuordnungDTO {
+public class AssignmentDTO {
 
 	int id;
 	String detail;
@@ -23,9 +23,9 @@ public class ZuordnungDTO {
 	int category;
 	int position;
 	
-	public ZuordnungDTO() {}
+	public AssignmentDTO() {}
 	
-	public ZuordnungDTO(Zuordnung z) {
+	public AssignmentDTO(Assignment z) {
 		id = z.getId();
 		detail = z.getShortdescription();
 		istwert = z.getWert();
@@ -46,7 +46,7 @@ public class ZuordnungDTO {
 		}
 	}
 
-	public ZuordnungDTO(Plan p) {
+	public AssignmentDTO(Plan p) {
 		id = 0;
 		detail = p.getShortDescription();
 		sollwert = p.getWert();
@@ -60,9 +60,9 @@ public class ZuordnungDTO {
 		subcategory = s.getId();
 	}
 
-	public Zuordnung toZuordnung(PlanRepository planRepository, SubCategoryRepository subCategoryRepository,
+	public Assignment toAssignment(PlanRepository planRepository, SubCategoryRepository subCategoryRepository,
 			AccountRecordRepository accountRecordRepository) {
-		Zuordnung res = new Zuordnung();
+		Assignment res = new Assignment();
 		res.setId(id);
 		res.setShortdescription(detail);
 		res.setDescription(description);
@@ -80,7 +80,7 @@ public class ZuordnungDTO {
 		return res;
 	}
 	
-	public int compareSubCategory(ZuordnungDTO z) {
+	public int compareSubCategory(AssignmentDTO z) {
 		int res = Long.compare(position, z.position);
 		if (res != 0)
 			return res;
@@ -88,7 +88,7 @@ public class ZuordnungDTO {
 		return Long.compare(id,z.id);
 	}
 
-	public int compareCategory(ZuordnungDTO z) {
+	public int compareCategory(AssignmentDTO z) {
 		int res = Long.compare(subcategory, z.subcategory);
 		if (res != 0)
 			return res;

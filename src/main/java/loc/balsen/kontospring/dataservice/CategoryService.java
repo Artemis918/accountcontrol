@@ -19,10 +19,10 @@ public class CategoryService {
 	
 	private CategoryRepository categoryRepository;
 	private SubCategoryRepository subCategoryRepository;
-	private ZuordnungService assignService;
+	private AssignmentService assignService;
 
-	public CategoryService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository, ZuordnungService zuordnungService) {
-		this.assignService= zuordnungService;
+	public CategoryService(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository, AssignmentService assignmentService) {
+		this.assignService= assignmentService;
 		this.categoryRepository = categoryRepository;
 		this.subCategoryRepository = subCategoryRepository;
 	}

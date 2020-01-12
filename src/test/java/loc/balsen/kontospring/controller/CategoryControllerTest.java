@@ -29,7 +29,7 @@ import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.dto.CategoryDTO;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -260,7 +260,7 @@ public class CategoryControllerTest extends TestContext {
 		AccountRecord record = new AccountRecord();
 		assignRecordRepository.save(record);
 		
-		Zuordnung assign = new Zuordnung();
+		Assignment assign = new Assignment();
 		assign.setAccountrecord(record);
 		assign.setSubcategory(delsub1);
 		
@@ -272,7 +272,7 @@ public class CategoryControllerTest extends TestContext {
 		assertFalse(categoryRepository.findById(delcat.getId()).isPresent());
 		assertFalse(subCategoryRepository.findById(delsub1.getId()).isPresent());
 		assertFalse(subCategoryRepository.findById(delsub2.getId()).isPresent());
-		assertFalse(zuordnungRepository.findById(assign.getId()).isPresent());
+		assertFalse(assignmentRepository.findById(assign.getId()).isPresent());
 		assertTrue(assignRecordRepository.findById(record.getId()).isPresent());
 	}
 }

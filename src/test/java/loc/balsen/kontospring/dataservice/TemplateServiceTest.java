@@ -25,11 +25,11 @@ import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -40,7 +40,7 @@ public class TemplateServiceTest extends TestContext {
 	public AccountRecordRepository accountRecordRepository;
 
 	@Autowired
-	public ZuordnungRepository zuordnungRepository;
+	public AssignmentRepository assignmentRepository;
 
 	@Autowired
 	public SubCategoryRepository kontoRepository;
@@ -151,10 +151,10 @@ public class TemplateServiceTest extends TestContext {
 		planRepository.save(plan);
 
 		if (record != null) {
-			Zuordnung z = new Zuordnung();
+			Assignment z = new Assignment();
 			z.setPlan(plan);
 			z.setAccountrecord(record);
-			zuordnungRepository.save(z);
+			assignmentRepository.save(z);
 		}
 
 		return plan;

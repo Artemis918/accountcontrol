@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { CategorySelector } from '../utils/categoryselector'
-import { AccountRecord, Plan, Zuordnung } from '../utils/dtos'
+import { AccountRecord, Plan, Assignment } from '../utils/dtos'
 import { PlanSelect } from './planselect'
 import * as mcss from './css/guidedassign.css'
 
@@ -37,7 +37,7 @@ class AssignPart {
         this.betrag = Math.abs(wert);
     }
 
-    getZuordnung( accountRecord: AccountRecord ): Zuordnung {
+    getAssignment( accountRecord: AccountRecord ): Assignment {
         return {
             id: undefined,
             detail: this.details,
@@ -69,13 +69,13 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
     }
 
     save(): void {
-        var zuordnungen: Zuordnung[] = this.state.data.map( ( t: AssignPart ) => { return t.getZuordnung( this.props.accountRecord) } );
-        zuordnungen.forEach( ( z: Zuordnung ) => { z.committed = true } );
+        var assignments: Assignment[] = this.state.data.map( ( t: AssignPart ) => { return t.getAssignment( this.props.accountRecord) } );
+        assignments.forEach( ( z: Assignment ) => { z.committed = true } );
 
         var self: GuidedAssign = this;
         fetch( '/assign/parts', {
             method: 'post',
-            body: JSON.stringify( zuordnungen ),
+            body: JSON.stringify( assignments ),
             headers: {
                 "Content-Type": "application/json"
             }

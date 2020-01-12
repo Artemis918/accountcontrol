@@ -18,9 +18,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Zuordnung;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.ZuordnungRepository;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -31,14 +31,14 @@ public class StatsServiceTest extends TestContext {
 	private PlanRepository planRepository;
 	
 	@Mock
-	private ZuordnungRepository zuordnungRepository;
+	private AssignmentRepository assignmentRepository;
 	
 	private StatsService statsService;
 	
 	@Before
 	public void setUp() throws Exception {
 		createCategoryData();
-		statsService = new StatsService(zuordnungRepository, planRepository);
+		statsService = new StatsService(assignmentRepository, planRepository);
 	}
 
 	@After
@@ -94,13 +94,13 @@ public class StatsServiceTest extends TestContext {
 	@Test
 	public void testGetCummulatedAssigns() {
 		
-		List<Zuordnung> zgeplantlist=  new ArrayList<>();
-		List<Zuordnung> zungeplantlist=  new ArrayList<>();
+		List<Assignment> zgeplantlist=  new ArrayList<>();
+		List<Assignment> zungeplantlist=  new ArrayList<>();
 		
 		AccountRecord record1 = new AccountRecord();
 		record1.setWertstellung(LocalDate.of(2018, 12, 1));
 		
-		Zuordnung zuordnung1 = new Zuordnung();
+		Assignment zuordnung1 = new Assignment();
 		zuordnung1.setAccountrecord(record1);
 		zuordnung1.setWert(100);
 		zungeplantlist.add(zuordnung1);
@@ -111,7 +111,7 @@ public class StatsServiceTest extends TestContext {
 		Plan plan2 = new Plan();
 		plan2.setPlanDate(LocalDate.of(2018, 12, 3));
 
-		Zuordnung zuordnung2 = new Zuordnung();
+		Assignment zuordnung2 = new Assignment();
 		zuordnung2.setAccountrecord(record2);
 		zuordnung2.setWert(110);
 		zuordnung2.setPlan(plan2);
@@ -120,7 +120,7 @@ public class StatsServiceTest extends TestContext {
 		AccountRecord record3 = new AccountRecord();
 		record3.setWertstellung(LocalDate.of(2019, 2, 2));
 
-		Zuordnung zuordnung3 = new Zuordnung();
+		Assignment zuordnung3 = new Assignment();
 		zuordnung3.setAccountrecord(record3);
 		zuordnung3.setWert(-2);
 		zungeplantlist.add(zuordnung3);
@@ -128,7 +128,7 @@ public class StatsServiceTest extends TestContext {
 		AccountRecord record4 = new AccountRecord();
 		record4.setWertstellung(LocalDate.of(2019, 2, 28));
 
-		Zuordnung zuordnung4 = new Zuordnung();
+		Assignment zuordnung4 = new Assignment();
 		zuordnung4.setAccountrecord(record4);
 		zuordnung4.setWert(-12);
 		zungeplantlist.add(zuordnung4);
@@ -139,14 +139,14 @@ public class StatsServiceTest extends TestContext {
 		Plan plan5 = new Plan();
 		plan5.setPlanDate(LocalDate.of(2019, 3, 1));
 		
-		Zuordnung zuordnung5 = new Zuordnung();
+		Assignment zuordnung5 = new Assignment();
 		zuordnung5.setAccountrecord(record5);
 		zuordnung5.setWert(17);
 		zuordnung5.setPlan(plan5);
 		zgeplantlist.add(zuordnung5);
 		
-		when(zuordnungRepository.findAllPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zgeplantlist);
-		when(zuordnungRepository.findAllNotPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zungeplantlist);
+		when(assignmentRepository.findAllPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zgeplantlist);
+		when(assignmentRepository.findAllNotPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zungeplantlist);
 		
 		List<Integer> result = statsService.getMonthlyCumulatedAssigns(LocalDate.of(2018,10,3), LocalDate.of(2019,5,3));
 		

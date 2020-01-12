@@ -146,7 +146,7 @@ export class StatsMonthDTO {
 }
 
 //=====================================================
-export class  Zuordnung {
+export class  Assignment {
     id: number;
     detail: string;
     description: string;
