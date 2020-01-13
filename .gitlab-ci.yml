@@ -67,11 +67,11 @@ publish:
   only:
     - master
 
-deploy:
-  stage: deploy 
-  script:
-  	- kubectl apply
-  only:
-    - master
-variables:
-  GIT_STRATEGY: fetch
+#deploy:
+#  stage: deploy 
+#  script:
+#  	- kubectl apply
+#  only:
+#    - master
+#variables:
+#  GIT_STRATEGY: fetch
