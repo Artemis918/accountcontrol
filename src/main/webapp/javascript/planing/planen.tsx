@@ -80,7 +80,7 @@ export class Planen extends React.Component<PlanenProps, IState> {
         var self: Planen = this;
         fetch( "plans/createFromTemplates/" + this.state.creationMonth + "/" + this.state.creationYear )
             .then( ( response: Response ) => response.text() )
-            .then( ( json ) => { self.openCreatePopup( false ); self.props.sendmessage( "Pläne erzeugt", false );  } );
+            .then( ( json ) => { self.openCreatePopup( false ); self.props.sendmessage( "Pläne erzeugt",  MessageID.OK);  } );
     }
 
     renderCreation(): JSX.Element {

@@ -25,7 +25,7 @@
 .headerselector {
 	float: right;
 	padding: 5px;
-	font-size: 15px;
+	font-size: 16px;
 }
 
 .langselector {
@@ -35,9 +35,29 @@
 
 
 .actionbar {
-	
+	border: 0px 0px 0xp 2px;
 }
 
 .actionbutton {
-	
+	background-color: lightgray;
+	padding: 5px;
+	margin: 5px;
+	font-size: 16px;
 }
+
+.addonbutton {
+	background-color: lightblue;
+	padding: 5px;
+	margin: 5px;
+	font-size: 16px;
+}
+
+
+.catselector {
+	float: right;
+	padding: 5px;
+	width: 100%;
+	font-size: 16px;
+}
+
+

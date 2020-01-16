@@ -39,6 +39,19 @@
 	"category.description": "Beschreibung",
 	"category.woulddelete": "Diese Aktion löscht folgendes:",
 	
+    "assign.assignplan": "Plan zuweisen",
+    "assign.catassign": "Kat. zuweisen",
+    "assign.categoryassign": "Zuweisen an Kategorie",
+    "assign.assign": "Zuweisen",
+	"assign.split": "Verteilen",
+	"assign.auto": "Automatisch",
+	"assign.plan": "Neu planen",
+	"assign.date": "Datum",
+	"assign.receiver": "Empfänger",
+	"assign.detail": "Details",
+	"assign.value": "Wert",
+	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
+	
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",
 	"returncode_3": "Einige Daten sind nicht korrekt"

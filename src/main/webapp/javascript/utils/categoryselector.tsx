@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { DropdownService } from './dropdownservice'
 
+import * as css from '../css/index.css'
+
 
 export type HandleCategoryChange = ( subCategory: number, category: number ) => void;
 
@@ -50,28 +52,30 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                 <div>
                     <DropdownService value={this.state.category}
                         onChange={this.setCategory}
-                        url='category/catenum' />
+                        url='category/catenum'
+						className={css.catselector} />
                     <DropdownService value={this.state.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
-                        param={'' + this.state.category} />
+                        param={'' + this.state.category}
+						className={css.catselector} />
                 </div> )
         }
         else {
             return (
-                <div>
-                    <div>
-                        <DropdownService value={this.state.category}
+                <table><tbody>
+                    <tr><td>
+                        <DropdownService className={css.catselector} value={this.state.category}
                             onChange={this.setCategory}
                             url='category/catenum' />
-                    </div>
-                    <div>
-                        <DropdownService value={this.state.subcategory}
+                    </td></tr>
+                    <tr><td>
+                        <DropdownService className={css.catselector} value={this.state.subcategory}
                             onChange={this.setSubCategory}
                             url='category/subenum'
                             param={'' + this.state.category} />
-                    </div>
-                </div>
+                    </td></tr>
+                </tbody></table>
             );
         }
     }

@@ -1,12 +1,16 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import { CategoryAssign } from './categoryassign'
+import CategoryAssign from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { GuidedAssign } from './guidedassign';
 import { PlanSelect } from './planselect';
-import { AccountRecord, Plan } from '../utils/dtos'
-import { SendMessage, MessageID } from '../utils/messageid'
- 
+import { AccountRecord, Plan } from '../utils/dtos';
+import { SendMessage, MessageID } from '../utils/messageid';
+import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
+import { useIntl, WrappedComponentProps } from 'react-intl';
+
+
+import * as mcss from './css/assign.css'
 import * as css from '../css/index.css'
 
 
@@ -24,7 +28,16 @@ interface IState {
     defcategory: number
 }
 
-export class Assign extends React.Component<AssignProps, IState> {
+const assignmenu:string = "assignmenu";
+
+class _Assign extends React.Component<AssignProps & WrappedComponentProps, IState> {
+	
+	assignplanlabel:string;
+	assignlabel:string;
+	splitlabel:string;
+	autolabel:string;
+	planlabel:string;
+	
 
     columns: ColumnInfo<AccountRecord>[] = [
         {
@@ -55,15 +68,35 @@ export class Assign extends React.Component<AssignProps, IState> {
         }];
     lister: MultiSelectLister<AccountRecord>;
 
-    constructor( props: AssignProps ) {
+    constructor( props: AssignProps & WrappedComponentProps ) {
         super( props )
         this.lister = undefined;
         this.state = { plan: undefined, planassign: undefined, accountRecord: undefined, categoryassign: false, deftext: "", defsubcategory: 1, defcategory: 1 }
         this.createPlan = this.createPlan.bind( this );
+        this.assignAuto = this.assignAuto.bind( this );
+        this.assignManuell = this.assignManuell.bind( this );
+        this.assignPlan = this.assignPlan.bind( this );
+        this.assignCategory = this.assignCategory.bind( this );
         this.onChange = this.onChange.bind( this );
         this.assignSelected = this.assignSelected.bind( this );
         this.assignSelectedPlan = this.assignSelectedPlan.bind( this );
     }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
+	createLabel():void {
+		this.assignplanlabel = this.label("assign.assignplan");
+		this.assignlabel = this.label("assign.catassign");
+		this.splitlabel = this.label("assign.split");
+		this.autolabel = this.label("assign.auto");
+		this.planlabel = this.label("assign.plan");
+		
+		this.columns[0].header = this.label("assign.date");
+		this.columns[1].header = this.label("assign.receiver");
+		this.columns[2].header = this.label("assign.detail");
+		this.columns[3].header = this.label("assign.value");
+		
+	}
 
     assignAuto(): void {
         fetch( 'assign/all' )
@@ -82,7 +115,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     assignManuell(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
+            this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
         }
         else {
             this.setState( { accountRecord: data[0] } )
@@ -114,7 +147,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     createPlan(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
+            this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
         }
         else {
             this.setState( { plan: data[0].id } )
@@ -143,7 +176,7 @@ export class Assign extends React.Component<AssignProps, IState> {
     assignPlan(): void {
         var data: AccountRecord[] = this.lister.getSelectedData();
         if ( data.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Beleg selektiert sein", MessageID.INVALID_DATA );
+            this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
         }
         else {
             this.setState( { planassign: data[0].id } )
@@ -159,7 +192,25 @@ export class Assign extends React.Component<AssignProps, IState> {
             return null;
     }
 
+	renderContextMenu():JSX.Element {
+		return (
+				<ContextMenu id={assignmenu} hideOnLeave={true} className={mcss.assigncontext}>
+					
+				    <MenuItem onClick={this.assignCategory} className={mcss.assigncontextitem}>
+                       {this.assignlabel}
+                    </MenuItem>
+				    <MenuItem onClick={this.assignPlan} className={mcss.assigncontextitem}>
+					   {this.assignplanlabel}
+		            </MenuItem>
+				    <MenuItem onClick={this.assignManuell} className={mcss.assigncontextitem}>
+                       {this.splitlabel}
+                    </MenuItem>
+				</ContextMenu>
+		)
+    }
+
     render(): JSX.Element {
+		this.createLabel();
 
         if ( this.state.plan !== undefined ) {
             return <TemplateEditor accountRecord={this.state.plan} onChange={() => this.onChange()} />
@@ -170,20 +221,22 @@ export class Assign extends React.Component<AssignProps, IState> {
         }
 
         return (
-            <div>
+	        <div>
                 <div className={css.actionbar}>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>Automatisch</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignCategory()}>Kategorie</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>Manuell</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>Plan Zuweisen</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.createPlan()}>Planen</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>{this.autolabel}</button> |
+					<button className={css.actionbutton} onClick={( e ) => this.assignCategory()}>{this.assignlabel}</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>{this.splitlabel}</button>
+                    <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>{this.assignplanlabel}</button> |                  
+					<button className={css.actionbutton} onClick={( e ) => this.createPlan()}>{this.planlabel}</button>
                 </div>
                 <div>
+                    <ContextMenuTrigger id={assignmenu} >´					
                     <MultiSelectLister<AccountRecord> columns={this.columns}
                         url='record/unassigned'
                         lines={28}
                         ext=''
                         ref={( ref ) => { this.lister = ref }} />
+					</ContextMenuTrigger>
                 </div>
                 {this.state.categoryassign ? <CategoryAssign
                     text={this.state.deftext}
@@ -193,7 +246,16 @@ export class Assign extends React.Component<AssignProps, IState> {
                     : null
                 }
                 {this.renderPlanSelect()}
+				{this.renderContextMenu()}
             </div>
         )
     }
 }
+
+type CreateAssign = (props:AssignProps) => JSX.Element;
+
+const Assign:CreateAssign = (props : AssignProps) => {
+    return (<_Assign {...props} intl={useIntl()}/>);
+}
+
+export default Assign;

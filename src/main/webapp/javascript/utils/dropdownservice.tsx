@@ -9,6 +9,7 @@ export interface DropdownServiceProps {
     url: string;
     param?: string;
     value: number;
+	className?: string;
 }
 
 interface IState {
@@ -64,7 +65,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
 
     render(): JSX.Element {
         return (
-            <select value={this.props.value} 
+            <select className={this.props.className} value={this.props.value} 
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
                 {this.state.data.map( ( t ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>

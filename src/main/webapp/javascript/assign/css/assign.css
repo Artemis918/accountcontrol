@@ -1,0 +1,20 @@
+.maninput {
+	border: none; 
+	-moz-appearance : textfield;
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.assigncontext {
+	background-color: lightgray;
+	border: thin;
+	border-style: solid;
+	padding: 5px;
+}
+
+.assigncontextitem {
+	background-color: lightgray;
+	padding: 5px;
+}
+
+

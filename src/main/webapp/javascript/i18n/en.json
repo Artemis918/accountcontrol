@@ -38,6 +38,20 @@
 	"category.shortdescription": "name",
 	"category.description": "Description",
 	"category.woulddelete": "This will delete :",
+
+    "assign.assignplan": "Assign plan",
+    "assign.catassign": "Assign cat",
+    "assign.categoryassign": "Assign category",
+    "assign.assign": "Assign",
+	"assign.split": "Split",
+	"assign.auto": "Auto assign",
+	"assign.plan": "plan",
+	"assign.date": "Sate",
+	"assign.receiver": "To",
+	"assign.detail": "Details",
+	"assign.value": "Value",
+	"assign.onevalue": "you must select exactly on record",
+	
 	
 	"returncode_1": "ok",
 	"returncode_2": "some data is missing",

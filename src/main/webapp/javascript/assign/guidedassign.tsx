@@ -2,7 +2,7 @@ import * as React from 'react'
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
 import { PlanSelect } from './planselect'
-import * as mcss from './css/guidedassign.css'
+import * as mcss from './css/assign.css'
 
 type onCommitCallback = () => void;
 
