@@ -3,7 +3,7 @@ import {useIntl, IntlShape,WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 
 import * as css from '../css/index.css'
-
+import * as acss from './css/assign.css'
 
 type HandleAssignCallback = ( subCategory: number, text: string ) => void;
 
@@ -62,7 +62,7 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
                             horiz={true}
                         />
                     </div>
-                    <div><input type='text' defaultValue={this.props.text} ref={this.comment} /></div>
+                    <div><input className={acss.descinput} type='text' defaultValue={this.props.text} ref={this.comment} /></div>
                     <div><button onClick={this.assign} className={css.addonbutton} >
 							{this.label("assign.assign")}
 						</button>

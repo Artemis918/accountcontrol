@@ -17,4 +17,14 @@
 	padding: 5px;
 }
 
+.descinput {
+	width: 100%;
+	border-style: groove;
+	border-width: 3px;
+	border-color: darkgray #101010;
+	background-color: lightgray;
+	box-sizing: border-box;
+	margin: 5px 0px 5px 0px
+}
+
 
