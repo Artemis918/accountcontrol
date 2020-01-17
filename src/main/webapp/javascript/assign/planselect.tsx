@@ -2,6 +2,11 @@ import * as React from 'react'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils/monthselect'
 import { Plan } from '../utils/dtos'
+import { useIntl, WrappedComponentProps } from 'react-intl'
+
+import * as css from '../css/index.css'
+import * as acss from './css/assign.css'
+
 
 type OnSelectCallBack = ( plan: Plan ) => void;
 
@@ -16,23 +21,23 @@ interface IState {
     year: number
 }
 
-export class PlanSelect extends React.Component<PlanSelectProps, IState> {
+export class _PlanSelect extends React.Component<PlanSelectProps & WrappedComponentProps, IState> {
 
     columns: ColumnInfo<Plan>[];
     lister: SingleSelectLister<Plan>;
 
-    constructor( props: PlanSelectProps ) {
+    constructor( props: PlanSelectProps & WrappedComponentProps) {
         super( props );
         this.state = { year: this.props.year, month: this.props.month };
         this.setFilter = this.setFilter.bind( this );
         this.columns = [{
-            header: 'Datum',
+            header: this.label("assign.date"),
             getdata: ( p: Plan ): string => { return p.plandate.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
-            header: 'Beschreibung',
+            header: this.label("assign.detail"),
             getdata: ( p: Plan ): string => { return p.shortdescription }
         }, {
-            header: 'Betrag',
+            header: this.label("assign.value"),
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
                 return (
                     <div style={{
@@ -46,6 +51,8 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
         }]
     }
 
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+		
     setFilter( m: number, y: number ): void {
         this.setState( { year: y, month: m } )
     }
@@ -76,10 +83,20 @@ export class PlanSelect extends React.Component<PlanSelectProps, IState> {
                             columns={this.columns}
                             ref={( ref ) => { this.lister = ref }} />
                     </div>
-                    <button onClick={() => this.props.onSelect( undefined )}>Cancel</button>
+                    <button onClick={() => this.props.onSelect( undefined )} 
+                            className={css.addonbutton}>
+                       {this.label("cancel")}
+                    </button>
                 </div>
             </div>
         )
     }
-
 }
+
+type CreatePlanSelect = (props:PlanSelectProps) => JSX.Element;
+
+const PlanSelect:CreatePlanSelect = (props : PlanSelectProps) => {
+    return (<_PlanSelect {...props} intl={useIntl()}/>);
+}
+
+export default PlanSelect;

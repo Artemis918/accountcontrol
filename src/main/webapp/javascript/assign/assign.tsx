@@ -3,7 +3,7 @@ import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlis
 import CategoryAssign from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { GuidedAssign } from './guidedassign';
-import { PlanSelect } from './planselect';
+import PlanSelect from './planselect';
 import { AccountRecord, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
@@ -20,7 +20,7 @@ interface AssignProps {
 
 interface IState {
     plan: number;
-    planassign: number;
+    planassign: AccountRecord;
     accountRecord: AccountRecord;
     categoryassign: boolean;
     deftext: string;
@@ -163,7 +163,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
         var self = this;
         if ( plan != undefined ) {
             var self = this;
-            fetch( '/assign/toplan/' + plan.id + '/' + this.state.planassign )
+            fetch( '/assign/toplan/' + plan.id + '/' + this.state.planassign.id )
                 .then( function( response ) {
                     self.setState( { planassign: undefined } );
                     self.lister.reload();
@@ -179,14 +179,14 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
             this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
         }
         else {
-            this.setState( { planassign: data[0].id } )
+            this.setState( { planassign: data[0] } )
         }
     }
 
     renderPlanSelect(): JSX.Element {
         if ( this.state.planassign != undefined ) {
-            var now: Date = new Date;
-            return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onSelect={this.assignSelectedPlan} /> );
+		var date: Date = this.state.planassign.eingang;
+            return ( <PlanSelect month={date.getMonth()} year={date.getFullYear()} onSelect={this.assignSelectedPlan} /> );
         }
         else
             return null;
