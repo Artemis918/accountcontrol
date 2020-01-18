@@ -10,7 +10,7 @@ export interface CategorySelectorProps {
     onChange?: HandleCategoryChange;
     category?: number;
     subcategory?: number;
-    horiz?: boolean;
+    horiz: boolean;
 }
 
 interface IState {
@@ -49,21 +49,21 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     render(): JSX.Element {
         if ( this.props.horiz ) {
             return (
-                <div>
+                <span>
                     <DropdownService value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum'
-						className={css.catselector} />
+						className={css.catselector2} />
                     <DropdownService value={this.state.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
                         param={'' + this.state.category}
-						className={css.catselector} />
-                </div> )
+						className={css.catselector2} />
+                </span> )
         }
         else {
             return (
-                <table><tbody>
+                <table style={{width:"100%"}}><tbody>
                     <tr><td>
                         <DropdownService className={css.catselector} value={this.state.category}
                             onChange={this.setCategory}

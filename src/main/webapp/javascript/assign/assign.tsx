@@ -2,7 +2,7 @@ import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
 import CategoryAssign from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
-import { GuidedAssign } from './guidedassign';
+import SplitAssign from './splitassign';
 import PlanSelect from './planselect';
 import { AccountRecord, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
@@ -91,10 +91,10 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.autolabel = this.label("assign.auto");
 		this.planlabel = this.label("assign.plan");
 		
-		this.columns[0].header = this.label("assign.date");
+		this.columns[0].header = this.label("date");
 		this.columns[1].header = this.label("assign.receiver");
-		this.columns[2].header = this.label("assign.detail");
-		this.columns[3].header = this.label("assign.value");
+		this.columns[2].header = this.label("details");
+		this.columns[3].header = this.label("value");
 		
 	}
 
@@ -217,7 +217,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
         }
 
         if ( this.state.accountRecord !== undefined ) {
-            return <GuidedAssign accountRecord={this.state.accountRecord} onCommit={() => this.onChange()} />
+            return <SplitAssign accountRecord={this.state.accountRecord} onCommit={() => this.onChange()} />
         }
 
         return (

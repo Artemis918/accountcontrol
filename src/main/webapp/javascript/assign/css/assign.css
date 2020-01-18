@@ -1,9 +1,3 @@
-.maninput {
-	border: none; 
-	-moz-appearance : textfield;
-	-webkit-appearance: none;
-	margin: 0;
-}
 
 .assigncontext {
 	background-color: lightgray;
@@ -17,6 +11,15 @@
 	padding: 5px;
 }
 
+.delbutton {
+	margin: 0;
+	borderstyle: outset;
+    background-color: lightgray;
+    font-size: 15px;
+    padding: 2px 10px;
+    margin: 0px 2px;
+}
+
 .descinput {
 	width: 100%;
 	border-style: groove;
@@ -24,7 +27,8 @@
 	border-color: darkgray #101010;
 	background-color: lightgray;
 	box-sizing: border-box;
-	margin: 5px 0px 5px 0px
+	margin: 5px 0px 5px 0px;
+	font-size: 15px
 }
 
 

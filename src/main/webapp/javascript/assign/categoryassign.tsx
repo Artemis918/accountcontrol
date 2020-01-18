@@ -59,7 +59,7 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
                             category={this.props.category}
                             subcategory={this.props.subcategory}
                             ref={this.categoryselector}
-                            horiz={true}
+                            horiz={false}
                         />
                     </div>
                     <div><input className={acss.descinput} type='text' defaultValue={this.props.text} ref={this.comment} /></div>

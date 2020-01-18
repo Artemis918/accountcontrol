@@ -1,11 +1,15 @@
 {
 	"create": "Anlegen",
 	"cancel": "Abbrechen",
+	"save": "Speichern",
 	"delete": "Löschen",
 	"categories": "Kategorien",
 	"subcategories": "Unterkategorien",
 	"assingments": "Zuordnungen",
-
+	"details": "Details",
+	"value": "Wert",
+	"date": "Datum",
+		
 	"footer.state": "Status",
 	"footer.error": "Fehler",
 	
@@ -46,10 +50,9 @@
 	"assign.split": "Verteilen",
 	"assign.auto": "Automatisch",
 	"assign.plan": "Neu planen",
-	"assign.date": "Datum",
 	"assign.receiver": "Empfänger",
-	"assign.detail": "Details",
-	"assign.value": "Wert",
+
+	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
 	
 	"returncode_1": "OK",

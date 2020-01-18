@@ -31,13 +31,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
         this.state = { year: this.props.year, month: this.props.month };
         this.setFilter = this.setFilter.bind( this );
         this.columns = [{
-            header: this.label("assign.date"),
+            header: this.label("date"),
             getdata: ( p: Plan ): string => { return p.plandate.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
-            header: this.label("assign.detail"),
+            header: this.label("details"),
             getdata: ( p: Plan ): string => { return p.shortdescription }
         }, {
-            header: this.label("assign.value"),
+            header: this.label("value"),
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
                 return (
                     <div style={{

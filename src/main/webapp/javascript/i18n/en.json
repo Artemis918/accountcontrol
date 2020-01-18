@@ -1,11 +1,15 @@
 {
 	"create": "Create",
 	"cancel": "Cancel",
+	"save": "Save",
 	"delete": "Delete",
 	"categories": "Categories",
 	"subcategories": "Subcategories",
 	"assingments": "Assignments",
-
+	"details": "Details",
+	"value": "Value",
+	"date": "Date",
+	
 	"footer.state": "state",
 	"footer.error": "error",
 	
@@ -45,11 +49,9 @@
     "assign.assign": "Assign",
 	"assign.split": "Split",
 	"assign.auto": "Auto assign",
-	"assign.plan": "plan",
-	"assign.date": "Date",
+	"assign.plan": "Create plan",
 	"assign.receiver": "To",
-	"assign.detail": "Details",
-	"assign.value": "Value",
+	"assign.selectplan": "Select plan",
 	"assign.onevalue": "you must select exactly on record",
 	
 	

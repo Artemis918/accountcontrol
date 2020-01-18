@@ -1,12 +1,14 @@
 import * as React from 'react'
+import {useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
-import { PlanSelect } from './planselect'
+import PlanSelect from './planselect'
 import * as mcss from './css/assign.css'
+import * as css from '../css/index.css'
 
 type onCommitCallback = () => void;
 
-export interface GuidedAssignProps {
+export interface SplitAssignProps {
     accountRecord: AccountRecord;
     onCommit: onCommitCallback;
 }
@@ -52,9 +54,9 @@ class AssignPart {
 }
 
 
-export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
+export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComponentProps, IState> {
 
-    constructor( props: GuidedAssignProps ) {
+    constructor( props: SplitAssignProps & WrappedComponentProps) {
         super( props )
         var initial: AssignPart = new AssignPart( props.accountRecord.details, props.accountRecord.wert, 1, 1 );
         this.state = { data: [initial], planselect: false };
@@ -67,12 +69,14 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
         this.recalcData = this.recalcData.bind( this );
         this.save = this.save.bind( this );
     }
+	
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     save(): void {
         var assignments: Assignment[] = this.state.data.map( ( t: AssignPart ) => { return t.getAssignment( this.props.accountRecord) } );
         assignments.forEach( ( z: Assignment ) => { z.committed = true } );
 
-        var self: GuidedAssign = this;
+        var self: _SplitAssign = this;
         fetch( '/assign/parts', {
             method: 'post',
             body: JSON.stringify( assignments ),
@@ -150,7 +154,7 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
         return (
             <input type='text'
                 value={this.state.data[index].details}
-                className={mcss.maninput}
+                className={mcss.descinput}
                 onChange={e => {
                     const data: AssignPart[] = this.state.data;
                     data[index].details = e.target.value;
@@ -173,7 +177,7 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
         return (
             <input type='text'
                 value={this.state.data[index].wertstring}
-                className={mcss.maninput}
+                className={mcss.descinput}
                 onChange={( e: React.ChangeEvent<HTMLInputElement> ) => {
                     const data: AssignPart[] = this.state.data;
                     data[index].wertstring = e.target.value;
@@ -192,10 +196,10 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
 
     renderDelButton( index: number ): JSX.Element {
         if ( index == this.state.data.length - 1 ) {
-            return ( <button onClick={e => { this.removeLastRow() }}>^</button> );
+            return ( <button className={mcss.delbutton} onClick={e => { this.removeLastRow() }}>^</button> );
 
         }
-        return ( <button onClick={e => { this.removeRow( index ) }}>x</button> );
+        return ( <button className={mcss.delbutton} onClick={e => { this.removeRow( index ) }}>x</button> );
     }
 
     renderPlanSelect(): JSX.Element {
@@ -210,10 +214,10 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
     renderRow( index: number ): JSX.Element {
         return (
             <tr key={'row' + index}>
-                <td>{this.renderDetails( index )}</td>
-                <td>{this.renderSubCategory( index )}</td>
-                <td>{this.renderValue( index )}</td>
-                <td>{this.renderDelButton( index )}</td>
+                <td style={{width: "50%"}}>{this.renderDetails( index )}</td>
+                <td style={{width: "30%"}}>{this.renderSubCategory( index )}</td>
+                <td style={{width: "10%"}}>{this.renderValue( index )}</td>
+                <td style={{width: "5%"}}>{this.renderDelButton( index )}</td>
             </tr> )
     }
 
@@ -223,9 +227,9 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
                 <table>
                     <thead>
                         <tr>
-                            <th>Details</th>
-                            <th>Subkategorie</th>
-                            <th>Betrag</th>
+                            <th>{this.label("details")}</th>
+                            <th>{this.label("categories")}</th>
+                            <th>{this.label("value")}</th>
                             <th>-</th>
                         </tr>
                     </thead>
@@ -233,11 +237,26 @@ export class GuidedAssign extends React.Component<GuidedAssignProps, IState> {
                         {this.state.data.map( ( d: AssignPart, i: number ) => this.renderRow( i ) )}
                     </tbody>
                 </table>
-                <span style={{ width: '30%' }}><button onClick={( e ) => this.setState( { planselect: true } )} > Select Plan </button> </span>
-                <span style={{ width: '30%' }}><button onClick={this.props.onCommit} > Abbrechen </button></span>
-                <span style={{ width: '30%' }}><button onClick={this.save} > Speichern </button></span>
+                <button className={css.addonbutton} 
+                        onClick={( e ) => this.setState( { planselect: true } )} > 
+                    {this.label("assign.selectplan")} 
+				</button>
+                <button className={css.addonbutton} onClick={this.props.onCommit} >
+                    {this.label("cancel")} 
+ 				</button>
+                <button className={css.addonbutton} onClick={this.save} > 
+					{this.label("save")}
+				</button>
                 {this.renderPlanSelect()}
             </div>
         )
     }
 }
+
+type CreateSplitAssign = (props:SplitAssignProps) => JSX.Element;
+
+const SplitAssign:CreateSplitAssign = (props : SplitAssignProps) => {
+    return (<_SplitAssign {...props} intl={useIntl()}/>);
+}
+
+export default SplitAssign;
