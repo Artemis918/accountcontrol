@@ -5,6 +5,7 @@
 	"new": "Neu",	
 	"copy": "Kopieren",	
 	"delete": "Löschen",
+	"reset": "Zurücksetzen",
 	"categories": "Kategorien",
 	"subcategories": "Unterkategorien",
 	"assingments": "Zuordnungen",
@@ -61,6 +62,11 @@
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
 	
 	"records.recorddata": "Belegdaten",
+	"records.upload": "Einspielen",
+	"records.opendialog": "Dateibrowser öffnen",
+	"records.drophere": "Datei hierhin ziehen",
+	"records.filelist": "Dateiliste",
+	
 	
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",

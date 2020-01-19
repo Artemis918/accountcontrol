@@ -6,6 +6,7 @@ export const editortitle: string;
 export const headerselector: string;
 export const catselector: string;
 export const catselector2: string;
+export const dropzone: string;
 
 export const langselector: string;
 export const actionbar: string;

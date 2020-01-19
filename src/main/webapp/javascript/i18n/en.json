@@ -5,6 +5,7 @@
 	"new": "New",
 	"copy": "Copy",	
 	"delete": "Delete",
+	"reset": "Reset",
 	"categories": "Categories",
 	"subcategories": "Subcategories",
 	"assingments": "Assignments",
@@ -61,7 +62,11 @@
 	"assign.onevalue": "you must select exactly on record",
 	
 	"records.recorddata": "Record data",
-	
+	"records.upload": "Upload",
+	"records.opendialog": "open file browser",
+	"records.drophere": "drop file here",
+	"records.filelist": "file list",
+		
 	"returncode_1": "ok",
 	"returncode_2": "some data is missing",
 	"returncode_3": "some data is invalid"

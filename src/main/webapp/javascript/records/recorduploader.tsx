@@ -1,7 +1,14 @@
 import * as React from 'react'
 import * as Dropzone from 'react-dropzone'
+import {useIntl, WrappedComponentProps} from 'react-intl'
 import * as axios from 'axios'
+import css from '../css/index.css'
+
 import { SendMessage, MessageID } from '../utils/messageid'
+
+
+type Create = (props:RecordUploaderProps) => JSX.Element;
+export const RecordUploader:Create = (p) => {return (<_RecordUploader {...p} intl={useIntl()}/>);}
 
 interface RecordUploaderProps {
     sendmessage: SendMessage;
@@ -13,9 +20,9 @@ interface IState {
     fileerr: string[];
 }
 
-export class RecordUploader extends React.Component<RecordUploaderProps, IState> {
+class _RecordUploader extends React.Component<RecordUploaderProps & WrappedComponentProps, IState> {
 
-    constructor( props: RecordUploaderProps ) {
+    constructor( props: RecordUploaderProps & WrappedComponentProps) {
         super( props );
         this.uploadit = this.uploadit.bind( this );
         this.buttonClear = this.buttonClear.bind( this );
@@ -29,6 +36,8 @@ export class RecordUploader extends React.Component<RecordUploaderProps, IState>
             fileerr: []
         }
     }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     buttonClear(): void {
         this.setState( { accepted: [] } );
@@ -82,7 +91,8 @@ export class RecordUploader extends React.Component<RecordUploaderProps, IState>
                     <tr>
                         <td>
                             <div style={{ textAlign: 'center' }}>
-                                <ul>
+								{this.label("records.filelist")}
+                                <ul style={{borderStyle: 'solid'}}>
                                     {
                                         this.state.accepted.map( f => <li key={f.name}>{f.name} - {f.size} bytes</li> )
                                     }
@@ -92,19 +102,20 @@ export class RecordUploader extends React.Component<RecordUploaderProps, IState>
                                     {
                                         this.state.fileok.map( f => <li> ok: {f} </li> )
                                     }
+                                <li> ... </li>
                                 </ul>
                             </div>
                         </td>
                         <td>
-                            <div className="dropzone">
+                            <div className={css.dropzone}>
                                 <Dropzone.default accept="text/*" onDrop={this.onDrop} >
                                     {( { getRootProps, getInputProps, open } ) => (
                                         <div {...getRootProps()}>
                                             <input {...getInputProps()} />
-                                            <p>Drop files here</p>
-                                            <button type="button" onClick={() => open()}>
-                                                Open File Dialog
-                                                    </button>
+                                            <p style={{textAlign: 'center'}}>{this.label("records.drophere")}</p>
+                                            <button className={css.addonbutton} type="button" onClick={() => open()}>
+                                                {this.label("records.opendialog")}
+                                            </button>
                                         </div>
                                     )}
                                 </Dropzone.default>
@@ -113,8 +124,17 @@ export class RecordUploader extends React.Component<RecordUploaderProps, IState>
                     </tr>
                     <tr>
                         <td>
-                            <button className="button" onClick={( e ) => this.buttonClear()}> Clear </button>
-                            <button className="button" onClick={( e ) => this.uploadit()}> Upload </button>
+                            <button 
+                                 className= {css.addonbutton} 
+                                 onClick={( e ) => this.uploadit()}>
+                                {this.label("records.upload")}
+                            </button>
+                            <button 
+                                 className= {css.addonbutton} 
+                                 onClick={( e ) => this.buttonClear()}>
+                                {this.label("reset")}
+                            </button>
+
                         </td>
                     </tr>
                 </tbody>
