@@ -5,13 +5,10 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { RecordEditor } from './recordeditor'
 import { AccountRecord } from '../utils/dtos'
 import { SendMessage } from '../utils/messageid'
+import css from '../css/index.css'
 
 type Create = (props:RecordCreatorProps) => JSX.Element;
-
-export const RecordCreator:Create = (props : RecordCreatorProps) => {
-    return (<_RecordCreator {...props} intl={useIntl()}/>);
-}
-
+export const RecordCreator:Create = (p) => {return (<_RecordCreator {...p} intl={useIntl()}/>);}
 
 interface RecordCreatorProps {
     sendmessage: SendMessage;
@@ -28,19 +25,19 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
     lister: SingleSelectLister<AccountRecord>;
     editor: RecordEditor;
     columns: ColumnInfo<AccountRecord>[] = [{
-        header: 'Datum',
+        header: this.label("date"),
         getdata: ( data: AccountRecord ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
     }, {
-        header: 'Absender',
+        header: this.label("sender"),
         getdata: ( data: AccountRecord ): string => { return data.absender },
     }, {
-        header: 'Empfänger',
+        header: this.label("receiver"),
         getdata: ( data: AccountRecord ): string => { return data.empfaenger },
     }, {
-        header: 'Details',
+        header: this.label("details"),
         getdata: ( data: AccountRecord ): string => { return data.details },
     }, {
-        header: 'Betrag',
+        header: this.label("value"),
         cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
             <div style={{
@@ -64,6 +61,7 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
         this.editor = undefined;
     }
 
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     setFilter( m: number, y: number ): void {
         this.setState( { year: y, month: m } )
@@ -85,14 +83,16 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
                 <tbody>
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
-                            <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Belegdaten </div>
+                            <div className={css.editortitle}> 
+								{this.label("records.recorddata")}
+						    </div>
                             <RecordEditor ref={( ref ) => { this.editor = ref; }} 
                                           onChange={this.refreshlist}
                                           intl={this.props.intl} />
                         </td>
                         <td >
                             <div style={{ borderBottom: '1px solid black', padding: '3px' }} >
-                                <MonthSelect label='Monat:'
+                                <MonthSelect label={this.label("month")+":"}
                                     year={this.state.year}
                                     month={this.state.month}
                                     onChange={this.setFilter} />

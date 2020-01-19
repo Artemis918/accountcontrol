@@ -9,12 +9,15 @@ import { RecordCreator } from './records/recordcreator'
 import { Templates } from './planing/templates'
 import { Planen } from './planing/planen'
 import { PatternPlanen } from './planing/patternplanen'
-import Assign from './assign/assign'
+import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
 import { OverviewGFX } from './overviewgfx'
-import CategoriesConfig from './configuration/categoriesconfig'
+import { CategoriesConfig } from './configuration/categoriesconfig'
 import { MessageID } from './utils/messageid';
 
+
+type Create = (props:TabbedPagesProps) => JSX.Element;
+export const TabbedPages:Create = (p) => {return (<_TabbedPages {...p} intl={useIntl()}/>); }
 
 type ChangeValue = ( index: number ) => void;
 
@@ -133,11 +136,3 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
         )
     }
 }
-
-type CreateTabbedPages = (props:TabbedPagesProps) => JSX.Element;
-
-const TabbedPages:CreateTabbedPages = (props : TabbedPagesProps) => {
-    return (<_TabbedPages {...props} intl={useIntl()}/>);
-}
-
-export default TabbedPages;

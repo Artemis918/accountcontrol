@@ -13,6 +13,8 @@ import { useIntl, WrappedComponentProps } from 'react-intl';
 import * as mcss from './css/assign.css'
 import * as css from '../css/index.css'
 
+type Create = (props:AssignProps) => JSX.Element;
+export const Assign:Create = (props : AssignProps) => { return (<_Assign {...props} intl={useIntl()}/>);}
 
 interface AssignProps {
     sendmessage: SendMessage;
@@ -252,10 +254,3 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
     }
 }
 
-type CreateAssign = (props:AssignProps) => JSX.Element;
-
-const Assign:CreateAssign = (props : AssignProps) => {
-    return (<_Assign {...props} intl={useIntl()}/>);
-}
-
-export default Assign;

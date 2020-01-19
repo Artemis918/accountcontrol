@@ -2,7 +2,7 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl'
 import { InitialPage } from './initial'
-import TabbedPages from './tabbedPages'
+import { TabbedPages } from './tabbedPages'
 
 
 

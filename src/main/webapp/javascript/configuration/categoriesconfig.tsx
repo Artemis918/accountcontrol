@@ -7,6 +7,9 @@ import { AddTool } from './addtool'
 import { YesNo } from '../utils/yesno'
 import { SendMessage, MessageID } from '../utils/messageid'
 
+type Creator = (props:CategoryConfigProps) => JSX.Element;
+export const CategoriesConfig:Creator = (p) => {return (<_CategoriesConfig {...p} intl={useIntl()}/>); }
+
 interface CategoryConfigProps { 
     sendmessage: SendMessage;
 }
@@ -247,10 +250,3 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     }
 }
 
-type Creator = (props:CategoryConfigProps) => JSX.Element;
-
-const CategoriesConfig:Creator = (props : CategoryConfigProps) => {
-    return (<_CategoriesConfig {...props} intl={useIntl()}/>);
-}
-
-export default CategoriesConfig;

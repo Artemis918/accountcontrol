@@ -13,7 +13,8 @@
 	"date": "Datum",
 	"sender": "Absender",
 	"receiver": "Empfänger",
-	"accountingdate": "Wertstellung", 
+	"accountingdate": "Wertstellung",
+	"month": "Monat",
 		
 	"footer.state": "Status",
 	"footer.error": "Fehler",
@@ -56,9 +57,10 @@
 	"assign.auto": "Automatisch",
 	"assign.plan": "Neu planen",
 	"assign.receiver": "Empfänger",
-
 	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
+	
+	"records.recorddata": "Belegdaten",
 	
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",

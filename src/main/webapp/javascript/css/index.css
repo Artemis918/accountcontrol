@@ -79,3 +79,8 @@
 	background-color: lightgray;
 }	
 
+.editortitle {
+	 font-size: 20px;
+	 border-bottom: 1px solid black;
+	 margin: 5px;	
+}
