@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { PatternEditor } from './patterneditor'
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { CategorySelector } from '../utils/categoryselector'
-import { Plan, Pattern } from '../utils/dtos'
+import { Plan } from '../utils/dtos'
 import 'react-day-picker/lib/style.css'
 
 type OnChangeCallback = () => void;
@@ -133,6 +132,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                         <tr>
                             <td>Kategorie</td>
                             <td><CategorySelector
+								horiz={false}
                                 onChange={( s, c ) => this.setSubCategory( s, c )}
                                 subcategory={this.state.plan.subcategory}
                                 category={this.state.plan.category} />

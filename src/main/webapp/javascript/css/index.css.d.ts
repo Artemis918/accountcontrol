@@ -10,3 +10,5 @@ export const langselector: string;
 export const actionbar: string;
 export const actionbutton: string;
 export const addonbutton: string;
+export const numberinput: string;
+export const stringinput: string;

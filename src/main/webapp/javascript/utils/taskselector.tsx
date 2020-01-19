@@ -9,27 +9,27 @@ export interface Task {
 interface TaskSelectorProps {
     tasks: Task[];
     currenttask: number;
-    pagename: string
+	pageindex: number
 }
 
 interface IState {
     currenttask: number;
-    pagename: string
+	pageindex: number;
 }
 
 export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
 
     constructor( props: TaskSelectorProps ) {
         super( props );
-        this.state = { currenttask: this.props.currenttask, pagename: this.props.pagename};
+        this.state = { currenttask: this.props.currenttask, pageindex: this.props.pageindex};
         this.selectTask = this.selectTask.bind( this );
     }
 
     static getDerivedStateFromProps(nextProps:TaskSelectorProps, prevState:IState): IState {
-        if(nextProps.pagename !== prevState.pagename)
-          return {currenttask: nextProps.currenttask, pagename: nextProps.pagename};
+        if(nextProps.pageindex !== prevState.pageindex)
+          return {currenttask: nextProps.currenttask, pageindex: nextProps.pageindex};
         else
-          return null;
+          return { currenttask: prevState.currenttask, pageindex: prevState.pageindex };
     }
     
     selectTask( i: number ): void {

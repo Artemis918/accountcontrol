@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { useIntl, WrappedComponentProps } from'react-intl'
 import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { RecordEditor } from './recordeditor'
 import { AccountRecord } from '../utils/dtos'
-import { SendMessage, MessageID } from '../utils/messageid'
+import { SendMessage } from '../utils/messageid'
+
+type Create = (props:RecordCreatorProps) => JSX.Element;
+
+export const RecordCreator:Create = (props : RecordCreatorProps) => {
+    return (<_RecordCreator {...props} intl={useIntl()}/>);
+}
+
 
 interface RecordCreatorProps {
     sendmessage: SendMessage;
@@ -15,7 +22,8 @@ interface IState {
     year: number;
 }
 
-export class RecordCreator extends React.Component<RecordCreatorProps, IState> {
+
+class _RecordCreator extends React.Component<RecordCreatorProps & WrappedComponentProps, IState> {
 
     lister: SingleSelectLister<AccountRecord>;
     editor: RecordEditor;
@@ -45,8 +53,8 @@ export class RecordCreator extends React.Component<RecordCreatorProps, IState> {
         )
     }];
 
-    constructor( props: RecordCreatorProps ) {
-        super( props );
+    constructor( props: RecordCreatorProps & WrappedComponentProps) {
+        super( props);
         var currentTime = new Date();
         this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
@@ -78,7 +86,9 @@ export class RecordCreator extends React.Component<RecordCreatorProps, IState> {
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Belegdaten </div>
-                            <RecordEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
+                            <RecordEditor ref={( ref ) => { this.editor = ref; }} 
+                                          onChange={this.refreshlist}
+                                          intl={this.props.intl} />
                         </td>
                         <td >
                             <div style={{ borderBottom: '1px solid black', padding: '3px' }} >

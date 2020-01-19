@@ -1,0 +1,18 @@
+.input {
+  display: inline-block;
+  background :lightgray;
+  font-size: 16;
+}
+
+.inputOverlayWrapper {
+  position: relative;
+}
+
+.inputOverlay {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+
+  background: lightgray;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}

@@ -128,21 +128,24 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             <td>Stardatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.startdate = d; this.setPlanState() }}
-                                startdate={this.state.plan.startdate} />
+                                startdate={this.state.plan.startdate}
+								locale={"DE"} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>Plandatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.plandate = d; this.setPlanState() }}
-                                startdate={this.state.plan.plandate} />
+                                startdate={this.state.plan.plandate}
+								locale={"DE"}  />
                             </td>
                         </tr>
                         <tr>
                             <td>Enddatum</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.enddate = d; this.setPlanState() }}
-                                startdate={this.state.plan.enddate} />
+                                startdate={this.state.plan.enddate}
+  								locale={"DE"}  />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
@@ -155,6 +158,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         <tr>
                             <td>Unterkategorie</td>
                             <td><CategorySelector
+								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
                                 subcategory={this.state.plan.subcategory}
                                 category={this.state.plan.category} />

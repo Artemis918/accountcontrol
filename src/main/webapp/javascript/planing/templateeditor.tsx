@@ -148,13 +148,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         <tr><td>gültig ab</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.validFrom = d; this.setTemplateState() }}
-                                startdate={this.state.template.validFrom} />
+                                startdate={this.state.template.validFrom} 
+            					locale={"DE"} />
                             </td>
                         </tr>
                         <tr><td>gültig bis</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.validUntil = d; this.setTemplateState() }}
-                                startdate={this.state.template.validUntil} />
+                                startdate={this.state.template.validUntil}
+								locale={"DE"}  />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Rythmus</td>
@@ -174,7 +176,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         <tr style={{ background: 'darkgray' }}><td>Starttag</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.start = d; this.setTemplateState() }}
-                                startdate={this.state.template.start} />
+                                startdate={this.state.template.start} 
+								locale={"DE"} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>Vardays</td>
@@ -191,6 +194,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         </tr>
                         <tr><td>Kategorie</td>
                             <td><CategorySelector
+								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
                                 subcategory={this.state.template.subcategory}
                                 category={this.state.template.category} /></td>

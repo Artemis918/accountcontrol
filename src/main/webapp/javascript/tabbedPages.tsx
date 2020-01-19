@@ -113,8 +113,8 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
     ];
     }
 
-    renderPage (page: Page): JSX.Element {
-        return ( <TaskSelector tasks={page.tasks} currenttask={0} pagename={page.title} /> );
+    renderPage (page: Page,index:number): JSX.Element {
+        return ( <TaskSelector tasks={page.tasks} pageindex={index} currenttask={0} /> );
     }
 
     render(): JSX.Element {
@@ -127,7 +127,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
                         title={this.pages[this.state.curpage].title} 
                         pages = {this.headerpages}
                 />
-                {this.renderPage(this.pages[this.state.curpage])}
+                {this.renderPage(this.pages[this.state.curpage],this.state.curpage)}
                 <Footer intl={this.props.intl} ref={this.footer} />
               </div>
         )

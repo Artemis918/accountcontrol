@@ -1,6 +1,10 @@
 import * as React from 'react'
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import {format, parse} from 'date-fns';
+import MomentLocaleUtils from 'react-day-picker/moment';
+import kcss from './css/ksdaypickerinput.css'
+import css from '../css/index.css'
+
+import 'moment/locale/de';
 
 
 export type OnKSDayPickerCallback = (date: Date) => void;
@@ -8,6 +12,7 @@ export type OnKSDayPickerCallback = (date: Date) => void;
 export interface KSDayPickerProps {
     startdate: Date;
     onChange: OnKSDayPickerCallback;
+	locale: string;
 }
 
 
@@ -15,14 +20,11 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 
     constructor( props : KSDayPickerProps ) {
         super( props );
+		this.localParseDate = this.localParseDate.bind(this);
     }
 
-    formatDate( date :Date, f : string ) :string {
-        return format( date, f );
-    }
-
-    parseDate( str :string, f: string) :Date {
-        const parsed: Date = parse( str, f, new Date());
+    localParseDate( str :string, f: string) :Date {
+        const parsed: Date = MomentLocaleUtils.parseDate( str, f, this.props.locale);
         if ( isNaN(parsed.getTime()) || parsed.getFullYear() < 1970)  {
             return undefined;
         }
@@ -30,15 +32,17 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
     }
     
     render() : JSX.Element {
-        const FORMAT :string = "dd.MM.yyyy";
         return (
-                <DayPickerInput
-                onDayChange={( d ) => this.props.onChange(d )}
+                <DayPickerInput			
+				classNames={{container: kcss.input, overlayWrapper: kcss.inputOverlayWrapper, overlay: kcss.inputOverlay}}
+				inputProps= {{className: css.stringinput}}
+                onDayChange={( d:Date ) => this.props.onChange(d)}
                 value={this.props.startdate}
-                formatDate={this.formatDate}
-                format={FORMAT}
-                parseDate={this.parseDate}
-                placeholder='DD.MM.YYYY'/>
+				format={'L'}
+                formatDate={MomentLocaleUtils.formatDate}
+                parseDate={this.localParseDate}
+		        dayPickerProps={{ locale: this.props.locale, localeUtils: MomentLocaleUtils }}
+                />
                 );
     }
 }

@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { AccountRecord } from '../utils/dtos'
+import { IntlShape } from 'react-intl' 
+import * as css from '../css/index.css'
 
 type OnChangeCallback = () => void;
-type SendMessage = ( message: string, error: boolean ) => void;
 
 interface RecordEditorProps {
     onChange: OnChangeCallback;
+	intl: IntlShape;
 }
 
 interface IState {
@@ -28,6 +30,8 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
     }
+
+    label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     createEmptyRecord(): AccountRecord {
         return new AccountRecord();
@@ -67,7 +71,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
 
     delete(): void {
         var self = this;
-        fetch( '/recorde/delete/' + this.state.record.id, { method: 'get' } )
+        fetch( '/record/delete/' + this.state.record.id, { method: 'get' } )
             .then( function( response ) { self.setAnswer( response.json() ); } );
     }
 
@@ -86,37 +90,39 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                 <table>
                     <tbody>
                         <tr>
-                            <td>Absender</td>
+                            <td>{this.label("sender")}</td>
                             <td>
-                                <input value={this.state.record.absender}
+                                <input className={css.stringinput} value={this.state.record.absender}
                                     onChange={( e ) => { this.record.absender = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Empfänger</td>
+                            <td>{this.label("receiver")}</td>
                             <td>
-                                <input value={this.state.record.empfaenger}
+                                <input className={css.stringinput} value={this.state.record.empfaenger}
                                     onChange={( e ) => { this.record.empfaenger = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Beschreibung</td>
+                            <td>{this.label("details")}</td>
                             <td>
-                                <input value={this.state.record.details}
+                                <input className={css.stringinput} value={this.state.record.details}
                                     onChange={( e ) => { this.record.details = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Wert</td>
+                            <td>{this.label("value")}</td>
                             <td>
-                                <input step="0.01" value={this.state.record.wert / 100}
+                                <input className={css.numberinput}
+                                    step="0.01" value={this.state.record.wert / 100}
                                     type='number'
                                     onChange={( e ) => { this.record.wert = e.target.valueAsNumber * 100; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>WertStellung</td>
-                            <td><KSDayPickerInput
+                            <td>{this.label("date")}</td>
+                            <td className={css.stringinput}><KSDayPickerInput
+                                locale={this.props.intl.locale}
                                 onChange={( d ) => { this.record.wertstellung = d; this.setState( { record: this.record } ) }}
                                 startdate={this.state.record.wertstellung} />
                             </td>
@@ -124,10 +130,10 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                     </tbody>
                 </table>
                 <div>
-                    <button onClick={this.save}>Save</button>
-                    <button onClick={this.cleanup}>New</button>
-                    <button onClick={this.copy}>Copy</button>
-                    <button onClick={this.delete}>Del</button>
+                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.cleanup}>{this.label("new")}</button>
+                    <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
+                    <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
                 </div>
             </div>
         );

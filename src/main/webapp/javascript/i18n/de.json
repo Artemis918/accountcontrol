@@ -2,6 +2,8 @@
 	"create": "Anlegen",
 	"cancel": "Abbrechen",
 	"save": "Speichern",
+	"new": "Neu",	
+	"copy": "Kopieren",	
 	"delete": "Löschen",
 	"categories": "Kategorien",
 	"subcategories": "Unterkategorien",
@@ -9,6 +11,9 @@
 	"details": "Details",
 	"value": "Wert",
 	"date": "Datum",
+	"sender": "Absender",
+	"receiver": "Empfänger",
+	"accountingdate": "Wertstellung", 
 		
 	"footer.state": "Status",
 	"footer.error": "Fehler",

@@ -2,6 +2,8 @@
 	"create": "Create",
 	"cancel": "Cancel",
 	"save": "Save",
+	"new": "New",
+	"copy": "Copy",	
 	"delete": "Delete",
 	"categories": "Categories",
 	"subcategories": "Subcategories",
@@ -9,6 +11,9 @@
 	"details": "Details",
 	"value": "Value",
 	"date": "Date",
+	"sender": "From",
+	"receiver": "To",
+	"accountingdate": "Accounting date",
 	
 	"footer.state": "state",
 	"footer.error": "error",
