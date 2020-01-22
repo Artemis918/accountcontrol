@@ -41,6 +41,7 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 				format={'L'}
                 formatDate={MomentLocaleUtils.formatDate}
                 parseDate={this.localParseDate}
+				placeholder={"-"}
 		        dayPickerProps={{ locale: this.props.locale, localeUtils: MomentLocaleUtils }}
                 />
                 );

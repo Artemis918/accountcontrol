@@ -1,9 +1,17 @@
 import * as React from 'react'
+import { useIntl, WrappedComponentProps} from 'react-intl'
+
 import { TemplateEditor } from './templateeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Template } from '../utils/dtos'
 import { DropdownService } from '../utils/dropdownservice'
 import { SendMessage, MessageID } from '../utils/messageid'
+
+
+import css from '../css/index.css'
+
+type Create = (props:TemplateProps) => JSX.Element;
+export const Templates:Create = (p) => {return (<_Templates {...p} intl={useIntl()}/>);}
 
 interface TemplateProps {
     sendmessage: SendMessage;
@@ -13,47 +21,29 @@ interface IState {
     category: number;
 }
 
-const rythmNames: string[] = ['Tag', 'Woche', 'Monat', 'Jahr'];
 
 
-export class Templates extends React.Component<TemplateProps, IState> {
+
+export class _Templates extends React.Component<TemplateProps & WrappedComponentProps, IState> {
 
 
     lister: SingleSelectLister<Template>;
     editor: TemplateEditor;
     columns: ColumnInfo<Template>[];
 
-    constructor( props: TemplateProps ) {
+	rythmNames: string[]; 
+	
+    constructor( props: TemplateProps & WrappedComponentProps) {
         super( props );
         this.state = { category: 1 };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.lister = undefined;
         this.editor = undefined;
-        this.columns = [{
-            header: 'Start Tag',
-            getdata: ( d: Template ): string => { return d.start.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ).substr( 0, 6 ) },
-        }, {
-            header: 'Gültig bis',
-            getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
-        }, {
-            header: 'Rhythmus',
-            getdata: ( d: Template ): string => { return d.anzahl + ' - ' + rythmNames[d.rythmus] }
-        }, {
-            header: 'Beschreibung',
-            getdata: ( d: Template ): string => { return d.shortdescription; }
-        }, {
-            header: 'Betrag',
-            cellrender: ( cellinfo: CellInfo<Template> ) => (
-                <div style={{
-                    color: cellinfo.data.value >= 0 ? 'green' : 'red',
-                    textAlign: 'right'
-                }}>
-                    {( cellinfo.data.value / 100 ).toFixed( 2 )}
-                </div>
-            )
-        }]
+
     }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     refreshlist(): void {
         this.lister.reload();
@@ -63,22 +53,54 @@ export class Templates extends React.Component<TemplateProps, IState> {
         this.editor.setTemplate( template );
     }
 
+	createData():void {
+		this.rythmNames = [this.label("day"), 
+		                   this.label("week"), 
+                           this.label("month"),
+                           this.label("year")];
+        this.columns = [{
+            header: this.label("templates.firstday"),
+            getdata: ( d: Template ): string => { return d.start.toLocaleDateString( this.props.intl.locale, { day: '2-digit', month: '2-digit' } ).substr( 0, 6 ) },
+        }, {
+            header: this.label("templates.validuntil"),
+            getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
+        }, {
+            header: this.label("templates.repetition"),
+            getdata: ( d: Template ): string => { return d.anzahl + ' - ' + this.rythmNames[d.rythmus] }
+        }, {
+            header: this.label("shortdescription"),
+            getdata: ( d: Template ): string => { return d.shortdescription; }
+        }, {
+            header: this.label("value"),
+            cellrender: ( cellinfo: CellInfo<Template> ) => (
+                <div style={{
+                    color: cellinfo.data.value >= 0 ? 'green' : 'red',
+                    textAlign: 'right'
+                }}>
+                    {( cellinfo.data.value / 100 ).toFixed( 2 )}
+                </div>
+            )
+        }]
+	}
+	
     render(): JSX.Element {
+		this.createData();
         return (
             <table style={{ border: '1px solid black' }}>
                 <tbody>
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
-                            <div style={{ fontSize: '20px', borderBottom: '1px solid black', margin: '5px' }}> Vorlagedaten </div>
-                            <TemplateEditor ref={( ref ) => { this.editor = ref; }} onChange={this.refreshlist} />
+							<div className={css.editortitle}> {this.label("records.recorddata")} </div>
+                            <TemplateEditor ref={( ref ) => { this.editor = ref; }} intl={this.props.intl}onChange={this.refreshlist} />
                         </td>
                         <td style={{ verticalAlign: 'top' }} >
-                            <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
-                                <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
+                            <p style={{ padding: '1px', margin: '5px', borderBottom: '1px solid black' }}>
+                                <DropdownService className={css.catselector3} 
+                                    onChange={( val: number ): void => this.setState( { category: val } )}
                                     url='category/catenum'
                                     value={this.state.category}
                                 />
-                            </div>
+                            </p>
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
                                 lines={28}
                                 handleChange={this.refresheditor}

@@ -60,9 +60,9 @@ export class AddTool extends React.Component<AddToolProps, {}> {
                     fontSize: '15px'
                 }}>
                     {this.createTitle()}
-                    <FormattedMessage id='category.shortdescription'/>
+                    <FormattedMessage id='shortdescription'/>
                     <div><input type='text' ref={this.short} size={20} style={{ fontSize: '15px'}}/></div>                    
-                    <FormattedMessage id='category.description'/>
+                    <FormattedMessage id='description'/>
                     <div><input type='text' ref={this.description} size={20} style={{ fontSize: '15px'}}/></div>
                     <div><button onClick={this.createcat} style={{ fontSize: '15px'}}>{this.props.createlabel}</button>
                         <button onClick={this.cancel} style={{ fontSize: '15px'}}>{this.props.cancellabel}</button>

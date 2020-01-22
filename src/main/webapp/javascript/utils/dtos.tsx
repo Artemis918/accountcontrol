@@ -117,7 +117,7 @@ export class Template {
         this.vardays = 4;
         this.anzahl = 1;
         this.rythmus = 2;
-        this.description = 'Neue Vorlage';
+        this.description = '';
         this.category = 1;
         this.subcategory = 1;
         this.categoryname = '';
@@ -125,7 +125,7 @@ export class Template {
         this.position = 1;
         this.value = 0;
         this.pattern = new Pattern();
-        this.shortdescription = 'neu';
+        this.shortdescription = '';
         this.matchstyle = 0;
         this.previous = undefined;
     }

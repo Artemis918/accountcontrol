@@ -70,6 +70,12 @@
 	background-color: lightgray;
 }
 
+.catselector3 {
+	width: 10em;
+	font-size: 16px;
+	background-color: lightgray;
+}
+
 .stringinput {
 	font-size: 16px;
 	background-color: lightgray;
@@ -78,7 +84,13 @@
 .numberinput {
 	font-size: 16px;
 	background-color: lightgray;
-}	
+}
+
+.numbersmallinput {
+	font-size: 16px;
+	width: 5em;
+	background-color: lightgray;
+}
 
 .editortitle {
 	font-size: 20px;

@@ -215,7 +215,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.createLabel();
 
         if ( this.state.plan !== undefined ) {
-            return <TemplateEditor accountRecord={this.state.plan} onChange={() => this.onChange()} />
+            return <TemplateEditor intl={this.props.intl} accountRecord={this.state.plan} onChange={() => this.onChange()} />
         }
 
         if ( this.state.accountRecord !== undefined ) {

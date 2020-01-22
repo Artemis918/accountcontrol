@@ -1,9 +1,15 @@
 import * as React from 'react'
+import { IntlShape} from 'react-intl'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { DropdownService } from '../utils/dropdownservice'
 import { CategorySelector } from '../utils/categoryselector'
-import { Template, Pattern } from '../utils/dtos'
+import { Template } from '../utils/dtos'
+import { TimeRangeSelector } from '../utils/timerangeselector'
+
+import css from '../css/index.css'
+import { MatchStyleSelector } from '../utils/matchstyleselector'
+
 
 type OnChangeCallback = () => void;
 
@@ -11,6 +17,7 @@ type OnChangeCallback = () => void;
 interface TemplateEditorProps {
     onChange: OnChangeCallback;
     accountRecord?: number;
+	intl?: IntlShape;
 }
 
 interface IState {
@@ -26,7 +33,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
     constructor( props: TemplateEditorProps ) {
         super( props );
-        this.template = new Template();
+        this.createNewTemplate();
         this.state = { template: this.template, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.save = this.save.bind( this );
@@ -35,6 +42,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         this.setAnswer = this.setAnswer.bind( this );
         this.setTemplate = this.setTemplate.bind( this );
     }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
+	componentDidUpdate() {
+        if ( this.props.accountRecord != undefined ) {
+			this.template.description=this.label("templates.newdescription");
+			this.template.shortdescription=this.label("templates.newshortdescription");
+		}		
+	}
 
     componentDidMount() {
         if ( this.props.accountRecord != undefined ) {
@@ -45,8 +61,14 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         }
     }
 
-    resetEditor(): void {
+    createNewTemplate(): void {
         this.template = new Template();
+		this.template.description=this.label("templates.newdescription");
+		this.template.shortdescription=this.label("templates.newshortdescription");
+    }
+
+    resetEditor(): void {
+		this.createNewTemplate();
         this.setState( { template: this.template } );
     }
 
@@ -75,7 +97,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     }
 
     setAnswer( data: any ): void {
-        var msg:string = "template saved"
+        var msg:string = this.label("templates.saved");
         this.setState( { message: msg } );
         if ( !data.error ) {
             this.clear();
@@ -117,18 +139,18 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
         if ( this.props.accountRecord == undefined ) {
             return (
                 <div>
-                    <button onClick={this.save}>Save</button>
-                    <button onClick={this.clear}>New</button>
-                    <button onClick={this.copy}>Copy</button>
-                    <button onClick={this.delete}>Del</button>
+                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.clear}>{this.label("new")}</button>
+                    <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
+                    <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
                 </div>
             );
         }
         else {
             return (
                 <div>
-                    <button onClick={this.save.bind( this )}>Save</button>
-                    <button onClick={this.clear}>Back</button>
+                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.clear}>{this.label("back")}</button>
                 </div>
             );
         }
@@ -140,86 +162,98 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
-                        <tr><td>Name</td>
-                            <td><input value={this.state.template.shortdescription} type='text'
+                        <tr><td>{this.label("shortdescription")}</td>
+                            <td><input className={css.stringinput} 
+                                value={this.state.template.shortdescription} type='text'
                                 onChange={( e ) => { this.template.shortdescription = e.target.value; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>gültig ab</td>
+                        <tr><td>{this.label("templates.validfrom")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.validFrom = d; this.setTemplateState() }}
                                 startdate={this.state.template.validFrom} 
-            					locale={"DE"} />
+            					locale={this.props.intl.locale} />
                             </td>
                         </tr>
-                        <tr><td>gültig bis</td>
+                        <tr><td>{this.label("templates.validuntil")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.validUntil = d; this.setTemplateState() }}
                                 startdate={this.state.template.validUntil}
-								locale={"DE"}  />
+								locale={this.props.intl.locale}  />
                             </td>
                         </tr>
-                        <tr style={{ background: 'darkgray' }}><td>Rythmus</td>
+                        <tr style={{ background: 'darkgray' }}><td>{this.label("templates.repetition")}</td>
                             <td>
-                                <span style={{ width: '30%' }}>
-                                    <input style={{ width: '40px' }} value={this.state.template.anzahl}
+                                <span style={{ width: '20%' }}>
+                                    <input className={css.numbersmallinput} value={this.state.template.anzahl}
                                         type='number'
                                         onChange={( e ) => { this.template.anzahl = e.target.valueAsNumber; this.setTemplateState() }} />
                                 </span>
-                                <span style={{ width: '70%' }}>
-                                    <DropdownService value={this.state.template.rythmus}
+                                <span style={{ width: '20%' }}>
+                                    <TimeRangeSelector 
+                                        className={css.catselector3} 
+                                        curvalue={this.state.template.rythmus}
                                         onChange={( e ) => { this.template.rythmus = e; this.setTemplateState() }}
-                                        url='collections/rythmus' />
+                                    />
                                 </span>
                             </td>
                         </tr>
-                        <tr style={{ background: 'darkgray' }}><td>Starttag</td>
+                        <tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.template.start = d; this.setTemplateState() }}
                                 startdate={this.state.template.start} 
-								locale={"DE"} />
+								locale={this.props.intl.locale} />
                             </td>
                         </tr>
-                        <tr style={{ background: 'darkgray' }}><td>Vardays</td>
+                        <tr style={{ background: 'darkgray' }}><td>{this.label("templates.variance")}</td>
                             <td><input value={this.state.template.vardays}
+          						className={css.numbersmallinput}
                                 type='number'
                                 onChange={( e ) => { this.template.vardays = e.target.valueAsNumber; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Position</td>
+                        <tr><td>{this.label("templates.position")}</td>
                             <td><input value={this.state.template.position}
                                 type='number'
+          						className={css.numbersmallinput}
                                 onChange={( e ) => { this.template.position = e.target.valueAsNumber; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Kategorie</td>
+                        <tr><td>{this.label("category")}</td>
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
                                 subcategory={this.state.template.subcategory}
                                 category={this.state.template.category} /></td>
                         </tr>
-                        <tr><td>MatchArt</td>
+                        <tr><td>{this.label("templates.matchstyle")}</td>
                             <td>
-                                <DropdownService value={this.state.template.matchstyle}
-                                    onChange={( e ) => { this.template.matchstyle = e; this.setTemplateState() }}
-                                    url='collections/matchstyle' />
+                                <MatchStyleSelector
+                                    curvalue={this.state.template.matchstyle}
+									className={css.catselector3}
+                                    onChange={( e ) => { this.template.matchstyle = e; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Wert</td>
+                        <tr><td>{this.label("value")}</td>
                             <td><input step="0.01" value={this.state.template.value / 100}
                                 type='number'
+          						className={css.numbersmallinput}
                                 onChange={( e ) => { this.template.value = e.target.valueAsNumber * 100; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Beschreibung</td>
+                        <tr><td>{this.label("description")}</td>
                             <td><textarea cols={20} rows={3}
+                                className={css.stringinput}
                                 value={this.state.template.description}
                                 onChange={( e ) => { this.template.description = e.target.value; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>Pattern</td>
-                            <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
+                        <tr><td>{this.label("templates.pattern")}</td>
+                            <td><button 
+                                onClick={() => this.setState( { patternEdit: true } )}
+                                className={css.addonbutton}>
+                                {this.label("templates.edit")}</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -227,6 +261,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                 <label>{this.state.message}</label>
                 {this.state.patternEdit ?
                     <PatternEditor
+                        intl={this.props.intl}
                         pattern={this.state.template.pattern}
                         sendPattern={( e ) => { this.template.pattern = e; this.setTemplateState() }}
                     />

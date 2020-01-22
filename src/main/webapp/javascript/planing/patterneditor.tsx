@@ -1,13 +1,15 @@
 import * as React from 'react'
+import { IntlShape } from 'react-intl'
+
 import {Pattern} from '../utils/dtos'
+import css from '../css/index.css'
 
 type SendPatternCallback= (pattern: Pattern)=>void
-
- 
 
 interface PatternEditorProps {
     pattern: Pattern;
     sendPattern: SendPatternCallback;
+	intl?: IntlShape;
 }
 
 interface IState {
@@ -23,6 +25,8 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
         this.state = {pattern: props.pattern }
         this.pattern = props.pattern;
     }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
     
     setValue( index :string, event :React.ChangeEvent<HTMLInputElement> ) :void {
         this.pattern[index] = event.target.value;
@@ -44,20 +48,58 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
                     margin: '15% auto',
                     padding: '20px',
                     border: '1px solid #888',
-                    width: '300px', height: '300px',
+                    width: '300px', height: '220px',
                     background: 'darkgray'
                 }}>
                     <table>
                         <tbody>
-                        <tr> <td>Absender</td> <td> <input value={this.state.pattern.sender} type='text' onChange={( e ) => this.setValue( 'sender', e )}  /></td></tr>
-                        <tr> <td>Empfänger</td> <td> <input value={this.state.pattern.receiver} type='text' onChange={( e ) => this.setValue( 'receiver', e )}  /></td></tr>
-                        <tr> <td>Referenzid</td> <td> <input value={this.state.pattern.referenceID} type='text' onChange={( e ) => this.setValue( 'referenceID', e )}  /></td></tr>
-                        <tr> <td>Mandat</td> <td> <input value={this.state.pattern.mandat} type='text' onChange={( e ) => this.setValue( 'mandat', e )}  /></td></tr>
-                        <tr> <td>Einreicher</td> <td> <input value={this.state.pattern.senderID} type='text' onChange={( e ) => this.setValue( 'senderID', e )}  /></td></tr>
-                        <tr> <td>Details</td> <td> <input value={this.state.pattern.details} type='text' onChange={( e ) => this.setValue( 'details', e )}  /></td></tr>
+                        <tr> <td>{this.label("sender")}</td> 
+                             <td> <input className={css.stringinput}
+                                         value={this.state.pattern.sender} 
+                                         type='text' 
+                                         onChange={( e ) => this.setValue( 'sender', e )}  />
+                            </td>
+                        </tr>
+                        <tr> <td>{this.label("receiver")}</td> 
+                             <td> <input className={css.stringinput} 
+                                         value={this.state.pattern.receiver} 
+                                         type='text'
+                                         onChange={( e ) => this.setValue( 'receiver', e )}  />
+                            </td>
+                        </tr>
+                        <tr> <td>{this.label("refid")}</td>
+                             <td> <input className={css.stringinput} 
+                                         value={this.state.pattern.referenceID}
+                                         type='text' 
+                                         onChange={( e ) => this.setValue( 'referenceID', e )}  />
+                             </td>
+                        </tr>
+                        <tr> <td>{this.label("mandate")}</td> 
+                             <td> <input className={css.stringinput}
+                                         value={this.state.pattern.mandat} 
+                                         type='text' 
+                                         onChange={( e ) => this.setValue( 'mandat', e )}  />
+                             </td>
+                        </tr>
+                        <tr> <td>{this.label("submitter")}</td> 
+                             <td> <input className={css.stringinput}
+                                         value={this.state.pattern.senderID}
+                                         type='text'
+                                         onChange={( e ) => this.setValue( 'senderID', e )}  />
+                             </td>
+                         </tr>
+                        <tr> <td>{this.label("details")} </td> 
+                             <td> <input className={css.stringinput}
+                                         value={this.state.pattern.details}
+                                         type='text' 
+                                         onChange={( e ) => this.setValue( 'details', e )}  />
+                             </td>
+                         </tr>
                         </tbody>
                     </table>
-                    <button onClick={() => this.sendPattern()}> OK</button>
+                    <div style={{alignContent: 'center' , width: '100%'}} >
+                       <button style= {{width: '100%'}} className={css.addonbutton} onClick={() => this.sendPattern()}> OK</button>
+					</div>
                 </div>
             </div>
         );
