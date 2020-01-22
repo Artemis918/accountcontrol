@@ -104,6 +104,17 @@
 	"plan.fromtemplates": "Create from templates",
 	"plan.plandata": "Planing data",
 	"plan.plansfor": "Plan for ",
+		
+	"check.plan": "Planned value",
+	"check.real": "Real value",
+	"check.sum": "Total",
+	"check.commitselected": "Commit selected",
+	"check.commitall": "Commit all",
+	"check.removeassign": "Revoke assingment",
+	"check.replan": "Replan",
+	
+	"pattern.patterndata": "Musterdaten",
+	
 	
 	"pattern.patterndata": "Pattern data",
 	

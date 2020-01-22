@@ -1,34 +1,40 @@
 .treeview {
-	margin: 0pt
+	margin: 0pt;
+	font-size:  16pt;
 }
 
 .expandbutton {
 	margin: 0pt;
 	padding: 4px;
 	border: none;
-	background-color: #d0d0d0
+	background-color: #d0d0d0;
+	font-size:  16pt;
 }
 
 .button {
 	margin: 0pt;
 	padding: 4px;
 	border: none;	
-	background-color: #d0d0d0
+	background-color: #d0d0d0;
+	font-size:  16pt;
 }
 
 .selected {
 	margin: 0pt;
 	padding: 4px;
 	border: none;
-	background-color: #FFFFFF
+	background-color: #FFFFFF;
+	font-size:  16pt;
 }
 
 .list {
-	list-style-type: none
+	list-style-type: none;
+	font-size:  16pt;
 }
 
 .list0 {
 	list-style-type: none;
 	margin-left: 5px;
-	padding: 5px
+	padding: 5px;
+	font-size:  16pt;
 }

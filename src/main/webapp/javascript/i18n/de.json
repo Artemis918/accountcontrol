@@ -105,7 +105,13 @@
 	"plan.plandata": "Plandaten",
 	"plan.plansfor": "Pläne für ",
 	
-	
+	"check.plan": "Planwert",
+	"check.real": "Istwert",
+	"check.sum": "Summe",
+	"check.commitselected": "Auswahl bestätigen",
+	"check.commitall": "Alles bestätigen",
+	"check.removeassign": "Zuordnung lösen",
+	"check.replan": "Erneut planen",
 	"pattern.patterndata": "Musterdaten",
 			
 	"returncode_1": "OK",

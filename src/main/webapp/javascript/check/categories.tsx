@@ -1,12 +1,15 @@
 import * as React from 'react'
+import {useIntl,WrappedComponentProps} from 'react-intl'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
 import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
-import { CategorySelector } from '../utils/categoryselector'
 import { Assignment, Template } from '../utils/dtos'
-import { myParseJson } from '../utils/misc'
-import * as css from './css/konten.css'
+import acss from './css/account.css'
+import css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
+
+type Create = (props:CategoriesProps) => JSX.Element;
+export const Categories:Create = (p) => {return (<_Categories {...p} intl={useIntl()}/>);}
 
 interface CategoriesProps {
     sendmessage: SendMessage;
@@ -19,12 +22,12 @@ interface IState {
     year: number;
 }
 
-export class Categories extends React.Component<CategoriesProps, IState> {
+export class _Categories extends React.Component<CategoriesProps & WrappedComponentProps, IState> {
 
     columns: ColumnInfo<Assignment>[];
     lister: React.RefObject<MultiSelectLister<Assignment>>;
 
-    constructor( props: CategoriesProps ) {
+    constructor( props: CategoriesProps & WrappedComponentProps ) {
         super( props );
         var currentTime = new Date();
         this.state = {
@@ -34,13 +37,26 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             year: currentTime.getFullYear()
         };
         this.lister = React.createRef();
+
+
+        this.commitAssignment = this.commitAssignment.bind( this );
+        this.commitSelected = this.commitSelected.bind( this );
+        this.commitAll = this.commitAll.bind( this );
+        this.removeAssignment = this.removeAssignment.bind( this );
+        this.replanAssignment = this.replanAssignment.bind( this );
+		this.createFooter = this.createFooter.bind(this);
+    }
+
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
+	createColumns():void {
         this.columns = [
             {
-                header: 'Beschreibung',
+                header: this.label("shortdescription"),
                 getdata: ( z: Assignment ) => { return z.detail }
             },
             {
-                header: 'Soll',
+                header: this.label("check.plan"),
                 cellrender: ( cell: CellInfo<Assignment> ) => {
                     if ( cell.data.sollwert == 0 ) {
                         return null;
@@ -55,7 +71,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 }
             },
             {
-                header: 'Ist',
+                header: this.label("check.real"),
                 cellrender: ( cell: CellInfo<Assignment> ) => {
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
@@ -76,14 +92,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 },
             }
         ];
-
-        this.commitAssignment = this.commitAssignment.bind( this );
-        this.commitSelected = this.commitSelected.bind( this );
-        this.commitAll = this.commitAll.bind( this );
-        this.removeAssignment = this.removeAssignment.bind( this );
-        this.replanAssignment = this.replanAssignment.bind( this );
-    }
-
+	}
+	
     getColor( z: Assignment ): string {
         if ( z.accountrecord == 0 || z.plan == 0 )
             return 'lightgrey';
@@ -95,7 +105,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
 
     commit( z: Assignment[] ): void {
         var ids: number[] = z.map( ( za: Assignment ) => { return za.id; } );
-        var self: Categories = this;
+        var self: _Categories = this;
         fetch( '/assign/commit', {
             method: 'post',
             body: JSON.stringify( ids ),
@@ -108,7 +118,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     commitAssignment( a: Assignment ): void {
-        var self: Categories = this;
+        var self: _Categories = this;
         fetch( '/assign/invertcommit/' + a.id )
             .then( function( response ) {
                 self.lister.current.reload();
@@ -140,7 +150,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             }
 
             if ( id != undefined ) {
-                var self: Categories = this;
+                var self: _Categories = this;
                 fetch( url + id, { headers: { "Content-Type": "application/json" } } )
                     .then( ( response: Response ) => response.text() )
                     .then( () => self.lister.current.reload() );
@@ -149,8 +159,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map( ( za: Assignment ) => { return za.accountrecord; } );
-        var self: Categories = this;
+        var ids: number[] = this.lister.current.getSelectedData().map( ( assign: Assignment ) => { return assign.accountrecord; } );
+        var self: _Categories = this;
         fetch( '/assign/remove', {
             method: 'post',
             body: JSON.stringify( ids ),
@@ -180,29 +190,42 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         var istwert: number = 0;
         var sollwert: number = 0;
         z.map( ( assignment: Assignment ) => { istwert += assignment.istwert; if ( assignment.sollwert != undefined ) sollwert += assignment.sollwert; } )
-        footer.detail = 'Summe';
+        footer.detail = this.label("check.sum");
         footer.istwert = istwert;
         footer.sollwert = sollwert;
         return footer;
     }
 
     render(): JSX.Element {
+		this.createColumns();
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
 
-                    <button onClick={() => this.commitSelected()}> Auswahl Bestätigen </button>
-                    <button onClick={() => this.commitAll()}> Alles Bestätigen </button>
-                    <button onClick={() => this.removeAssignment()}> Zuordnung lösen </button>
-                    <button onClick={() => this.replanAssignment()}> Plan anpassen </button>
+                    <button className={css.actionbutton} 
+                            onClick={() => this.commitSelected()}>
+							{this.label("check.commitselected")}
+					 </button>
+                    <button className={css.actionbutton} 
+                            onClick={() => this.commitAll()}>
+							{this.label("check.commitall")}
+                    </button>
+                    <button className={css.actionbutton} 
+                            onClick={() => this.removeAssignment()}>
+							{this.label("check.removeassign")}
+							</button>
+                    <button className={css.actionbutton} 
+                            onClick={() => this.replanAssignment()}>
+							{this.label("check.replan")}
+                            </button>
                 </div>
                 <table>
                     <tbody>
                         <tr>
 
                             <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
-                                <div className={css.monthselect}>
-                                    <MonthSelect label='Monat: '
+                                <div className={acss.monthselect}>
+                                    <MonthSelect label={this.label("month")}
                                         onChange={( m: number, y: number ) => this.setState( { month: m, year: y } )}
                                         month={this.state.month}
                                         year={this.state.year} />
