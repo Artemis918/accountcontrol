@@ -9,7 +9,7 @@ type SendPatternCallback= (pattern: Pattern)=>void
 interface PatternEditorProps {
     pattern: Pattern;
     sendPattern: SendPatternCallback;
-	intl?: IntlShape;
+	intl: IntlShape;
 }
 
 interface IState {

@@ -1,13 +1,16 @@
 import * as React from 'react'
+import { IntlShape } from 'react-intl'
+
 import { PatternEditor } from './patterneditor'
 import { CategorySelector } from '../utils/categoryselector'
 import { Plan } from '../utils/dtos'
-import 'react-day-picker/lib/style.css'
+import css from '../css/index.css'
 
 type OnChangeCallback = () => void;
 
 interface PlanEditorProps {
     onChange: OnChangeCallback;
+	intl: IntlShape;
 }
 
 interface IState {
@@ -22,7 +25,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 
     constructor( props: PlanEditorProps ) {
         super( props );
-        this.plan = new Plan();
+        this.createNewPlan();
         this.state = { plan: this.plan, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.save = this.save.bind( this );
@@ -32,9 +35,18 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
         this.setPlan = this.setPlan.bind( this );
     }
 
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
     resetEditor(): void {
-        this.plan = new Plan();
+        this.createNewPlan();
         this.setState( { plan: this.plan } );
+    }
+
+
+    createNewPlan(): void {
+        this.plan = new Plan();
+		this.plan.description=this.label("plan.newdescription");
+		this.plan.shortdescription=this.label("plan.newshortdescription");
     }
 
     setPlan( plan: Plan ) {
@@ -101,12 +113,12 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 
     renderButton(): JSX.Element {
         return (
-            <div>
-                <button onClick={this.save}>Save</button>
-                <button onClick={this.clear}>New</button>
-                <button onClick={this.copy}>Copy</button>
-                <button onClick={this.delete}>Del</button>
-            </div>
+                <div>
+                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.clear}>{this.label("new")}</button>
+                    <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
+                    <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
+                </div>
         );
     }
 
@@ -117,20 +129,23 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Name</td>
-                            <td><input value={this.state.plan.shortdescription} type='text'
+                            <td>{this.label("shortdescription")}</td>
+                            <td><input className={css.stringinput} 
+                                value={this.state.plan.shortdescription} 
+                                type='text'
                                 onChange={( e ) => { this.plan.shortdescription = e.target.value; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Position</td>
-                            <td><input value={this.state.plan.position}
+                            <td>{this.label("plan.position")}</td>
+                            <td><input className={css.numbersmallinput} 
+                                value={this.state.plan.position}
                                 type='number'
                                 onChange={( e ) => { this.plan.position = e.target.valueAsNumber; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Kategorie</td>
+                            <td>{this.label("category")}</td>
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( s, c ) => this.setSubCategory( s, c )}
@@ -139,15 +154,20 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Beschreibung</td>
-                            <td><textarea cols={20} rows={3}
+                            <td>{this.label("description")}</td>
+                            <td><textarea className={css.stringinput}
+                                cols={20} rows={3}
                                 value={this.state.plan.description}
                                 onChange={( e ) => { this.plan.description = e.target.value; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Pattern</td>
-                            <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
+                            <td>{this.label("plan.pattern")}</td>
+                            <td><button className={css.addonbutton} 
+								onClick={() => this.setState( { patternEdit: true } )}>
+								{this.label("plan.edit")}
+								</button>
+							</td>
                         </tr>
                     </tbody>
                 </table>
@@ -155,6 +175,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                 {this.renderButton()}
                 {this.state.patternEdit ?
                     <PatternEditor
+						intl={this.props.intl}
                         pattern={this.state.plan.patterndto}
                         sendPattern={( e ) => { this.plan.patterndto = e; this.setState( { patternEdit: false, plan: this.plan, message: "" } ) }}
                     />

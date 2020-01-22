@@ -8,6 +8,7 @@
 	"reset": "Zurücksetzen",
 	"back": "Zurück",
 	"category": "Kategorie",
+	"subcategory": "Unterkategorie",
 	"categories": "Kategorien",
 	"subcategories": "Unterkategorien",
 	"shortdescription": "Name",
@@ -29,7 +30,7 @@
 	"exact": "Genau",
 	"maxvalue": "Max. Wert",
 	"maxsum": "Max. Summe",
-
+	"pattern": "Muster",
 		
 	"footer.state": "Status",
 	"footer.error": "Fehler",
@@ -85,14 +86,27 @@
 	"templates.repetition": "Wiederholung",
 	"templates.firstday": "Starttag",
 	"templates.variance": "Max. Abweichung",
-	"templates.position": "Position",
-	"templates.matchstyle": "Vergleich",
-	"templates.pattern": "Muster",
-	"templates.edit": "Bearbeiten",
 	"templates.newshortdescription": "Neu",
 	"templates.newdescription": "Neue Vorlage",
 	"templates.copyof": "Kopie von ",
 	"templates.saved": "Vorlage gespeichert",
+	
+	"plan.newshortdescription": "Neu",
+	"plan.newdescription": "Neuer Plan",
+	"plan.firstday": "Startdatum",
+	"plan.planedday": "Planungsdatum",
+	"plan.endday": "Enddatum",
+	"plan.position": "Position",
+	"plan.matchstyle": "Vergleich",
+	"plan.pattern": "Muster",
+	"plan.edit": "Bearbeiten",
+	"plan.createplans": "Pläne erstellen bis:",
+	"plan.fromtemplates": "Aus Vorlagen erstellen",
+	"plan.plandata": "Plandaten",
+	"plan.plansfor": "Pläne für ",
+	
+	
+	"pattern.patterndata": "Musterdaten",
 			
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",

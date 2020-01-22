@@ -75,8 +75,8 @@ export class Plan {
         this.plandate = date;
         this.enddate = date;
         this.position = 0;
-        this.description = 'Neuer Plan';
-        this.shortdescription = 'neu';
+        this.description = '';
+        this.shortdescription = '';
         this.category = 1;
         this.subcategory = 1;
         this.categoryname = '';

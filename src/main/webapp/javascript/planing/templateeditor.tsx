@@ -6,9 +6,10 @@ import { DropdownService } from '../utils/dropdownservice'
 import { CategorySelector } from '../utils/categoryselector'
 import { Template } from '../utils/dtos'
 import { TimeRangeSelector } from '../utils/timerangeselector'
+import { MatchStyleSelector } from '../utils/matchstyleselector'
 
 import css from '../css/index.css'
-import { MatchStyleSelector } from '../utils/matchstyleselector'
+
 
 
 type OnChangeCallback = () => void;
@@ -17,7 +18,7 @@ type OnChangeCallback = () => void;
 interface TemplateEditorProps {
     onChange: OnChangeCallback;
     accountRecord?: number;
-	intl?: IntlShape;
+	intl: IntlShape;
 }
 
 interface IState {
@@ -212,7 +213,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                 onChange={( e ) => { this.template.vardays = e.target.valueAsNumber; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>{this.label("templates.position")}</td>
+                        <tr><td>{this.label("plan.position")}</td>
                             <td><input value={this.state.template.position}
                                 type='number'
           						className={css.numbersmallinput}
@@ -226,7 +227,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                 subcategory={this.state.template.subcategory}
                                 category={this.state.template.category} /></td>
                         </tr>
-                        <tr><td>{this.label("templates.matchstyle")}</td>
+                        <tr><td>{this.label("plan.matchstyle")}</td>
                             <td>
                                 <MatchStyleSelector
                                     curvalue={this.state.template.matchstyle}
@@ -248,11 +249,11 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                 onChange={( e ) => { this.template.description = e.target.value; this.setTemplateState() }} />
                             </td>
                         </tr>
-                        <tr><td>{this.label("templates.pattern")}</td>
+                        <tr><td>{this.label("plan.pattern")}</td>
                             <td><button 
                                 onClick={() => this.setState( { patternEdit: true } )}
                                 className={css.addonbutton}>
-                                {this.label("templates.edit")}</button>
+                                {this.label("plan.edit")}</button>
                             </td>
                         </tr>
                     </tbody>

@@ -1,15 +1,19 @@
 import * as React from 'react'
-import { DropdownService } from '../utils/dropdownservice'
+import { IntlShape } from 'react-intl'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
 import { CategorySelector } from '../utils/categoryselector'
-import { Plan, Pattern } from '../utils/dtos'
-import 'react-day-picker/lib/style.css'
+import { Plan } from '../utils/dtos'
+import { MatchStyleSelector } from '../utils/matchstyleselector'
+
+import css from '../css/index.css'
+
 
 type OnChangeCallback = () => void;
 
 interface PlanEditorProps {
     onChange: OnChangeCallback;
+	intl: IntlShape;
 }
 
 interface IState {
@@ -34,8 +38,16 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setPlan = this.setPlan.bind( this );
     }
 
-    resetEditor(): void {
+	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
+    createNewPlan(): void {
         this.plan = new Plan();
+		this.plan.description=this.label("plan.newdescription");
+		this.plan.shortdescription=this.label("plan.newshortdescription");
+    }
+
+    resetEditor(): void {
+		this.createNewPlan();
         this.setState( { plan: this.plan } );
     }
 
@@ -104,10 +116,10 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
     renderButton(): JSX.Element {
         return (
             <div>
-                <button onClick={this.save}>Save</button>
-                <button onClick={this.clear}>New</button>
-                <button onClick={this.copy}>Copy</button>
-                <button onClick={this.delete}>Del</button>
+                <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
+                <button className={css.addonbutton} onClick={this.clear}>{this.label("new")}</button>
+                <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
+                <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
             </div>
         );
     }
@@ -119,44 +131,47 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Name</td>
-                            <td><input value={this.state.plan.shortdescription} type='text'
+                            <td>{this.label("shortdescription")}</td>
+                            <td><input className={css.stringinput}
+                                value={this.state.plan.shortdescription} 
+                                type='text'
                                 onChange={( e ) => { this.plan.shortdescription = e.target.value; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Stardatum</td>
+                            <td>{this.label("plan.firstday")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.startdate = d; this.setPlanState() }}
                                 startdate={this.state.plan.startdate}
-								locale={"DE"} />
+								locale={this.props.intl.locale} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Plandatum</td>
+                            <td>{this.label("plan.planedday")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.plandate = d; this.setPlanState() }}
                                 startdate={this.state.plan.plandate}
-								locale={"DE"}  />
+								locale={this.props.intl.locale}  />
                             </td>
                         </tr>
                         <tr>
-                            <td>Enddatum</td>
+                            <td>{this.label("plan.firstday")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.enddate = d; this.setPlanState() }}
                                 startdate={this.state.plan.enddate}
-  								locale={"DE"}  />
+  								locale={this.props.intl.locale}  />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Position</td>
-                            <td><input value={this.state.plan.position}
+                            <td>{this.label("plan.position")}</td>
+                            <td><input className={css.numbersmallinput}
+                                value={this.state.plan.position}
                                 type='number'
                                 onChange={( e ) => { this.plan.position = e.target.valueAsNumber; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Unterkategorie</td>
+                            <td>{this.label("category")}</td>
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
@@ -165,30 +180,37 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>MatchArt</td>
-                            <td><DropdownService value={this.state.plan.matchstyle}
-                                onChange={( e ) => { this.plan.matchstyle = e; this.setPlanState() }}
-                                url='collections/matchstyle' />
+                            <td>{this.label("plan.matchstyle")}</td>
+                            <td><MatchStyleSelector 
+                                    className={css.catselector3}
+                                    curvalue={this.state.plan.matchstyle}
+                                    onChange={( e ) => { this.plan.matchstyle = e; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Wert</td>
-                            <td><input value={this.state.plan.wert / 100}
+                            <td>{this.label("value")}</td>
+                            <td><input className={css.numberinput} 
+                                value={this.state.plan.wert / 100}
                                 type='number'
                                 step='0.01'
                                 onChange={( e ) => { this.plan.wert = e.target.valueAsNumber * 100; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>Beschreibung</td>
-                            <td><textarea cols={20} rows={3}
+                            <td>{this.label("description")}</td>
+                            <td><textarea className={css.stringinput}
+                                cols={20} rows={3}
                                 value={this.state.plan.description}
                                 onChange={( e ) => { this.plan.description = e.target.value; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>Pattern</td>
-                            <td><button onClick={() => this.setState( { patternEdit: true } )}>Editieren</button></td>
+                            <td>{this.label("plan.pattern")}</td>
+                            <td><button className={css.addonbutton} 
+                                onClick={() => this.setState( { patternEdit: true } )}>
+								{this.label("plan.edit")}
+								</button>
+						    </td>
                         </tr>
                     </tbody>
                 </table>

@@ -8,6 +8,7 @@
 	"reset": "Reset",
 	"back": "Back",	
 	"category": "Category",
+	"subcategory": "Subcategory",
 	"categories": "Categories",
 	"subcategories": "Subcategories",
 	"shortdescription": "Name",
@@ -29,7 +30,8 @@
 	"exact": "Exact",
 	"maxvalue": "Max. value",
 	"maxsum": "Max. sum",
-	
+	"pattern": "Pattern",
+		
 	"footer.state": "state",
 	"footer.error": "error",
 	
@@ -84,15 +86,27 @@
 	"templates.repetition": "Repetition",
 	"templates.firstday": "First day",
 	"templates.variance": "Max. variance",
-	"templates.position": "Position",
-	"templates.matchstyle": "Matchstyle",
-	"templates.pattern": "Pattern",
-	"templates.edit": "Edit",
 	"templates.newshortdescription": "New",
 	"templates.newdescription": "New Template",
 	"templates.copyof": "Copy of ",
 	"templates.saved": "template saved",
 				
+	"plan.newshortdescription": "New",
+	"plan.newdescription": "New plan",
+	"plan.firstday": "First day",
+	"plan.planedday": "Planned day",
+	"plan.endday": "Last day",
+	"plan.position": "Position",
+	"plan.matchstyle": "Matchstyle",
+	"plan.pattern": "Pattern",
+	"plan.edit": "Edit",
+	"plan.createplans": "Create plans until:",
+	"plan.fromtemplates": "Create from templates",
+	"plan.plandata": "Planing data",
+	"plan.plansfor": "Plan for ",
+	
+	"pattern.patterndata": "Pattern data",
+	
 	"returncode_1": "ok",
 	"returncode_2": "some data is missing",
 	"returncode_3": "some data is invalid"

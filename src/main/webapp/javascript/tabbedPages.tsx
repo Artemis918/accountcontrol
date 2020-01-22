@@ -7,8 +7,8 @@ import { TaskSelector, Task } from './utils/taskselector'
 import { RecordUploader } from './records/recorduploader'
 import { RecordCreator } from './records/recordcreator'
 import { Templates } from './planing/templates'
-import { Planen } from './planing/planen'
-import { PatternPlanen } from './planing/patternplanen'
+import { Planing } from './planing/planing'
+import { PatternPlaning} from './planing/patternplaning'
 import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
 import { OverviewGFX } from './overviewgfx'
@@ -77,8 +77,8 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
             title: this.label("page.plan"), tasks:
                 [
                     { name: this.label("task.template"), comp: ( <Templates sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.plan"), comp: ( <Planen sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.pattern"), comp: ( <PatternPlanen sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.plan"), comp: ( <Planing sendmessage={this.sendMessage} /> ) },
+                    { name: this.label("task.pattern"), comp: ( <PatternPlaning sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
