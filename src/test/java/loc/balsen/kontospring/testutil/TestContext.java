@@ -34,7 +34,7 @@ public class TestContext {
 	protected AssignmentRepository assignmentRepository;
 
 	@Autowired
-	protected AccountRecordRepository assignRecordRepository;
+	protected AccountRecordRepository accountRecordRepository;
 
 	protected SubCategory subCategory1;
 	protected SubCategory subCategory2;
@@ -48,7 +48,7 @@ public class TestContext {
 
 	public void clearRepos() {
 		assignmentRepository.deleteAll();
-		assignRecordRepository.deleteAll();
+		accountRecordRepository.deleteAll();
 		planRepository.deleteAll();
 		templateRepository.deleteAll();
 	}

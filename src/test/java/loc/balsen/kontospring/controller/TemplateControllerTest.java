@@ -31,12 +31,12 @@ import loc.balsen.kontospring.testutil.TestContext;
 public class TemplateControllerTest extends TestContext {
 
 	static private String templatejson = "{  " + 
-			"\"gueltigVon\": \"2018-12-03\", " +
-			"\"gueltigBis\": \"\", " +
+			"\"validfrom\": \"2018-12-03\", " +
+			"\"validuntil\": \"\", " +
 			"\"start\": \"2018-10-03\", " +
-			"\"vardays\": 5, " +
-			"\"anzahl\": 1," +
-			"\"rythmus\": 2, " +
+			"\"variance\": 5, " +
+			"\"repeatcount\": 1," +
+			"\"repeatunit\": 2, " +
 			"\"subcategory\": SUBCATEGORY, " +
 			"\"category\": 1, "+
 			"\"description\": \"Beschreibung\", " +
@@ -45,11 +45,11 @@ public class TemplateControllerTest extends TestContext {
 			"\"value\": 100, " +
 			"\"matchstyle\": 1, " +
 			"\"pattern\": { " +
-            "  \"sender\": \"Absender\", " +
-			"  \"receiver\": \"Empfänger\", " +
-            "  \"referenceID\": \"Referenz\", " +
+            "  \"sender\": \"Sender\", " +
+			"  \"receiver\": \"Receiver\", " +
+            "  \"referenceID\": \"Reference\", " +
 			"  \"details\": \"*pups*\", " +
-            "  \"mandat\":  \"\" " +
+            "  \"mandate\":  \"\" " +
 			"}" +
 			"}";
 		
@@ -89,24 +89,24 @@ public class TemplateControllerTest extends TestContext {
 	@Test
 	public void testCreateFromAccountRecord() throws Exception {
 		AccountRecord record =  new AccountRecord();
-		record.setAbsender("hallo");
-		record.setCreation(LocalDate.of(1998, 4, 2));
+		record.setSender("hallo");
+		record.setCreated(LocalDate.of(1998, 4, 2));
 		record.setDetails("whatever you will");
-		record.setEinreicherId("einreicherID");
-		record.setEmpfaenger("empfänger");
-		record.setMandat("mandat");
-		record.setReferenz("refernzID");
-		record.setWert(200);
-		record.setWertstellung(LocalDate.of(2000, 4, 2));
-		assignRecordRepository.save(record);
+		record.setSubmitter("submitterID");
+		record.setReceiver("receiver");
+		record.setMandate("mandate");
+		record.setReference("refernceID");
+		record.setValue(200);
+		record.setExecuted(LocalDate.of(2000, 4, 2));
+		accountRecordRepository.save(record);
 		
 		mvc.perform(get("/templates/accountrecord/" + record.getId()))
 		   .andExpect(jsonPath("$.pattern.sender").value("hallo"))
 		   .andExpect(jsonPath("$.pattern.details").value("whatever you will"))
-		   .andExpect(jsonPath("$.pattern.senderID").value("einreicherID"))
-		   .andExpect(jsonPath("$.pattern.receiver").value("empfänger"))
-		   .andExpect(jsonPath("$.pattern.mandat").value("mandat"))
-		   .andExpect(jsonPath("$.pattern.referenceID").value("refernzID"))
+		   .andExpect(jsonPath("$.pattern.senderID").value("submitterID"))
+		   .andExpect(jsonPath("$.pattern.receiver").value("receiver"))
+		   .andExpect(jsonPath("$.pattern.mandat").value("mandate"))
+		   .andExpect(jsonPath("$.pattern.referenceID").value("refernceID"))
 		   .andExpect(jsonPath("$.value").value("200"))
 		   .andExpect(jsonPath("$.start").value("2000-04-02"))
 		   ;

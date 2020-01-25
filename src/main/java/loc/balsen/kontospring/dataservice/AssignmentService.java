@@ -30,11 +30,11 @@ public class AssignmentService {
 			return 0;
 
 		// searching for min and max date
-		LocalDate maxdate = records.get(0).getCreation();
-		LocalDate mindate = records.get(0).getCreation();
+		LocalDate maxdate = records.get(0).getCreated();
+		LocalDate mindate = records.get(0).getCreated();
 
 		for (AccountRecord record : records) {
-			LocalDate date = record.getCreation();
+			LocalDate date = record.getCreated();
 			if (date.isBefore(mindate))
 				mindate = date;
 			if (date.isAfter(maxdate))
@@ -46,7 +46,7 @@ public class AssignmentService {
 	}
 
 	public int getAssignCount(int subcategory) {
-		return assignmentRepository.countBySubcategoryId(subcategory);
+		return assignmentRepository.countBySubCategoryId(subcategory);
 	}
 	
 	private int assign(List<AccountRecord> records, List<Plan> plans) {
@@ -66,7 +66,7 @@ public class AssignmentService {
 		for (Plan plan : plans) {
 			boolean pattern = plan.getMatchStyle() == Plan.MatchStyle.PATTERN;
 			boolean summax = plan.getMatchStyle() == Plan.MatchStyle.SUMMAX;
-			boolean period = plan.isInPeriod(record.getCreation());
+			boolean period = plan.isInPeriod(record.getCreated());
 
 			if (!summax && (pattern || period) && plan.matches(record)) {
 				plansForRecord.add(plan);
@@ -76,18 +76,18 @@ public class AssignmentService {
 		if (plansForRecord.isEmpty())
 			return false;
 
-		int summe = 0;
+		int sum = 0;
 
 		for (int i = plansForRecord.size() - 1; i > 0; i--) {
 			Plan plan = plansForRecord.get(i);
-			assign(record, plan, plan.getWert());
+			assign(record, plan, plan.getValue());
 			if (plan.getMatchStyle() != Plan.MatchStyle.PATTERN)
-				summe += plan.getWert();
+				sum += plan.getValue();
 		}
 
 		/// the entry gets the rest
 		Plan plan = plansForRecord.get(0);
-		assign(record, plan, record.getWert() - summe);
+		assign(record, plan, record.getValue() - sum);
 
 		// remove used plans
 		for (Plan plan1 : plansForRecord) {
@@ -98,15 +98,15 @@ public class AssignmentService {
 		return true;
 	}
 
-	private void assign(AccountRecord record, Plan plan, int wert) {
+	private void assign(AccountRecord record, Plan plan, int value) {
 
 		Assignment assignment = new Assignment();
 
 		assignment.setAccountrecord(record);
 		assignment.setDescription(plan.getDescription());
-		assignment.setSubcategory(plan.getSubCategory());
+		assignment.setSubCategory(plan.getSubCategory());
 		assignment.setShortdescription(plan.getShortDescription());
-		assignment.setWert(wert);
+		assignment.setValue(value);
 		assignment.setCommitted(false);
 
 		if (plan.getMatchStyle() != Plan.MatchStyle.PATTERN) {
@@ -130,15 +130,15 @@ public class AssignmentService {
 
 	public void assignToSubCategory(SubCategory subCategory, String text, AccountRecord record) {
 		if (text.isEmpty())
-			text = record.getPartner();
+			text = record.getOtherParty();
 
 		Assignment assignment = new Assignment();
 
 		assignment.setAccountrecord(record);
 		assignment.setDescription(text);
-		assignment.setSubcategory(subCategory);
+		assignment.setSubCategory(subCategory);
 		assignment.setShortdescription(text);
-		assignment.setWert(record.getWert());
+		assignment.setValue(record.getValue());
 		assignment.setCommitted(false);
 		assignmentRepository.save(assignment);
 	}
@@ -148,16 +148,16 @@ public class AssignmentService {
 
 		assignment.setAccountrecord(record);
 		assignment.setDescription(plan.getDescription());
-		assignment.setSubcategory(plan.getSubCategory());
+		assignment.setSubCategory(plan.getSubCategory());
 		assignment.setShortdescription(plan.getShortDescription());
-		assignment.setWert(record.getWert());
+		assignment.setValue(record.getValue());
 		assignment.setPlan(plan);
 		assignment.setCommitted(true);
 		assignmentRepository.save(assignment);
 	}
 
 	public void deleteBySubCategoryId(int subCategory) {
-		assignmentRepository.deleteBySubcategoryId(subCategory);
+		assignmentRepository.deleteBySubCategoryId(subCategory);
 	}
 
 }

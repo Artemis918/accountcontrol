@@ -55,20 +55,20 @@ public class ImportPB extends Importbase {
 	private AccountRecord parseLine(String fields[]) throws ParseException {
 
 		AccountRecord record = new AccountRecord();
-		record.setEingang(LocalDate.now());
-		record.setCreation(LocalDate.parse(fields[0],dateformater));
-		record.setWertstellung(LocalDate.parse(fields[1],dateformater));
+		record.setReceived(LocalDate.now());
+		record.setCreated(LocalDate.parse(fields[0],dateformater));
+		record.setExecuted(LocalDate.parse(fields[1],dateformater));
 
 		AccountRecord.Type type = recordType.get(fields[2].trim());
 		if (type == null) {
-			throw new ParseException("Unknown belegart " + fields[2], 0);
+			throw new ParseException("Unknown record type " + fields[2], 0);
 		}
 		record.setType(type);
 
 		parseDetails(fields[3], record);
 
-		record.setAbsender(fields[4]);
-		record.setEmpfaenger(fields[5]);
+		record.setSender(fields[4]);
+		record.setReceiver(fields[5]);
 		
 		char euroLatin9 = 0xA4;
 
@@ -78,7 +78,7 @@ public class ImportPB extends Importbase {
 		value = value.replaceAll(",", "");
 		value = value.replaceAll(" €", "");
 		value = value.replaceAll(euroLatin9 + " ", "");
-		record.setWert(Integer.parseInt(value));
+		record.setValue(Integer.parseInt(value));
 
 		return record;
 	}
@@ -103,25 +103,25 @@ public class ImportPB extends Importbase {
 		int i = 0;
 		if (fields[0].equals("Referenz")) {
 			i++;
-			String referenz = fields[i++];
+			String reference = fields[i++];
 			while (i<fields.length && !fields[i].equals("Mandat") && !fields[i].equals("Verwendungszweck")) {
-				referenz += " "+ fields[i++];
+				reference += " "+ fields[i++];
 			}
-			bubel.setReferenz(referenz);
+			bubel.setReference (reference);
 			
 			if (checkField(fields, i, "Mandat")) {
 				i++;
-				String mandat;
-				mandat = fields[i++];
+				String mandate;
+				mandate = fields[i++];
 				while (i<fields.length && !fields[i].equals("Einreicher-ID")) {
-					mandat += " " + fields[i++];
+					mandate += " " + fields[i++];
 				}
-				bubel.setMandat(mandat);
+				bubel.setMandate(mandate);
 			}
 			
 			if (checkField(fields, i,"Einreicher-ID")) {
 				i++;
-				bubel.setEinreicherId(fields[i++]);
+				bubel.setSubmitter(fields[i++]);
 			}
 			
 			if (checkField(fields, i,"Verwendungszweck")) {
@@ -138,31 +138,30 @@ public class ImportPB extends Importbase {
 	private static final Map<String, AccountRecord.Type> recordType;
 	static {
 		Map<String, AccountRecord.Type> aMap = new HashMap<String, AccountRecord.Type>(30);
-		aMap.put("Gutschrift", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Einzahlung", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Dauer Gutschrift", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Dauergutschrift", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Gehalt/Rente", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Lastschrift", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Auslandsauftrag", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Kreditkartenumsatz", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Dauer Lastschrift", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Überweisung", AccountRecord.Type.UEBERWEISUNG);
-		aMap.put("Überweisung giropay", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Kartenverfügung", AccountRecord.Type.KARTE);
-		aMap.put("Auszahlung", AccountRecord.Type.KARTE);
-		aMap.put("Zinsen/Entgelt", AccountRecord.Type.ENTGELT);
-		aMap.put("Entgelt", AccountRecord.Type.ENTGELT);
-		aMap.put("Scheckeinreichung", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Gutschr.SEPA", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("SEPA Überw.", AccountRecord.Type.UEBERWEISUNG);
-		aMap.put("SDD Lastschr", AccountRecord.Type.LASTSCHRIFT);
-		aMap.put("Storno", AccountRecord.Type.GUTSCHRIFT);
-		aMap.put("Dauerauftrag", AccountRecord.Type.UEBERWEISUNG);
-		aMap.put("Kartenzahlung", AccountRecord.Type.KARTE);
-		aMap.put("Auszahlung Geldautomat", AccountRecord.Type.KARTE);
+		aMap.put("Gutschrift", AccountRecord.Type.CREDIT);
+		aMap.put("Einzahlung", AccountRecord.Type.CREDIT);
+		aMap.put("Dauer Gutschrift", AccountRecord.Type.CREDIT);
+		aMap.put("Dauergutschrift", AccountRecord.Type.CREDIT);
+		aMap.put("Gehalt/Rente", AccountRecord.Type.CREDIT);
+		aMap.put("Lastschrift", AccountRecord.Type.DEBIT);
+		aMap.put("Auslandsauftrag", AccountRecord.Type.DEBIT);
+		aMap.put("Kreditkartenumsatz", AccountRecord.Type.DEBIT);
+		aMap.put("Dauer Lastschrift", AccountRecord.Type.DEBIT);
+		aMap.put("Überweisung", AccountRecord.Type.TRANSFER);
+		aMap.put("Überweisung giropay", AccountRecord.Type.DEBIT);
+		aMap.put("Kartenverfügung", AccountRecord.Type.CARD);
+		aMap.put("Auszahlung", AccountRecord.Type.CARD);
+		aMap.put("Zinsen/Entgelt", AccountRecord.Type.REMUNERATION);
+		aMap.put("Entgelt", AccountRecord.Type.REMUNERATION);
+		aMap.put("Scheckeinreichung", AccountRecord.Type.CREDIT);
+		aMap.put("Gutschr.SEPA", AccountRecord.Type.CREDIT);
+		aMap.put("SEPA Überw.", AccountRecord.Type.TRANSFER);
+		aMap.put("SDD Lastschr", AccountRecord.Type.DEBIT);
+		aMap.put("Storno", AccountRecord.Type.CREDIT);
+		aMap.put("Dauerauftrag", AccountRecord.Type.TRANSFER);
+		aMap.put("Kartenzahlung", AccountRecord.Type.CARD);
+		aMap.put("Auszahlung Geldautomat", AccountRecord.Type.CARD);
 		recordType = Collections.unmodifiableMap(aMap);
 
 	}
-
 }

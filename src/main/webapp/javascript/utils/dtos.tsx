@@ -2,31 +2,31 @@
 // =====================================================
 export class AccountRecord {
     id: number;
-    eingang: Date;
-    creation: Date;
-    wertstellung: Date;
+    received: Date;
+    created: Date;
+    executed: Date;
     type: number;
-    absender: string;
-    empfaenger: string;
-    wert: number;
+    sender: string;
+    receiver: string;
+    value: number;
     details: string;
-    einreicherId: string;
-    mandant: string;
-    referenz: string;
+    submitter: string;
+    mandate: string;
+    reference: string;
 
     constructor() {
         this.id = undefined;
-        this.eingang = new Date();
-        this.creation = new Date();
-        this.wertstellung = new Date();
+        this.received = new Date();
+        this.created = new Date();
+        this.executed = new Date();
         this.type = 8;
-        this.absender = '';
-        this.empfaenger = '';
-        this.wert = 0;
+        this.sender = '';
+        this.receiver = '';
+        this.value = 0;
         this.details = '';
-        this.einreicherId = '';
-        this.mandant = '';
-        this.referenz = '';
+        this.submitter = '';
+        this.mandate = '';
+        this.reference = '';
     }
 }
 
@@ -35,7 +35,7 @@ export class Pattern {
     sender: string;
     receiver: string;
     referenceID: string;
-    mandat: string;
+    mandate: string;
     senderID: string;
     details: string;
     [key: string]: string;
@@ -46,7 +46,7 @@ export class Pattern {
         this.receiver = '';
         this.referenceID = '';
         this.details = '';
-        this.mandat = '';
+        this.mandate = '';
     }
 
 }
@@ -64,7 +64,7 @@ export class Plan {
     subcategory: number;
     categoryname: string;
     subcategoryname: string;
-    wert: number;
+    value: number;
     patterndto: Pattern;
     matchstyle: number;
 
@@ -81,7 +81,7 @@ export class Plan {
         this.subcategory = 1;
         this.categoryname = '';
         this.subcategoryname = '';
-        this.wert = 0;
+        this.value = 0;
         this.patterndto = new Pattern();
         this.matchstyle = 0;
     }
@@ -93,9 +93,9 @@ export class Template {
     validFrom: Date;
     validUntil: Date;
     start: Date;
-    vardays: number;
-    anzahl: number;
-    rythmus: number;
+    variance: number;
+    repeatcount: number;
+    repeatunit: number;
     description: string;
     category: number;
     subcategory: number;
@@ -114,9 +114,9 @@ export class Template {
         this.validFrom = date;
         this.validUntil = undefined;
         this.start = date;
-        this.vardays = 4;
-        this.anzahl = 1;
-        this.rythmus = 2;
+        this.variance = 4;
+        this.repeatcount = 1;
+        this.repeatunit = 2;
         this.description = '';
         this.category = 1;
         this.subcategory = 1;
@@ -150,8 +150,8 @@ export class  Assignment {
     id: number;
     detail: string;
     description: string;
-    sollwert?: number;
-    istwert: number;
+    planed?: number;
+    real: number;
     committed: boolean;
     plan?: number;
     accountrecord: number;

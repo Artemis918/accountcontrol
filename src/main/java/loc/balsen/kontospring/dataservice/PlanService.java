@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -116,6 +117,17 @@ public class PlanService {
 	public void detachPlans ( Template template ) {
 		planRepository.findByTemplate(template).forEach((p) -> { p.setTemplate(null); planRepository.save(p);});
 	}
+	
+	public void replacePattern (Template template, LocalDate from, Pattern newPattern ) {
+		List<Plan> plans = planRepository.findByTemplate(template);
+		plans.stream().filter((p) -> {
+			return !p.getPlanDate().isBefore(from);
+		}).forEach((p) -> {
+			p.setPattern(newPattern);
+			planRepository.save(p);
+		});
+	}
+	
 
 	private boolean isTemplateRange(Template template) {
 		if (template.getValidFrom().isBefore(start)

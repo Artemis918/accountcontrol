@@ -1,16 +1,16 @@
-create table Zuordnung
+create table Assignment
 (
-    id               integer NOT NULL,   
-	konto		     int,
+	id               integer NOT NULL,
+	subcategory      int,
 	description      varchar(512),
-    shortdescription varchar(80),
-	wert             int,
+	shortdescription varchar(80),
+	value            int,
 	plan             int,
-	buchungsbeleg    int,
-	committed		boolean,
+	accountrecord    int,
+	committed        boolean,
 	primary key (id)
 );
 
-create unique index ZuordnungID on Zuordnung (id);
+create unique index AssignmentID on Assignment (id);
 
-create sequence seq_zuordnung;
+create sequence seq_assignment;

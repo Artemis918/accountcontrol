@@ -73,6 +73,8 @@
 	"assign.receiver": "Empfänger",
 	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
+	"assign.otherparty": "Absender/Empf.",
+	
 	
 	"records.recorddata": "Belegdaten",
 	"records.upload": "Einspielen",
@@ -104,6 +106,7 @@
 	"plan.fromtemplates": "Aus Vorlagen erstellen",
 	"plan.plandata": "Plandaten",
 	"plan.plansfor": "Pläne für ",
+	"plan.planscreated": "Pläne erstellt",
 	
 	"check.plan": "Planwert",
 	"check.real": "Istwert",

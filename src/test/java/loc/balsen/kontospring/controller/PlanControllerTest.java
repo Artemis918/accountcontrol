@@ -26,7 +26,7 @@ import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Template.Rythmus;
+import loc.balsen.kontospring.data.Template.TimeUnit;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -44,14 +44,14 @@ public class PlanControllerTest extends TestContext {
 			"\"description\": \"Beschreibung\", " +
 			"\"shortdescription\": \"Kurz\", " +
 			"\"position\": 5, " +
-			"\"wert\": 100, " +
+			"\"value\": 100, " +
 			"\"matchstyle\": 1, " +
 			"\"patterndto\": { " +
-            "  \"sender\": \"Absender\", " +
-			"  \"receiver\": \"Empfänger\", " +
-            "  \"referenceID\": \"Referenz\", " +
+            "  \"sender\": \"sender\", " +
+			"  \"receiver\": \"Receiver\", " +
+            "  \"referenceID\": \"Reference\", " +
 			"  \"details\": \"*pups*\", " +
-            "  \"mandat\":  \"\" " +
+            "  \"mandate\":  \"\" " +
 			"}" +
 			"}";
 		
@@ -79,7 +79,7 @@ public class PlanControllerTest extends TestContext {
 		List<Plan> plans =planRepository.findAll();
 		assertEquals(1,plans.size());
 		Plan plan  = plans.get(0);
-		assertEquals(100, plan.getWert());
+		assertEquals(100, plan.getValue());
 		assertEquals(subCategory1.getId(), plan.getSubCategory().getId());
 
 		mvc.perform(get("/plans/list/1797/11"))
@@ -116,20 +116,20 @@ public class PlanControllerTest extends TestContext {
 		template.setValidFrom(LocalDate.of(year,9, 1));
 		template.setValidUntil(LocalDate.of(year,12, 31));
 		template.setStart(LocalDate.of(year,9, 15));
-		template.setVardays(5);
-		template.setAnzahlRythmus(1);
-		template.setRythmus(Rythmus.MONTH);
+		template.setVariance(5);
+		template.setRepeatCount(1);
+		template.setRepeatUnit(TimeUnit.MONTH);
 		template.setSubCategory(subCategory1);
 		template.setDescription("Beschreibung");
 		template.setShortDescription("Kurz1234");
 		template.setValue(100);
 		template.setPosition(4);
 		template.setMatchStyle(MatchStyle.EXACT);
-		template.setPattern(new Pattern( "  \"sender\": \"Absender\", " +
-			"  \"receiver\": \"Empfänger\", " +
-            "  \"referenceID\": \"Referenz\", " +
+		template.setPattern(new Pattern( "  \"sender\": \"sender\", " +
+			"  \"receiver\": \"Receiver\", " +
+            "  \"referenceID\": \"Reference\", " +
 			"  \"details\": \"*pups*\", " +
-            "  \"mandat\":  \"\" "));	
+            "  \"mandate\":  \"\" "));	
 		templateRepository.save(template);
 	}
 	

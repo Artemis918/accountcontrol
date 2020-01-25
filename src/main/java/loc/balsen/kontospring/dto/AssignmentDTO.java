@@ -14,8 +14,8 @@ public class AssignmentDTO {
 	int id;
 	String detail;
 	String description;
-	int sollwert;
-	int istwert;
+	int planed;
+	int real;
 	boolean committed;
 	int plan;
 	int accountrecord;
@@ -28,18 +28,18 @@ public class AssignmentDTO {
 	public AssignmentDTO(Assignment z) {
 		id = z.getId();
 		detail = z.getShortdescription();
-		istwert = z.getWert();
+		real = z.getValue();
 		accountrecord = z.getAccountrecord().getId();
 		committed = z.isCommitted();
 		position = 2000;
 		Plan p = z.getPlan();
 		if (p != null) {
 			plan = p.getId();
-			sollwert = p.getWert();
+			planed = p.getValue();
 			position = p.getPosition();
 		}
 
-		SubCategory s = z.getSubcategory();
+		SubCategory s = z.getSubCategory();
 		if (s != null) {
 			category = s.getCategory().getId();
 			subcategory = s.getId();
@@ -49,9 +49,9 @@ public class AssignmentDTO {
 	public AssignmentDTO(Plan p) {
 		id = 0;
 		detail = p.getShortDescription();
-		sollwert = p.getWert();
+		planed = p.getValue();
 		position = p.getPosition();
-		istwert=0;
+		real=0;
 		accountrecord = 0;
 		committed = false;
 		plan=p.getId();
@@ -66,7 +66,7 @@ public class AssignmentDTO {
 		res.setId(id);
 		res.setShortdescription(detail);
 		res.setDescription(description);
-		res.setWert(istwert);
+		res.setValue(real);
 		res.setCommitted(committed);
 
 		if (plan != 0)
@@ -76,7 +76,7 @@ public class AssignmentDTO {
 			res.setAccountrecord(accountRecordRepository.getOne(accountrecord));
 
 		if (subcategory != 0) 
-			res.setSubcategory(subCategoryRepository.getOne(subcategory));
+			res.setSubCategory(subCategoryRepository.getOne(subcategory));
 		return res;
 	}
 	

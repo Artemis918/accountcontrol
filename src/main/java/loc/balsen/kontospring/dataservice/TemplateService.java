@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.data.Template;
@@ -17,7 +18,7 @@ import loc.balsen.kontospring.repositories.TemplateRepository;
 @Component
 public class TemplateService {
 
-	private static final int KONTO_DEFAULT = 1;
+	private static final int SUBCATEGORY_DEFAULT = 1;
 
 	PlanService planService;
 	TemplateRepository templateRepository;
@@ -28,13 +29,31 @@ public class TemplateService {
 	public TemplateService(PlanService planService,
 			               TemplateRepository templateRepository,
 			               AccountRecordRepository accountRecordRepository,
-			               SubCategoryRepository kontoRepository) {
+			               SubCategoryRepository subCategoryRepository) {
 		this.planService = planService;
 		this.templateRepository = templateRepository;
 		this.accountRecordRepository = accountRecordRepository;
-		this.subCategoryRepository = kontoRepository;
+		this.subCategoryRepository = subCategoryRepository;
 	}
 
+	public void replaceTemplate (Template oldTemp, Template newTemp) {
+		
+		newTemp.setId(0);
+		templateRepository.save(newTemp);
+		planService.createNewPlansfromTemplate(newTemp);
+		
+		oldTemp.setValidUntil(newTemp.getValidFrom().minusDays(1));		
+		oldTemp.setNext(newTemp.getId());		
+		templateRepository.save(oldTemp);
+		planService.deactivatePlans(oldTemp);		
+	}
+	
+	public void replacePattern (Template temp, LocalDate from, Pattern newPattern ) {
+		temp.setPattern(newPattern);
+		templateRepository.save(temp);
+		planService.replacePattern(temp,from,newPattern);
+	}
+	
 	public void saveTemplate(Template template) {
 
 		if (template.getId() == 0) {
@@ -50,17 +69,10 @@ public class TemplateService {
 				templateOrig.setValidUntil(template.getValidUntil());
 				template = templateOrig;
 			} else {
-				LocalDate lastPlan = planService.getLastPlanOf(templateOrig);
 				LocalDate changeDay = template.getValidFrom();
-				if (lastPlan.isAfter(changeDay))
-					changeDay=lastPlan.plusDays(1);
 				
 				template.setId(0);
-				
-				template.setValidFrom(changeDay);
-				if (template.getValidUntil() != null && template.getValidUntil().isBefore(changeDay))
-					template.setValidUntil(changeDay);
-					
+				template.setValidFrom(changeDay);					
 				templateRepository.save(template);
 				
 				templateOrig.setValidUntil(changeDay.minusDays(1));
@@ -68,16 +80,13 @@ public class TemplateService {
 			}
 			templateRepository.save(templateOrig);
 			planService.deactivatePlans(templateOrig);
-			
-			planService.createNewPlansfromTemplate(template);
-
 		}
 	}
 	
 	public Template createFromRecord(Integer id) {
 		Optional<AccountRecord> record = accountRecordRepository.findById(id);
 		if (record.isPresent()) {
-			SubCategory subCategory = subCategoryRepository.findById(KONTO_DEFAULT).get();
+			SubCategory subCategory = subCategoryRepository.findById(SUBCATEGORY_DEFAULT).get();
 			Template template = new Template(record.get());
 			template.setSubCategory(subCategory);
 			return template;

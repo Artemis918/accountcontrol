@@ -21,13 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Assignment;
+import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
 
 @RunWith(SpringRunner.class)
@@ -132,25 +132,25 @@ public class PlanServiceTest extends TestContext {
 		LocalDate last = planService.getLastPlanOf(template);
 		assertNull(last);
 
-		LocalDate plandate = createZuordnung(plans.get(1));
+		LocalDate plandate = createAssignment(plans.get(1));
 		last = planService.getLastPlanOf(template);
 		assertEquals(plandate, last);
 
-		plandate = createZuordnung(plans.get(2));
+		plandate = createAssignment(plans.get(2));
 		last = planService.getLastPlanOf(template);
 		assertEquals(plandate, last);
 
-		plandate = createZuordnung(plans.get(4));
+		plandate = createAssignment(plans.get(4));
 		last = planService.getLastPlanOf(template);
 		assertEquals(plandate, last);
 
-		createZuordnung(plans.get(3));
+		createAssignment(plans.get(3));
 		last = planService.getLastPlanOf(template);
 		assertEquals(plandate, last);
 
 	}
 
-	private LocalDate createZuordnung(Plan plan) {
+	private LocalDate createAssignment(Plan plan) {
 		Assignment assignment = new Assignment();
 		assignment.setPlan(plan);
 		assignmentRepository.save(assignment);
@@ -247,31 +247,69 @@ public class PlanServiceTest extends TestContext {
 		}
 
 	}
+	
+	@Test 
+	public void testReplacePattern() {
+		String senderjson = "{\"sender\": \"gulli0\"}";
+		List<Plan> plans = new ArrayList<>();
+		Plan plan1 = new Plan();
+		plan1.setId(1);
+		plan1.setPlanDate(LocalDate.of(1997, 5, 14));
+		plan1.setPattern(new Pattern(senderjson));
+		plans.add(plan1);
+
+		Plan plan2 = new Plan();
+		plan2.setId(2);
+		plan2.setPlanDate(LocalDate.of(1997, 6, 14));
+		plan2.setPattern(new Pattern(senderjson));
+		plans.add(plan2);
+
+		Plan plan3 = new Plan();
+		plan3.setId(3);
+		plan3.setPlanDate(LocalDate.of(1997, 7, 14));
+		plan3.setPattern(new Pattern(senderjson));
+		plans.add(plan3);
+		
+		when(mockPlanRepository.findByTemplate(template)).thenReturn(plans);
+		
+		planService_mocked.replacePattern(template, LocalDate.of(1997, 6, 14), new Pattern("{\"sender\": \"someone\"}") );
+
+		verify(mockPlanRepository,times(0)).save(plan1);
+		verify(mockPlanRepository,times(1)).save(plan2);
+		verify(mockPlanRepository,times(1)).save(plan3);
+		
+		assertEquals("gulli0",plan1.getPatternObject().getSender());
+		assertEquals("someone",plan2.getPatternObject().getSender());
+		assertEquals("someone",plan3.getPatternObject().getSender());
+	
+	}
 
 	public void createTestData() {
+		String senderjson = "{\"sender\": \"gulli0\"}";
+		
 		latestPlan = new Plan();
 		latestPlan.setPlanDate(LocalDate.of(1997, 5, 14));
 		latestPlan.setDescription("templatetest");
-		latestPlan.setPattern(new Pattern("\"sender\": \"gulli0\""));
+		latestPlan.setPattern(new Pattern(senderjson));
 		latestPlan.setSubCategory(subCategory1);
 		planRepository.save(latestPlan);
 
 		template = new Template();
 		template.setShortDescription("tester");
-		template.setAnzahlRythmus(1);
-		template.setRythmus(Template.Rythmus.MONTH);
-		template.setVardays(5);
+		template.setRepeatCount(1);
+		template.setRepeatUnit(Template.TimeUnit.MONTH);
+		template.setVariance(5);
 		template.setValidFrom(LocalDate.of(1999, 1, 3));
 		template.setStart(LocalDate.of(1998, 10, 2));
-		template.setPattern(new Pattern("\"sender\": \"gulli1\""));
+		template.setPattern(new Pattern(senderjson));
 		template.setSubCategory(subCategory2);
 		templateRepository.save(template);
 
 		Template template2 = new Template();
 		template2.setShortDescription("tester2");
-		template2.setAnzahlRythmus(1);
-		template2.setRythmus(Template.Rythmus.MONTH);
-		template2.setVardays(5);
+		template2.setRepeatCount(1);
+		template2.setRepeatUnit(Template.TimeUnit.MONTH);
+		template2.setVariance(5);
 		template2.setValidFrom(LocalDate.of(1999, 1, 3));
 		template2.setStart(LocalDate.of(1998, 10, 2));
 		template2.setPattern(new Pattern("\"sender\": \"gulli2\""));

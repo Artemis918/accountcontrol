@@ -10,21 +10,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name="zuordnung")
 public class Assignment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_zuordnung_name")
-	@SequenceGenerator(name = "seq_zuordnung_name", sequenceName = "seq_zuordnung", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_assignment_name")
+	@SequenceGenerator(name = "seq_assignment_name", sequenceName = "seq_assignment", allocationSize = 1)
 	private int id;
 
-	private int wert;
+	private int value;
 	private String shortdescription;
 	private String description;
 	private boolean committed;
@@ -34,26 +32,26 @@ public class Assignment {
 	private Plan plan;
 	
 	@OneToOne
-	@JoinColumn(name = "buchungsbeleg")
+	@JoinColumn(name = "accountrecord")
 	private AccountRecord accountrecord;
 	
 	@ManyToOne
-	@JoinColumn(name = "konto")	
-	private SubCategory subcategory;
+	@JoinColumn(name = "subcategory")	
+	private SubCategory subCategory;
 
-	public Double getEuroWert() {
-		double res = getWert();
+	public Double getNaturalValue() {
+		double res = value;
 		res /= 100;
 		return res;
 	}
 
-	public void setEuroWert(Double val) {
+	public void setNatural(Double val) {
 		val *= 100;
-		setWert(val.intValue());
+		value =(val.intValue());
 	}
 	
 	public LocalDate getStatsDay()  {
-		return plan == null ? accountrecord.getWertstellung() : plan.getPlanDate();
+		return plan == null ? accountrecord.getExecuted() : plan.getPlanDate();
 		
 	}
 }

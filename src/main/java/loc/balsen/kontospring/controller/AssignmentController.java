@@ -17,19 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.dataservice.TemplateService;
+import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.SubCategory;
+import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.dataservice.AssignmentService;
-import loc.balsen.kontospring.dto.MessageID;
-import loc.balsen.kontospring.dto.SubCategoryDTO;
+import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.AssignmentDTO;
+import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.AssignmentRepository;
+import loc.balsen.kontospring.repositories.PlanRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import lombok.Data;
 
 @Controller
@@ -70,11 +69,11 @@ public class AssignmentController {
 	@GetMapping("/getcategory/{year}/{month}/{id}")
 	public List<AssignmentDTO> getCategory(@PathVariable int id, @PathVariable int month, @PathVariable int year) {
 		List<Assignment> assignments = new ArrayList<>();
-		List<SubCategory> kontolist = subCategoryRepository.findByCategoryId(id);
+		List<SubCategory> subcategories = subCategoryRepository.findByCategoryId(id);
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
-		for (SubCategory konto : kontolist) {
-			assignments.addAll(assignRepository.findBySubCategoryAndMonth(start, end, konto.getId()));
+		for (SubCategory subcategory : subcategories) {
+			assignments.addAll(assignRepository.findBySubCategoryAndMonth(start, end, subcategory.getId()));
 		}
 
 		List<AssignmentDTO> zdtos = assignments.stream().map(z -> {
@@ -82,7 +81,7 @@ public class AssignmentController {
 		}).collect(Collectors.toList());
 
 		zdtos.addAll(planRepository.findByPlanDateNotAssigned(start, end).stream().filter(p -> {
-			return contains(p, kontolist);
+			return contains(p, subcategories);
 		}).map(p -> {
 			return new AssignmentDTO(p);
 		}).collect(Collectors.toList()));
@@ -91,8 +90,8 @@ public class AssignmentController {
 		return zdtos;
 	}
 
-	private boolean contains(Plan p, List<SubCategory> kontolist) {
-		return kontolist.contains(p.getSubCategory());
+	private boolean contains(Plan p, List<SubCategory> subcategories) {
+		return subcategories.contains(p.getSubCategory());
 	}
 
 	@GetMapping("/getsubcategory/{year}/{month}/{id}")
@@ -164,10 +163,10 @@ public class AssignmentController {
 
 	@PostMapping("/tosubcategory")
 	public MessageID assignToCategory(@RequestBody ToCategoryRequestDTO request) {
-		SubCategory konto = subCategoryRepository.getOne(request.subcategory);
+		SubCategory subcategory = subCategoryRepository.getOne(request.subcategory);
 
 		request.ids.forEach(
-				(Integer z) -> assignService.assignToSubCategory(konto, request.text, accountRecordRepository.getOne(z)));
+				(Integer z) -> assignService.assignToSubCategory(subcategory, request.text, accountRecordRepository.getOne(z)));
 		return MessageID.ok;
 	}
 
@@ -181,7 +180,7 @@ public class AssignmentController {
 	public MessageID assignParts(@RequestBody List<AssignmentDTO> request) {
 
 		request.forEach((AssignmentDTO z) -> {
-			if (z.getIstwert()!= 0) 
+			if (z.getReal()!= 0) 
 				assignRepository.save(
 						z.toAssignment(planRepository, subCategoryRepository, accountRecordRepository));
 		});
@@ -204,7 +203,7 @@ public class AssignmentController {
 		Assignment assignment = assignRepository.getOne(id);
 		if (assignment.getPlan() != null && assignment.getPlan().getTemplate() != null ) {
 			AccountRecord record = assignment.getAccountrecord();
-			Template template = assignment.getPlan().getTemplate().copy(assignment.getWert(),assignment.getPlan().getStartDate());
+			Template template = assignment.getPlan().getTemplate().copy(assignment.getValue(),assignment.getPlan().getStartDate());
 			
 			assignRepository.delete(assignment);
 			templateService.saveTemplate(template);

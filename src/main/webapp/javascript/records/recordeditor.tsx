@@ -54,12 +54,12 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function( response ) {
-            self.setAnswer( response.json() );
+        } ).then( function() {
+            self.setAnswer();
         } );
     }
 
-    setAnswer( data: any ): void {
+    setAnswer( ): void {
         this.props.onChange();
     }
 
@@ -72,7 +72,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
     delete(): void {
         var self = this;
         fetch( '/record/delete/' + this.state.record.id, { method: 'get' } )
-            .then( function( response ) { self.setAnswer( response.json() ); } );
+            .then( function() { self.setAnswer(); } );
     }
 
     copy(): void {
@@ -92,15 +92,15 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                         <tr>
                             <td>{this.label("sender")}</td>
                             <td>
-                                <input className={css.stringinput} value={this.state.record.absender}
-                                    onChange={( e ) => { this.record.absender = e.target.value; this.setState( { record: this.record } ) }} />
+                                <input className={css.stringinput} value={this.state.record.sender}
+                                    onChange={( e ) => { this.record.sender = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>{this.label("receiver")}</td>
                             <td>
-                                <input className={css.stringinput} value={this.state.record.empfaenger}
-                                    onChange={( e ) => { this.record.empfaenger = e.target.value; this.setState( { record: this.record } ) }} />
+                                <input className={css.stringinput} value={this.state.record.receiver}
+                                    onChange={( e ) => { this.record.receiver = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
@@ -114,17 +114,17 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                             <td>{this.label("value")}</td>
                             <td>
                                 <input className={css.numberinput}
-                                    step="0.01" value={this.state.record.wert / 100}
+                                    step="0.01" value={this.state.record.value / 100}
                                     type='number'
-                                    onChange={( e ) => { this.record.wert = e.target.valueAsNumber * 100; this.setState( { record: this.record } ) }} />
+                                    onChange={( e ) => { this.record.value = e.target.valueAsNumber * 100; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
                             <td>{this.label("date")}</td>
                             <td className={css.stringinput}><KSDayPickerInput
                                 locale={this.props.intl.locale}
-                                onChange={( d ) => { this.record.wertstellung = d; this.setState( { record: this.record } ) }}
-                                startdate={this.state.record.wertstellung} />
+                                onChange={( d ) => { this.record.executed = d; this.setState( { record: this.record } ) }}
+                                startdate={this.state.record.executed} />
                             </td>
                         </tr>
                     </tbody>

@@ -15,7 +15,7 @@ public class Pattern {
 	private String referenceID;
 	private String senderID;
 	private String details;
-	private String mandat;
+	private String mandate;
 	
 	static private final ObjectMapper mapper =  new ObjectMapper();
 	
@@ -25,7 +25,7 @@ public class Pattern {
 		referenceID = "";
 		senderID = ""; 
 		details = "";
-		mandat = "";
+		mandate = "";
 	};
 
 	public Pattern(String jsonString) {
@@ -36,7 +36,7 @@ public class Pattern {
 			this.referenceID = p.referenceID;
 			this.senderID = p.senderID;
 			this.details = p.details;
-			this.mandat = p.mandat;
+			this.mandate = p.mandate;
 			
 		} catch (IOException e) {
 			// TODO generate some log
@@ -45,17 +45,17 @@ public class Pattern {
 			referenceID = "";
 			senderID = ""; 
 			details = "";
-			mandat = "";
+			mandate = "";
 		}
 	}
 	
 	public Pattern(AccountRecord accountRecord) {
-		this.sender = accountRecord.getAbsender();
-		this.receiver = accountRecord.getEmpfaenger();
-		this.referenceID = accountRecord.getReferenz();
-		this.senderID = accountRecord.getEinreicherId();
+		this.sender = accountRecord.getSender();
+		this.receiver = accountRecord.getReceiver();
+		this.referenceID = accountRecord.getReference();
+		this.senderID = accountRecord.getSubmitter();
 		this.details = accountRecord.getDetails();
-		this.mandat = accountRecord.getMandat();
+		this.mandate = accountRecord.getMandate();
 	}
 
 	public String toJson() {
@@ -69,12 +69,12 @@ public class Pattern {
 	}
 
 	public boolean matches(AccountRecord record) {
-		return matches(sender,record.getAbsender()) 
-				&& matches(receiver, record.getEmpfaenger())
-				&& matches(referenceID , record.getReferenz())
-				&& matches(senderID , record.getEinreicherId())
+		return matches(sender,record.getSender()) 
+				&& matches(receiver, record.getReceiver())
+				&& matches(referenceID , record.getReference())
+				&& matches(senderID , record.getSubmitter())
 				&& matches(details , record.getDetailsNOLF())
-				&& matches(mandat , record.getMandat());
+				&& matches(mandate , record.getMandate());
 	}
 
 	private boolean matches(String pattern, String text) {

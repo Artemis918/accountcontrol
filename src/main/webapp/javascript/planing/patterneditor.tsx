@@ -76,9 +76,9 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
                         </tr>
                         <tr> <td>{this.label("mandate")}</td> 
                              <td> <input className={css.stringinput}
-                                         value={this.state.pattern.mandat} 
+                                         value={this.state.pattern.mandate} 
                                          type='text' 
-                                         onChange={( e ) => this.setValue( 'mandat', e )}  />
+                                         onChange={( e ) => this.setValue( 'mandate', e )}  />
                              </td>
                         </tr>
                         <tr> <td>{this.label("submitter")}</td> 

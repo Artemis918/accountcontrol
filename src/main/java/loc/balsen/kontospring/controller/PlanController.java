@@ -32,7 +32,7 @@ public class PlanController {
 	private PlanRepository planRepository;
 
 	@Autowired
-	private SubCategoryRepository kontoRepository;
+	private SubCategoryRepository subCategoryRepository;
 
 	@Autowired
 	private TemplateRepository templateRepository;
@@ -66,14 +66,14 @@ public class PlanController {
 	@GetMapping("/patternplans/{groupid}")
 	List<PlanDTO> findPatternPlans(@PathVariable Integer groupid) {
 
-		return planRepository.findByPatternPlansAndKontogroup(groupid).stream().map((plan) -> {
+		return planRepository.findByPatternPlansAndCategory(groupid).stream().map((plan) -> {
 			return new PlanDTO(plan);
 		}).collect(Collectors.toList());
 	}
 
 	@PostMapping("/save")
 	MessageID savePlan(@RequestBody PlanDTO plandto) {
-		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
+		Plan plan = plandto.toPlan(templateRepository, subCategoryRepository);
 		plan.setCreationDate(LocalDate.now());
 		planRepository.save(plan);
 		return MessageID.ok;
@@ -81,12 +81,12 @@ public class PlanController {
 
 	@PostMapping("/savePattern")
 	MessageID savePattern(@RequestBody PlanDTO plandto) {
-		Plan plan = plandto.toPlan(templateRepository, kontoRepository);
+		Plan plan = plandto.toPlan(templateRepository, subCategoryRepository);
 		plan.setCreationDate(LocalDate.now());
 		plan.setStartDate(null);
 		plan.setEndDate(null);
 		plan.setMatchStyle(MatchStyle.PATTERN);
-		plan.setWert(0);
+		plan.setValue(0);
 		planRepository.save(plan);
 		return MessageID.ok;
 	}

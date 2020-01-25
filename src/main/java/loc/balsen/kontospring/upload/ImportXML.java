@@ -29,17 +29,17 @@ public class ImportXML extends Importbase {
 	static private final HashMap<String, Type> recordTypesMap = new HashMap<String, Type>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("NTRF+166", Type.GUTSCHRIFT);
-			put("NDDT+105", Type.LASTSCHRIFT);
-			put("NCMI+116", Type.UEBERWEISUNG);
-			put("NTRF+153", Type.ENTGELT);
-			put("NDDT+106", Type.KARTE);
-			put("NDDT+083", Type.AUSZAHLUNG);
-			put("NCMI+117", Type.DAUERAUFTRAG);
-			put("NCMI+083", Type.UMBUCHUNG);
-			put("NDDT+107", Type.LASTSCHRIFTKARTE);
-			put("NCHG+805", Type.ZINSEN);
-			put("NCMI+082", Type.UMBUCHUNG);
+			put("NTRF+166", Type.CREDIT);
+			put("NDDT+105", Type.DEBIT);
+			put("NCMI+116", Type.TRANSFER);
+			put("NTRF+153", Type.REMUNERATION);
+			put("NDDT+106", Type.CARD);
+			put("NDDT+083", Type.PAYINGOUT);
+			put("NCMI+117", Type.STANDINGORDER);
+			put("NCMI+083", Type.REBOOKING);
+			put("NDDT+107", Type.DEBITCARD);
+			put("NCHG+805", Type.INTEREST);
+			put("NCMI+082", Type.REBOOKING);
 		}
 	};
 
@@ -92,15 +92,15 @@ public class ImportXML extends Importbase {
 		else if (!cdtDbtInd.equals("CRDT"))
 			throw new ParseException("Unknown Indicator :" + cdtDbtInd, 0);
 		
-		record.setWert(amount);
-		record.setCreation(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt",null),dateformater));
-		record.setWertstellung(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt",null),dateformater));
+		record.setValue(amount);
+		record.setCreated(LocalDate.parse(getChild(entry, "BookgDt").getChildText("Dt",null),dateformater));
+		record.setExecuted(LocalDate.parse(getChild(entry, "ValDt").getChildText("Dt",null),dateformater));
 
 		Element details = getChild(entry, "NtryDtls").getChild("TxDtls",null);
 
 		Element parties = getChild(details, "RltdPties");
-		record.setAbsender(getChild(parties, "Dbtr").getChildText("Nm",null));
-		record.setEmpfaenger(getChild(parties, "Cdtr").getChildText("Nm",null));
+		record.setSender(getChild(parties, "Dbtr").getChildText("Nm",null));
+		record.setReceiver(getChild(parties, "Cdtr").getChildText("Nm",null));
 
 		Element infoElement = getChild(details, "RmtInf");
 
@@ -109,18 +109,18 @@ public class ImportXML extends Importbase {
 		for (Element line : infolines) {
 			String text = line.getValue();
 			if (text.startsWith("Referenz"))
-				record.setReferenz(text.substring(9));
+				record.setReference(text.substring(9));
 			else if (text.startsWith("Mandat"))
-				record.setMandat(text.substring(7));
+				record.setMandate(text.substring(7));
 			else if (text.startsWith("Einreicher-ID"))
-				record.setEinreicherId(text.substring(14));
+				record.setSubmitter(text.substring(14));
 			else {
 				record.addDetailLine(text);
 			}
 		}
 
 		record.setType(getType(details));
-		record.setEingang(LocalDate.now());
+		record.setReceived(LocalDate.now());
 		return record;
 	}
 

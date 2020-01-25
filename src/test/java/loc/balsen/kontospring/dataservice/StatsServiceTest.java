@@ -53,27 +53,27 @@ public class StatsServiceTest extends TestContext {
 		
 		Plan plan1 = new Plan();
 		plan1.setPlanDate(LocalDate.of(2018, 12, 3));
-		plan1.setWert(15);
+		plan1.setValue(15);
 		planlist.add(plan1);
 
 		Plan plan2 = new Plan();
 		plan2.setPlanDate(LocalDate.of(2018, 12, 3));
-		plan2.setWert(10);
+		plan2.setValue(10);
 		planlist.add(plan2);
 
 		Plan plan3 = new Plan();
 		plan3.setPlanDate(LocalDate.of(2019, 2, 19));
-		plan3.setWert(-5);
+		plan3.setValue(-5);
 		planlist.add(plan3);
 
 		Plan plan4 = new Plan();
 		plan4.setPlanDate(LocalDate.of(2019, 2, 28));
-		plan4.setWert(-24);
+		plan4.setValue(-24);
 		planlist.add(plan4);
 
 		Plan plan5 = new Plan();
 		plan5.setPlanDate(LocalDate.of(2019, 3, 13));
-		plan5.setWert(12);
+		plan5.setValue(12);
 		planlist.add(plan5);
 		
 		when(planRepository.findByPlanDate(any(LocalDate.class), any(LocalDate.class))).thenReturn(planlist);
@@ -98,52 +98,52 @@ public class StatsServiceTest extends TestContext {
 		List<Assignment> zungeplantlist=  new ArrayList<>();
 		
 		AccountRecord record1 = new AccountRecord();
-		record1.setWertstellung(LocalDate.of(2018, 12, 1));
+		record1.setExecuted(LocalDate.of(2018, 12, 1));
 		
-		Assignment zuordnung1 = new Assignment();
-		zuordnung1.setAccountrecord(record1);
-		zuordnung1.setWert(100);
-		zungeplantlist.add(zuordnung1);
+		Assignment assignment1 = new Assignment();
+		assignment1.setAccountrecord(record1);
+		assignment1.setValue(100);
+		zungeplantlist.add(assignment1);
 
 		AccountRecord record2 = new AccountRecord();
-		record2.setWertstellung(LocalDate.of(2019, 1, 4));
+		record2.setExecuted(LocalDate.of(2019, 1, 4));
 
 		Plan plan2 = new Plan();
 		plan2.setPlanDate(LocalDate.of(2018, 12, 3));
 
-		Assignment zuordnung2 = new Assignment();
-		zuordnung2.setAccountrecord(record2);
-		zuordnung2.setWert(110);
-		zuordnung2.setPlan(plan2);
-		zgeplantlist.add(zuordnung2);
+		Assignment assignment2 = new Assignment();
+		assignment2.setAccountrecord(record2);
+		assignment2.setValue(110);
+		assignment2.setPlan(plan2);
+		zgeplantlist.add(assignment2);
 
 		AccountRecord record3 = new AccountRecord();
-		record3.setWertstellung(LocalDate.of(2019, 2, 2));
+		record3.setExecuted(LocalDate.of(2019, 2, 2));
 
-		Assignment zuordnung3 = new Assignment();
-		zuordnung3.setAccountrecord(record3);
-		zuordnung3.setWert(-2);
-		zungeplantlist.add(zuordnung3);
+		Assignment assignment3 = new Assignment();
+		assignment3.setAccountrecord(record3);
+		assignment3.setValue(-2);
+		zungeplantlist.add(assignment3);
 
 		AccountRecord record4 = new AccountRecord();
-		record4.setWertstellung(LocalDate.of(2019, 2, 28));
+		record4.setExecuted(LocalDate.of(2019, 2, 28));
 
-		Assignment zuordnung4 = new Assignment();
-		zuordnung4.setAccountrecord(record4);
-		zuordnung4.setWert(-12);
-		zungeplantlist.add(zuordnung4);
+		Assignment assignment4 = new Assignment();
+		assignment4.setAccountrecord(record4);
+		assignment4.setValue(-12);
+		zungeplantlist.add(assignment4);
 
 		AccountRecord record5 = new AccountRecord();
-		record5.setWertstellung(LocalDate.of(2019, 1, 1));
+		record5.setExecuted(LocalDate.of(2019, 1, 1));
 		
 		Plan plan5 = new Plan();
 		plan5.setPlanDate(LocalDate.of(2019, 3, 1));
 		
-		Assignment zuordnung5 = new Assignment();
-		zuordnung5.setAccountrecord(record5);
-		zuordnung5.setWert(17);
-		zuordnung5.setPlan(plan5);
-		zgeplantlist.add(zuordnung5);
+		Assignment assignment5 = new Assignment();
+		assignment5.setAccountrecord(record5);
+		assignment5.setValue(17);
+		assignment5.setPlan(plan5);
+		zgeplantlist.add(assignment5);
 		
 		when(assignmentRepository.findAllPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zgeplantlist);
 		when(assignmentRepository.findAllNotPlannedByPeriod(any(LocalDate.class), any(LocalDate.class))).thenReturn(zungeplantlist);

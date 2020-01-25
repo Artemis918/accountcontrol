@@ -5,8 +5,6 @@ import { Plan } from '../utils/dtos'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 
 import * as css from '../css/index.css'
-import * as acss from './css/assign.css'
-
 
 type OnSelectCallBack = ( plan: Plan ) => void;
 
@@ -41,10 +39,10 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
                 return (
                     <div style={{
-                        color: cell.data.wert >= 0 ? 'green' : 'red',
+                        color: cell.data.value >= 0 ? 'green' : 'red',
                         textAlign: 'right'
                     }}>
-                        {( cell.data.wert / 100 ).toFixed( 2 )}
+                        {( cell.data.value / 100 ).toFixed( 2 )}
                     </div>
                 )
             }

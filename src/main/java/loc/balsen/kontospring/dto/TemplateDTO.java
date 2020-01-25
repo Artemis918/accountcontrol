@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Template.Rythmus;
+import loc.balsen.kontospring.data.Template.TimeUnit;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import lombok.Data;
 
@@ -14,9 +14,9 @@ public class TemplateDTO {
 	private LocalDate validFrom;
 	private LocalDate validUntil;
 	private LocalDate start;
-	private int vardays;
-	private int anzahl;
-	private int rythmus;
+	private int variance;
+	private int repeatcount;
+	private int repeatunit;
 	private int subcategory;
 	private int category;
 	private String subcategoryname;
@@ -38,9 +38,9 @@ public class TemplateDTO {
 		this.validFrom = template.getValidFrom();
 		this.validUntil = template.getValidUntil();
 		this.start = template.getStart();
-		this.vardays=template.getVardays();
-		this.anzahl = template.getAnzahlRythmus();
-		this.rythmus = template.getRythmus().ordinal();
+		this.variance=template.getVariance();
+		this.repeatcount = template.getRepeatCount();
+		this.repeatunit = template.getRepeatUnit().ordinal();
 		this.description = template.getDescription();
 		this.position= template.getPosition();
 		this.subcategory=template.getSubCategory().getId();
@@ -61,15 +61,15 @@ public class TemplateDTO {
 		template.setValidFrom(this.validFrom == null ? LocalDate.now(): this.validFrom);
 		template.setValidUntil(this.validUntil);
 		template.setStart(this.start == null ? LocalDate.now() : this.start);
-		template.setVardays(this.getVardays());
-		template.setAnzahlRythmus(this.getAnzahl());
-		template.setRythmus(Rythmus.values()[this.rythmus]);
-		template.setDescription(this.getDescription());
-		template.setPosition(this.getPosition());
-		template.setValue(this.getValue());
+		template.setVariance(this.variance);
+		template.setRepeatCount(this.repeatcount);
+		template.setRepeatUnit(TimeUnit.values()[this.repeatunit]);
+		template.setDescription(this.description);
+		template.setPosition(this.position);
+		template.setValue(this.value);
 		template.setSubCategory(subCategoryRepository.getOne(this.subcategory));
 		template.setPattern(pattern.toPattern());
-		template.setShortDescription(this.getShortdescription());
+		template.setShortDescription(this.shortdescription);
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);
 		template.setNext(this.getPrevious());
 

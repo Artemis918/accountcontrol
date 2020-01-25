@@ -24,12 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.google.gson.Gson;
-import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 
 import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Category;
 import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.dto.CategoryDTO;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -101,7 +100,7 @@ public class CategoryControllerTest extends TestContext {
 	public void addSubCategory() throws Exception {
 		
 		SubCategoryDTO testsub = new SubCategoryDTO();
-		testsub.setArt(1);
+		testsub.setType(1);
 		testsub.setDescription("testing");
 		
 		//some subcategory
@@ -258,11 +257,11 @@ public class CategoryControllerTest extends TestContext {
 		subCategoryRepository.save(delsub2);
 		
 		AccountRecord record = new AccountRecord();
-		assignRecordRepository.save(record);
+		accountRecordRepository.save(record);
 		
 		Assignment assign = new Assignment();
 		assign.setAccountrecord(record);
-		assign.setSubcategory(delsub1);
+		assign.setSubCategory(delsub1);
 		
 		mvc.perform(get("/category/delcat/" + delcat.getId())
 					    .contentType(MediaType.APPLICATION_JSON)
@@ -273,6 +272,6 @@ public class CategoryControllerTest extends TestContext {
 		assertFalse(subCategoryRepository.findById(delsub1.getId()).isPresent());
 		assertFalse(subCategoryRepository.findById(delsub2.getId()).isPresent());
 		assertFalse(assignmentRepository.findById(assign.getId()).isPresent());
-		assertTrue(assignRecordRepository.findById(record.getId()).isPresent());
+		assertTrue(accountRecordRepository.findById(record.getId()).isPresent());
 	}
 }

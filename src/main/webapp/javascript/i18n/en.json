@@ -73,6 +73,7 @@
 	"assign.receiver": "To",
 	"assign.selectplan": "Select plan",
 	"assign.onevalue": "you must select exactly on record",
+	"assign.otherparty": "other party",
 	
 	"records.recorddata": "Record data",
 	"records.upload": "Upload",
@@ -104,6 +105,7 @@
 	"plan.fromtemplates": "Create from templates",
 	"plan.plandata": "Planing data",
 	"plan.plansfor": "Plan for ",
+	"plan.planscreated": "Plans created",
 		
 	"check.plan": "Planned value",
 	"check.real": "Real value",
@@ -112,9 +114,6 @@
 	"check.commitall": "Commit all",
 	"check.removeassign": "Revoke assingment",
 	"check.replan": "Replan",
-	
-	"pattern.patterndata": "Musterdaten",
-	
 	
 	"pattern.patterndata": "Pattern data",
 	

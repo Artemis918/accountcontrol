@@ -17,7 +17,7 @@ public class SubCategoryDTO {
 		this.id = cat.getId();
 		this.description = cat.getDescription();
 		this.shortdescription = cat.getShortdescription();
-		this.art = cat.getArt();
+		this.type = cat.getType();
 		if (cat.getCategory() != null)
 			this.category =  cat.getCategory().getId();
 	}
@@ -27,7 +27,7 @@ public class SubCategoryDTO {
 		sub.setId(id);
 		sub.setShortdescription(shortdescription);
 		sub.setDescription(description);
-		sub.setArt(art);
+		sub.setType(type);
 		if (category != 0) {
 			Optional<Category> cat = categoryRepository.findById(category);
 			sub.setCategory(cat.isPresent() ? cat.get():null);			
@@ -38,6 +38,6 @@ public class SubCategoryDTO {
 	private int id;
 	private String shortdescription;
 	private String description;
-	private int art;
+	private int type;
 	private int category;
 }

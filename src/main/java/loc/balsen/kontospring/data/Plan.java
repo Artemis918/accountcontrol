@@ -35,7 +35,7 @@ public class Plan {
 	private LocalDate endDate;
 	private LocalDate deactivateDate;
 	private int position;
-	private int wert;
+	private int value;
 	private String shortDescription;
 	private String description;
 	private MatchStyle matchStyle;
@@ -49,7 +49,7 @@ public class Plan {
 
 	@ManyToOne
 	@NotNull
-	@JoinColumn(name = "konto")
+	@JoinColumn(name = "subcategory")
 	private SubCategory subCategory;
 
 	@Transient
@@ -62,13 +62,13 @@ public class Plan {
 
 		creationDate = LocalDate.now();
 
-		startDate = date.minusDays(templ.getVardays());
+		startDate = date.minusDays(templ.getVariance());
 		planDate = date;
-		endDate = date.plusDays(templ.getVardays());
+		endDate = date.plusDays(templ.getVariance());
 
 		subCategory = templ.getSubCategory();
 		position = templ.getPosition();
-		wert = templ.getValue();
+		value = templ.getValue();
 		pattern = templ.getPattern();
 		shortDescription = templ.getShortDescription();
 		description = templ.getDescription();

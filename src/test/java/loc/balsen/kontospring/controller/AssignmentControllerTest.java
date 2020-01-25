@@ -82,11 +82,11 @@ public class AssignmentControllerTest extends TestContext {
 		Gson gson =  new Gson();
 				
 		AccountRecord record = new AccountRecord();
-		record.setReferenz("testrec");
-		assignRecordRepository.save(record);
+		record.setReference("testrec");
+		accountRecordRepository.save(record);
 		Assignment assignment =  new Assignment();
 		assignment.setAccountrecord(record);
-		assignment.setSubcategory(subCategory1);
+		assignment.setSubCategory(subCategory1);
 		
 		List<Integer> list =  new ArrayList<>();
 		list.add(new Integer(subCategory1.getId()));
@@ -173,7 +173,7 @@ public class AssignmentControllerTest extends TestContext {
 	}
 
 	@Test
-	public void testAssignKonto() throws Exception {
+	public void testAssignSubCategory() throws Exception {
 		
 		AccountRecord record2 = createRecord("test5 bleble");
 		AccountRecord record1 =createRecord("test6 bleble");
@@ -194,9 +194,9 @@ public class AssignmentControllerTest extends TestContext {
 	private AccountRecord createRecord(String description) {
 		AccountRecord result = new AccountRecord();
 		result.setDetails(description);
-		result.setWertstellung(LocalDate.now());
-		result.setCreation(LocalDate.now());
-		assignRecordRepository.save(result);
+		result.setExecuted(LocalDate.now());
+		result.setCreated(LocalDate.now());
+		accountRecordRepository.save(result);
 		return result;
 	}
 

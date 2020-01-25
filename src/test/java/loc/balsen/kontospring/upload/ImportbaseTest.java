@@ -65,12 +65,12 @@ public class ImportbaseTest {
 		
 	}
 
-	private AccountRecord createRecord(String absender, String empfaenger, LocalDate date, int wert) {
+	private AccountRecord createRecord(String sender, String receiver, LocalDate date, int value) {
 		AccountRecord res  =  new AccountRecord();
-		res.setAbsender(absender);
-		res.setEmpfaenger(empfaenger);
-		res.setWert(wert);
-		res.setCreation(date);
+		res.setSender(sender);
+		res.setReceiver(receiver);
+		res.setValue(value);
+		res.setCreated(date);
 		return res;
 	}
 

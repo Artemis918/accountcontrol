@@ -14,16 +14,16 @@ public class RecordDTOTest {
 	@Test
 	public void test() {
 		AccountRecord record =  new AccountRecord();
-		record.setWert(102056);
-		record.setWertstellung(LocalDate.now());
-		record.setAbsender("absender");
-		record.setEmpfaenger("empfänger");
-		record.setDetails("Referenz NOTPROVIDED");
+		record.setValue(102056);
+		record.setExecuted(LocalDate.now());
+		record.setSender("sender");
+		record.setReceiver("receiver");
+		record.setDetails("Reference NOTPROVIDED");
 		
 		RecordDTO dto = new RecordDTO(record);
 		
-		assertEquals("absender", dto.getPartner());
-		assertEquals("Referenz NOTPROVIDED",dto.getDetails());
+		assertEquals("sender", dto.getPartner());
+		assertEquals("Reference NOTPROVIDED",dto.getDetails());
 	}
 
 }

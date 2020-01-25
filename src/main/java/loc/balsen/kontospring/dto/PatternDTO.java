@@ -12,7 +12,7 @@ public class PatternDTO {
 	private String referenceID;
 	private String senderID;
 	private String details;
-	private String mandat;
+	private String mandate;
 	
 	public PatternDTO() {
 	}
@@ -23,7 +23,7 @@ public class PatternDTO {
 		this.referenceID = pattern.getReferenceID();
 		this.senderID = pattern.getSenderID();
 		this.details = pattern.getDetails();
-		this.mandat = pattern.getMandat();
+		this.mandate = pattern.getMandate();
 	}
 	
 	public Pattern toPattern() {
@@ -33,7 +33,7 @@ public class PatternDTO {
 		pattern.setReferenceID(referenceID);
 		pattern.setSenderID(senderID);
 		pattern.setDetails(details);
-		pattern.setMandat(mandat);
+		pattern.setMandate(mandate);
 		return pattern;
 	}
 }

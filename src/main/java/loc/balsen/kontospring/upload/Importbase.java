@@ -37,8 +37,8 @@ public abstract class Importbase {
 	}
 
 	private boolean exists(AccountRecord record) {
-		List<AccountRecord> same = accountRecordRepository.findByWertAndCreationAndAbsenderAndEmpfaenger(record.getWert(), record.getCreation(),
-				record.getAbsender(), record.getEmpfaenger());
+		List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(record.getValue(), record.getCreated(),
+				record.getSender(), record.getReceiver());
 
 		return !same.isEmpty();
 	}

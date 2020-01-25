@@ -31,7 +31,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
     editor: TemplateEditor;
     columns: ColumnInfo<Template>[];
 
-	rythmNames: string[]; 
+	unitNames: string[]; 
 	
     constructor( props: TemplateProps & WrappedComponentProps) {
         super( props );
@@ -54,7 +54,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
     }
 
 	createData():void {
-		this.rythmNames = [this.label("day"), 
+		this.unitNames = [this.label("day"), 
 		                   this.label("week"), 
                            this.label("month"),
                            this.label("year")];
@@ -66,7 +66,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
             getdata: ( d: Template ): string => { return d.validUntil != null ? d.validUntil.toLocaleDateString( 'de-DE' ) : "" },
         }, {
             header: this.label("templates.repetition"),
-            getdata: ( d: Template ): string => { return d.anzahl + ' - ' + this.rythmNames[d.rythmus] }
+            getdata: ( d: Template ): string => { return d.repeatcount + ' - ' + this.unitNames[d.repeatunit] }
         }, {
             header: this.label("shortdescription"),
             getdata: ( d: Template ): string => { return d.shortdescription; }
@@ -104,7 +104,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
                             <SingleSelectLister<Template> ref={( ref ) => { this.lister = ref; }}
                                 lines={28}
                                 handleChange={this.refresheditor}
-                                url='templates/listgroup/'
+                                url='templates/listcategory/'
                                 ext={this.state.category.toString( 10 )}
                                 columns={this.columns} />
                         </td>

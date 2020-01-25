@@ -4,8 +4,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
+import org.h2.tools.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,10 @@ public class RecordControllerTest extends TestContext {
 	MockMvc mvc;
 	
 	@Before
-	public void setup() {
+	public void setup() throws SQLException {
+		Server webServer = Server.createWebServer("-web", 
+                "-webAllowOthers", "-webPort", "8082");
+		webServer.start();
 		createCategoryData();
 	}
 	
@@ -41,8 +46,9 @@ public class RecordControllerTest extends TestContext {
 	}
 	
 	@Test
-	public void test() throws Exception {
-		int startSize = assignRecordRepository.findUnresolvedRecords().size();
+	public void testLoadRecords() throws Exception {
+		createRecord("testsecurity");
+		int startSize = accountRecordRepository.findUnresolvedRecords().size();
 		
 		mvc.perform(get("/record/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize)));
@@ -76,8 +82,8 @@ public class RecordControllerTest extends TestContext {
 	private AccountRecord createRecord(String description) {
 		AccountRecord result =  new AccountRecord();
 		result.setDetails(description);
-		result.setWertstellung(LocalDate.now());
-		assignRecordRepository.save(result);
+		result.setExecuted(LocalDate.now());
+		accountRecordRepository.save(result);
 		return result;
 	}
 

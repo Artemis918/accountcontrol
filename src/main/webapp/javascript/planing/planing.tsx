@@ -66,10 +66,10 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
             cellrender: ( cell: CellInfo<Plan> ): JSX.Element => (
 
                 <div style={{
-                    color: cell.data.wert >= 0 ? 'green' : 'red',
+                    color: cell.data.value >= 0 ? 'green' : 'red',
                     textAlign: 'right'
                 }}>
-                    {( cell.data.wert / 100 ).toFixed( 2 )}
+                    {( cell.data.value / 100 ).toFixed( 2 )}
                 </div>
             )
         }]
@@ -93,7 +93,8 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
         var self: _Planing = this;
         fetch( "plans/createFromTemplates/" + this.state.creationMonth + "/" + this.state.creationYear )
             .then( ( response: Response ) => response.text() )
-            .then( ( json ) => { self.openCreatePopup( false ); self.props.sendmessage( "Pläne erzeugt",  MessageID.OK);  } );
+            .then( () => { self.openCreatePopup( false ); 
+                           self.props.sendmessage( this.label("plan.planscreated"),  MessageID.OK);  } );
     }
 
     renderCreation(): JSX.Element {

@@ -43,27 +43,27 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
     columns: ColumnInfo<AccountRecord>[] = [
         {
-            header: 'Datum',
-            getdata: ( data: AccountRecord ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
+            header: this.label("date"),
+            getdata: ( data: AccountRecord ): string => { return data.executed.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
-            header: 'Empf./Absender',
+            header: this.label("assign.otherparty"),
             cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
                 <div>
-                    {( cellinfo.data.wert > 0 ) ? cellinfo.data.absender : cellinfo.data.empfaenger}
+                    {( cellinfo.data.value > 0 ) ? cellinfo.data.sender : cellinfo.data.receiver}
                 </div>
             )
         }, {
-            header: 'Detail',
+            header: this.label("details"),
             getdata: ( data: AccountRecord ) => { return data.details },
         }, {
-            header: 'Betrag',
+            header: this.label("value"),
             cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
                 <div style={{
-                    color: cellinfo.data.wert >= 0 ? 'green' : 'red',
+                    color: cellinfo.data.value >= 0 ? 'green' : 'red',
                     textAlign: 'right'
                 }}>
-                    {( cellinfo.data.wert / 100 ).toFixed( 2 )}
+                    {( cellinfo.data.value / 100 ).toFixed( 2 )}
                 </div>
 
             )
@@ -136,7 +136,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
                 headers: {
                     "Content-Type": "application/json"
                 }
-            } ).then( function( response ) {
+            } ).then( function() {
                 self.setState( { categoryassign: false } );
                 self.lister.reload();
             } );
@@ -166,7 +166,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
         if ( plan != undefined ) {
             var self = this;
             fetch( '/assign/toplan/' + plan.id + '/' + this.state.planassign.id )
-                .then( function( response ) {
+                .then( function() {
                     self.setState( { planassign: undefined } );
                     self.lister.reload();
                 } );
@@ -187,7 +187,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
     renderPlanSelect(): JSX.Element {
         if ( this.state.planassign != undefined ) {
-		var date: Date = this.state.planassign.eingang;
+		var date: Date = this.state.planassign.received;
             return ( <PlanSelect month={date.getMonth()} year={date.getFullYear()} onSelect={this.assignSelectedPlan} /> );
         }
         else
@@ -225,11 +225,11 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
         return (
 	        <div>
                 <div className={css.actionbar}>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignAuto()}>{this.autolabel}</button> |
-					<button className={css.actionbutton} onClick={( e ) => this.assignCategory()}>{this.assignlabel}</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignManuell()}>{this.splitlabel}</button>
-                    <button className={css.actionbutton} onClick={( e ) => this.assignPlan()}>{this.assignplanlabel}</button> |                  
-					<button className={css.actionbutton} onClick={( e ) => this.createPlan()}>{this.planlabel}</button>
+                    <button className={css.actionbutton} onClick={() => this.assignAuto()}>{this.autolabel}</button> |
+					<button className={css.actionbutton} onClick={() => this.assignCategory()}>{this.assignlabel}</button>
+                    <button className={css.actionbutton} onClick={() => this.assignManuell()}>{this.splitlabel}</button>
+                    <button className={css.actionbutton} onClick={() => this.assignPlan()}>{this.assignplanlabel}</button> |                  
+					<button className={css.actionbutton} onClick={() => this.createPlan()}>{this.planlabel}</button>
                 </div>
                 <div>
                     <ContextMenuTrigger id={assignmenu} >´					

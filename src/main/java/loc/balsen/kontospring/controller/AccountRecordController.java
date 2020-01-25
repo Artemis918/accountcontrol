@@ -20,9 +20,9 @@ import loc.balsen.kontospring.dto.RecordDTO;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
 
 @Controller
-@RequestMapping("/record")
+@RequestMapping("/accountrecord")
 @ResponseBody
-public class RecordController {
+public class AccountRecordController {
 	
 	@Autowired
 	AccountRecordRepository recordRepository;
@@ -40,7 +40,7 @@ public class RecordController {
 		LocalDate start = LocalDate.of(year, month, 1);
 		LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 		
-		return recordRepository.findByArtAndPeriod(start,end,AccountRecord.Type.MANUELL.ordinal())
+		return recordRepository.findByTypeAndPeriod(start,end,AccountRecord.Type.MANUEL.ordinal())
 				.stream()
 				.map((record) -> {return new RecordDTO(record);})
 				.collect(Collectors.toList());
@@ -48,10 +48,10 @@ public class RecordController {
 	
 	@PostMapping("/save")
 	MessageID saveRecord(@RequestBody RecordDTO recorddto) {
-		if (recorddto.getId() == 0 || recorddto.getType()==AccountRecord.Type.MANUELL) {
+		if (recorddto.getId() == 0 || recorddto.getType()==AccountRecord.Type.MANUEL) {
 			AccountRecord record = recorddto.toRecord();
-			record.setType(AccountRecord.Type.MANUELL);
-			record.setEingang(LocalDate.now());
+			record.setType(AccountRecord.Type.MANUEL);
+			record.setReceived(LocalDate.now());
 			recordRepository.save(record);
 			return MessageID.ok;
 		}
@@ -73,7 +73,7 @@ public class RecordController {
 	@GetMapping("/delete/{id}")
 	MessageID deleteTemplate(@PathVariable Integer id) {
 		Optional<AccountRecord> record = recordRepository.findById(id);
-		if (record.isPresent() && record.get().getType() == AccountRecord.Type.MANUELL)
+		if (record.isPresent() && record.get().getType() == AccountRecord.Type.MANUEL)
 			recordRepository.deleteById(id);
 		return MessageID.ok;
 	}

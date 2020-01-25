@@ -13,7 +13,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "konto")
 public class SubCategory {
 
 	public static final int LEN_DESCRIPTION = 512;
@@ -23,14 +22,14 @@ public class SubCategory {
 	public static final int INTERN = 1;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_konto_name")
-	@SequenceGenerator(name = "seq_konto_name", sequenceName = "seq_konto", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_subcategory_name")
+	@SequenceGenerator(name = "seq_subcategory_name", sequenceName = "seq_subcategory", allocationSize = 1)
 	private int id;
 	private String shortdescription;
 	private String description;
-	private int art; 
+	private int type; 
 	
 	@ManyToOne
-	@JoinColumn(name = "id_gruppe")
+	@JoinColumn(name = "category")
 	private Category category;
 }

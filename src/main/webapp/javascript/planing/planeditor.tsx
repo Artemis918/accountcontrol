@@ -190,10 +190,10 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         <tr>
                             <td>{this.label("value")}</td>
                             <td><input className={css.numberinput} 
-                                value={this.state.plan.wert / 100}
+                                value={this.state.plan.value / 100}
                                 type='number'
                                 step='0.01'
-                                onChange={( e ) => { this.plan.wert = e.target.valueAsNumber * 100; this.setPlanState() }} />
+                                onChange={( e ) => { this.plan.value = e.target.valueAsNumber * 100; this.setPlanState() }} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

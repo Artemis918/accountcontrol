@@ -2,7 +2,6 @@ package loc.balsen.kontospring.data;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,51 +13,47 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="buchungsbeleg")
 public class AccountRecord {
 
 	public static String LF= " | ";
 	
 	public enum Type {
-		GUTSCHRIFT ,
-		LASTSCHRIFT ,
-		LASTSCHRIFTKARTE ,
-		UEBERWEISUNG ,
-		KARTE,
-		ENTGELT,
-		AUSZAHLUNG,
-		DAUERAUFTRAG,
-		MANUELL,
-		UMBUCHUNG,
-		ZINSEN
+		CREDIT ,
+		DEBIT ,
+		DEBITCARD ,
+		TRANSFER ,
+		CARD,
+		REMUNERATION,
+		PAYINGOUT,
+		STANDINGORDER,
+		MANUEL,
+		REBOOKING,
+		INTEREST
 	}
 	
-	public static int LEN_DETAIL = 512;
-	public static int LEN_ABSENDER = 80;
-	public static int LEN_EMPFAENGER = 80;
-	public static int LEN_DETAILS = 50;
+	public static int LEN_DETAILS = 200;
+	public static int LEN_SENDER = 80;
+	public static int LEN_RECEIVER = 80;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_buchungsbeleg_name")
-	@SequenceGenerator(name = "seq_buchungsbeleg_name", sequenceName = "seq_buchungsbeleg", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_accountrecord_name")
+	@SequenceGenerator(name = "seq_accountrecord_name", sequenceName = "seq_accountrecord", allocationSize = 1)
 	private int id;
 	
-	private LocalDate eingang;
+	private LocalDate received;
 	
-	@Column(name = "beleg")
-	private LocalDate creation;
+	private LocalDate created;
 	
-	private LocalDate wertstellung;
+	private LocalDate executed;
 	
-	@Column(name = "art")	
 	private Type type;
-	private String absender;
-	private String empfaenger;
-	private int wert;
+	private String sender;
+	private String receiver;
+	private int value;
 	private String details;
-	private String einreicherId;
-	private String mandat;
-	private String referenz;
+	private String submitter;
+	private String mandate;
+	private String reference;
 	
 	public String getDetailsNOLF() {
 		if (details != null) 
@@ -77,7 +72,7 @@ public class AccountRecord {
 		details+=line;
 	}
 
-	public String getPartner() {
-		return wert > 0 ? absender : empfaenger;
+	public String getOtherParty() {
+		return value > 0 ? sender : receiver;
 	}
 }

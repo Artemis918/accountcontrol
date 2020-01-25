@@ -11,19 +11,19 @@ import loc.balsen.kontospring.data.AccountRecord;
 
 public interface AccountRecordRepository extends JpaRepository<AccountRecord, Integer> {
 
-	public List<AccountRecord> findByWertAndCreationAndAbsenderAndEmpfaenger(int wert, LocalDate creation, String absender, String empfaenger);
+	public List<AccountRecord> findByValueAndCreatedAndSenderAndReceiver(int value, LocalDate created, String sender, String receiver);
 	
-	@Query(value = "select b.* from BuchungsBeleg b "
-	               + "left join Zuordnung z on z.buchungsbeleg = b.id "
-	               + "where z.id is null "
-	               + "order by b.wertstellung"
+	@Query(value = "select ar.* from account_record ar "
+	               + "left join assignment a on a.accountrecord = ar.id "
+	               + "where a.id is null "
+	               + "order by ar.executed"
 	       , nativeQuery = true)
 	public List<AccountRecord> findUnresolvedRecords();
 
-	@Query(value = "select b.* from BuchungsBeleg b "
-            + "where b.wertstellung between ?1 and ?2 "
-			+"and b.art = ?3"
+	@Query(value = "select ar.* from Account_Record ar "
+            + "where ar.executed between ?1 and ?2 "
+			+"and ar.type = ?3"
     , nativeQuery = true)
-	public List<AccountRecord> findByArtAndPeriod(LocalDate start, LocalDate end, Integer artId);
+	public List<AccountRecord> findByTypeAndPeriod(LocalDate start, LocalDate end, Integer type);
 	
 }

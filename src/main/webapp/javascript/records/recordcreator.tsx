@@ -26,13 +26,13 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
     editor: RecordEditor;
     columns: ColumnInfo<AccountRecord>[] = [{
         header: this.label("date"),
-        getdata: ( data: AccountRecord ): string => { return data.wertstellung.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
+        getdata: ( data: AccountRecord ): string => { return data.executed.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
     }, {
         header: this.label("sender"),
-        getdata: ( data: AccountRecord ): string => { return data.absender },
+        getdata: ( data: AccountRecord ): string => { return data.sender },
     }, {
         header: this.label("receiver"),
-        getdata: ( data: AccountRecord ): string => { return data.empfaenger },
+        getdata: ( data: AccountRecord ): string => { return data.receiver },
     }, {
         header: this.label("details"),
         getdata: ( data: AccountRecord ): string => { return data.details },
@@ -41,10 +41,10 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
         cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
             <div style={{
-                color: cellinfo.data.wert >= 0 ? 'green' : 'red',
+                color: cellinfo.data.value >= 0 ? 'green' : 'red',
                 textAlign: 'right'
             }}>
-                {( cellinfo.data.wert / 100 ).toFixed( 2 )}
+                {( cellinfo.data.value / 100 ).toFixed( 2 )}
             </div>
 
         )

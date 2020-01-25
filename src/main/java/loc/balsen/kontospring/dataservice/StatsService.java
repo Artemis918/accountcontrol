@@ -46,7 +46,7 @@ public class StatsService {
 			Assignment plan = piter.next();
 			Assignment record = uiter.next();
 
-			if (plan.getPlan().getPlanDate().isBefore(record.getAccountrecord().getWertstellung())) {
+			if (plan.getPlan().getPlanDate().isBefore(record.getAccountrecord().getExecuted())) {
 				resultlist.add(plan);
 				uiter.previous();
 			} else {
@@ -69,7 +69,7 @@ public class StatsService {
 	}
 
 	
-	private <T> List<Integer> getMonthlyCumulated (List<T> list, LocalDate start, LocalDate end, Function<T,LocalDate> getDate, ToIntFunction<T> getWert) {
+	private <T> List<Integer> getMonthlyCumulated (List<T> list, LocalDate start, LocalDate end, Function<T,LocalDate> getDate, ToIntFunction<T> getValue) {
 		LocalDate curDate = start;
 
 		List<Integer> result = new ArrayList<>();
@@ -83,7 +83,7 @@ public class StatsService {
 				curDate = curDate.plusMonths(1);
 			}
 
-			sum += getWert.applyAsInt(obj);
+			sum += getValue.applyAsInt(obj);
 		}
 
 		while (curDate.isBefore(end)) {
@@ -99,14 +99,14 @@ public class StatsService {
 		LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
 		LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
 		List<Assignment> list = getAssignments(startDay, endDay);
-		return this.<Assignment>getMonthlyCumulated(list , startDay, endDay, Assignment::getStatsDay, Assignment::getWert);
+		return this.<Assignment>getMonthlyCumulated(list , startDay, endDay, Assignment::getStatsDay, Assignment::getValue);
 	}
 	
 	public List<Integer> getMonthlyCumulatedPlan(LocalDate start, LocalDate end) {
 		LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
 		LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
 		List<Plan> list = planRepository.findByPlanDate(startDay, endDay);
-		return this.<Plan>getMonthlyCumulated(list , startDay, endDay, Plan::getPlanDate, Plan::getWert);
+		return this.<Plan>getMonthlyCumulated(list , startDay, endDay, Plan::getPlanDate, Plan::getValue);
 	}
 	
 	public List<Integer> getMonthlyCumulatedAssignsOld(LocalDate start, LocalDate end) {
@@ -126,7 +126,7 @@ public class StatsService {
 				curDate = curDate.plusMonths(1);
 			}
 
-			sum += assignment.getWert();
+			sum += assignment.getValue();
 		}
 
 		while (curDate.isBefore(endDay)) {
@@ -152,7 +152,7 @@ public class StatsService {
 				result.add(new Integer(sum));
 				curDate = curDate.plusMonths(1);
 			}
-			sum += plan.getWert();
+			sum += plan.getValue();
 		}
 		while (curDate.isBefore(endDay)) {
 			result.add(new Integer(sum));

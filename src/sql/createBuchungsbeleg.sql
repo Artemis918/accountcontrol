@@ -1,21 +1,21 @@
-create table Buchungsbeleg
+create table AccountRecord
 (
     id            integer NOT NULL,
-    eingang       date,    
-    beleg         date,
-    wertstellung  date,
-    art           smallint,
-    absender      varchar(80),
-    empfaenger    varchar(80),
-    wert          int,
+    received      date,
+    created       date,
+    executed      date,
+    type          smallint,
+    sender        varchar(80),
+    receiver      varchar(80),
+    value         int,
     details       varchar(200),
-    einreicher_id varchar(40),
-    mandat        varchar(40),
-    referenz      varchar(40)
+    submitter     varchar(40),
+    mandate       varchar(40),
+    reference     varchar(40)
     primary key (id)
 );
 
-create unique index BuchungsbelegID on Buchungsbeleg (id);
-create index BuchungsbelegDate on Buchungsbeleg (beleg);
+create unique index AccountRecordID on AccountRecord (id);
+create index AccountRecordDate on AccountRecord (created);
 
-create sequence seq_buchungsbeleg;
+create sequence seq_accountrecord;

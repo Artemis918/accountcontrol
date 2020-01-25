@@ -10,59 +10,59 @@ import lombok.Data;
 public class RecordDTO {
 
 	private int id;
-	private LocalDate eingang;
-	private LocalDate creation;
-	private LocalDate wertstellung;
+	private LocalDate received;
+	private LocalDate created;
+	private LocalDate executed;
 	private Type type;
-	private String absender;
-	private String empfaenger;
-	private int wert;
+	private String sender;
+	private String receiver;
+	private int value;
 	private String details;
-	private String einreicherId;
-	private String mandat;
-	private String referenz;
+	private String submitter;
+	private String mandate;
+	private String reference;
 
 	public RecordDTO() {
 	}
 
 	public RecordDTO(AccountRecord record) {
 		this.id = record.getId();
-		this.eingang = record.getEingang();
-		this.creation = record.getCreation();
-		this.wertstellung = record.getWertstellung();
+		this.received = record.getReceived();
+		this.created = record.getCreated();
+		this.executed = record.getExecuted();
 		this.type = record.getType();
-		this.absender = record.getAbsender();
-		this.empfaenger = record.getEmpfaenger();
-		this.wert = record.getWert();
+		this.sender = record.getSender();
+		this.receiver = record.getReceiver();
+		this.value = record.getValue();
 		this.details = record.getDetails();
-		this.einreicherId = record.getEinreicherId();
-		this.mandat = record.getMandat();
-		this.referenz = record.getReferenz();
+		this.submitter = record.getSubmitter();
+		this.mandate = record.getMandate();
+		this.reference = record.getReference();
 	}
 
 	public AccountRecord toRecord() {
 		AccountRecord record = new AccountRecord();
 		record.setId(id);
-		record.setEingang(eingang);
-		record.setCreation(this.creation);
-		record.setWertstellung(wertstellung);
+		record.setReceived(received);
+		record.setCreated(this.created);
+		record.setExecuted(executed);
 		record.setType(type);
-		record.setAbsender(absender);
-		record.setEmpfaenger(empfaenger);
-		record.setWert(wert);
+		record.setSender(sender);
+		record.setReceiver(receiver);
+		record.setValue(value);
 		record.setDetails(details);
-		record.setEinreicherId(einreicherId);
-		record.setMandat(mandat);
-		record.setReferenz(referenz);
+		record.setSubmitter(submitter);
+		record.setMandate(mandate);
+		record.setReference(reference);
 
 		return record;
 	}
 
 	public String getPartner() {
-		if (wert > 0) {
-			return absender;
+		if (value > 0) {
+			return sender;
 		} else {
-			return empfaenger;
+			return receiver;
 		}
 	}
 }

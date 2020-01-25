@@ -18,7 +18,7 @@ import lombok.Data;
 @Entity
 public class Template {
 
-	public enum Rythmus {
+	public enum TimeUnit {
 		DAY, WEEK, MONTH, YEAR
 	}
 
@@ -29,9 +29,9 @@ public class Template {
 	private LocalDate validFrom;
 	private LocalDate validUntil;
 	private LocalDate start;
-	private int vardays;
-	private int anzahlRythmus;
-	private Rythmus rythmus;
+	private int variance;
+	private int repeatCount;
+	private TimeUnit repeatUnit;
 	private String description;
 	private int position;
 	private int value;
@@ -44,7 +44,7 @@ public class Template {
 	
 	@ManyToOne
 	@NotNull
-	@JoinColumn(name = "konto")
+	@JoinColumn(name = "subcategory")
 	private SubCategory subCategory;
 
 	public Template() {
@@ -52,9 +52,9 @@ public class Template {
 		this.validFrom = null;
 		this.validUntil= null;
 		this.start= null;
-		this.vardays= 4;
-		this.anzahlRythmus= 0;
-		this.rythmus= Rythmus.MONTH;
+		this.variance= 4;
+		this.repeatCount= 0;
+		this.repeatUnit= TimeUnit.MONTH;
 		this.description= null;
 		this.position= 0;
 		this.value= 0;
@@ -66,17 +66,17 @@ public class Template {
 	}
 	
 	public Template (AccountRecord accountRecord) {
-		LocalDate plandate = accountRecord.getWertstellung(); 
+		LocalDate plandate = accountRecord.getExecuted(); 
 		this.id = 0;
 		this.validFrom = plandate;
 		this.validUntil= null;
 		this.start= plandate;
-		this.vardays= 4;
-		this.anzahlRythmus= 0;
-		this.rythmus= Rythmus.MONTH;
+		this.variance= 4;
+		this.repeatCount= 0;
+		this.repeatUnit= TimeUnit.MONTH;
 		this.description= null;
 		this.position= 0;
-		this.value= accountRecord.getWert();
+		this.value= accountRecord.getValue();
 		this.pattern= (new Pattern(accountRecord)).toJson();
 		this.shortDescription= null;
 		this.matchStyle= MatchStyle.EXACT;
@@ -92,9 +92,9 @@ public class Template {
 		this.validFrom = t.validFrom;
 		this.validUntil= t.validUntil;
 		this.start= t.start;
-		this.vardays= t.vardays;
-		this.anzahlRythmus= t.anzahlRythmus;
-		this.rythmus= t.rythmus;
+		this.variance= t.variance;
+		this.repeatCount= t.repeatCount;
+		this.repeatUnit= t.repeatUnit;
 		this.description= t.description;
 		this.position= t.position;
 		this.value= t.value;
@@ -107,15 +107,15 @@ public class Template {
 
 	public LocalDate increaseDate(LocalDate last) {
 		if (last != null) {
-			switch (rythmus) {
+			switch (repeatUnit) {
 			case DAY:
-				return last.plusDays(anzahlRythmus);
+				return last.plusDays(repeatCount);
 			case MONTH:
-				return last.plusMonths(anzahlRythmus);
+				return last.plusMonths(repeatCount);
 			case WEEK:
-				return last.plusWeeks(anzahlRythmus);
+				return last.plusWeeks(repeatCount);
 			case YEAR:
-				return last.plusYears(anzahlRythmus);
+				return last.plusYears(repeatCount);
 			}
 		}
 		return start;			
@@ -129,10 +129,10 @@ public class Template {
 		pattern = p.toJson();
 	}
 
-	public Template copy(int wert, LocalDate startDate) {
+	public Template copy(int value, LocalDate startDate) {
 		Template result = new Template();
 		result.set(this);
-		result.setValue(wert);;
+		result.setValue(value);
 		result.setValidFrom(startDate);
 		return result;
 	}
@@ -140,9 +140,9 @@ public class Template {
 	public boolean equalsExceptValidPeriod(Template t) {
 		return this.id == t.id
 				&& this.start.equals(t.start)
-				&& this.vardays  == t.vardays
-				&& this.anzahlRythmus == t.anzahlRythmus
-				&& this.rythmus == t.rythmus
+				&& this.variance  == t.variance
+				&& this.repeatCount == t.repeatCount
+				&& this.repeatUnit == t.repeatUnit
 				&& this.description.equals(t.description)
 				&& this.position == t.position
 				&& this.value == t.value

@@ -19,7 +19,7 @@ public class PlanDTO {
 	private LocalDate plandate;
 	private LocalDate enddate;
 	private int position;
-	private int wert;
+	private int value;
 	private PatternDTO patterndto;
 	private String shortdescription;
 	private String description;
@@ -40,7 +40,7 @@ public class PlanDTO {
 		this.plandate=plan.getPlanDate();
 		this.enddate=plan.getEndDate();
 		this.position=plan.getPosition();
-		this.wert=plan.getWert();
+		this.value=plan.getValue();
 		this.patterndto=new PatternDTO(plan.getPatternObject());
 		this.shortdescription=plan.getShortDescription();
 		this.description=plan.getDescription();
@@ -64,7 +64,7 @@ public class PlanDTO {
 		plan.setPlanDate(plandate);
 		plan.setEndDate(enddate);
 		plan.setPosition(position);
-		plan.setWert(wert);
+		plan.setValue(value);
 		plan.setPattern(patterndto.toPattern());
 		plan.setShortDescription(shortdescription);
 		plan.setDescription(description);

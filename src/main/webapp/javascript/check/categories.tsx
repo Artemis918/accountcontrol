@@ -3,7 +3,7 @@ import {useIntl,WrappedComponentProps} from 'react-intl'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
 import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
-import { Assignment, Template } from '../utils/dtos'
+import { Assignment } from '../utils/dtos'
 import acss from './css/account.css'
 import css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
@@ -58,13 +58,13 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             {
                 header: this.label("check.plan"),
                 cellrender: ( cell: CellInfo<Assignment> ) => {
-                    if ( cell.data.sollwert == 0 ) {
+                    if ( cell.data.planed == 0 ) {
                         return null;
                     }
                     else {
                         return (
                             <div style={{ textAlign: 'right' }}>
-                                {( cell.data.sollwert / 100 ).toFixed( 2 )}
+                                {( cell.data.planed / 100 ).toFixed( 2 )}
                             </div>
                         )
                     }
@@ -75,7 +75,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                 cellrender: ( cell: CellInfo<Assignment> ) => {
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
-                            {( cell.data.accountrecord == 0 ) ? '--' : ( cell.data.istwert / 100 ).toFixed( 2 )}
+                            {( cell.data.accountrecord == 0 ) ? '--' : ( cell.data.real / 100 ).toFixed( 2 )}
                         </div>
                     )
                 },
@@ -94,17 +94,17 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         ];
 	}
 	
-    getColor( z: Assignment ): string {
-        if ( z.accountrecord == 0 || z.plan == 0 )
+    getColor( a: Assignment ): string {
+        if ( a.accountrecord == 0 || a.plan == 0 )
             return 'lightgrey';
-        else if ( z.sollwert > z.istwert )
+        else if ( a.planed > a.real )
             return 'red';
         else
             return 'green';
     }
 
-    commit( z: Assignment[] ): void {
-        var ids: number[] = z.map( ( za: Assignment ) => { return za.id; } );
+    commit( alist: Assignment[] ): void {
+        var ids: number[] = alist.map( ( a: Assignment ) => { return a.id; } );
         var self: _Categories = this;
         fetch( '/assign/commit', {
             method: 'post',
@@ -112,7 +112,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function( response ) {
+        } ).then( function() {
             self.lister.current.reload();
         } );
     }
@@ -120,7 +120,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     commitAssignment( a: Assignment ): void {
         var self: _Categories = this;
         fetch( '/assign/invertcommit/' + a.id )
-            .then( function( response ) {
+            .then( function() {
                 self.lister.current.reload();
             } );
     }
@@ -167,7 +167,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function( response ) {
+        } ).then( function() {
             self.lister.current.reload();
         } );
     }
@@ -187,12 +187,12 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     createFooter( z: Assignment[] ): Assignment {
         var footer: Assignment = new Assignment();
-        var istwert: number = 0;
-        var sollwert: number = 0;
-        z.map( ( assignment: Assignment ) => { istwert += assignment.istwert; if ( assignment.sollwert != undefined ) sollwert += assignment.sollwert; } )
+        var real: number = 0;
+        var planed: number = 0;
+        z.map( ( assignment: Assignment ) => { real += assignment.real; if ( assignment.planed != undefined ) planed += assignment.planed; } )
         footer.detail = this.label("check.sum");
-        footer.istwert = istwert;
-        footer.sollwert = sollwert;
+        footer.real = real;
+        footer.planed = planed;
         return footer;
     }
 

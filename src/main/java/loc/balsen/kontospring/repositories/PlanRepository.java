@@ -16,15 +16,15 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	LocalDate findMaxPlanDate();
 
 	@Query(value = "select * from Plan p"
-	        + " left outer join Zuordnung z on z.plan=p.id"
-			+ " where z.id is null"
+	        + " left outer join Assignment a on a.plan=p.id"
+			+ " where a.id is null"
 			+ "   and p.deactivate_date is null"
 			+ "   and p.template = ?1", nativeQuery = true)
 	List<Plan> findActiveByTemplateNotAssigned(Integer template);
 
 	@Query(value = "select * from Plan p" 
-	        + " left outer join Zuordnung z on z.plan=p.id"
-			+ " where z.id is null"
+	        + " left outer join Assignment a on a.plan=p.id"
+			+ " where a.id is null"
 			+ " and deactivate_date is NULL"
 			+ " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )", nativeQuery = true)
 	List<Plan> findByPeriodNotAssigned(LocalDate mindate, LocalDate maxdate);
@@ -32,18 +32,18 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	@Query(value = "select * from Plan where plan_date between ?1 and ?2 and deactivate_date is null order by plan_date", nativeQuery = true)
 	List<Plan> findByPlanDate(LocalDate mindate, LocalDate maxdate);
 
-	@Query(value = "select * from Plan p " + " left join Zuordnung z on z.plan=p.id" + " where z.id is null"
+	@Query(value = "select * from Plan p " + " left join Assignment a on a.plan=p.id" + " where a.id is null"
 			+ " and p.plan_date between ?1 and ?2" + " and p.deactivate_date is null", nativeQuery = true)
 	List<Plan> findByPlanDateNotAssigned(LocalDate mindate, LocalDate maxdate);
 
 	List<Plan> findByTemplate(Template template);
 
 	@Query(value = "select * from Plan p"
-			+ " inner join Konto k on p.konto = k.id"
+			+ " inner join Sub_Category s on p.subcategory = s.id"
 			+ " where p.match_style = 3"
-			+ " and k.id_gruppe = ?1"
+			+ " and s.category = ?1"
 			+ " and deactivate_date is null", nativeQuery = true)
-	Collection<Plan> findByPatternPlansAndKontogroup(Integer gruppe);
+	Collection<Plan> findByPatternPlansAndCategory(Integer category);
 
 	@Query(value= "select max(p.plan_date) from Plan p where p.template = ?1" , nativeQuery = true)
 	LocalDate findMaxPlanDateByTemplate(Integer templateid);
@@ -52,7 +52,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 	LocalDate findMinPlanDateByTemplate(Integer templateid);
 
 	@Query(value = "select max(p.plan_date) from Plan p" 
-	        + " inner join Zuordnung z on z.plan=p.id"
+	        + " inner join Assignment a on a.plan=p.id"
 			+ " where p.template = ?1",nativeQuery = true)
 	LocalDate findMaxAssignedPlanDateByTemplate(int id);
 }

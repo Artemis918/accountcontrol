@@ -186,15 +186,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         <tr style={{ background: 'darkgray' }}><td>{this.label("templates.repetition")}</td>
                             <td>
                                 <span style={{ width: '20%' }}>
-                                    <input className={css.numbersmallinput} value={this.state.template.anzahl}
+                                    <input className={css.numbersmallinput} value={this.state.template.repeatcount}
                                         type='number'
-                                        onChange={( e ) => { this.template.anzahl = e.target.valueAsNumber; this.setTemplateState() }} />
+                                        onChange={( e ) => { this.template.repeatcount = e.target.valueAsNumber; this.setTemplateState() }} />
                                 </span>
                                 <span style={{ width: '20%' }}>
                                     <TimeRangeSelector 
                                         className={css.catselector3} 
-                                        curvalue={this.state.template.rythmus}
-                                        onChange={( e ) => { this.template.rythmus = e; this.setTemplateState() }}
+                                        curvalue={this.state.template.repeatunit}
+                                        onChange={( e ) => { this.template.repeatunit = e; this.setTemplateState() }}
                                     />
                                 </span>
                             </td>
@@ -207,10 +207,10 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}><td>{this.label("templates.variance")}</td>
-                            <td><input value={this.state.template.vardays}
+                            <td><input value={this.state.template.variance}
           						className={css.numbersmallinput}
                                 type='number'
-                                onChange={( e ) => { this.template.vardays = e.target.valueAsNumber; this.setTemplateState() }} />
+                                onChange={( e ) => { this.template.variance = e.target.valueAsNumber; this.setTemplateState() }} />
                             </td>
                         </tr>
                         <tr><td>{this.label("plan.position")}</td>
