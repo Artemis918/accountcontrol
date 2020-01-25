@@ -138,11 +138,11 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     replanAssignment(): void {
         var assignments: Assignment[] = this.lister.current.getSelectedData();
         if ( assignments.length != 1 ) {
-            this.props.sendmessage( "es muss genau ein Eintrag selektiert sein", MessageID.INVALID_DATA );
+            this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
         }
         else {
             var id: number = assignments[0].id;
-            var url: string = '/assign/replan/';
+            var url: string = '/assign/newvalue/';
 
             if ( id == 0 || id == undefined ) {
                 id = assignments[0].plan;
@@ -216,7 +216,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 							</button>
                     <button className={css.actionbutton} 
                             onClick={() => this.replanAssignment()}>
-							{this.label("check.replan")}
+							{this.label("check.acceptvalue")}
                             </button>
                 </div>
                 <table>

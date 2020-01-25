@@ -114,7 +114,8 @@
 	"check.commitselected": "Auswahl bestätigen",
 	"check.commitall": "Alles bestätigen",
 	"check.removeassign": "Zuordnung lösen",
-	"check.replan": "Erneut planen",
+	"check.acceptvalue": "Wert übernehmen",
+	
 	"pattern.patterndata": "Musterdaten",
 			
 	"returncode_1": "OK",
