@@ -83,20 +83,20 @@ public class ImportPB extends Importbase {
 		return record;
 	}
 
-	private void parseDetails(String detailsAll, AccountRecord bubel) {
+	private void parseDetails(String detailsAll, AccountRecord accountrecord) {
 		String details = new String();
 		
 		String fields[] = detailsAll.split(" ");
 		int len = fields.length;		
 
-		int i = parseReferences(bubel, fields);
+		int i = parseReferences(accountrecord, fields);
 
 		while (i<len) {
 			if (details.length() > 0)
 				details += " ";
 			details+=fields[i++];
 		}
-		bubel.setDetails(details);
+		accountrecord.setDetails(details);
 	}
 
 	private int parseReferences(AccountRecord bubel, String[] fields) {

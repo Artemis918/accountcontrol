@@ -33,10 +33,10 @@ public class ImportPBTest {
 	
 	static String TESTDATA = "\"30.08.2018\";\"31.08.2018\";\""
 			+ "Lastschrift\";"
-			+ "\"Referenz xxxxxxxxxxxx"
+			+ "\"Referenz xxxxxxxxxxxx "
 			+ "Mandat yyyyyyyyyyyy yyyyy "
-			+ "Einreicher-ID zzzzzzzzzzzzzzzzz "
-			+ "some more details \";"
+			+ "Einreicher-ID zzzzzzzzzzzzzzzz "
+			+ "Verwendungszweck some more details \";"
 			+ "\"me and you\";"
 			+ "\"Telecomica\";"
 			+ "\"-42,80 €\";"
@@ -73,7 +73,7 @@ public class ImportPBTest {
 		assertEquals("me and you",record.getSender());
 		assertEquals("Telecomica",record.getReceiver());
 		assertEquals(-4280,record.getValue());
-		assertEquals("some more details ",record.getDetails());
+		assertEquals("some more details",record.getDetails());
 		assertEquals("xxxxxxxxxxxx", record.getReference());
 		assertEquals("yyyyyyyyyyyy yyyyy", record.getMandate());
 		assertEquals("zzzzzzzzzzzzzzzz", record.getSubmitter());

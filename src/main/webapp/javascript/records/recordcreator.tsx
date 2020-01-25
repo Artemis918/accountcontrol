@@ -100,7 +100,7 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
                             <SingleSelectLister<AccountRecord> ref={( ref ) => { this.lister = ref; }}
                                 ext={this.state.year + '/' + this.state.month}
                                 handleChange={this.refresheditor}
-                                url='record/manlist/'
+                                url='accountrecord/manlist/'
                                 lines={28}
                                 columns={this.columns} />
                         </td>

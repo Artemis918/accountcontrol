@@ -234,7 +234,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
                 <div>
                     <ContextMenuTrigger id={assignmenu} >´					
                     <MultiSelectLister<AccountRecord> columns={this.columns}
-                        url='record/unassigned'
+                        url='accountrecord/unassigned'
                         lines={28}
                         ext=''
                         ref={( ref ) => { this.lister = ref }} />

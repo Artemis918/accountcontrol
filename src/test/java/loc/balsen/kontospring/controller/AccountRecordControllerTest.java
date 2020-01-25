@@ -27,7 +27,7 @@ import loc.balsen.kontospring.testutil.TestContext;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @WebAppConfiguration
-public class RecordControllerTest extends TestContext {
+public class AccountRecordControllerTest extends TestContext {
 
 	@Autowired
 	MockMvc mvc;
@@ -50,20 +50,20 @@ public class RecordControllerTest extends TestContext {
 		createRecord("testsecurity");
 		int startSize = accountRecordRepository.findUnresolvedRecords().size();
 		
-		mvc.perform(get("/record/unassigned"))
+		mvc.perform(get("/accountrecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize)));
 
 		AccountRecord record = createRecord("accountrecord");
 		
-		mvc.perform(get("/record/unassigned"))
+		mvc.perform(get("/accountrecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 1)));
 
 		createRecord("record1");
-		mvc.perform(get("/record/unassigned"))
+		mvc.perform(get("/accountrecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 2)));
 		
 		createAssignment(record);
-		mvc.perform(get("/record/unassigned"))
+		mvc.perform(get("/srecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize + 1)))
 		   .andExpect(jsonPath("$.[" + startSize + "].details").value( "record1"));
 }

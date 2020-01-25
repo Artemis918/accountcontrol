@@ -80,7 +80,7 @@ public class TemplateControllerTest extends TestContext {
 		assertEquals(100, template.getValue());
 		assertEquals(subCategory1.getId(), template.getSubCategory().getId());
 		
-		mvc.perform(get("/templates/listgroup/1"))
+		mvc.perform(get("/templates/listcategory/1"))
 		   .andExpect(jsonPath("$.[*]", hasSize(1)));
 	}
 
@@ -105,7 +105,7 @@ public class TemplateControllerTest extends TestContext {
 		   .andExpect(jsonPath("$.pattern.details").value("whatever you will"))
 		   .andExpect(jsonPath("$.pattern.senderID").value("submitterID"))
 		   .andExpect(jsonPath("$.pattern.receiver").value("receiver"))
-		   .andExpect(jsonPath("$.pattern.mandat").value("mandate"))
+		   .andExpect(jsonPath("$.pattern.mandate").value("mandate"))
 		   .andExpect(jsonPath("$.pattern.referenceID").value("refernceID"))
 		   .andExpect(jsonPath("$.value").value("200"))
 		   .andExpect(jsonPath("$.start").value("2000-04-02"))

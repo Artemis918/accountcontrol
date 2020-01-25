@@ -22,7 +22,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 			       + "inner join account_record ar on a.accountrecord = ar.id "
 			       + "left outer join plan p on a.plan = p.id "
 			       + "where (( p.id is null and ar.executed between ?1 and ?2 ) or p.plan_date between ?1 and ?2 ) " 
-		           + "and a.sub_category = ?3", nativeQuery=true)
+		           + "and a.subcategory = ?3", nativeQuery=true)
 	public List<Assignment> findBySubCategoryAndMonth(LocalDate start, LocalDate end, int id);
 
 	@Modifying
