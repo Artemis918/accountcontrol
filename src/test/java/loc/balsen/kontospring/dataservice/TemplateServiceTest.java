@@ -3,6 +3,7 @@ package loc.balsen.kontospring.dataservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,7 +75,6 @@ public class TemplateServiceTest extends TestContext {
 	}
 
 	@Test
-	@Ignore
 	public void testReplan() {
 		template1.setValue(200);
 		template1.setValidFrom(LocalDate.of(1999, 5, 1));
@@ -84,7 +84,7 @@ public class TemplateServiceTest extends TestContext {
 
 		ArgumentCaptor<Template> tempcap = ArgumentCaptor.forClass(Template.class);
 		verify(planService,times(1)).deactivatePlans(tempcap.capture());
-		verify(planService,times(1)).createNewPlansfromTemplate(template1);
+		verify(planService,times(1)).createPlansfromTemplate(template1);
 		
 		Template templateOrig = templateRepository.findById(template.getId()).get();
 		assertEquals(template.getId(),tempcap.getValue().getId());
@@ -96,13 +96,23 @@ public class TemplateServiceTest extends TestContext {
 	
 	
 	@Test
-	public void testReplacePattern( ) {
-		
+	public void testReplaceTemplate() {
+		int oldid = template.getId(); 
+		templateService.replaceTemplate(template1, template);
+		assertEquals(template.getId(), template1.getNext());
+		assertEquals(template.getValidFrom().minusDays(1), template1.getValidUntil());
+		assertNotEquals(oldid, template.getId());
+		verify(planService,times(1)).deactivatePlans(template1);
+		verify(planService, times(1)).createPlansfromTemplate(template);
 	}
 
 	@Test
-	public void testReplaceTemplate() {
-		
+	public void testReplacePattern() {
+		LocalDate testdate = LocalDate.of(1997, 5, 1);
+		Pattern testPattern = new Pattern("{ \"sender\": \"hans02\" }") ;
+		templateService.replacePattern(template, testdate , testPattern);
+		assertEquals(testPattern,template.getPatternObject());
+		verify(planService,times(1)).replacePattern(template, testdate, testPattern);
 	}
 
 	

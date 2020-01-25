@@ -63,10 +63,10 @@ public class PlanController {
 		}).collect(Collectors.toList());
 	}
 	
-	@GetMapping("/patternplans/{groupid}")
-	List<PlanDTO> findPatternPlans(@PathVariable Integer groupid) {
+	@GetMapping("/patternplans/{categoryid}")
+	List<PlanDTO> findPatternPlans(@PathVariable Integer categoryid) {
 
-		return planRepository.findByPatternPlansAndCategory(groupid).stream().map((plan) -> {
+		return planRepository.findByPatternPlansAndCategory(categoryid).stream().map((plan) -> {
 			return new PlanDTO(plan);
 		}).collect(Collectors.toList());
 	}

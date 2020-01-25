@@ -63,7 +63,7 @@ public class AccountRecordControllerTest extends TestContext {
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize+ 2)));
 		
 		createAssignment(record);
-		mvc.perform(get("/srecord/unassigned"))
+		mvc.perform(get("/accountrecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize + 1)))
 		   .andExpect(jsonPath("$.[" + startSize + "].details").value( "record1"));
 }

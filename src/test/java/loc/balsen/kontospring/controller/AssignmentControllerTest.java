@@ -123,13 +123,13 @@ public class AssignmentControllerTest extends TestContext {
 				mockTemplateService, null, null);
 		
 		// do nothing
-		controller.replan(100);
+		controller.setNewValue(100);
 		
 		assignment.setPlan(plan);
-		controller.replan(100);
+		controller.setNewValue(100);
 		
 		plan.setTemplate(template);	
-		controller.replan(100);
+		controller.setNewValue(100);
 
 		verify(mockAssignmentRepository,times(1)).delete(assignment);
 		verify(mockTemplateService,times(1)).saveTemplate(template);

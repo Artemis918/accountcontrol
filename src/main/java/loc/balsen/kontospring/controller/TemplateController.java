@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.dataservice.PlanService;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.MessageID;
+import loc.balsen.kontospring.dto.PlanDTO;
 import loc.balsen.kontospring.dto.TemplateDTO;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.SubCategoryRepository;
@@ -41,7 +43,7 @@ public class TemplateController {
 
 	@Autowired
 	TemplateService templateService;
-
+	
 	@GetMapping("/listcategory/{category}")
 	List<TemplateDTO> findGroupTemplates(@PathVariable int category) {
 		return templateRepository.findValid().stream().filter((template) -> {
@@ -70,20 +72,23 @@ public class TemplateController {
 		return new TemplateDTO(templateService.createFromRecord(id));
 	}
 	
-	@GetMapping("/changevalue/{templateId}/{value}")
-	MessageID changeplan(@PathVariable Integer templateId,@PathVariable Integer newValue) {
-		Plan plan = planRepository.getOne(templateId);
+	@PostMapping("/changepattern")
+	MessageID changeValue(@RequestBody PlanDTO plandto) {
+		
+		Plan plan = plandto.toPlan(templateRepository, subcategoryRepository);
+		
 		if (plan.getTemplate() != null ) {
-			Template template = plan.getTemplate().copy(newValue,plan.getStartDate());
-			templateService.replaceTemplate(plan.getTemplate(), template);
+			templateService.replacePattern(plan.getTemplate(), plan.getPlanDate(), plan.getPatternObject());
 		} 		
 		return MessageID.ok;
 	}
 
-	@GetMapping("/changetimerange/{templateId}/{timestring}")
-	MessageID changetime(@PathVariable Integer templateId,@PathVariable String timestring) {
+	@GetMapping("/changetimerange/{planId}/{timestring}/{variance}")
+	MessageID changetime(@PathVariable Integer planId,
+			             @PathVariable String timestring,
+			             @PathVariable Integer variance ) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-		Plan plan = planRepository.getOne(templateId);
+		Plan plan = planRepository.getOne(planId);
 		LocalDate newDate = null;
 		
 		try {
@@ -94,7 +99,10 @@ public class TemplateController {
 		}
 		
 		if (plan.getTemplate() != null ) {
-			Template template = plan.getTemplate().copy(plan.getValue(),newDate);
+			Template template = plan.getTemplate().copy();
+			template.setStart(newDate);
+			template.setValidFrom(newDate);
+			template.setVariance(variance);
 			templateService.replaceTemplate(plan.getTemplate(), template);
 		}	
 		return MessageID.ok;

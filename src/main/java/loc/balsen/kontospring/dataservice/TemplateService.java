@@ -40,7 +40,7 @@ public class TemplateService {
 		
 		newTemp.setId(0);
 		templateRepository.save(newTemp);
-		planService.createNewPlansfromTemplate(newTemp);
+		planService.createPlansfromTemplate(newTemp);
 		
 		oldTemp.setValidUntil(newTemp.getValidFrom().minusDays(1));		
 		oldTemp.setNext(newTemp.getId());		
@@ -67,13 +67,13 @@ public class TemplateService {
 			
 			if (templateOrig.equalsExceptValidPeriod(template)) {
 				templateOrig.setValidUntil(template.getValidUntil());
-				template = templateOrig;
 			} else {
 				LocalDate changeDay = template.getValidFrom();
 				
 				template.setId(0);
 				template.setValidFrom(changeDay);					
 				templateRepository.save(template);
+				planService.createPlansfromTemplate(template);
 				
 				templateOrig.setValidUntil(changeDay.minusDays(1));
 				templateOrig.setNext(template.getId());

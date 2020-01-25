@@ -198,12 +198,13 @@ public class AssignmentController {
 		return MessageID.ok;
 	}
 	
-	@GetMapping("/replan/{id}")
-	MessageID replan(@PathVariable Integer id) {
-		Assignment assignment = assignRepository.getOne(id);
+	@GetMapping("/newvalue/{assignmentId}")
+	MessageID setNewValue(@PathVariable Integer assignmentId) {
+		Assignment assignment = assignRepository.getOne(assignmentId);
 		if (assignment.getPlan() != null && assignment.getPlan().getTemplate() != null ) {
 			AccountRecord record = assignment.getAccountrecord();
-			Template template = assignment.getPlan().getTemplate().copy(assignment.getValue(),assignment.getPlan().getStartDate());
+			Template template = assignment.getPlan().getTemplate().copy();
+			template.setValue(record.getValue());
 			
 			assignRepository.delete(assignment);
 			templateService.saveTemplate(template);

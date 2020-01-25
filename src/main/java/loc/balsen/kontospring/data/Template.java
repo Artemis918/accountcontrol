@@ -129,11 +129,9 @@ public class Template {
 		pattern = p.toJson();
 	}
 
-	public Template copy(int value, LocalDate startDate) {
+	public Template copy() {
 		Template result = new Template();
 		result.set(this);
-		result.setValue(value);
-		result.setValidFrom(startDate);
 		return result;
 	}
 	
