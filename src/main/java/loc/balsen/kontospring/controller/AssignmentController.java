@@ -215,4 +215,13 @@ public class AssignmentController {
 		} 		
 		return MessageID.ok;
 	}
+	
+	@GetMapping("/analyze/{recordid}/{planid}")
+	String analyzePlan(@PathVariable Integer recordid, @PathVariable Integer planid) {
+		Plan plan = planRepository.findById(planid).get();
+		AccountRecord record = accountRecordRepository.findById(recordid).get();
+		String result = plan.matches(record)? "0":"1";
+		result += plan.isInPeriod(record.getCreated())?"0":"1";
+		return result;
+	}
 }

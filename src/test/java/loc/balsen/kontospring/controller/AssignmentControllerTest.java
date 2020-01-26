@@ -60,8 +60,7 @@ public class AssignmentControllerTest extends TestContext {
 	
 	@Mock
 	private AssignmentRepository mockAssignmentRepository;
-	
-	
+
 	@Captor
 	private ArgumentCaptor<List<AccountRecord>> captor;
 	
@@ -141,7 +140,7 @@ public class AssignmentControllerTest extends TestContext {
 	}
 
 	@Test
-	public void testAssign() throws Exception {
+	public void testGetCategory() throws Exception {
 
 		LocalDate today = LocalDate.now();
 		int month = today.getMonthValue();
@@ -189,6 +188,31 @@ public class AssignmentControllerTest extends TestContext {
 		
 		List<Assignment> assignList = assignmentRepository.findByShortdescription("helpme");
 		assertEquals(2, assignList.size());
+	}
+	
+	@Test
+	public void testAnalyse() {
+		
+		AssignmentController controller =  new AssignmentController(subCategoryRepository,
+				                                  null,null,null,accountRecordRepository,planRepository);
+		
+		Plan plan = createPlan("123",subCategory1);
+		int planid = plan.getId();
+		AccountRecord rec = createRecord("abc");
+		assertEquals("10", controller.analyzePlan(rec.getId(), planid));
+
+		rec.setCreated(LocalDate.now().minusDays(4));
+		accountRecordRepository.save(rec);
+		assertEquals("11", controller.analyzePlan(rec.getId(), planid));
+
+		rec = createRecord("a123b");
+		assertEquals("00", controller.analyzePlan(rec.getId(), planid));
+
+		rec.setCreated(LocalDate.now().minusDays(3));
+		accountRecordRepository.save(rec);
+		assertEquals("01", controller.analyzePlan(rec.getId(), planid));
+
+
 	}
 	
 	private AccountRecord createRecord(String description) {
