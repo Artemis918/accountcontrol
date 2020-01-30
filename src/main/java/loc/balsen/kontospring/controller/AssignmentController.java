@@ -25,6 +25,7 @@ import loc.balsen.kontospring.dataservice.AssignmentService;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.AssignmentDTO;
 import loc.balsen.kontospring.dto.MessageID;
+import loc.balsen.kontospring.dto.TemplateDTO;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
 import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
@@ -217,11 +218,21 @@ public class AssignmentController {
 	}
 	
 	@GetMapping("/analyze/{recordid}/{planid}")
-	String analyzePlan(@PathVariable Integer recordid, @PathVariable Integer planid) {
+	TemplateDTO analyzePlan(@PathVariable Integer recordid, @PathVariable Integer planid) {
 		Plan plan = planRepository.findById(planid).get();
-		AccountRecord record = accountRecordRepository.findById(recordid).get();
-		String result = plan.matches(record)? "0":"1";
-		result += plan.isInPeriod(record.getCreated())?"0":"1";
-		return result;
+		if (plan !=null && plan.getTemplate() != null ) {
+			Template template = plan.getTemplate();
+			AccountRecord record = accountRecordRepository.findById(recordid).get();
+			String result = plan.matches(record)? "0":"1";
+			result += plan.isInPeriod(record.getCreated())?"0":"1";
+			TemplateDTO dto = new TemplateDTO(template);
+			dto.setAdditional(result);
+			return dto;
+		}
+		else {
+			TemplateDTO dto = new TemplateDTO();
+			dto.setAdditional("");
+			return dto;			
+		}
 	}
 }

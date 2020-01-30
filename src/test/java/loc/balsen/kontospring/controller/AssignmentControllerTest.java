@@ -40,6 +40,7 @@ import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.dataservice.TemplateService;
+import loc.balsen.kontospring.dto.TemplateDTO;
 import loc.balsen.kontospring.dataservice.AssignmentService;
 import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -191,28 +192,49 @@ public class AssignmentControllerTest extends TestContext {
 	}
 	
 	@Test
-	public void testAnalyse() {
+	public void testAnalyze() {
 		
 		AssignmentController controller =  new AssignmentController(subCategoryRepository,
 				                                  null,null,null,accountRecordRepository,planRepository);
 		
+		Template template = new Template();
+		template.setSubCategory(subCategory1);
+		template.setPattern(new Pattern());
+		
+		templateRepository.save(template);
+		int templateId= template.getId();
+		
 		Plan plan = createPlan("123",subCategory1);
 		int planid = plan.getId();
+
 		AccountRecord rec = createRecord("abc");
-		assertEquals("10", controller.analyzePlan(rec.getId(), planid));
+		TemplateDTO dto = controller.analyzePlan(rec.getId(), planid);
+		assertEquals("", dto.getAdditional());
+		
+		plan.setTemplate(template);
+		planRepository.save(plan);
+
+		rec = createRecord("abc");
+		dto = controller.analyzePlan(rec.getId(), planid);
+		assertEquals(templateId, dto.getId());
+		assertEquals("10", dto.getAdditional());
 
 		rec.setCreated(LocalDate.now().minusDays(4));
 		accountRecordRepository.save(rec);
-		assertEquals("11", controller.analyzePlan(rec.getId(), planid));
+		dto = controller.analyzePlan(rec.getId(), planid);
+		assertEquals(templateId, dto.getId());
+		assertEquals("11", dto.getAdditional());
 
 		rec = createRecord("a123b");
-		assertEquals("00", controller.analyzePlan(rec.getId(), planid));
+		dto = controller.analyzePlan(rec.getId(), planid);
+		assertEquals(templateId, dto.getId());
+		assertEquals("00", dto.getAdditional());
 
 		rec.setCreated(LocalDate.now().minusDays(3));
 		accountRecordRepository.save(rec);
-		assertEquals("01", controller.analyzePlan(rec.getId(), planid));
-
-
+		dto = controller.analyzePlan(rec.getId(), planid);
+		assertEquals(templateId, dto.getId());
+		assertEquals("01", dto.getAdditional());
 	}
 	
 	private AccountRecord createRecord(String description) {
