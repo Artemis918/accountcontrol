@@ -227,6 +227,7 @@ public class AssignmentController {
 			result += plan.isInPeriod(record.getCreated())?"0":"1";
 			TemplateDTO dto = new TemplateDTO(template);
 			dto.setAdditional(result);
+			dto.setStart(record.getExecuted()); // Here i reused htat date for another context. Should be changed some day
 			return dto;
 		}
 		else {

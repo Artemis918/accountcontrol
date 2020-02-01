@@ -3,6 +3,7 @@ package loc.balsen.kontospring.controller;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -197,9 +198,11 @@ public class AssignmentControllerTest extends TestContext {
 		AssignmentController controller =  new AssignmentController(subCategoryRepository,
 				                                  null,null,null,accountRecordRepository,planRepository);
 		
+		LocalDate templatedate = LocalDate.of(1977, 1, 2);
 		Template template = new Template();
 		template.setSubCategory(subCategory1);
 		template.setPattern(new Pattern());
+		template.setStart(templatedate);
 		
 		templateRepository.save(template);
 		int templateId= template.getId();
@@ -218,6 +221,7 @@ public class AssignmentControllerTest extends TestContext {
 		dto = controller.analyzePlan(rec.getId(), planid);
 		assertEquals(templateId, dto.getId());
 		assertEquals("10", dto.getAdditional());
+		assertNotEquals(templatedate,dto.getStart());
 
 		rec.setCreated(LocalDate.now().minusDays(4));
 		accountRecordRepository.save(rec);
