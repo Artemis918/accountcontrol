@@ -74,7 +74,9 @@
 	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
 	"assign.otherparty": "Absender/Empf.",
-	
+	"assign.adjust": "Anpassen",
+	"assign.adjustpattern": "Muster",
+	"assign.adjusttime": "Zeitraum",
 	
 	"records.recorddata": "Belegdaten",
 	"records.upload": "Einspielen",

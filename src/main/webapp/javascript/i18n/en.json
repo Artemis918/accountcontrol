@@ -74,6 +74,9 @@
 	"assign.selectplan": "Select plan",
 	"assign.onevalue": "you must select exactly on record",
 	"assign.otherparty": "other party",
+	"assign.adjust": "Adjust",
+	"assign.adjustpattern": "Pattern",
+	"assign.adjusttime": "Timerange",
 	
 	"records.recorddata": "Record data",
 	"records.upload": "Upload",
