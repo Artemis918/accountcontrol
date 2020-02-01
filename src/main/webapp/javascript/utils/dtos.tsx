@@ -1,4 +1,20 @@
 
+export type handleJsonAnswer = (answer: any) => void;
+
+export function postRequest(url:string, jsonbody:string, answer:handleJsonAnswer): void {
+    fetch( url, {
+            method: 'post',
+            body: jsonbody,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        } ).then( function( response ) {
+		if (answer != undefined )
+            answer( response.json() );
+    } );
+}
+
+
 // =====================================================
 export class AccountRecord {
     id: number;
@@ -107,6 +123,7 @@ export class Template {
     shortdescription: string;
     matchstyle: number;
     previous: number;
+	additional: string;
 
     constructor() {
         var date = new Date();
@@ -128,6 +145,7 @@ export class Template {
         this.shortdescription = '';
         this.matchstyle = 0;
         this.previous = undefined;
+		this.additional= "";
     }
 }
 //=====================================================
