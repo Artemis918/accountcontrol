@@ -2,10 +2,9 @@ import * as React from 'react'
 import { IntlShape} from 'react-intl'
 import { PatternEditor } from './patterneditor'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
-import { DropdownService } from '../utils/dropdownservice'
 import { CategorySelector } from '../utils/categoryselector'
 import { Template } from '../utils/dtos'
-import { TimeRangeSelector } from '../utils/timerangeselector'
+import { TimeUnitSelector } from '../utils/timeunitselector'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 
 import css from '../css/index.css'
@@ -191,7 +190,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                                         onChange={( e ) => { this.template.repeatcount = e.target.valueAsNumber; this.setTemplateState() }} />
                                 </span>
                                 <span style={{ width: '20%' }}>
-                                    <TimeRangeSelector 
+                                    <TimeUnitSelector 
                                         className={css.catselector3} 
                                         curvalue={this.state.template.repeatunit}
                                         onChange={( e ) => { this.template.repeatunit = e; this.setTemplateState() }}
@@ -262,6 +261,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                 <label>{this.state.message}</label>
                 {this.state.patternEdit ?
                     <PatternEditor
+                        zIndex={1}
                         intl={this.props.intl}
                         pattern={this.state.template.pattern}
                         sendPattern={( e ) => { this.template.pattern = e; this.setTemplateState() }}

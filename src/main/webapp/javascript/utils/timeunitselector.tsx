@@ -3,13 +3,13 @@ import { useIntl, IntlShape } from 'react-intl'
 
 type HandleChange = ( id: number ) => void;
 
-export interface TimeRangeProps {
+export interface TimeUnitProps {
     onChange: HandleChange;
 	curvalue: number;
 	className: string;
 }
 
-export function TimeRangeSelector( props: TimeRangeProps) :JSX.Element {
+export function TimeUnitSelector( props: TimeUnitProps) :JSX.Element {
 	const intl: IntlShape = useIntl();
 	return (
             <select className={props.className}
