@@ -28,6 +28,7 @@ public class TemplateDTO {
 	private String shortdescription;
 	private int matchstyle;
 	private int previous;	
+	private String additional;
 
 	public TemplateDTO() {
 	}
@@ -52,6 +53,7 @@ public class TemplateDTO {
 		this.shortdescription = template.getShortDescription();
 		this.matchstyle = template.getMatchStyle().ordinal();
 		this.previous = template.getNext();
+		this.additional = "";
 	}
 	
 	public Template toTemplate(SubCategoryRepository subCategoryRepository) {
@@ -72,7 +74,6 @@ public class TemplateDTO {
 		template.setShortDescription(this.shortdescription);
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);
 		template.setNext(this.getPrevious());
-
 		return template;
 	}
 	
