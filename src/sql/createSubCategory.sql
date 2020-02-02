@@ -1,4 +1,4 @@
-create table SubCategory
+create table sub_category
 (
     id                 integer NOT NULL,
     category           int,
@@ -8,6 +8,6 @@ create table SubCategory
     primary key (id)
 );
 
-create unique index SubCategoryID on SubCategory (id);
+create unique index sub_categoryID on sub_category (id);
 create sequence seq_subcategory;
 
