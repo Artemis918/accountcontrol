@@ -3,7 +3,7 @@ alter sequence if exists seq_buchungsbeleg rename to seq_accountrecord;
 alter index if exists BuchungsbelegID rename to AccountRecordID;
 alter index if exists BuchungsbelegDate rename to AccountRecordDate;
 
-alter table if exists Buchungsbeleg rename to AccountRecord;
+alter table if exists Buchungsbeleg rename to account_record;
 alter table if exists AccountRecord rename column eingang to received;
 alter table if exists AccountRecord rename column beleg to created;
 alter table if exists AccountRecord rename column wertstellung to executed;
