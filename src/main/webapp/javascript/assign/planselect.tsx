@@ -107,12 +107,12 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	setPattern(p: Pattern): void {
 		var plan: Plan =  this.lister.getSelected();
 		plan.patterndto=p;
-		postRequest('/templates/changepattern',JSON.stringify( plan ),undefined);
+		postRequest('/templates/changepattern',plan,undefined);
 		this.setState({patterneditor: false});
 	}
 
 	settimerange(template: Template): void {
-		postRequest('/templates/save',JSON.stringify( template ),undefined);
+		postRequest('/templates/save',template,undefined);
 		this.setState({timerangeeditor: false});
     }
 

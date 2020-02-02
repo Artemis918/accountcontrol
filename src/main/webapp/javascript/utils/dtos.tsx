@@ -1,10 +1,10 @@
 
 export type handleJsonAnswer = (answer: any) => void;
 
-export function postRequest(url:string, jsonbody:string, answer:handleJsonAnswer): void {
+export function postRequest(url:string, data:any, answer:handleJsonAnswer): void {
     fetch( url, {
             method: 'post',
-            body: jsonbody,
+            body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
