@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FormattedMessage,IntlShape } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 type SaveData = ( short: string, descripition:string ) => void;
 
@@ -55,7 +55,7 @@ export class AddTool extends React.Component<AddToolProps, {}> {
                     margin: '15% auto',
                     padding: '20px',
                     border: '1px solid #888',
-                    width: '250px', height: '180px',
+                    width: '250px', height: '160px',
                     background: 'darkgray',
                     fontSize: '15px'
                 }}>
@@ -64,8 +64,8 @@ export class AddTool extends React.Component<AddToolProps, {}> {
                     <div><input type='text' ref={this.short} size={20} style={{ fontSize: '15px'}}/></div>                    
                     <FormattedMessage id='description'/>
                     <div><input type='text' ref={this.description} size={20} style={{ fontSize: '15px'}}/></div>
-                    <div><button onClick={this.createcat} style={{ fontSize: '15px'}}>{this.props.createlabel}</button>
-                        <button onClick={this.cancel} style={{ fontSize: '15px'}}>{this.props.cancellabel}</button>
+                    <div style={{marginTop: '10px'}}><button onClick={this.createcat} style={{ width: '47%', fontSize: '15px'}}>{this.props.createlabel}</button>
+                        <button onClick={this.cancel} style={{width: '47%', fontSize: '15px'}}>{this.props.cancellabel}</button>
                     </div>
                 </div>
             </div>
