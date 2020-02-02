@@ -1,6 +1,7 @@
 import * as React from 'react'
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import MomentLocaleUtils from 'react-day-picker/moment';
+import 'react-day-picker/lib/style.css'
 import kcss from './css/ksdaypickerinput.css'
 import css from '../css/index.css'
 
