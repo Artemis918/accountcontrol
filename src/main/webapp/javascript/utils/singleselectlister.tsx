@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './selectlister'
+import { SelectLister, ColumnInfo, CreateFooterCallback } from './selectlister'
 
 export { ColumnInfo, CellInfo } from './selectlister'
 
@@ -69,8 +69,8 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
                 ext={this.props.ext}
                 url={this.props.url}
                 lines={this.props.lines}
-                handleSelect={( s, c, d, i ) => this.changeSelected( d, i )}
-                handleExecute={( s, c, d, i ) => this.executeSelected( d, i )}
+                handleSelect={( _s, _c, d, i ) => this.changeSelected( d, i )}
+                handleExecute={( _s, _c, d, i ) => this.executeSelected( d, i )}
                 isSelected={( i ) => this.isSelected( i )}
                 ref={( r ) => { this.lister = r; }} />
         );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SelectLister, ColumnInfo, CellInfo, CreateFooterCallback } from './selectlister';
+import { SelectLister, ColumnInfo, CreateFooterCallback } from './selectlister';
 
 export { ColumnInfo, CellInfo } from './selectlister';
 
@@ -51,7 +51,11 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 
     handleSelect( shift: boolean, ctrl: boolean, index: number ): void {
         var selectedData: D[];
-        if ( shift ) {
+		if (index == undefined) {
+            selectedData = undefined;
+            this.setState( { selectedRows: undefined, range: undefined } );			
+		}
+        else if ( shift ) {
             var f: number;
             if ( this.state.range == undefined ) {
                 f = index;
@@ -67,7 +71,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
             if ( this.state.range != undefined ) {
                 var lo: number = this.state.range.getLo();
                 var hi: number = this.state.range.getHi();
-                rows = Array.from( Array( hi - lo + 1 ), ( val, i ) => { return i + lo } );
+                rows = Array.from( Array( hi - lo + 1 ), ( _val, i ) => { return i + lo } );
             }
             else if ( this.state.selectedRows != undefined ) {
                 rows = Array.from( this.state.selectedRows );
@@ -128,7 +132,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
                 ext={this.props.ext}
                 url={this.props.url}
                 lines={this.props.lines}
-                handleSelect={( s: boolean, c: boolean, d: D, i: number ) => this.handleSelect( s, c, i )}
+                handleSelect={( s: boolean, c: boolean, _d: D, i: number ) => this.handleSelect( s, c, i )}
                 isSelected={( i ) => this.isSelected( i )}
                 ref={( r ) => { this.lister = r; }} />
         );
