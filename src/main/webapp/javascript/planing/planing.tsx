@@ -77,7 +77,6 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
 	
     setFilter( m: number, y: number ): void {
         this.setState( { year: y, month: m } );
-        this.editor.setPlan( undefined );
     }
 
     refreshlist() {

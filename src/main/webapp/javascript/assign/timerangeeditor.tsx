@@ -3,7 +3,7 @@ import { IntlShape } from 'react-intl'
 
 import { TimeUnitSelector } from '../utils/timeunitselector'
 import { KSDayPickerInput } from '../utils/KSDayPickerInput'
-import { Plan, Template } from '../utils/dtos'
+import { Template } from '../utils/dtos'
 
 import css from '../css/index.css'
 
