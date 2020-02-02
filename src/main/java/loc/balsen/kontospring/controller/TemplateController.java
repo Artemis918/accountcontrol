@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.dataservice.PlanService;
 import loc.balsen.kontospring.dataservice.TemplateService;
 import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.PlanDTO;
