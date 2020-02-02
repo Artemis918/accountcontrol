@@ -1,10 +1,14 @@
 import * as React from 'react'
-import {useIntl, WrappedComponentProps } from 'react-intl'
+import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
-import PlanSelect from './planselect'
+import { PlanSelect } from './planselect'
 import * as mcss from './css/assign.css'
 import * as css from '../css/index.css'
+
+type Create = (props:SplitAssignProps) => JSX.Element;
+export const SplitAssign:Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()}/>); }
+
 
 type onCommitCallback = () => void;
 
@@ -205,7 +209,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
     renderPlanSelect(): JSX.Element {
         if ( this.state.planselect == true ) {
             var now: Date = new Date;
-            return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onSelect={this.addPlan} /> );
+            return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onAssign={this.addPlan} /> );
         }
         else
             return ( <div /> );
@@ -252,11 +256,3 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         )
     }
 }
-
-type CreateSplitAssign = (props:SplitAssignProps) => JSX.Element;
-
-const SplitAssign:CreateSplitAssign = (props : SplitAssignProps) => {
-    return (<_SplitAssign {...props} intl={useIntl()}/>);
-}
-
-export default SplitAssign;

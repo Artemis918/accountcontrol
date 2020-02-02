@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import CategoryAssign from './categoryassign'
+import { CategoryAssign } from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
-import SplitAssign from './splitassign';
-import PlanSelect from './planselect';
+import { SplitAssign } from './splitassign';
+import { PlanSelect } from './planselect';
 import { AccountRecord, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
@@ -22,6 +22,7 @@ interface AssignProps {
 
 interface IState {
     plan: number;
+	selectedplan: Plan;
     planassign: AccountRecord;
     accountRecord: AccountRecord;
     categoryassign: boolean;
@@ -73,7 +74,14 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
     constructor( props: AssignProps & WrappedComponentProps ) {
         super( props )
         this.lister = undefined;
-        this.state = { plan: undefined, planassign: undefined, accountRecord: undefined, categoryassign: false, deftext: "", defsubcategory: 1, defcategory: 1 }
+        this.state = { plan: undefined,
+                       selectedplan: undefined, 
+                       planassign: undefined, 
+                       accountRecord: undefined,
+                       categoryassign: false,
+                       deftext: "",
+                       defsubcategory: 1,
+                       defcategory: 1 }
         this.createPlan = this.createPlan.bind( this );
         this.assignAuto = this.assignAuto.bind( this );
         this.assignManuell = this.assignManuell.bind( this );
@@ -187,8 +195,11 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
     renderPlanSelect(): JSX.Element {
         if ( this.state.planassign != undefined ) {
-		var date: Date = this.state.planassign.received;
-            return ( <PlanSelect month={date.getMonth()} year={date.getFullYear()} onSelect={this.assignSelectedPlan} /> );
+		    var date: Date = this.state.planassign.received;
+            return ( <PlanSelect month={date.getMonth()} 
+                                 year={date.getFullYear()}
+                                 onAssign={this.assignSelectedPlan}
+                                 recordid={this.state.planassign.id}/> );
         }
         else
             return null;

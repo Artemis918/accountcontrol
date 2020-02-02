@@ -5,6 +5,12 @@ import { CategorySelector } from '../utils/categoryselector'
 import * as css from '../css/index.css'
 import * as acss from './css/assign.css'
 
+type Create = (props:CategoryAssignProps) => JSX.Element;
+export const CategoryAssign:Create = (p) => { return (<_CategoryAssign {...p} intl={useIntl()}/>); }
+
+
+export default CategoryAssign;
+
 type HandleAssignCallback = ( subCategory: number, text: string ) => void;
 
 export interface CategoryAssignProps {
@@ -75,11 +81,3 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
         );
     }
 }
-
-type CreateCatAssign = (props:CategoryAssignProps) => JSX.Element;
-
-const CategoryAssign:CreateCatAssign = (props : CategoryAssignProps) => {
-    return (<_CategoryAssign {...props} intl={useIntl()}/>);
-}
-
-export default CategoryAssign;

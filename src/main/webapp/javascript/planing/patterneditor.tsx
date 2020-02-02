@@ -10,6 +10,7 @@ interface PatternEditorProps {
     pattern: Pattern;
     sendPattern: SendPatternCallback;
 	intl: IntlShape;
+	zIndex: number;
 }
 
 interface IState {
@@ -24,6 +25,8 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
         super( props );
         this.state = {pattern: props.pattern }
         this.pattern = props.pattern;
+		this.setValue = this.setValue.bind(this);
+		this.sendPattern = this.sendPattern.bind(this);
     }
 
 	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
@@ -41,7 +44,7 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
         return (
             <div style={{
                 position: 'fixed',
-                zIndex: 1,
+                zIndex: this.props.zIndex,
                 left: '0', top: '0', width: '100%', height: '100%'
             }}>
                 <div style={{

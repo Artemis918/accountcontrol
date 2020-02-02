@@ -53,6 +53,15 @@
 	font-size: 16px;
 }
 
+.charbutton {
+	margin: 0;
+	border: none;
+    background-color: lightgray;
+    font-size: 15px;
+    padding: 2px 10px;
+    margin: 0px 2px;
+}
+
 
 .catselector {
 	float: right;
@@ -103,4 +112,12 @@
 	border-radius: 5px;
 	border-width: 2px;
 	background-color: white
+}
+
+.hoverbox {
+	position: fixed;
+	margin: 0;
+	padding: 2px;
+	border: 2px solid #000;
+	background: lightyellow
 }
