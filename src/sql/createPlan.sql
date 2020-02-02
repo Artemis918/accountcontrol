@@ -1,6 +1,4 @@
-﻿-- drop table plan;
-
-create table Plan
+﻿create table Plan
 (
     id               integer NOT NULL,   
     creation_date     date,
@@ -9,22 +7,20 @@ create table Plan
     end_date          date,
     deactivate_date   date,
     subcategory	      int,
-	position          int,
-	description       varchar(512),
+    position          int,
+    description       varchar(512),
     short_description varchar(80),
-	pattern           varchar(1024),
-	value             int,
-	match_style       int,
-	template          int,
-	primary key (id)
+    pattern           varchar(1024),
+    value             int,
+    match_style       int,
+    template          int,
+    primary key (id)
 );
 
 
 create unique index PlanID on Plan (id);
 
-create index PlanDateIdx on plan(plandate);
-
-
--- drop sequence seq_plan;
+create index PlanDateIdx on plan(plan_date);
 
 create sequence seq_plan;
+
