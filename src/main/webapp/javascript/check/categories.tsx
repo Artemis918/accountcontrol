@@ -43,7 +43,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         this.commitSelected = this.commitSelected.bind( this );
         this.commitAll = this.commitAll.bind( this );
         this.removeAssignment = this.removeAssignment.bind( this );
-        this.replanAssignment = this.replanAssignment.bind( this );
+        this.acceptValueAssignment = this.acceptValueAssignment.bind( this );
 		this.createFooter = this.createFooter.bind(this);
     }
 
@@ -135,7 +135,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         this.lister.current.reload();
     }
 
-    replanAssignment(): void {
+    acceptValueAssignment(): void {
         var assignments: Assignment[] = this.lister.current.getSelectedData();
         if ( assignments.length != 1 ) {
             this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
@@ -215,14 +215,13 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 							{this.label("check.removeassign")}
 							</button>
                     <button className={css.actionbutton} 
-                            onClick={() => this.replanAssignment()}>
+                            onClick={() => this.acceptValueAssignment()}>
 							{this.label("check.acceptvalue")}
                             </button>
                 </div>
                 <table>
                     <tbody>
                         <tr>
-
                             <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                 <div className={acss.monthselect}>
                                     <MonthSelect label={this.label("month")}
