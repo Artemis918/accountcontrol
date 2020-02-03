@@ -29,7 +29,6 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
 
     lister: SingleSelectLister<Plan>;
     editor: PlanEditor;
-    columns: ColumnInfo<Plan>[];
 
     constructor( props: PlaningProps & WrappedComponentProps ) {
         super( props );
@@ -51,8 +50,8 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
 
 	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 	
-	createTableData():void {
-	    this.columns = [{
+	createColums():ColumnInfo<Plan>[] {
+	    return [{
             header: this.label("date"),
             getdata: ( data: Plan ): string => { return data.plandate.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
@@ -80,7 +79,6 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
     }
 
     refreshlist() {
-        this.editor.setPlan( undefined );
         this.lister.reload();
     }
 
@@ -132,7 +130,6 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
     }
 
     render(): JSX.Element {
-		this.createTableData();
         return (
             <div>
                 <table style={{ border: '1px solid black' }}>
@@ -156,7 +153,7 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
                                     lines={28}
                                     ext={this.state.year + '/' + this.state.month}
                                     handleChange={( data: Plan ) => this.refresheditor( data )}
-                                    columns={this.columns}
+                                    columns={this.createColums()}
                                     url='plans/list/' />
                             </td>
                         </tr>

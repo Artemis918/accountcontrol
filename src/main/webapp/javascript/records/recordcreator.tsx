@@ -69,7 +69,6 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
     }
 
     refreshlist(): void {
-        this.editor.setRecord( undefined );
         this.lister.reload();
     }
 

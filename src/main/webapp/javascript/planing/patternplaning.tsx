@@ -24,21 +24,18 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
 
     lister: SingleSelectLister<Plan>;
     editor: PatternPlanEditor;
-    columns: ColumnInfo<Plan>[];
 
     constructor( props: PatternPlaningProps & WrappedComponentProps) {
         super( props );
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.state= {category: 1};
-
-
     }
 
 	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
-	createColumns(): void {
-        this.columns = [{
+	createColumns(): ColumnInfo<Plan>[] {
+        return [{
             header: this.label("shortdescription"),
             getdata: ( data: Plan ): string => { return data.shortdescription }
         }, {
@@ -51,7 +48,6 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
 	}
 
     refreshlist() {
-        this.editor.setPlan( null );
         this.lister.reload();
     }
 
@@ -60,7 +56,6 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
     }
 
     render(): JSX.Element {
-		this.createColumns();
         return (
             <table style={{ border: '1px solid black' }}>
                 <tbody>
@@ -83,7 +78,7 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
                             <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                 lines={30}
                                 handleChange={( data: Plan ) => this.refresheditor( data )}
-                                columns={this.columns}
+                                columns={this.createColumns()}
                                 ext={this.state.category.toString( 10 )}
                                 url='plans/patternplans/' />
                         </td>

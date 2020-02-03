@@ -29,7 +29,6 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
 
     lister: SingleSelectLister<Template>;
     editor: TemplateEditor;
-    columns: ColumnInfo<Template>[];
 
 	unitNames: string[]; 
 	
@@ -53,12 +52,12 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
         this.editor.setTemplate( template );
     }
 
-	createData():void {
+	createColums():ColumnInfo<Template>[] {
 		this.unitNames = [this.label("day"), 
 		                   this.label("week"), 
                            this.label("month"),
                            this.label("year")];
-        this.columns = [{
+        return [{
             header: this.label("templates.firstday"),
             getdata: ( d: Template ): string => { return d.start.toLocaleDateString( this.props.intl.locale, { day: '2-digit', month: '2-digit' } ).substr( 0, 6 ) },
         }, {
@@ -84,7 +83,6 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
 	}
 	
     render(): JSX.Element {
-		this.createData();
         return (
             <table style={{ border: '1px solid black' }}>
                 <tbody>
@@ -106,7 +104,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
                                 handleChange={this.refresheditor}
                                 url='templates/listcategory/'
                                 ext={this.state.category.toString( 10 )}
-                                columns={this.columns} />
+                                columns={this.createColums()} />
                         </td>
                     </tr>
                 </tbody>
