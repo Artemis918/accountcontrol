@@ -3,7 +3,7 @@ import { IntlShape } from 'react-intl'
 
 import { PatternEditor } from './patterneditor'
 import { CategorySelector } from '../utils/categoryselector'
-import { Plan } from '../utils/dtos'
+import { Plan, postRequest } from '../utils/dtos'
 import css from '../css/index.css'
 
 type OnChangeCallback = () => void;
@@ -45,6 +45,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 
     createNewPlan(): void {
         this.plan = new Plan();
+		this.plan.plandate = undefined;
 		this.plan.description=this.label("plan.newdescription");
 		this.plan.shortdescription=this.label("plan.newshortdescription");
     }
@@ -60,17 +61,8 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
     }
 
     save() {
-        var self = this;
-        var jsonbody = JSON.stringify( self.state.plan );
-        fetch( '/plans/savePattern', {
-            method: 'post',
-            body: jsonbody,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        } ).then( function( response ) {
-            self.setAnswer( response.json() );
-        } );
+        var self:PatternPlanEditor = this;
+		postRequest('/plans/savePattern', self.state.plan, self.setAnswer);
     }
 
     setAnswer( data: any ): void {
