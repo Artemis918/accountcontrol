@@ -84,7 +84,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			var self = this;
 			fetch(this.props.url + this.props.ext)
 				.then((response: Response) => response.text())
-				.then((text) => { self.setState({ data: myParseJson(text) }); this.props.handleSelect(false, false, undefined, undefined) })
+				.then((text) => { self.setState({ data: myParseJson(text) }) })
 		}
 	}
 

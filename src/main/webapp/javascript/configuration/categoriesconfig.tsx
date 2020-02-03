@@ -57,7 +57,8 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     }
     
     setCategory( category: Category ): void {
-        this.setState({category: category})
+        this.setState({category: category});
+		this.sublister.current.clearSelection();
     }
 
     setSubCategory( subcategory: SubCategory ): void {
