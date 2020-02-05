@@ -224,10 +224,10 @@ public class AssignmentController {
 			Template template = plan.getTemplate();
 			AccountRecord record = accountRecordRepository.findById(recordid).get();
 			String result = plan.matches(record)? "0":"1";
-			result += plan.isInPeriod(record.getCreated())?"0":"1";
+			result += plan.isInPeriod(record.getExecuted())?"0":"1";
 			TemplateDTO dto = new TemplateDTO(template);
 			dto.setAdditional(result);
-			dto.setStart(record.getExecuted()); // Here i reused htat date for another context. Should be changed some day
+			dto.setStart(record.getExecuted()); // Here i reused that date for another context. Should be changed some day
 			return dto;
 		}
 		else {

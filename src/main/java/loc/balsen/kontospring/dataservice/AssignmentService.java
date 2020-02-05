@@ -30,11 +30,11 @@ public class AssignmentService {
 			return 0;
 
 		// searching for min and max date
-		LocalDate maxdate = records.get(0).getCreated();
-		LocalDate mindate = records.get(0).getCreated();
+		LocalDate maxdate = records.get(0).getExecuted();
+		LocalDate mindate = records.get(0).getExecuted();
 
 		for (AccountRecord record : records) {
-			LocalDate date = record.getCreated();
+			LocalDate date = record.getExecuted();
 			if (date.isBefore(mindate))
 				mindate = date;
 			if (date.isAfter(maxdate))
@@ -66,7 +66,7 @@ public class AssignmentService {
 		for (Plan plan : plans) {
 			boolean pattern = plan.getMatchStyle() == Plan.MatchStyle.PATTERN;
 			boolean summax = plan.getMatchStyle() == Plan.MatchStyle.SUMMAX;
-			boolean period = plan.isInPeriod(record.getCreated());
+			boolean period = plan.isInPeriod(record.getExecuted());
 
 			if (!summax && (pattern || period) && plan.matches(record)) {
 				plansForRecord.add(plan);

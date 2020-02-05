@@ -43,7 +43,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 		       + "inner join plan p on a.plan = p.id "
 		       + "  and p.plan_date between ?1 and ?2 "
 		       + "  and a.committed = true "
-		       + "order by ar.plan_date" , nativeQuery=true)
+		       + "order by p.plan_date" , nativeQuery=true)
 	public List<Assignment> findAllPlannedByPeriod(LocalDate start, LocalDate end);
 	
 	public int countBySubCategoryId(int subCategory);
