@@ -223,7 +223,7 @@ public class AssignmentControllerTest extends TestContext {
 		assertEquals("10", dto.getAdditional());
 		assertNotEquals(templatedate,dto.getStart());
 
-		rec.setCreated(LocalDate.now().minusDays(4));
+		rec.setExecuted(LocalDate.now().minusDays(4));
 		accountRecordRepository.save(rec);
 		dto = controller.analyzePlan(rec.getId(), planid);
 		assertEquals(templateId, dto.getId());
@@ -234,7 +234,7 @@ public class AssignmentControllerTest extends TestContext {
 		assertEquals(templateId, dto.getId());
 		assertEquals("00", dto.getAdditional());
 
-		rec.setCreated(LocalDate.now().minusDays(3));
+		rec.setExecuted(LocalDate.now().minusDays(3));
 		accountRecordRepository.save(rec);
 		dto = controller.analyzePlan(rec.getId(), planid);
 		assertEquals(templateId, dto.getId());

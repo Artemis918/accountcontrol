@@ -97,7 +97,7 @@ public class AssignmentServiceTest extends TestContext {
 	private AccountRecord createRecord(String date, String mandate) {
 		AccountRecord record = new AccountRecord();
 		record.setMandate(mandate);
-		record.setCreated(LocalDate.parse(date));
+		record.setExecuted(LocalDate.parse(date));
 		record.setValue(70);
 		accountRecordRepository.save(record);
 		return record;
