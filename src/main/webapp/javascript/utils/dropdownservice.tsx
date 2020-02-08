@@ -7,7 +7,7 @@ type HandleChange = ( id: number ) => void;
 export interface DropdownServiceProps {
     onChange: HandleChange;
     url: string;
-    param?: string;
+    param?: string;    // undefined->ignored,  ''->no select, value-> urlextension
     value: number;
 	className?: string;
 }
@@ -29,8 +29,6 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     componentDidUpdate(prevProps: DropdownServiceProps) :void {
         if ( this.props.param != prevProps.param )
             this.fetchData();   
-        if ( this.props.value != prevProps.value )
-            this.setState({data: this.state.data } );
     }
 
     componentDidMount() :void {
@@ -64,10 +62,11 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     }
 
     render(): JSX.Element {
+		var index = (this.state.data!=undefined) ? this.state.data.findIndex((t,_i,_o)=>{return t.value == this.props.value}) : 0;
         return (
-            <select className={this.props.className} value={this.props.value} 
+            <select className={this.props.className} 
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
-                {this.state.data.map( ( t ) => <option key={t.value} value={t.value}>{t.text}</option> )}
+                {this.state.data.map( ( t, i ) => <option key={t.value} value={t.value} selected={i==index}>{t.text}</option> )}
             </select>
         );
     }

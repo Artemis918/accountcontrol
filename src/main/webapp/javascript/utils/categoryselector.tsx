@@ -47,17 +47,20 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     render(): JSX.Element {
+		var caturlextension = this.state.category==undefined?'':this.state.category.toString();
         if ( this.props.horiz ) {
             return (
                 <span>
-                    <DropdownService value={this.state.category}
+                    <DropdownService 
+						value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum'
 						className={css.catselector2} />
-                    <DropdownService value={this.state.subcategory}
+                    <DropdownService 
+						value={this.state.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
-                        param={'' + this.state.category}
+                        param={caturlextension}
 						className={css.catselector2} />
                 </span> )
         }
@@ -65,15 +68,17 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
             return (
                 <table style={{width:"100%"}}><tbody>
                     <tr><td>
-                        <DropdownService className={css.catselector} value={this.state.category}
+                        <DropdownService className={css.catselector} 
+							value={this.state.category}
                             onChange={this.setCategory}
                             url='category/catenum' />
                     </td></tr>
                     <tr><td>
-                        <DropdownService className={css.catselector} value={this.state.subcategory}
+                        <DropdownService className={css.catselector} 
+							value={this.state.subcategory}
                             onChange={this.setSubCategory}
                             url='category/subenum'
-                            param={'' + this.state.category} />
+                            param={caturlextension} />
                     </td></tr>
                 </tbody></table>
             );

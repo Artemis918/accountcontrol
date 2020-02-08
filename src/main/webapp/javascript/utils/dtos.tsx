@@ -93,8 +93,8 @@ export class Plan {
         this.position = 0;
         this.description = '';
         this.shortdescription = '';
-        this.category = 1;
-        this.subcategory = 1;
+        this.category = undefined;
+        this.subcategory = undefined;
         this.categoryname = '';
         this.subcategoryname = '';
         this.value = 0;
@@ -135,8 +135,8 @@ export class Template {
         this.repeatcount = 1;
         this.repeatunit = 2;
         this.description = '';
-        this.category = 1;
-        this.subcategory = 1;
+        this.category = undefined;
+        this.subcategory = undefined;
         this.categoryname = '';
         this.subcategoryname = '';
         this.position = 1;

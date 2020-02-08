@@ -34,7 +34,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
 	
     constructor( props: TemplateProps & WrappedComponentProps) {
         super( props );
-        this.state = { category: 1 };
+        this.state = { category: undefined };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.lister = undefined;
@@ -103,7 +103,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
                                 lines={28}
                                 handleChange={this.refresheditor}
                                 url='templates/listcategory/'
-                                ext={this.state.category.toString( 10 )}
+                                ext={this.state.category ==undefined ? undefined : this.state.category.toString( 10 )}
                                 columns={this.createColums()} />
                         </td>
                     </tr>

@@ -222,7 +222,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
                         <tr><td>{this.label("category")}</td>
                             <td><CategorySelector
 								horiz={false}
-                                onChange={( k, g ) => this.setSubCategory( k, g )}
+                                onChange={( s, c ) => this.setSubCategory( s, c )}
                                 subcategory={this.state.template.subcategory}
                                 category={this.state.template.category} /></td>
                         </tr>
