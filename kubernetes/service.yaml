@@ -1,9 +1,0 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: konto-service
-spec: 
-  ports: 
-    - port: 8080
-  selector: 
-      app: kontospring

@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: account-service
+spec:
+  type: ClusterIP
+  selector:
+    app: account-controller
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetport: 8080

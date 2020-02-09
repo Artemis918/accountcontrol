@@ -4,22 +4,22 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: "1"
   labels:
-    app: kontospring
-  name: kontospring-deploy
+    app: account-controller
+  name: account-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kontospring
+      app: account-controller
   template:
     metadata:
       labels:
-        app: kontospring
+        app: account-controller
     spec:
       containers:
       - image: gitlab.balsen.loc:4901/balsen/kontospring
         imagePullPolicy: Always
-        name: kontospring
+        name: account-controller
         volumeMounts:
         - mountPath: /tmp
           name: tmp-volume

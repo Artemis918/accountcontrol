@@ -1,0 +1,9 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: account-db
+spec:
+  ports:
+    - protocol: TCP
+      port: 7000
+      targetPort: 5434
