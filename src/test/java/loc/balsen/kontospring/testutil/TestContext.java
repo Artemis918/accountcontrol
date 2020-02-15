@@ -15,7 +15,6 @@ import loc.balsen.kontospring.repositories.TemplateRepository;
 import loc.balsen.kontospring.repositories.AssignmentRepository;
 
 @SpringBootTest(classes = Application.class)
-@TestPropertySource("classpath:/h2database.properties")
 public class TestContext {
 
 	@Autowired

@@ -24,7 +24,6 @@ import loc.balsen.kontospring.repositories.AccountRecordRepository;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = Application.class)
-@TestPropertySource("classpath:/h2database.properties")
 @WebAppConfiguration
 public class ImportbaseTest {
 	
