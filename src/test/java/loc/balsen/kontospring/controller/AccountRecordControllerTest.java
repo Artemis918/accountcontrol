@@ -35,7 +35,7 @@ public class AccountRecordControllerTest extends TestContext {
 	@Before
 	public void setup() throws SQLException {
 		Server webServer = Server.createWebServer("-web", 
-                "-webAllowOthers", "-webPort", "8082");
+                "-webAllowOthers", "-webPort", "8083");
 		webServer.start();
 		createCategoryData();
 	}
@@ -66,7 +66,7 @@ public class AccountRecordControllerTest extends TestContext {
 		mvc.perform(get("/accountrecord/unassigned"))
 		   .andExpect(jsonPath("$.[*]", hasSize(startSize + 1)))
 		   .andExpect(jsonPath("$.[" + startSize + "].details").value( "record1"));
-}
+	}
 
 	private void createAssignment(AccountRecord record) {
 		Plan plan =  new Plan();
