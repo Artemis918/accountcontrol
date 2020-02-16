@@ -138,7 +138,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
             var request = { text: t, subcategory: sub, ids: this.lister.getSelectedData().map( d => d.id ) };
             var self = this;
             var jsonbody = JSON.stringify( request );
-            fetch( '/assign/tosubcategory', {
+            fetch( 'sassign/tosubcategory', {
                 method: 'post',
                 body: jsonbody,
                 headers: {
@@ -173,7 +173,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
         var self = this;
         if ( plan != undefined ) {
             var self = this;
-            fetch( '/assign/toplan/' + plan.id + '/' + this.state.planassign.id )
+            fetch( 'assign/toplan/' + plan.id + '/' + this.state.planassign.id )
                 .then( function() {
                     self.setState( { planassign: undefined } );
                     self.lister.reload();

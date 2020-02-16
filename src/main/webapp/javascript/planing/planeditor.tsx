@@ -64,7 +64,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
     save() {
         var self = this;
         var jsonbody = JSON.stringify( self.state.plan );
-        fetch( '/plans/save', {
+        fetch( 'plans/save', {
             method: 'post',
             body: jsonbody,
             headers: {
@@ -91,7 +91,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
     delete(): void {
         if ( this.state.plan.id !== undefined ) {
             var self = this;
-            fetch( '/plans/delete/' + this.state.plan.id, { method: 'get' } )
+            fetch( 'plans/delete/' + this.state.plan.id, { method: 'get' } )
                 .then( function( response ) { self.setAnswer( response.json() ); } );
         }
     }

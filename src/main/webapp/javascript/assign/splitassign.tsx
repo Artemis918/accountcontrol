@@ -81,7 +81,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         assignments.forEach( ( z: Assignment ) => { z.committed = true } );
 
         var self: _SplitAssign = this;
-        fetch( '/assign/parts', {
+        fetch( 'assign/parts', {
             method: 'post',
             body: JSON.stringify( assignments ),
             headers: {

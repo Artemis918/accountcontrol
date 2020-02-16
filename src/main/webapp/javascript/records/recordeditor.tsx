@@ -48,7 +48,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
     save(): void {
         var self = this;
         var jsonbody = JSON.stringify( self.state.record );
-        fetch( '/accountrecord/save', {
+        fetch( 'accountrecord/save', {
             method: 'post',
             body: jsonbody,
             headers: {
@@ -71,7 +71,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
 
     delete(): void {
         var self = this;
-        fetch( '/accountrecord/delete/' + this.state.record.id, { method: 'get' } )
+        fetch( 'accountrecord/delete/' + this.state.record.id, { method: 'get' } )
             .then( function() { self.setAnswer(); } );
     }
 

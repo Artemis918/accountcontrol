@@ -62,7 +62,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 
     save() {
         var self:PatternPlanEditor = this;
-		postRequest('/plans/savePattern', self.state.plan, self.setAnswer);
+		postRequest('plans/savePattern', self.state.plan, self.setAnswer);
     }
 
     setAnswer( data: any ): void {
@@ -81,7 +81,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
     delete(): void {
         if ( this.state.plan.id !== undefined ) {
             var self = this;
-            fetch( '/plans/delete/' + this.state.plan.id, { method: 'get' } )
+            fetch( 'plans/delete/' + this.state.plan.id, { method: 'get' } )
                 .then( function( response ) { self.setAnswer( response.json() ); } );
         }
     }

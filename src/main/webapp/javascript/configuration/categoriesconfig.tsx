@@ -68,7 +68,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     delSub(b: boolean):void {
         var self = this;
         if (b) {
-            fetch( '/category/delsub/' +this.state.subcategory.id ) 
+            fetch( 'category/delsub/' +this.state.subcategory.id ) 
                  .then( function( response ) {
                     self.setState({delsub: false, subcategory: undefined});
                     self.sublister.current.reload();
@@ -83,7 +83,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     delCat(b: boolean):void {
         var self = this;
         if (b) {
-            fetch( '/category/delcat/' +this.state.category.id ) 
+            fetch( 'category/delcat/' +this.state.category.id ) 
                  .then( function( response ) {
                     self.setState({delcat: false, subcategory: undefined, category: undefined});
                     self.catlister.current.reload();
@@ -101,7 +101,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         if (short != undefined && short != '') {
             var subCategory:SubCategory = {id: 0, shortdescription:short, description: desc, category: this.state.category.id, art: 0};
             var jsonbody = JSON.stringify( subCategory );
-            fetch( '/category/savesub', {
+            fetch( 'category/savesub', {
                        method: 'post',
                        body: jsonbody,
                        headers: {"Content-Type": "application/json" }
@@ -123,7 +123,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         if (short != undefined && short != '') {
             var category:Category = {id: 0, shortdescription:short, description: desc};
             var jsonbody = JSON.stringify( category );
-            fetch( '/category/savecat', {
+            fetch( 'category/savecat', {
                        method: 'post',
                        body: jsonbody,
                        headers: {"Content-Type": "application/json" }
@@ -177,7 +177,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     fetchCatInfo(): void {
         if (this.state.category != undefined ) {
             var self: _CategoriesConfig = this;
-            fetch( '/assign/countsubcategory', {
+            fetch( 'assign/countsubcategory', {
                 method: 'post',
                 body: JSON.stringify( this.sublister.current.getData().map((s:SubCategory)=>{return (s.id)}) ),
                 headers: {
@@ -193,7 +193,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
         if (this.state.subcategory != undefined ) {
             var self: _CategoriesConfig = this;
             var list:number[] = [ this.state.subcategory.id ];
-            fetch( '/assign/countsubcategory', {
+            fetch( 'assign/countsubcategory', {
                 method: 'post',
                 body: JSON.stringify( list ),
                 headers: {

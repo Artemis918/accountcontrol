@@ -64,7 +64,7 @@ export class OverviewGFX extends React.Component<OverviewGFXProps, IState> {
         
         this.setState( { endYear: endYear, endMonth: endMonth, startYear: startYear, startMonth: startMonth, tillEndOfYear: currentYear } );
         var self: OverviewGFX = this;
-        var url: string = "/stats/real/" + startYear + "/" + startMonth + "/";
+        var url: string = "stats/real/" + startYear + "/" + startMonth + "/";
 
         if ( currentYear ) {
             var today: Date = new Date;

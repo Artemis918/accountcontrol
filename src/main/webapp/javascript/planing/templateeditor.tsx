@@ -85,7 +85,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     save(): void {
         var self = this;
         var jsonbody = JSON.stringify( self.state.template );
-        fetch( '/templates/save', {
+        fetch( 'templates/save', {
             method: 'post',
             body: jsonbody,
             headers: {
@@ -113,7 +113,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
     delete(): void {
         if ( this.state.template.id != undefined && this.state.template.id != 0 ) {
             var self = this;
-            fetch( '/templates/delete/' + this.state.template.id, { method: 'get' } )
+            fetch( 'templates/delete/' + this.state.template.id, { method: 'get' } )
                 .then( function( response ) { self.setAnswer( response.json() ); } );
         }
     }

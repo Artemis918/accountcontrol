@@ -106,7 +106,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     commit( alist: Assignment[] ): void {
         var ids: number[] = alist.map( ( a: Assignment ) => { return a.id; } );
         var self: _Categories = this;
-        fetch( '/assign/commit', {
+        fetch( 'assign/commit', {
             method: 'post',
             body: JSON.stringify( ids ),
             headers: {
@@ -119,7 +119,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     commitAssignment( a: Assignment ): void {
         var self: _Categories = this;
-        fetch( '/assign/invertcommit/' + a.id )
+        fetch( 'assign/invertcommit/' + a.id )
             .then( function() {
                 self.lister.current.reload();
             } );
@@ -142,11 +142,11 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         }
         else {
             var id: number = assignments[0].id;
-            var url: string = '/assign/newvalue/';
+            var url: string = 'assign/newvalue/';
 
             if ( id == 0 || id == undefined ) {
                 id = assignments[0].plan;
-                url = '/assign/endplan/';
+                url = 'assign/endplan/';
             }
 
             if ( id != undefined ) {
@@ -161,7 +161,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     removeAssignment(): void {
         var ids: number[] = this.lister.current.getSelectedData().map( ( assign: Assignment ) => { return assign.accountrecord; } );
         var self: _Categories = this;
-        fetch( '/assign/remove', {
+        fetch( 'assign/remove', {
             method: 'post',
             body: JSON.stringify( ids ),
             headers: {
