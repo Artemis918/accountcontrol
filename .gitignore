@@ -9,4 +9,5 @@ bin
 /.project
 /.factorypath
 .vscode/settings.json
+kubernetes/dockercred.sh
 dist
