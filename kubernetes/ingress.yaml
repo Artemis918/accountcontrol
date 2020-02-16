@@ -3,12 +3,11 @@ kind: Ingress
 metadata:
   name: account-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - http:
       paths:
-        - path: /account(/|$)(.*)
+        - path: /account
           backend:
             serviceName: account-service
             servicePort: 8080
