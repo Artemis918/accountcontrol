@@ -1,6 +1,8 @@
 package loc.balsen.kontospring.controller;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class StatsController {
 	@GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}")
 	public StatsDTO getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth, @PathVariable Integer endyear, @PathVariable Integer endmonth) {
 		LocalDate curDate = LocalDate.of(startyear, startmonth, 1);
-		LocalDate endDate = LocalDate.of(endyear, endmonth, 28);
+		LocalDate endDate = LocalDate.of(endyear, endmonth, 1).with(TemporalAdjusters.lastDayOfMonth());
 		
 		List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(curDate, endDate);
 		List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(curDate, endDate);
@@ -59,7 +61,7 @@ public class StatsController {
 		int minval = monthlyValues.stream().min(Integer::compare).get();
 		int minplan = monthlyPlanValues.stream().min(Integer::compare).get();
 		
-		int beginforecast = monthlyValues.size()-1;
+		int beginforecast = (monthlyValues.size()>0) ? monthlyValues.size()-1 : 0;
 		int diffval = 0;
 		
 		while (beginforecast > 0 && monthlyValues.get(beginforecast).equals(monthlyValues.get(beginforecast-1)))
