@@ -61,7 +61,7 @@ public class StatsController {
 		int minval = monthlyValues.stream().min(Integer::compare).get();
 		int minplan = monthlyPlanValues.stream().min(Integer::compare).get();
 		
-		int beginforecast = (monthlyValues.size()>0) ? monthlyValues.size()-1 : 0;
+		int beginforecast = monthlyValues.size()-1;
 		int diffval = 0;
 		
 		while (beginforecast > 0 && monthlyValues.get(beginforecast).equals(monthlyValues.get(beginforecast-1)))
@@ -74,11 +74,11 @@ public class StatsController {
 			if (i < beginforecast-1) {
 				result.add(new StatsMonthDTO(curDate, val, planval, 0));
 			}
-			else if ( beginforecast == 0 || i == beginforecast-1) {
+			else if ( ( beginforecast <= 0 &&  i == 0) || i == beginforecast-1) {
 				diffval = val -planval;
 				result.add(new StatsMonthDTO(curDate, val, planval, val));
 			}
-			else if ( beginforecast !=0 && i== beginforecast) {
+			else if ( beginforecast > 0 && i== beginforecast) {
 				result.add(new StatsMonthDTO(curDate, val, planval, planval+diffval));
 			}
 			else {
