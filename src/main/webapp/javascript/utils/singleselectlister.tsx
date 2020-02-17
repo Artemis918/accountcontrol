@@ -32,6 +32,13 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
         this.isSelected = this.isSelected.bind( this );
     }
 
+	componentDidUpdate(prevProps: SingleSelectlisterProps<D>): void {
+		if (prevProps.ext !== this.props.ext) {
+			this.setState({ selectedData: undefined, selectedRow: undefined })
+		}
+	}
+
+
 	clearSelection(): void {
         this.setState( { selectedData: undefined, selectedRow: undefined } )
 	}
