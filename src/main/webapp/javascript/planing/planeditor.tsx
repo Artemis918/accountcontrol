@@ -155,7 +155,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("plan.firstday")}</td>
+                            <td>{this.label("plan.endday")}</td>
                             <td><KSDayPickerInput
                                 onChange={( d ) => { this.plan.enddate = d; this.setPlanState() }}
                                 startdate={this.state.plan.enddate}
