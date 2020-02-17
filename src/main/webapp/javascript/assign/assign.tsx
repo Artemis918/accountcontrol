@@ -195,8 +195,8 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
     renderPlanSelect(): JSX.Element {
         if ( this.state.planassign != undefined ) {
-		    var date: Date = this.state.planassign.received;
-            return ( <PlanSelect month={date.getMonth()} 
+		    var date: Date = this.state.planassign.executed;
+            return ( <PlanSelect month={date.getMonth()+1} 
                                  year={date.getFullYear()}
                                  onAssign={this.assignSelectedPlan}
                                  recordid={this.state.planassign.id}/> );
