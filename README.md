@@ -39,10 +39,14 @@ Comments and contributions are welcome
     * docker run <image id>
 4. Work: You should now be able to connect to localhost:8080 and see the first page
 
+## Docker/Kubernetes
+
+I used the files in docker and kubernetes subdirectory to deploy this service into a small kubernetes cluster with use of external database service and ingresses. Theses scripts are not perfect but may be used as an example
+
 ## A small How to use 
 
 My idea of filling the empty database:
-0. select language. there is a small doropdown in the right lower corner. Default is german, cause i'm using it this way
+0. select language. there is a small dropdown in the right lower corner. Default is german, cause i'm using it this way
 1. Add your categories and subcategories on 'Configruation page'. I am using asomethign like this
     * daily
 	** food
@@ -60,12 +64,12 @@ My idea of filling the empty database:
 2. Upload this file int your database with page "Account Records"
 3. Now begin your journey through the first month in Tab "Assign"
     * Select an entry which is revolving
-	* Press "Planen"
+	* Press "Create Plan"
 	* Choose categroy an subcategory of the entry, edit pattern to match future occurences of this entry and press save
-	* back on the page "Assign", you should now press "automatisch". Your entry should disappear from the list.
+	* back on the page "Assign", you should now press "Auto assign". Your entry should disappear from the list.
 	* you can find it now assigned to your previous selected type in Tab "Check"
 	* ...
-4. if you upload the second month go again to "Assign" and press again "Automatisch". All the previous created revovling plans will dispear into the category section
-5. In the category section now you can control all the revolving data and commit them with "bestätigen". Then the data will get into account for the statistical overview wich contains also asmall forecast
+4. if you upload the second month go again to "Assign" and press again "Auto assign". All the previous created revolving plans will dispear into the category section
+5. In the category section now you can control all the revolving data and commit them with "commit". Then the data will get into account for the statistical overview wich contains also asmall forecast
 
 There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)
