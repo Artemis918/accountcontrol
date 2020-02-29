@@ -138,7 +138,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
             var request = { text: t, subcategory: sub, ids: this.lister.getSelectedData().map( d => d.id ) };
             var self = this;
             var jsonbody = JSON.stringify( request );
-            fetch( 'sassign/tosubcategory', {
+            fetch( 'assign/tosubcategory', {
                 method: 'post',
                 body: jsonbody,
                 headers: {
