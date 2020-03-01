@@ -37,6 +37,46 @@ class PatternTest {
 		assertEquals("mand01",pattern.getMandate());
 	}
 	
-	
+	@Test 
+	void testMatchesAll() {
+		Pattern pattern = new Pattern(examplejson);
+		
+		AccountRecord rec = new AccountRecord();
+		rec.setSender("gulli0123");
+		rec.setReceiver("grtrec01");
+		rec.setReference("ref01");
+		rec.setSubmitter("abcsend01ert");
+		rec.setDetails("det01");
+		rec.setMandate("mand01");
+		assertTrue(pattern.matches(rec));
+	}
 
+	@Test 
+	void testMatchesEdges() {
+		Pattern pattern = new Pattern(examplejson);
+		AccountRecord rec = new AccountRecord();
+
+		rec.setSender(null);
+		rec.setReceiver("grtrec01");
+		rec.setReference("ref01");
+		rec.setSubmitter("abcsend01ert");
+		rec.setDetails("det01");
+		rec.setMandate("mand01");
+		assertFalse(pattern.matches(rec));
+		
+		rec.setSender("");
+		assertFalse(pattern.matches(rec));
+		
+		pattern.setSender("");
+		assertTrue(pattern.matches(rec));
+
+		pattern.setSender(null);
+		assertTrue(pattern.matches(rec));
+		
+		pattern.setReceiver("something");
+		assertFalse(pattern.matches(rec));
+
+		pattern.setReceiver("");
+		assertTrue(pattern.matches(rec));
+	}
 }
