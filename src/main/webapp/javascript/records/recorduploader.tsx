@@ -73,7 +73,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
             const data = new FormData();
             data.append( 'file', file );
 
-            axios.default.post( '/upload', data )
+            axios.default.post( 'upload', data )
                 .then( this.loadOK )
                 .catch( this.loadError )
         } );
