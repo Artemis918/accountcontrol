@@ -4,7 +4,7 @@ import {useIntl, WrappedComponentProps} from 'react-intl'
 import * as axios from 'axios'
 import css from '../css/index.css'
 
-import { SendMessage, MessageID } from '../utils/messageid'
+import { SendMessage } from '../utils/messageid'
 
 
 type Create = (props:RecordUploaderProps) => JSX.Element;
@@ -43,7 +43,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
         this.setState( { accepted: [] } );
     }
 
-    onDrop( accepted: File[], rejected: File[], event: React.DragEvent<HTMLElement> ): void {
+    onDrop( accepted: File[], _rejected: File[], _event: React.DragEvent<HTMLElement> ): void {
         this.setState( { accepted: this.state.accepted.concat( accepted ), fileok: [], fileerr: [] } );
     }
 
@@ -126,12 +126,12 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                         <td>
                             <button 
                                  className= {css.addonbutton} 
-                                 onClick={( e ) => this.uploadit()}>
+                                 onClick={( _e ) => this.uploadit()}>
                                 {this.label("records.upload")}
                             </button>
                             <button 
                                  className= {css.addonbutton} 
-                                 onClick={( e ) => this.buttonClear()}>
+                                 onClick={( _e ) => this.buttonClear()}>
                                 {this.label("reset")}
                             </button>
 
