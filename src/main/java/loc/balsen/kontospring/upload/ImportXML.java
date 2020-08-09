@@ -99,9 +99,22 @@ public class ImportXML extends Importbase {
 		Element details = getChild(entry, "NtryDtls").getChild("TxDtls",null);
 
 		Element parties = getChild(details, "RltdPties");
-		record.setSender(getChild(parties, "Dbtr").getChildText("Nm",null));
-		record.setReceiver(getChild(parties, "Cdtr").getChildText("Nm",null));
-
+		
+		Element debitor = getChildOrNull(parties, "Dbtr");
+		if (debitor == null) {
+			record.setSender("Bank");			
+		}
+		else {
+			record.setSender(debitor.getChildText("Nm",null));
+		}
+		
+		Element creditor = getChildOrNull(parties, "Cdtr");
+		if (creditor == null) {
+			record.setReceiver("Bank");			
+		}
+		else {
+			record.setReceiver(getChild(parties, "Cdtr").getChildText("Nm",null));
+		}
 		Element infoElement = getChild(details, "RmtInf");
 
 
@@ -136,6 +149,11 @@ public class ImportXML extends Importbase {
 		Element child = entry.getChild(childKey,null);
 		if (child == null)
 			throw new ParseException("key <" + childKey + "> not found", 0);
+		return child;
+	}
+	
+	private Element getChildOrNull(Element entry, String childKey) {
+		Element child = entry.getChild(childKey,null);
 		return child;
 	}
 }
