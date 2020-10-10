@@ -52,9 +52,12 @@ build:npm:
     expire_in: 1 day 
 
 test:
-  stage: test 
+  stage: test
   script:
     - ./gradlew test
+  dependencies:
+    - build:javaTest
+	- build:java
   allow_failure: false
 
 publish:

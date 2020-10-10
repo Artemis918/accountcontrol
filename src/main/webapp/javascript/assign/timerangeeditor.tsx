@@ -119,9 +119,9 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 							</tr>
 							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
 								<td><KSDayPickerInput
-									onChange={(d) => { this.setState({ plandate: d }) }}
-									startdate={this.state.plandate}
-									locale={this.props.intl.locale} />
+									    onChange={(d) => { this.setState({ plandate: d }) }}
+									    startdate={this.state.plandate}
+									    locale={this.props.intl.locale} />
 									<button className={css.charbutton}
 										onMouseEnter={(e) => this.setHovertext(e, this.props.template.start)}
 										onMouseLeave={() => this.setState({ hovertext: undefined })} 

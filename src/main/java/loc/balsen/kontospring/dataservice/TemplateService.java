@@ -24,57 +24,49 @@ public class TemplateService {
 	TemplateRepository templateRepository;
 	AccountRecordRepository accountRecordRepository;
 	SubCategoryRepository subCategoryRepository;
-	
+
 	@Autowired
-	public TemplateService(PlanService planService,
-			               TemplateRepository templateRepository,
-			               AccountRecordRepository accountRecordRepository,
-			               SubCategoryRepository subCategoryRepository) {
+	public TemplateService(PlanService planService, TemplateRepository templateRepository,
+			AccountRecordRepository accountRecordRepository, SubCategoryRepository subCategoryRepository) {
 		this.planService = planService;
 		this.templateRepository = templateRepository;
 		this.accountRecordRepository = accountRecordRepository;
 		this.subCategoryRepository = subCategoryRepository;
 	}
 
-	public void replaceTemplate (Template oldTemp, Template newTemp) {
-		
-		newTemp.setId(0);
-		templateRepository.save(newTemp);
-		planService.createPlansfromTemplate(newTemp);
-		
-		oldTemp.setValidUntil(newTemp.getValidFrom().minusDays(1));		
-		oldTemp.setNext(newTemp.getId());		
-		templateRepository.save(oldTemp);
-		planService.deactivatePlans(oldTemp);		
+	public void replaceTimeRange(Template temp, LocalDate from, LocalDate newStartDate, int newVariance) {
+		temp.setStart(newStartDate);
+		temp.setVariance(newVariance);
+		templateRepository.save(temp);
+		planService.replaceTimeRange(temp, from, newStartDate, newVariance);
 	}
-	
-	public void replacePattern (Template temp, LocalDate from, Pattern newPattern ) {
+
+	public void replacePattern(Template temp, LocalDate from, Pattern newPattern) {
 		temp.setPattern(newPattern);
 		templateRepository.save(temp);
-		planService.replacePattern(temp,from,newPattern);
+		planService.replacePattern(temp, from, newPattern);
 	}
-	
+
 	public void saveTemplate(Template template) {
 
 		if (template.getId() == 0) {
 			templateRepository.save(template);
 			planService.createPlansfromTemplate(template);
-		} else if (template.getMatchStyle() == MatchStyle.PATTERN){
+		} else if (template.getMatchStyle() == MatchStyle.PATTERN) {
 			templateRepository.save(template);
-		}
-		else {
+		} else {
 			Template templateOrig = templateRepository.findById(template.getId()).get();
-			
+
 			if (templateOrig.equalsExceptValidPeriod(template)) {
 				templateOrig.setValidUntil(template.getValidUntil());
 			} else {
 				LocalDate changeDay = template.getValidFrom();
-				
+
 				template.setId(0);
-				template.setValidFrom(changeDay);					
+				template.setValidFrom(changeDay);
 				templateRepository.save(template);
 				planService.createPlansfromTemplate(template);
-				
+
 				templateOrig.setValidUntil(changeDay.minusDays(1));
 				templateOrig.setNext(template.getId());
 			}
@@ -82,7 +74,7 @@ public class TemplateService {
 			planService.deactivatePlans(templateOrig);
 		}
 	}
-	
+
 	public Template createFromRecord(Integer id) {
 		Optional<AccountRecord> record = accountRecordRepository.findById(id);
 		if (record.isPresent()) {
@@ -93,9 +85,13 @@ public class TemplateService {
 		}
 		return new Template();
 	}
-	
+
 	public void deleteTemplate(Template template) {
 		planService.detachPlans(template);
 		templateRepository.delete(template);
+	}
+
+	public void replaceTemplate(Template template, Template template2) {
+		// TODO Auto-generated method stub.	
 	}
 }
