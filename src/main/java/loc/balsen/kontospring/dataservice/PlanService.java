@@ -20,9 +20,6 @@ public class PlanService {
 	private TemplateRepository templateRepository;
 	private PlanRepository planRepository;
 
-	private LocalDate end;
-	private LocalDate start;
-
 	@Autowired
 	public PlanService( PlanRepository planRepository, TemplateRepository templateRepository) {
 		this.planRepository = planRepository;
@@ -38,12 +35,11 @@ public class PlanService {
 		if (last.getMonth().getValue() == month && last.getYear() == year)
 			return;
 
-		end = LocalDate.of(year, month, 1);
-		end = end.with(TemporalAdjusters.lastDayOfMonth());
-		start = last.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
+		final LocalDate end = LocalDate.of(year, month, 1).with(TemporalAdjusters.lastDayOfMonth());
+		final LocalDate start = last.plusMonths(1).with(TemporalAdjusters.firstDayOfMonth());
 
 		List<Template> templates = templateRepository.findAll();
-		templates.stream().filter((t) -> isTemplateRange(t)).forEach((t) -> createPlans(t, t.getValidFrom(), start.minusDays(1)));
+		templates.stream().filter((t) -> isTemplateRange(t,start,end)).forEach((t) -> createPlans(t, t.getValidFrom(), start.minusDays(1),end));
 	}
 
 	public void createPlansfromTemplate(Template template) {
@@ -62,17 +58,15 @@ public class PlanService {
 	
 	private void createPlansfromTemplate(Template template, LocalDate excludeFrom, LocalDate excludeUntil) {
 
-		LocalDate last = planRepository.findMaxPlanDate();
-		if (last == null)
-			last = LocalDate.now();
-		end = LocalDate.of(last.getYear(), last.getMonth(), 1);
-		end = end.withDayOfMonth(end.lengthOfMonth());
-		start = template.getValidFrom();
+		LocalDate end = planRepository.findMaxPlanDate();
+		if (end == null)
+			end = LocalDate.now();
+		end = end.with(TemporalAdjusters.lastDayOfMonth());
 
-		createPlans(template, excludeFrom, excludeUntil);
+		createPlans(template, excludeFrom, excludeUntil, end);
 	}
 
-	private void createPlans(Template template, LocalDate excludeFrom, LocalDate excludeUntil ) {
+	private void createPlans(Template template, LocalDate excludeFrom, LocalDate excludeUntil, LocalDate end ) {
 		
 		for (LocalDate nextDate = template.getStart();
 		     !nextDate.isAfter(end);
@@ -127,9 +121,20 @@ public class PlanService {
 			planRepository.save(p);
 		});
 	}
-	
 
-	private boolean isTemplateRange(Template template) {
+	public void replaceTimeRange(Template template, LocalDate from, LocalDate newStartDate, int newVariance) {
+		List<Plan> plans = planRepository.findByTemplate(template);
+		plans.stream().filter((p) -> {
+			return !p.getPlanDate().isBefore(from);
+		}).forEach((p) -> {
+			p.setPlanDate(newStartDate);
+			p.setStartDate(newStartDate.minusDays(newVariance));
+			p.setEndDate(newStartDate.plusDays(newVariance));
+			planRepository.save(p);
+		});
+	}
+
+	private boolean isTemplateRange(Template template, LocalDate start, LocalDate end) {
 		if (template.getValidFrom().isBefore(start)
 				&& (template.getValidUntil() == null || !template.getValidUntil().isBefore(start))) {
 			return true;

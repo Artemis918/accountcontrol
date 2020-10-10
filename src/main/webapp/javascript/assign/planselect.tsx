@@ -112,7 +112,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	settimerange(template: Template): void {
-		postRequest('templates/save',template,undefined);
+		fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
 		this.setState({timerangeeditor: false});
     }
 
