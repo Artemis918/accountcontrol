@@ -57,7 +57,7 @@ test:
     - ./gradlew test
   dependencies:
     - build:javaTest
-	- build:java
+    - build:java
   allow_failure: false
 
 publish:
