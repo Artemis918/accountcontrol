@@ -205,6 +205,7 @@ public class AssignmentController {
 		if (assignment.getPlan() != null && assignment.getPlan().getTemplate() != null ) {
 			AccountRecord record = assignment.getAccountrecord();
 			Template template = assignment.getPlan().getTemplate().copy();
+			template.setValidFrom(assignment.getPlan().getPlanDate());
 			template.setValue(record.getValue());
 			
 			assignRepository.delete(assignment);

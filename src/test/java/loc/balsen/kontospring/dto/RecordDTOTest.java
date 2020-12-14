@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import org.junit.Test;
 
 import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.dto.RecordDTO;
 
 public class RecordDTOTest {
 
