@@ -5,8 +5,6 @@ cache:
   paths:
     - build
     - node_modules
-    - .gradle
-    - gradle
 
 stages:
   - setup
