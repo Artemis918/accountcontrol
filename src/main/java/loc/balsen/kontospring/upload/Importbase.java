@@ -29,7 +29,7 @@ public abstract class Importbase {
 	}
 
 	public boolean save(AccountRecord record) {
-		if (record == null ||exists(record)) 
+		if (record == null || exists(record))
 			return false;
 
 		accountRecordRepository.save(record);
@@ -37,8 +37,8 @@ public abstract class Importbase {
 	}
 
 	private boolean exists(AccountRecord record) {
-		List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(record.getValue(), record.getCreated(),
-				record.getSender(), record.getReceiver());
+		List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(record.getValue(),
+				record.getCreated(), record.getSender(), record.getReceiver());
 
 		return !same.isEmpty();
 	}

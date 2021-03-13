@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -63,8 +64,17 @@ public class ImportXML extends Importbase {
 		}
 		
 		Element root = document.getRootElement();
+		if (root == null ) 
+			throw new ParseException("No document root in xml: " + filename, 0 );			
+
 		Element acct = root.getChild("BkToCstmrAcctRpt",null);
+		if (acct == null ) 
+			throw new ParseException("No bookaccountreport in xml: " + filename, 0 );			
+
 		Element rpt = acct.getChild("Rpt",null);
+		if (rpt == null ) 
+			throw new ParseException("No report in xml: " + filename, 0 );			
+		
 		List<Element> entryList = rpt.getChildren("Ntry",null);
 
 		int entryNum = 0;
@@ -113,14 +123,16 @@ public class ImportXML extends Importbase {
 			record.setReceiver("Bank");			
 		}
 		else {
-			record.setReceiver(getChild(parties, "Cdtr").getChildText("Nm",null));
+			record.setReceiver(creditor.getChildText("Nm",null));
 		}
 		Element infoElement = getChild(details, "RmtInf");
 
 
 		List<Element> infolines = infoElement.getChildren("Ustrd",null);
-		for (Element line : infolines) {
-			String text = line.getValue();
+		Iterator<Element> lines = infolines.listIterator();
+		
+		while (lines.hasNext()) {
+			String text = getLine(lines);
 			if (text.startsWith("Referenz"))
 				record.setReference(text.substring(9));
 			else if (text.startsWith("Mandat"))
@@ -135,6 +147,17 @@ public class ImportXML extends Importbase {
 		record.setType(getType(details));
 		record.setReceived(LocalDate.now());
 		return record;
+	}
+	
+	private static String getLine(Iterator<Element> iter) {
+		String res = "";
+		while ( iter.hasNext()) {
+			String part = iter.next().getValue();
+			res+=part;
+			if (part.length() < 35)
+				break;
+		}
+		return res;
 	}
 
 	private Type getType(Element details) throws ParseException {
