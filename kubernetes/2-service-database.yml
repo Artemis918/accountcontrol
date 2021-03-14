@@ -3,6 +3,7 @@ apiVersion: v1
 metadata:
   name: account-db
 spec:
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 7000

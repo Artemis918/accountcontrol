@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
@@ -17,7 +17,7 @@ spec:
         app: account-controller
     spec:
       containers:
-      - image: gitlab.balsen.loc:4901/balsen/kontospring
+      - image: gitlab.balsen.loc:4901/balsen/kontospring:arm64v8
         imagePullPolicy: Always
         name: account-controller
         volumeMounts:
