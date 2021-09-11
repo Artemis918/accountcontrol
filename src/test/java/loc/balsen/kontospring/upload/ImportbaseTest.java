@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,7 +34,7 @@ public class ImportbaseTest {
 	private ImportTest importer;
 		
 	@Test
-	public void testSave() {
+	public void testSave() throws PSQLException {
 
 		List<AccountRecord> result = null;
 		

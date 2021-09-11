@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.util.List;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import loc.balsen.kontospring.data.AccountRecord;
@@ -28,7 +29,7 @@ public abstract class Importbase {
 	public Importbase() {
 	}
 
-	public boolean save(AccountRecord record) {
+	public boolean save(AccountRecord record) throws PSQLException {
 		if (record == null || exists(record))
 			return false;
 

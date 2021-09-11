@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.postgresql.util.PSQLException;
+
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 
@@ -42,9 +44,14 @@ public class ImportPB extends Importbase {
 		Iterator<String[]> lines = new CSVReaderBuilder(filereader).withSkipLines(headerlines)
 				.withCSVParser(new CSVParserBuilder().withSeparator(delimiter).withQuoteChar('"').build()).build()
 				.iterator();
-
+		int linenum=0;
 		while (lines.hasNext()) {
-			save(parseLine(lines.next()));
+			try {
+				linenum++;
+				save(parseLine(lines.next()));
+			} catch (PSQLException e) {
+				throw new ParseException(e.getMessage() + ": Entry " + linenum, 0);
+			}
 		}
 
 		return true;
