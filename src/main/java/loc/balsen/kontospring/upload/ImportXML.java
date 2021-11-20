@@ -153,15 +153,15 @@ public class ImportXML extends Importbase {
     while (iter.hasNext()) {
       String part = iter.next().getValue();
 
-      if (part.startsWith("Referenz ") || part.startsWith("Mandat")
-          || part.startsWith("Einreicher-ID")) {
+      if ((part.startsWith("Referenz ") || part.startsWith("Mandat")
+          || part.startsWith("Einreicher-ID")) && res != "") {
         iter.previous();
         break;
+      } else {
+        res += part;
+        if (part.length() < 35)
+          break;
       }
-
-      res += part;
-      if (part.length() < 35)
-        break;
     }
     return res;
   }
