@@ -69,12 +69,12 @@ public class CategoryController {
 	
 	@PostMapping(path="/savesub")
 	Integer saveSubCategory(@RequestBody SubCategoryDTO request) {
-		return new Integer(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
+		return Integer.valueOf(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
 	}
 	
 	@PostMapping(path="/savecat")
 	Integer saveCategory(@RequestBody CategoryDTO request) {
-		return new Integer(categoryService.saveCategory(request.toCategory()));
+		return Integer.valueOf(categoryService.saveCategory(request.toCategory()));
 	}
 	
 	@GetMapping(path="/delsub/{sub}")

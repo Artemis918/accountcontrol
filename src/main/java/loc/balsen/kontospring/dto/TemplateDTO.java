@@ -69,7 +69,7 @@ public class TemplateDTO {
 		template.setDescription(this.description);
 		template.setPosition(this.position);
 		template.setValue(this.value);
-		template.setSubCategory(subCategoryRepository.getOne(this.subcategory));
+		template.setSubCategory(subCategoryRepository.findById(this.subcategory).orElseThrow());
 		template.setPattern(pattern.toPattern());
 		template.setShortDescription(this.shortdescription);
 		template.setMatchStyle(Plan.MatchStyle.values()[this.matchstyle]);

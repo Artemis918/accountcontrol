@@ -87,7 +87,7 @@ public class TemplateController {
 			             @PathVariable String timestring,
 			             @PathVariable Integer variance ) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-		Plan plan = planRepository.getOne(planId);
+		Plan plan = planRepository.findById(planId).orElseThrow();
 		LocalDate newDate = null;
 		
 		try {

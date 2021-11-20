@@ -2,29 +2,26 @@ package loc.balsen.kontospring.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
 import com.google.gson.Gson;
-
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Category;
@@ -33,7 +30,7 @@ import loc.balsen.kontospring.dto.CategoryDTO;
 import loc.balsen.kontospring.dto.SubCategoryDTO;
 import loc.balsen.kontospring.testutil.TestContext;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @WebAppConfiguration
 public class CategoryControllerTest extends TestContext {
@@ -43,13 +40,13 @@ public class CategoryControllerTest extends TestContext {
 	@Autowired
 	private MockMvc mvc;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		gson = new Gson();
 		createCategoryData();
 	}
 
-	@After
+	@AfterEach
 	public void teardown() {
 		clearRepos();
 	}

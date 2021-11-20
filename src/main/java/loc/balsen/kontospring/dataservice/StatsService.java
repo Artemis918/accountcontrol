@@ -79,7 +79,7 @@ public class StatsService {
 			LocalDate date = getDate.apply(obj);
 
 			while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
-				result.add(new Integer(sum));
+				result.add(Integer.valueOf(sum));
 				curDate = curDate.plusMonths(1);
 			}
 
@@ -87,7 +87,7 @@ public class StatsService {
 		}
 
 		while (curDate.isBefore(end)) {
-			result.add(new Integer(sum));
+			result.add(Integer.valueOf(sum));
 			curDate = curDate.plusMonths(1);
 		}
 
@@ -122,7 +122,7 @@ public class StatsService {
 			LocalDate date = assignment.getStatsDay();
 
 			while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
-				result.add(new Integer(sum));
+				result.add(Integer.valueOf(sum));
 				curDate = curDate.plusMonths(1);
 			}
 
@@ -130,7 +130,7 @@ public class StatsService {
 		}
 
 		while (curDate.isBefore(endDay)) {
-			result.add(new Integer(sum));
+			result.add(Integer.valueOf(sum));
 			curDate = curDate.plusMonths(1);
 		}
 
@@ -149,13 +149,13 @@ public class StatsService {
 		for (Plan plan : planRepository.findByPlanDate(startDay, endDay)) {
 			LocalDate date = plan.getPlanDate();
 			while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
-				result.add(new Integer(sum));
+				result.add(Integer.valueOf(sum));
 				curDate = curDate.plusMonths(1);
 			}
 			sum += plan.getValue();
 		}
 		while (curDate.isBefore(endDay)) {
-			result.add(new Integer(sum));
+			result.add(Integer.valueOf(sum));
 			curDate = curDate.plusMonths(1);
 		}
 		return result;

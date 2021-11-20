@@ -1,8 +1,8 @@
 package loc.balsen.kontospring.upload;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -10,14 +10,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -59,6 +62,8 @@ public class ImportXMLTest {
 			+ "            </RmtInf>\n" + "          </TxDtls>\n" + "        </NtryDtls>\n" + "      </Ntry>";
 
 	static String FOOTER = "    </Rpt>\n" + "  </BkToCstmrAcctRpt>\n" + "</Document>\n";
+	
+	static String testfile ="/tmp/import_account_test.xml";
 
 	@Mock
 	AccountRecordRepository accountRecordRepository;
@@ -66,11 +71,29 @@ public class ImportXMLTest {
 	@InjectMocks
 	ImportXML importer = new ImportXML();
 
-	@Before
+	private AutoCloseable closeable;
+	
+	@BeforeEach
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
+		closeable = MockitoAnnotations.openMocks(this);
 	}
 
+	@AfterEach
+	public void teardown() throws Exception {
+		closeable.close();
+	}
+	
+	@Test
+	public void testFileImport() throws ParseException, IOException {
+
+		File importFile = new File(testfile);
+		if(importFile.exists() && !importFile.isDirectory()) { 
+
+			FileInputStream input = new FileInputStream(testfile);
+			importer.ImportFile("test.xml", input);
+		}
+	}
+	
 	@Test
 	public void testImport() throws ParseException, IOException {
 

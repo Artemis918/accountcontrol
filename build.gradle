@@ -7,22 +7,20 @@
  * user guide available at https://docs.gradle.org/2.14.1/userguide/tutorial_java_projects.html
  */
 
+
+
 plugins {
   id "java"
-  id "eclipse"
-  id "org.springframework.boot" version "2.2.2.RELEASE"
-  id "io.spring.dependency-management" version "1.0.6.RELEASE"
-  id "com.github.node-gradle.node" version "2.2.0"
-  id 'net.ltgt.apt-eclipse' version '0.16'
+  id "eclipse" 
+  id "org.springframework.boot" version "2.5.6"
+  id "io.spring.dependency-management" version "1.0.11.RELEASE"
+  id "com.github.node-gradle.node" version "3.1.1"
 }
-
 
 repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -31,18 +29,26 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
- 	implementation 'org.projectlombok:lombok:1.18.8'
+    implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'org.postgresql:postgresql'
     implementation 'com.opencsv:opencsv:4.2'
     implementation 'org.jdom:jdom2:2.0.5'
     implementation 'com.google.code.gson:gson:2.8.6'
 
-    testImplementation 'junit:junit'
-    testImplementation 'org.mockito:mockito-core:2.27.0'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'com.h2database:h2:1.4.197'    
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.7.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-commons:1.7.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2:1.4.197'   
 
-	annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 node {

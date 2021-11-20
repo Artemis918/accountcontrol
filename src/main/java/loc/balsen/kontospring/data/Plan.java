@@ -1,7 +1,7 @@
 package loc.balsen.kontospring.data;
 
 import java.time.LocalDate;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,89 +10,86 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
 import lombok.Data;
 
 @Data
 @Entity
 public class Plan {
 
-	public enum MatchStyle {
-		EXACT, /// value of record must match
-		MAX, /// value of record musn't exxed
-		SUMMAX, /// value of record is added to suim but there will be no assignment
-		PATTERN /// value is ignored. Just use to automatically assign records to category
-	}
+  public enum MatchStyle {
+    EXACT, /// value of record must match
+    MAX, /// value of record musn't exxed
+    SUMMAX, /// value of record is added to suim but there will be no assignment
+    PATTERN /// value is ignored. Just use to automatically assign records to category
+  }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_plan_name")
-	@SequenceGenerator(name = "seq_plan_name", sequenceName = "seq_plan", allocationSize = 1)
-	private int id;
-	private LocalDate creationDate;
-	private LocalDate startDate;
-	private LocalDate planDate;
-	private LocalDate endDate;
-	private LocalDate deactivateDate;
-	private int position;
-	private int value;
-	private String shortDescription;
-	private String description;
-	private MatchStyle matchStyle;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_plan_name")
+  @SequenceGenerator(name = "seq_plan_name", sequenceName = "seq_plan", allocationSize = 1)
+  private int id;
+  private LocalDate creationDate;
+  private LocalDate startDate;
+  private LocalDate planDate;
+  private LocalDate endDate;
+  private LocalDate deactivateDate;
+  private int position;
+  private int value;
+  private String shortDescription;
+  private String description;
+  private MatchStyle matchStyle;
 
-	@NotNull
-	private String pattern;
-	
-	@ManyToOne
-	@JoinColumn(name = "template")
-	private Template template;
+  @Column(nullable = false)
+  private String pattern;
 
-	@ManyToOne
-	@NotNull
-	@JoinColumn(name = "subcategory")
-	private SubCategory subCategory;
+  @ManyToOne
+  @JoinColumn(name = "template")
+  private Template template;
 
-	@Transient
-	private Pattern matcher;
+  @ManyToOne
+  @JoinColumn(name = "subcategory", nullable = false)
+  private SubCategory subCategory;
 
-	public Plan() {
-	}
+  @Transient
+  private Pattern matcher;
 
-	public Plan(Template templ, LocalDate date) {
+  public Plan() {}
 
-		creationDate = LocalDate.now();
+  public Plan(Template templ, LocalDate date) {
 
-		startDate = date.minusDays(templ.getVariance());
-		planDate = date;
-		endDate = date.plusDays(templ.getVariance());
+    creationDate = LocalDate.now();
 
-		subCategory = templ.getSubCategory();
-		position = templ.getPosition();
-		value = templ.getValue();
-		pattern = templ.getPattern();
-		shortDescription = templ.getShortDescription();
-		description = templ.getDescription();
-		matchStyle = templ.getMatchStyle();
-		template = templ;
+    startDate = date.minusDays(templ.getVariance());
+    planDate = date;
+    endDate = date.plusDays(templ.getVariance());
 
-		matcher = null;
-	}
+    subCategory = templ.getSubCategory();
+    position = templ.getPosition();
+    value = templ.getValue();
+    pattern = templ.getPattern();
+    shortDescription = templ.getShortDescription();
+    description = templ.getDescription();
+    matchStyle = templ.getMatchStyle();
+    template = templ;
 
-	public boolean isInPeriod(LocalDate date) {
-		return (startDate==null || !date.isBefore(startDate)) && (endDate==null || !date.isAfter(endDate));
-	}
+    matcher = null;
+  }
 
-	public boolean matches(AccountRecord record) {
-		if (matcher == null)
-			matcher = new Pattern(pattern);
-		return matcher.matches(record);
-	}
+  public boolean isInPeriod(LocalDate date) {
+    return (startDate == null || !date.isBefore(startDate))
+        && (endDate == null || !date.isAfter(endDate));
+  }
 
-	public Pattern getPatternObject() {
-		return new Pattern(pattern);
-	}
+  public boolean matches(AccountRecord record) {
+    if (matcher == null)
+      matcher = new Pattern(pattern);
+    return matcher.matches(record);
+  }
 
-	public void setPattern(Pattern p) {
-		pattern = p.toJson();
-	}
+  public Pattern getPatternObject() {
+    return new Pattern(pattern);
+  }
+
+  public void setPattern(Pattern p) {
+    pattern = p.toJson();
+  }
 }
