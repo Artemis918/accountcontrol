@@ -39,6 +39,7 @@ public class ImportXML extends Importbase {
       put("NDDT+107", Type.DEBITCARD);
       put("NCHG+805", Type.INTEREST);
       put("NCMI+082", Type.REBOOKING);
+      put("NCMI+084", Type.PAYDIREKT);
     }
   };
 

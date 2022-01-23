@@ -27,7 +27,8 @@ public class AccountRecord {
 		STANDINGORDER,
 		MANUEL,
 		REBOOKING,
-		INTEREST
+		INTEREST,
+		PAYDIREKT
 	}
 	
 	public static int LEN_DETAILS = 200;
