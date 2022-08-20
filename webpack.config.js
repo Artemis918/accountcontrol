@@ -7,6 +7,14 @@ const DEST = path.resolve( __dirname , 'build/js');
 module.exports = {
   devtool: 'inline-source-map',
   mode: 'development',
+  devServer: {
+    static: {
+      directory: DEST,
+    },
+    compress: true,
+    port: 9000,
+    proxy: { '/' : 'http://localhost:8080' }
+  },
   entry: {
      app: SRC + '/index.tsx',
   },
