@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Template;
 import loc.balsen.kontospring.testutil.TestContext;
@@ -65,6 +66,15 @@ public class TemplateControllerTest extends TestContext {
     assertEquals(subCategory1.getId(), template.getSubCategory().getId());
 
     mvc.perform(get("/templates/listcategory/1")).andExpect(jsonPath("$.[*]", hasSize(1)));
+
+    String tempjson2 = tempjson1.replace("\"repeatcount\": 1,", "\"repeatcount\": 0,");
+    MvcResult result = mvc
+        .perform(post("/templates/save").content(tempjson2).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andReturn();
+    assertEquals("\"invaliddata\"", result.getResponse().getContentAsString());
+
+    templates = templateRepository.findAll();
+    assertEquals(1, templates.size());
   }
 
 
