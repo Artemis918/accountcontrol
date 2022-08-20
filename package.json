@@ -3,7 +3,9 @@
   "version": "0.6.0",
   "description": "bank account supervisor using spring and react",
   "private": "true",
-  "scripts": {},
+  "scripts": {
+    "serve": "webpack serve --open"
+  },
   "dependencies": {
     "@types/recharts": "^1.8.4",
     "axios": "^0.24.0",
@@ -27,6 +29,7 @@
     "ts-loader": "^9.2.6",
     "typescript": "^4.4.4",
     "webpack": "^5.0.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0"
   }
 }
