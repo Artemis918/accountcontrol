@@ -1,13 +1,8 @@
--- public.sub_category definition
-
--- Drop table
-
--- DROP TABLE public.sub_category;
 
 CREATE TABLE public.sub_category (
 	id int4 NOT NULL,
-	description varchar(255) NULL,
-	shortdescription varchar(255) NULL,
+	description varchar(512) NULL,
+	shortdescription varchar(80) NULL,
 	"type" int4 NOT NULL,
 	category int4 NULL,
 	CONSTRAINT sub_category_pkey PRIMARY KEY (id)
@@ -21,5 +16,5 @@ ALTER TABLE public.sub_category
   FOREIGN KEY (category) 
   REFERENCES public.category(id);
 
-create unique index public.sub_category_id  on publici.sub_category(id);
+create unique index sub_category_id  on public.sub_category(id);
 create sequence public.seq_subcategory;

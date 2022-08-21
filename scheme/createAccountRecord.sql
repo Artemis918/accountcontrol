@@ -1,22 +1,20 @@
--- DROP TABLE public.account_record;
-
 CREATE TABLE public.account_record (
 	id int4 NOT NULL,
-	created date NULL,
-	details varchar(255) NULL,
-	executed date NULL,
-	mandate varchar(255) NULL,
 	received date NULL,
-	receiver varchar(255) NULL,
-	reference varchar(255) NULL,
-	sender varchar(255) NULL,
-	submitter varchar(255) NULL,
+	created date NULL,
+	executed date NULL,
 	"type" int4 NULL,
+	sender varchar(80) NULL,
+	receiver varchar(80) NULL,
 	value int4 NOT NULL,
+	details varchar(200) NULL,
+	mandate varchar(40) NULL,
+	submitter varchar(40) NULL,
+	reference varchar(40) NULL,
 	CONSTRAINT account_record_pkey PRIMARY KEY (id)
 );
 
 create unique index account_record_id on public.account_record(id);
-create index account_record_date on puiblic.account_record(executed);
+create index account_record_date on public.account_record(executed);
 
 create sequence public.seq_accountrecord;

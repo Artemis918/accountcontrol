@@ -1,14 +1,12 @@
--- DROP TABLE public."assignment";
-
 CREATE TABLE public."assignment" (
 	id int4 NOT NULL,
-	"committed" bool NOT NULL,
-	description varchar(255) NULL,
-	shortdescription varchar(255) NULL,
-	value int4 NOT NULL,
-	accountrecord int4 NULL,
-	plan int4 NULL,
 	subcategory int4 NULL,
+	description varchar(512) NULL,
+	shortdescription varchar(80) NULL,
+	value int4 NOT NULL,
+	plan int4 NULL,
+	accountrecord int4 NULL,
+	"committed" bool NOT NULL,
 	CONSTRAINT assignment_pkey PRIMARY KEY (id)
 );
 

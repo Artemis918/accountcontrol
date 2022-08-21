@@ -1,9 +1,7 @@
--- DROP TABLE public.category;
-
 CREATE TABLE public.category (
 	id int4 NOT NULL,
-	description varchar(255) NULL,
-	shortdescription varchar(255) NULL,
+	description varchar(80) NULL,
+	shortdescription varchar(512) NULL,
 	CONSTRAINT category_pkey PRIMARY KEY (id)
 );
 
