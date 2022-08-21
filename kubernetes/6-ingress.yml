@@ -1,13 +1,16 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: account-ingress
-  annotations:
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
         - path: /account
+          pathType: Prefix
           backend:
-            serviceName: account-service
-            servicePort: 8080
+            service:
+              name: account-service
+              port: 
+                number: 8080
