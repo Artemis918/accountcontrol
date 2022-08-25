@@ -66,7 +66,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
         return (
             <select className={this.props.className} 
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
-                {this.state.data.map( ( t, i ) => <option key={t.value} value={t.value} selected={i==index}>{t.text}</option> )}
+                {this.state.data.map( ( t, i ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>
         );
     }
