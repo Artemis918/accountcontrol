@@ -19,31 +19,27 @@ import loc.balsen.kontospring.repositories.AccountRecordRepository;
 
 public abstract class Importbase {
 
-  @Autowired
-  protected AccountRecordRepository accountRecordRepository;
+	@Autowired
+	protected AccountRecordRepository accountRecordRepository;
 
-  abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
+	abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
 
-  public Importbase() {}
+	public Importbase() {
+	}
 
-  public boolean save(AccountRecord record) throws PSQLException {
+	public boolean save(AccountRecord record) throws PSQLException {
 
+		if (record == null || exists(record))
+			return false;
 
-    if (record == null || exists(record))
-      return false;
+		accountRecordRepository.save(record);
+		return true;
+	}
 
-    String val = record.getReference();
-    if (val != null && val.length() > 40)
-      System.out.println(record.getDetails());
+	private boolean exists(AccountRecord record) {
+		List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(record.getValue(),
+				record.getCreated(), record.getSender(), record.getReceiver());
 
-    accountRecordRepository.save(record);
-    return true;
-  }
-
-  private boolean exists(AccountRecord record) {
-    List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(
-        record.getValue(), record.getCreated(), record.getSender(), record.getReceiver());
-
-    return !same.isEmpty();
-  }
+		return !same.isEmpty();
+	}
 }
