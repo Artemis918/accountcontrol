@@ -72,20 +72,9 @@ processResources {
 
 clean.delete << file('src/main/webapp/dist')
 
-task install(type: Copy) {
-	dependsOn 'jar'
-    from "$buildDir/libs/kontospring.jar"
-    into "/home/webproject/kontospring.jar"
-}
-
-task copyDockerJar(type: Copy) {
-	dependsOn "jar"
-    from "$buildDir/libs/kontospring.jar"
-    into "$buildDir/docker"
-}
-
-task copyDocker(type: Copy) {
-	dependsOn "copyDockerJar"
-    from "$projectDir/docker"
-    into "$buildDir/docker"
-}
+// createContainer {
+//   #dependsOn "build"
+//   #cp build/libs/accountcontrol.jar docker
+//   #docker build -t gitlab.balsen.loc:4901/balsen/kontospring/accountcontrol:latest docker
+//   #docker push gitlab.balsen.loc:4901/balsen/kontospring/accountcontrol:latest
+// }
