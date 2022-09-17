@@ -104,10 +104,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
     assignAuto(): void {
         fetch( 'assign/all' )
-            .then( response => {
-                response.json()
-                this.lister.reload();
-            }
+            .then( () => { this.lister.reload(); }
             );
     }
 

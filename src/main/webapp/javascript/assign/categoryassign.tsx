@@ -68,11 +68,20 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
                             horiz={false}
                         />
                     </div>
-                    <div><input className={acss.descinput} type='text' defaultValue={this.props.text} ref={this.comment} /></div>
+                    <div><input className={acss.descinput}
+                                type='text' 
+                                defaultValue={this.props.text}
+								onKeyDown={(e) => {if(e.keyCode === 13 ) {
+									this.assign();
+								}}}
+                                ref={this.comment} />
+                    </div>
                     <div><button onClick={this.assign} className={css.addonbutton} >
 							{this.label("assign.assign")}
 						</button>
-                        <button onClick={this.cancel} style={{float: "right"}} className={css.addonbutton}>
+                        <button onClick={this.cancel} 
+                                style={{float: "right"}} 
+                                className={css.addonbutton}>
 							{this.label("cancel")}
 						</button>
                     </div>
