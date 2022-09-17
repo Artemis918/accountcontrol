@@ -100,12 +100,6 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.splitlabel = this.label("assign.split");
 		this.autolabel = this.label("assign.auto");
 		this.planlabel = this.label("assign.plan");
-		
-		this.columns[0].header = this.label("date");
-		this.columns[1].header = this.label("assign.receiver");
-		this.columns[2].header = this.label("details");
-		this.columns[3].header = this.label("value");
-		
 	}
 
     assignAuto(): void {
