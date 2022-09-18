@@ -72,6 +72,7 @@
 	"assign.plan": "Neu planen",
 	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
+	"assign.atleastonevalue": "es muss mindestens ein Beleg selektiert sein",
 	"assign.otherparty": "Absender/Empf.",
 	"assign.adjust": "Anpassen",
 	"assign.adjustpattern": "Muster",

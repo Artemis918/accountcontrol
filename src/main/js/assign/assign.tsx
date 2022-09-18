@@ -111,6 +111,8 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
     assignCategory(): void {
         if ( this.lister.hasSelectedData() )
             this.setState( { categoryassign: true } );
+        else
+            this.props.sendmessage( this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
     }
 
     assignManuell(): void {
