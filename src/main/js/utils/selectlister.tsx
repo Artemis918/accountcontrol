@@ -96,11 +96,13 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
 
 	handleDoubleClick(e: React.MouseEvent<HTMLTableRowElement, MouseEvent>): void {
-		var rownum: number = e.currentTarget.rowIndex - 1;
-		this.props.handleExecute(e.shiftKey,
-			e.ctrlKey,
-			this.state.data[rownum],
-			rownum)
+		if (this.props.handleExecute) {
+			var rownum: number = e.currentTarget.rowIndex - 1;
+			this.props.handleExecute(e.shiftKey,
+				e.ctrlKey,
+				this.state.data[rownum],
+				rownum)
+		}
 	}
 
 
