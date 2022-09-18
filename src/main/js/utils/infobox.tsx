@@ -19,9 +19,8 @@ export class InfoBox extends React.Component<{}, InfoBoxState> {
 
     static defaultProps = {width: '250px', height: '180px'}
     
-    constructor() {
+    constructor( ) {
         super( {} );
-        close()
         this.state = {
 			showMe: false,
 			data: { info: ['']},
@@ -58,20 +57,26 @@ export class InfoBox extends React.Component<{}, InfoBoxState> {
                 <div style={{
                     margin: '15% auto',
                     padding: '20px',
-                    border: '1px solid #888',
+                    border: '3px solid #888',
                     width: '250px', height: '180px',
-                    background: 'darkgray',
+                    background: 'lightgray',
                     fontSize: '15px'
                 }}>
+                <div style={{
+                    margin: '5% auto',
+                    padding: '20px',
+                    background: 'white',
+                }}>
                     {this.state.data.info.map(this.createLine)}
-                    <div>
+                    <div style={{textAlign: 'center'}}>
                         <button 
                             onClick={()=>this.close()} 
-                            style={{ fontSize: '15px'}}>
-                            {this.state.data.buttonlabel}
+                            style={{ fontSize: '15px', }}>
+                            {this.state.data.buttonlabel?this.state.data.buttonlabel:"ok"}
                         </button>
                     </div>
                 </div>
+            </div>
             </div>
         );
     }

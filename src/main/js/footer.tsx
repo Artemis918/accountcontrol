@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FormattedMessage, IntlShape } from 'react-intl';
+import { InfoBox } from './utils/infobox';
 import { MessageID } from './utils/messageid';
 
 interface FooterProps {
@@ -14,6 +15,8 @@ interface CState {
 
 export class Footer extends React.PureComponent<FooterProps, CState> {
 
+  private infobox: InfoBox
+
   constructor(p: any) {
     super(p);
 	this.state = { message:"", errorcode: MessageID.OK }
@@ -25,7 +28,10 @@ export class Footer extends React.PureComponent<FooterProps, CState> {
 	  if (!m) {
   		  msg = this.props.intl.formatMessage({id: "returncode_" + e})
 	  }
-      this.setState( {message: m, errorcode: e });
+      this.infobox.setInfo( {info: [
+	     msg,
+	     `Errorcode: ${e}`
+      ]});
   }
   
   getLabel() : JSX.Element {
@@ -41,10 +47,12 @@ export class Footer extends React.PureComponent<FooterProps, CState> {
   render():JSX.Element {
     return (
       <div>
-             <label>
-                { this.getLabel() }  
-             </label> : {this.state.message}
+          <label>
+              version: 0.2  
+          </label>
+          <InfoBox ref={(r)=> { this.infobox=r;}} />
       </div>
+
     );
   }
 }
