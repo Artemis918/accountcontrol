@@ -37,6 +37,10 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
 
 	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
+	componentDidMount(): void {
+    	this.comment.current.focus();
+	}
+	
     assign() :void {
         this.props.handleAssign( this.categoryselector.current.getSubCategory(), this.comment.current.value );
     }
