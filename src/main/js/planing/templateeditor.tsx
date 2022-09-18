@@ -45,26 +45,31 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
-	componentDidUpdate() {
-		if (this.props.accountRecord != undefined) {
-			this.template.description = this.label("templates.newdescription");
-			this.template.shortdescription = this.label("templates.newshortdescription");
-		}
-	}
-
 	componentDidMount() {
 		if (this.props.accountRecord != undefined) {
 			var self = this;
 			fetch('templates/accountrecord/' + this.props.accountRecord)
 				.then(response => response.text())
-				.then(t => { if (t) { self.setTemplate(myParseJson(t)) } });
+				.then(t => {
+				    if (t) {
+					    let template:Template = myParseJson(t);
+			 			this.createDesc(template);
+						self.setTemplate(template) 
+					}
+		   		});
 		}
 	}
 
 	createNewTemplate(): void {
 		this.template = new Template();
+		this.createDesc(this.template);
 		this.template.description = this.label("templates.newdescription");
 		this.template.shortdescription = this.label("templates.newshortdescription");
+	}
+	
+	createDesc(template: Template) : void {
+		template.description = this.label("templates.newdescription");
+		template.shortdescription = this.label("templates.newshortdescription");
 	}
 
 	resetEditor(): void {
