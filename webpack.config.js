@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ROOT = path.resolve(__dirname, 'src/main/webapp');
-const SRC  = path.resolve( ROOT, 'javascript');
+const ROOT = path.resolve(__dirname, 'src/main');
+const SRC  = path.resolve( ROOT, 'js');
 const DEST = path.resolve( __dirname , 'build/js');
 
 module.exports = {
@@ -21,8 +21,8 @@ module.exports = {
   resolve: {
 	  modules: [
 		  "node_modules",
-		  path.resolve(ROOT, 'javascript'),
-		  path.resolve(ROOT, 'javascript/utils'),
+		  path.resolve(ROOT, 'js'),
+		  path.resolve(ROOT, 'js/utils'),
 	  ],
       extensions: [".ts",".tsx",".js" ]
   },
