@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.data;
+package loc.balsen.accountcontrol.data;
 
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
 
 @Entity
 public class Template {

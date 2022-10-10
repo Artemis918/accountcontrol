@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -21,10 +21,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import com.google.gson.Gson;
-import loc.balsen.kontospring.data.Category;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.dto.SubCategoryDTO;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.Category;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.dto.SubCategoryDTO;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc

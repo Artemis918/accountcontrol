@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.repositories;
+package loc.balsen.accountcontrol.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,8 +6,8 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Plan;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Plan;
 
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
 

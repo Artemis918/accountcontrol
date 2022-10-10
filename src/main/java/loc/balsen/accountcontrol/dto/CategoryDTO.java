@@ -1,6 +1,6 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
-import loc.balsen.kontospring.data.Category;
+import loc.balsen.accountcontrol.data.Category;
 
 public class CategoryDTO {
 

@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ResponseBody
 public class HomeController {
 
-	@Autowired
-	Environment env;
+  @Autowired
+  Environment env;
 
-	class ProdDTO {
-		private Boolean production;
-		public ProdDTO(Boolean b) {production = b;}
-	}
-	
-	@GetMapping("/production")
-	 ProdDTO isProduction() {
-		return new ProdDTO(env.getActiveProfiles().length <= 0);
-	}
+  class ProdDTO {
+    @SuppressWarnings("unused")
+    private Boolean production;
+
+    public ProdDTO(Boolean b) {
+      production = b;
+    }
+  }
+
+  @GetMapping("/production")
+  ProdDTO isProduction() {
+    return new ProdDTO(env.getActiveProfiles().length <= 0);
+  }
 }

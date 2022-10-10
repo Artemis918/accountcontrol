@@ -1,9 +1,9 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.AccountRecord.Type;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.AccountRecord.Type;
 
 public class RecordDTO {
 

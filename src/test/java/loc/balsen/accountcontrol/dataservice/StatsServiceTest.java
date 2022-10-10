@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.repositories.AssignmentRepository;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration

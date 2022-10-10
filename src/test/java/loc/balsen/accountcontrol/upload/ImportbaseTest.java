@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.upload;
+package loc.balsen.accountcontrol.upload;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,9 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import loc.balsen.kontospring.Application;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.repositories.AccountRecordRepository;
+import loc.balsen.accountcontrol.Application;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc

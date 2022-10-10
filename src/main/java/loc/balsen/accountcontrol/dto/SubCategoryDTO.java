@@ -1,8 +1,8 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
-import loc.balsen.kontospring.data.Category;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.repositories.CategoryRepository;
+import loc.balsen.accountcontrol.data.Category;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.repositories.CategoryRepository;
 
 public class SubCategoryDTO {
 

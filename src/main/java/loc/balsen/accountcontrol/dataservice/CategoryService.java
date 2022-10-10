@@ -1,12 +1,12 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
-import loc.balsen.kontospring.data.Category;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.repositories.CategoryRepository;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
+import loc.balsen.accountcontrol.data.Category;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.repositories.CategoryRepository;
+import loc.balsen.accountcontrol.repositories.SubCategoryRepository;
 
 @Component
 public class CategoryService {

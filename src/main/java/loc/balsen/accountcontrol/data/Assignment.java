@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.data;
+package loc.balsen.accountcontrol.data;
 
 import java.time.LocalDate;
 import javax.persistence.Entity;

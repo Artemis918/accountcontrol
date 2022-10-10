@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import loc.balsen.kontospring.data.Pattern;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
+import loc.balsen.accountcontrol.data.Pattern;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
+import loc.balsen.accountcontrol.repositories.TemplateRepository;
 
 @Component
 public class PlanService {

@@ -1,11 +1,11 @@
-package loc.balsen.kontospring.upload;
+package loc.balsen.accountcontrol.upload;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class ImportPBtxt extends ImportPB {
 
-	ImportPBtxt() {
-		super(".txt","ISO-8859-1",'\t',11);
-	}
+  ImportPBtxt() {
+    super(".txt", "ISO-8859-1", '\t', 11);
+  }
 }

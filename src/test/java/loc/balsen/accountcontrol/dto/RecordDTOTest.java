@@ -1,11 +1,11 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import loc.balsen.kontospring.data.AccountRecord;
+import loc.balsen.accountcontrol.data.AccountRecord;
 
 public class RecordDTOTest {
 

@@ -1,4 +1,4 @@
-package loc.balsen.kontospring;
+package loc.balsen.accountcontrol;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -9,14 +9,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @Configuration
-@EnableJpaRepositories(basePackages = "loc.balsen.kontospring.repositories")
-@EntityScan("loc.balsen.kontospring.data")
+@EnableJpaRepositories(basePackages = "loc.balsen.accountcontrol.repositories")
+@EntityScan("loc.balsen.accountcontrol.data")
 @EnableAutoConfiguration
 @ComponentScan
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
 }

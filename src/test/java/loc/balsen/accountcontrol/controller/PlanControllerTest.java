@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,12 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import loc.balsen.kontospring.data.Pattern;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Template.TimeUnit;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.Pattern;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.data.Template.TimeUnit;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc

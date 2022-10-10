@@ -1,9 +1,9 @@
-package loc.balsen.kontospring.data;
+package loc.balsen.accountcontrol.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
-import loc.balsen.kontospring.data.Template.TimeUnit;
+import loc.balsen.accountcontrol.data.Template.TimeUnit;
 
 public class TemplateTest {
 

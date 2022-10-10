@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,15 +18,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Pattern;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Template.TimeUnit;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Pattern;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.data.Template.TimeUnit;
+import loc.balsen.accountcontrol.repositories.AssignmentRepository;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
+import loc.balsen.accountcontrol.repositories.TemplateRepository;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration

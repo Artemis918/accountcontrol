@@ -1,16 +1,16 @@
-package loc.balsen.kontospring.testutil;
+package loc.balsen.accountcontrol.testutil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import loc.balsen.kontospring.Application;
-import loc.balsen.kontospring.data.Category;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.repositories.AccountRecordRepository;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
-import loc.balsen.kontospring.repositories.CategoryRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
+import loc.balsen.accountcontrol.Application;
+import loc.balsen.accountcontrol.data.Category;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
+import loc.balsen.accountcontrol.repositories.AssignmentRepository;
+import loc.balsen.accountcontrol.repositories.CategoryRepository;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
+import loc.balsen.accountcontrol.repositories.SubCategoryRepository;
+import loc.balsen.accountcontrol.repositories.TemplateRepository;
 
 @SpringBootTest(classes = Application.class)
 public class TestContext {

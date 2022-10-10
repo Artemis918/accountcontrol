@@ -1,12 +1,12 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
 import java.time.LocalDate;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
-import loc.balsen.kontospring.repositories.TemplateRepository;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.repositories.SubCategoryRepository;
+import loc.balsen.accountcontrol.repositories.TemplateRepository;
 
 public class PlanDTO {
 

@@ -1,12 +1,12 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.repositories.AccountRecordRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
+import loc.balsen.accountcontrol.repositories.SubCategoryRepository;
 
 public class AssignmentDTO {
 

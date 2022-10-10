@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -17,8 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import loc.balsen.kontospring.dataservice.StatsService;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.dataservice.StatsService;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc

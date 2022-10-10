@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertSame;
@@ -33,19 +33,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.google.gson.Gson;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Pattern;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Template;
-import loc.balsen.kontospring.data.Template.TimeUnit;
-import loc.balsen.kontospring.dataservice.AssignmentService;
-import loc.balsen.kontospring.dataservice.TemplateService;
-import loc.balsen.kontospring.dto.TemplateDTO;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Pattern;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.data.Template.TimeUnit;
+import loc.balsen.accountcontrol.dataservice.AssignmentService;
+import loc.balsen.accountcontrol.dataservice.TemplateService;
+import loc.balsen.accountcontrol.dto.TemplateDTO;
+import loc.balsen.accountcontrol.repositories.AssignmentRepository;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc

@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,12 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Pattern;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.testutil.TestContext;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Pattern;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.testutil.TestContext;
 
 @ExtendWith(SpringExtension.class)
 public class AssignmentServiceTest extends TestContext {

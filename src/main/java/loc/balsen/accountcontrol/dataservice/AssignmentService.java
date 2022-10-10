@@ -1,17 +1,17 @@
-package loc.balsen.kontospring.dataservice;
+package loc.balsen.accountcontrol.dataservice;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.data.Assignment;
-import loc.balsen.kontospring.data.Plan;
-import loc.balsen.kontospring.data.Plan.MatchStyle;
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.repositories.AssignmentRepository;
-import loc.balsen.kontospring.repositories.PlanRepository;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Plan;
+import loc.balsen.accountcontrol.data.Plan.MatchStyle;
+import loc.balsen.accountcontrol.data.SubCategory;
+import loc.balsen.accountcontrol.repositories.AssignmentRepository;
+import loc.balsen.accountcontrol.repositories.PlanRepository;
 
 @Component
 public class AssignmentService {

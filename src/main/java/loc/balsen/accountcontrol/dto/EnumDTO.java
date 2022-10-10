@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.dto;
+package loc.balsen.accountcontrol.dto;
 
 public class EnumDTO {
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package loc.balsen.kontospring.upload;
+package loc.balsen.accountcontrol.upload;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,8 +9,8 @@ import java.text.ParseException;
 import java.util.List;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
-import loc.balsen.kontospring.data.AccountRecord;
-import loc.balsen.kontospring.repositories.AccountRecordRepository;
+import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
 
 /**
  * @author balsen
@@ -19,27 +19,26 @@ import loc.balsen.kontospring.repositories.AccountRecordRepository;
 
 public abstract class Importbase {
 
-	@Autowired
-	protected AccountRecordRepository accountRecordRepository;
+  @Autowired
+  protected AccountRecordRepository accountRecordRepository;
 
-	abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
+  abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
 
-	public Importbase() {
-	}
+  public Importbase() {}
 
-	public boolean save(AccountRecord record) throws PSQLException {
+  public boolean save(AccountRecord record) throws PSQLException {
 
-		if (record == null || exists(record))
-			return false;
+    if (record == null || exists(record))
+      return false;
 
-		accountRecordRepository.save(record);
-		return true;
-	}
+    accountRecordRepository.save(record);
+    return true;
+  }
 
-	private boolean exists(AccountRecord record) {
-		List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(record.getValue(),
-				record.getCreated(), record.getSender(), record.getReceiver());
+  private boolean exists(AccountRecord record) {
+    List<AccountRecord> same = accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(
+        record.getValue(), record.getCreated(), record.getSender(), record.getReceiver());
 
-		return !same.isEmpty();
-	}
+    return !same.isEmpty();
+  }
 }

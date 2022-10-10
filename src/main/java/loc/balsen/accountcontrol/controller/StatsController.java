@@ -1,4 +1,4 @@
-package loc.balsen.kontospring.controller;
+package loc.balsen.accountcontrol.controller;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import loc.balsen.kontospring.dataservice.StatsService;
-import loc.balsen.kontospring.dto.StatsDTO;
-import loc.balsen.kontospring.dto.StatsMonthDTO;
+import loc.balsen.accountcontrol.dataservice.StatsService;
+import loc.balsen.accountcontrol.dto.StatsDTO;
+import loc.balsen.accountcontrol.dto.StatsMonthDTO;
 
 @Controller
 @RequestMapping("/stats")
