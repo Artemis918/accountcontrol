@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ public class ImportPB extends Importbase {
 		Iterator<String[]> lines = new CSVReaderBuilder(filereader).withSkipLines(headerlines)
 				.withCSVParser(new CSVParserBuilder().withSeparator(delimiter).withQuoteChar('"').build()).build()
 				.iterator();
-		int linenum=0;
+		int linenum = 0;
 		while (lines.hasNext()) {
 			try {
 				linenum++;
@@ -61,22 +62,57 @@ public class ImportPB extends Importbase {
 
 	private AccountRecord parseLine(String fields[]) throws ParseException {
 
-		AccountRecord record = new AccountRecord();
-		record.setReceived(LocalDate.now());
-		record.setCreated(LocalDate.parse(fields[0],dateformater));
-		record.setExecuted(LocalDate.parse(fields[1],dateformater));
+		LocalDate created = LocalDate.parse(fields[0], dateformater);
+		LocalDate executed = LocalDate.parse(fields[1], dateformater);
 
 		AccountRecord.Type type = recordType.get(fields[2].trim());
 		if (type == null) {
 			throw new ParseException("Unknown record type " + fields[2], 0);
 		}
-		record.setType(type);
 
-		parseDetails(fields[3], record);
+		String details = "";
+		String reference = "";
+		String mandate = "";
+		String submitter = "";
+		String detailfields[] = fields[3].split(" ");
+		int detlen = detailfields.length;
 
-		record.setSender(fields[4]);
-		record.setReceiver(fields[5]);
-		
+		int i = 0;
+		if (detailfields[0].equals("Referenz")) {
+			i++;
+			reference = detailfields[i++];
+			while (i < detlen && !detailfields[i].equals("Mandat") && !detailfields[i].equals("Verwendungszweck")) {
+				reference += " " + detailfields[i++];
+			}
+
+			if (checkField(detailfields, i, "Mandat")) {
+				i++;
+				mandate = detailfields[i++];
+				while (i < detlen && !detailfields[i].equals("Einreicher-ID")) {
+					mandate += " " + detailfields[i++];
+				}
+			}
+
+			if (checkField(detailfields, i, "Einreicher-ID")) {
+				i++;
+				submitter = detailfields[i++];
+			}
+
+			if (checkField(detailfields, i, "Verwendungszweck")) {
+				i++;
+			}
+		}
+		while (i < detlen) {
+			if (details.length() > 0)
+				details += " ";
+			details += detailfields[i++];
+		}
+		ArrayList<String> detlist = new ArrayList<>();
+		detlist.add(details);
+
+		String sender = fields[4];
+		String receiver = fields[5];
+
 		char euroLatin9 = 0xA4;
 
 		// Value interpretieren
@@ -85,61 +121,14 @@ public class ImportPB extends Importbase {
 		value = value.replaceAll(",", "");
 		value = value.replaceAll(" €", "");
 		value = value.replaceAll(euroLatin9 + " ", "");
-		record.setValue(Integer.parseInt(value));
+		int val = Integer.parseInt(value);
 
-		return record;
+		return new AccountRecord(0, LocalDate.now(), created, executed, type, sender, receiver, val, detlist, submitter,
+				mandate, reference);
 	}
 
-	private void parseDetails(String detailsAll, AccountRecord accountrecord) {
-		String details = new String();
-		
-		String fields[] = detailsAll.split(" ");
-		int len = fields.length;		
-
-		int i = parseReferences(accountrecord, fields);
-
-		while (i<len) {
-			if (details.length() > 0)
-				details += " ";
-			details+=fields[i++];
-		}
-		accountrecord.setDetails(details);
-	}
-
-	private int parseReferences(AccountRecord bubel, String[] fields) {
-		int i = 0;
-		if (fields[0].equals("Referenz")) {
-			i++;
-			String reference = fields[i++];
-			while (i<fields.length && !fields[i].equals("Mandat") && !fields[i].equals("Verwendungszweck")) {
-				reference += " "+ fields[i++];
-			}
-			bubel.setReference (reference);
-			
-			if (checkField(fields, i, "Mandat")) {
-				i++;
-				String mandate;
-				mandate = fields[i++];
-				while (i<fields.length && !fields[i].equals("Einreicher-ID")) {
-					mandate += " " + fields[i++];
-				}
-				bubel.setMandate(mandate);
-			}
-			
-			if (checkField(fields, i,"Einreicher-ID")) {
-				i++;
-				bubel.setSubmitter(fields[i++]);
-			}
-			
-			if (checkField(fields, i,"Verwendungszweck")) {
-				i++;
-			}
-		}
-		return i;
-	}
-
-	private boolean checkField(String[] fields, int i,String label) {
-		return i<fields.length && fields[i].equals(label);
+	private boolean checkField(String[] fields, int i, String label) {
+		return i < fields.length && fields[i].equals(label);
 	}
 
 	private static final Map<String, AccountRecord.Type> recordType;

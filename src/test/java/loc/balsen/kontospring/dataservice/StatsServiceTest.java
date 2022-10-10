@@ -48,30 +48,11 @@ public class StatsServiceTest extends TestContext {
 
     List<Plan> planlist = new ArrayList<>();
 
-    Plan plan1 = new Plan();
-    plan1.setPlanDate(LocalDate.of(2018, 12, 3));
-    plan1.setValue(15);
-    planlist.add(plan1);
-
-    Plan plan2 = new Plan();
-    plan2.setPlanDate(LocalDate.of(2018, 12, 3));
-    plan2.setValue(10);
-    planlist.add(plan2);
-
-    Plan plan3 = new Plan();
-    plan3.setPlanDate(LocalDate.of(2019, 2, 19));
-    plan3.setValue(-5);
-    planlist.add(plan3);
-
-    Plan plan4 = new Plan();
-    plan4.setPlanDate(LocalDate.of(2019, 2, 28));
-    plan4.setValue(-24);
-    planlist.add(plan4);
-
-    Plan plan5 = new Plan();
-    plan5.setPlanDate(LocalDate.of(2019, 3, 13));
-    plan5.setValue(12);
-    planlist.add(plan5);
+    planlist.add(createPlan(15, LocalDate.of(2018, 12, 3)));
+    planlist.add(createPlan(10, LocalDate.of(2018, 12, 3)));
+    planlist.add(createPlan(-5, LocalDate.of(2019, 2, 19)));
+    planlist.add(createPlan(-24, LocalDate.of(2019, 2, 28)));
+    planlist.add(createPlan(12, LocalDate.of(2019, 3, 13)));
 
     when(planRepository.findByPlanDate(any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(planlist);
@@ -90,59 +71,32 @@ public class StatsServiceTest extends TestContext {
     assertEquals(8, result.get(7).intValue());
   }
 
+  private Plan createPlan(int value, LocalDate plandate) {
+    return new Plan(0, null, null, plandate, null, 0, value, null, null, null, null, null, null);
+  }
+
+  private AccountRecord createRecord(int year, int month, int day) {
+    return new AccountRecord(0, null, null, LocalDate.of(year, month, day), null, null, null, 0,
+        null, null, null, null);
+  }
+
   @Test
   public void testGetCummulatedAssigns() {
 
     List<Assignment> zgeplantlist = new ArrayList<>();
     List<Assignment> zungeplantlist = new ArrayList<>();
 
-    AccountRecord record1 = new AccountRecord();
-    record1.setExecuted(LocalDate.of(2018, 12, 1));
+    zungeplantlist
+        .add(new Assignment(0, null, null, false, null, createRecord(2018, 12, 1), 100, null));
+    zgeplantlist.add(
+        new Assignment(110, createPlan(0, LocalDate.of(2018, 12, 3)), createRecord(2019, 1, 4)));
+    zungeplantlist
+        .add(new Assignment(0, null, null, false, null, createRecord(2019, 2, 2), -2, null));
+    zungeplantlist
+        .add(new Assignment(0, null, null, false, null, createRecord(2019, 2, 28), -12, null));
+    zgeplantlist
+        .add(new Assignment(17, createPlan(0, LocalDate.of(2019, 3, 1)), createRecord(2019, 1, 1)));
 
-    Assignment assignment1 = new Assignment();
-    assignment1.setAccountrecord(record1);
-    assignment1.setValue(100);
-    zungeplantlist.add(assignment1);
-
-    AccountRecord record2 = new AccountRecord();
-    record2.setExecuted(LocalDate.of(2019, 1, 4));
-
-    Plan plan2 = new Plan();
-    plan2.setPlanDate(LocalDate.of(2018, 12, 3));
-
-    Assignment assignment2 = new Assignment();
-    assignment2.setAccountrecord(record2);
-    assignment2.setValue(110);
-    assignment2.setPlan(plan2);
-    zgeplantlist.add(assignment2);
-
-    AccountRecord record3 = new AccountRecord();
-    record3.setExecuted(LocalDate.of(2019, 2, 2));
-
-    Assignment assignment3 = new Assignment();
-    assignment3.setAccountrecord(record3);
-    assignment3.setValue(-2);
-    zungeplantlist.add(assignment3);
-
-    AccountRecord record4 = new AccountRecord();
-    record4.setExecuted(LocalDate.of(2019, 2, 28));
-
-    Assignment assignment4 = new Assignment();
-    assignment4.setAccountrecord(record4);
-    assignment4.setValue(-12);
-    zungeplantlist.add(assignment4);
-
-    AccountRecord record5 = new AccountRecord();
-    record5.setExecuted(LocalDate.of(2019, 1, 1));
-
-    Plan plan5 = new Plan();
-    plan5.setPlanDate(LocalDate.of(2019, 3, 1));
-
-    Assignment assignment5 = new Assignment();
-    assignment5.setAccountrecord(record5);
-    assignment5.setValue(17);
-    assignment5.setPlan(plan5);
-    zgeplantlist.add(assignment5);
 
     when(assignmentRepository.findAllPlannedByPeriod(any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(zgeplantlist);
@@ -162,6 +116,5 @@ public class StatsServiceTest extends TestContext {
     assertEquals(213, result.get(6).intValue());
     assertEquals(213, result.get(7).intValue());
   }
-
 
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import lombok.Data;
 
 @Controller
 @ResponseBody
@@ -16,7 +15,6 @@ public class HomeController {
 	@Autowired
 	Environment env;
 
-	@Data
 	class ProdDTO {
 		private Boolean production;
 		public ProdDTO(Boolean b) {production = b;}

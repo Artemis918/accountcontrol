@@ -8,27 +8,61 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import lombok.Data;
-
-@Data
 @Entity
 public class SubCategory {
 
-	public static final int LEN_DESCRIPTION = 512;
-	public static final int LEN_SHORTDESCRIPTIION = 80;
-	
-	public static final int EXTERN = 0;
-	public static final int INTERN = 1;
+  public static final int LEN_DESCRIPTION = 512;
+  public static final int LEN_SHORTDESCRIPTIION = 80;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_subcategory_name")
-	@SequenceGenerator(name = "seq_subcategory_name", sequenceName = "seq_subcategory", allocationSize = 1)
-	private int id;
-	private String shortdescription;
-	private String description;
-	private int type; 
-	
-	@ManyToOne
-	@JoinColumn(name = "category")
-	private Category category;
+  public enum Type {
+    EXTERN, INTERN
+  }
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_subcategory_name")
+  @SequenceGenerator(name = "seq_subcategory_name", sequenceName = "seq_subcategory",
+      allocationSize = 1)
+  private int id;
+  private String shortDescription;
+  private String description;
+  private Type type;
+
+  @ManyToOne
+  @JoinColumn(name = "category")
+  private Category category;
+
+  public SubCategory() {}
+
+  public SubCategory(int id, String shortdescription, String description, Type type, Category cat) {
+    this.id = id;
+    this.shortDescription = shortdescription;
+    this.description = description;
+    this.type = type;
+    this.category = cat;
+  }
+
+  public void setDescription(String shortDescription, String description) {
+    this.description = description;
+    this.shortDescription = shortDescription;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public Type getType() {
+    return type;
+  }
 }

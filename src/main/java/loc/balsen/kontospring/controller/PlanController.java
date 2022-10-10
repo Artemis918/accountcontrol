@@ -19,8 +19,8 @@ import loc.balsen.kontospring.data.Plan.MatchStyle;
 import loc.balsen.kontospring.dataservice.PlanService;
 import loc.balsen.kontospring.dto.MessageID;
 import loc.balsen.kontospring.dto.PlanDTO;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
 
 @Controller
@@ -40,7 +40,6 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 
-	
 	@GetMapping("/list/{year}/{month}")
 	List<PlanDTO> findPlans(@PathVariable Integer year, @PathVariable Integer month) {
 		LocalDate start = LocalDate.of(year, month, 1);
@@ -62,7 +61,7 @@ public class PlanController {
 			return new PlanDTO(plan);
 		}).collect(Collectors.toList());
 	}
-	
+
 	@GetMapping("/patternplans/{categoryid}")
 	List<PlanDTO> findPatternPlans(@PathVariable Integer categoryid) {
 
@@ -83,10 +82,7 @@ public class PlanController {
 	MessageID savePattern(@RequestBody PlanDTO plandto) {
 		Plan plan = plandto.toPlan(templateRepository, subCategoryRepository);
 		plan.setCreationDate(LocalDate.now());
-		plan.setStartDate(null);
-		plan.setEndDate(null);
-		plan.setMatchStyle(MatchStyle.PATTERN);
-		plan.setValue(0);
+		plan.setMatchStylePattern();
 		planRepository.save(plan);
 		return MessageID.ok;
 	}

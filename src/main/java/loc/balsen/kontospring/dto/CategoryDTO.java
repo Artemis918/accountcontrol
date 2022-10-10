@@ -1,29 +1,34 @@
 package loc.balsen.kontospring.dto;
 
 import loc.balsen.kontospring.data.Category;
-import lombok.Data;
 
-@Data
 public class CategoryDTO {
 
-	public CategoryDTO() {
-	}
+  private int id;
+  private String shortdescription;
+  private String description;
 
-	public CategoryDTO(Category cat ) {
-		this.id = cat.getId();
-		this.description = cat.getDescription();
-		this.shortdescription = cat.getShortdescription();
-	}
+  public CategoryDTO(Category cat) {
+    this.id = cat.getId();
+    this.description = cat.getDescription();
+    this.shortdescription = cat.getShortDescription();
+  }
 
-	public Category toCategory() {
-		Category cat= new Category();
-		cat.setId(id);
-		cat.setShortdescription(shortdescription);
-		cat.setDescription(description);
-		return cat;
-	}
-	
-	private int id;
-	private String shortdescription;
-	private String description;
+  public Category toCategory() {
+    return new Category(id, shortdescription, description);
+  }
+
+  // for serialization only
+  //////////////////////////////// 7
+  public int getId() {
+    return id;
+  }
+
+  public String getShortdescription() {
+    return shortdescription;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

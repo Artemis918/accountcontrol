@@ -1,8 +1,7 @@
 package loc.balsen.kontospring.dataservice;
 
-
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class AssignmentServiceTest extends TestContext {
 
     // no match
     List<AccountRecord> buchungen1 = new ArrayList<>();
-    buchungen1.add(createRecord("2018-01-02", "2345"));
+    buchungen1.add(createRecord("2018-01-02", "23"));
     assignmentService.assign(buchungen1);
     List<Assignment> assignments = assignmentRepository.findAll();
     assertEquals(0, assignments.size());
@@ -57,8 +56,8 @@ public class AssignmentServiceTest extends TestContext {
     assignments = assignmentRepository.findAll(Sort.by("id"));
     assertEquals(1, assignments.size());
     Assignment assignment = assignments.get(0);
-    assertEquals(buchungen2.get(0), assignment.getAccountrecord());
-    assertEquals(plans.get(0), assignment.getPlan());
+    assertEquals("1234", assignment.getAccountrecord().getMandate());
+    assertEquals(plans.get(0).getId(), assignment.getPlan().getId());
     assertEquals(0.7, assignment.getNaturalValue().doubleValue(), 0);
 
     // second call -> no additional matches
@@ -93,10 +92,8 @@ public class AssignmentServiceTest extends TestContext {
   }
 
   private AccountRecord createRecord(String date, String mandate) {
-    AccountRecord record = new AccountRecord();
-    record.setMandate(mandate);
-    record.setExecuted(LocalDate.parse(date));
-    record.setValue(70);
+    AccountRecord record = new AccountRecord(0, null, null, LocalDate.parse(date), null, null, null,
+        70, null, null, mandate, null);;
     accountRecordRepository.save(record);
     return record;
   }
@@ -112,25 +109,15 @@ public class AssignmentServiceTest extends TestContext {
   }
 
   private void createplan(String start, String end, String pattern) {
-    Plan plan = new Plan();
-    plan.setStartDate(LocalDate.parse(start));
-    plan.setPlanDate(LocalDate.parse(start).plusDays(2));
-    plan.setEndDate(LocalDate.parse(end));
-    plan.setPattern(new Pattern(pattern));
-    plan.setValue(25);
-    plan.setSubCategory(subCategory1);
+    Plan plan = new Plan(0, null, LocalDate.parse(start), LocalDate.parse(start).plusDays(2),
+        LocalDate.parse(end), 0, 25, new Pattern(pattern), null, null, null, subCategory1, null);
     planRepository.save(plan);
     plans.add(plan);
   }
 
   private void createplan(String start, String pattern) {
-    Plan plan = new Plan();
-    plan.setStartDate(LocalDate.parse(start));
-    plan.setPlanDate(LocalDate.parse(start).plusDays(2));
-    plan.setPattern(new Pattern(pattern));
-    plan.setMatchStyle(MatchStyle.PATTERN);
-    plan.setValue(25);
-    plan.setSubCategory(subCategory2);
+    Plan plan = new Plan(0, null, LocalDate.parse(start), LocalDate.parse(start).plusDays(2), null,
+        0, 25, new Pattern(pattern), null, null, MatchStyle.PATTERN, subCategory2, null);
     planRepository.save(plan);
     plans.add(plan);
   }

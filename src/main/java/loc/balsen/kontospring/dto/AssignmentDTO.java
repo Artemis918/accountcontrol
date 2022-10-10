@@ -1,36 +1,33 @@
 package loc.balsen.kontospring.dto;
 
-import loc.balsen.kontospring.data.SubCategory;
-import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.AccountRecord;
 import loc.balsen.kontospring.data.Assignment;
+import loc.balsen.kontospring.data.Plan;
+import loc.balsen.kontospring.data.SubCategory;
 import loc.balsen.kontospring.repositories.AccountRecordRepository;
-import loc.balsen.kontospring.repositories.SubCategoryRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
-import lombok.Data;
+import loc.balsen.kontospring.repositories.SubCategoryRepository;
 
-@Data
 public class AssignmentDTO {
 
-  int id;
-  String detail;
-  String description;
-  int planed;
-  int real;
-  boolean committed;
-  int plan;
-  int accountrecord;
-  int subcategory;
-  int category;
-  int position;
-
-  public AssignmentDTO() {}
+  private int id;
+  private String detail;
+  private String description;
+  private int planed;
+  private int real;
+  private boolean committed;
+  private int plan;
+  private int accountrecord;
+  private int subcategory;
+  private int category;
+  private int position;
 
   public AssignmentDTO(Assignment z) {
     id = z.getId();
-    detail = z.getShortdescription();
+    detail = z.getShortDescription();
     real = z.getValue();
     accountrecord = z.getAccountrecord().getId();
-    committed = z.isCommitted();
+    setCommitted(z.isCommitted());
     position = 2000;
     Plan p = z.getPlan();
     if (p != null) {
@@ -53,7 +50,7 @@ public class AssignmentDTO {
     position = p.getPosition();
     real = 0;
     accountrecord = 0;
-    committed = false;
+    setCommitted(false);
     plan = p.getId();
     SubCategory s = p.getSubCategory();
     category = s.getCategory().getId();
@@ -63,25 +60,17 @@ public class AssignmentDTO {
   public Assignment toAssignment(PlanRepository planRepository,
       SubCategoryRepository subCategoryRepository,
       AccountRecordRepository accountRecordRepository) {
-    Assignment res = new Assignment();
-    res.setId(id);
-    res.setShortdescription(detail);
-    res.setDescription(description);
-    res.setValue(real);
-    res.setCommitted(committed);
 
-    if (plan != 0)
-      res.setPlan(planRepository.findById(plan).orElseThrow());
+    Plan plan = (this.plan == 0) ? null : planRepository.findById(this.plan).orElseThrow();
+    AccountRecord record = (this.accountrecord == 0) ? null
+        : accountRecordRepository.findById(accountrecord).orElseThrow();
+    SubCategory sub =
+        (subcategory == 0) ? null : subCategoryRepository.findById(subcategory).orElseThrow();
 
-    if (accountrecord != 0)
-      res.setAccountrecord(accountRecordRepository.findById(accountrecord).orElseThrow());
-
-    if (subcategory != 0)
-      res.setSubCategory(subCategoryRepository.findById(subcategory).orElseThrow());
-    return res;
+    return new Assignment(id, detail, description, committed, plan, record, real, sub);
   }
 
-  public int compareSubCategory(AssignmentDTO z) {
+  public int comparePosition(AssignmentDTO z) {
     int res = Long.compare(position, z.position);
     if (res != 0)
       return res;
@@ -99,5 +88,55 @@ public class AssignmentDTO {
       return res;
 
     return Long.compare(id, z.id);
+  }
+
+  public int getReal() {
+    return real;
+  }
+
+  // only for serialization
+  ////////////////////////////
+  public int getId() {
+    return id;
+  }
+
+  public String getDetail() {
+    return detail;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public int getPlaned() {
+    return planed;
+  }
+
+  public boolean isCommitted() {
+    return committed;
+  }
+
+  public void setCommitted(boolean committed) {
+    this.committed = committed;
+  }
+
+  public int getPlan() {
+    return plan;
+  }
+
+  public int getAccountrecord() {
+    return accountrecord;
+  }
+
+  public int getSubcategory() {
+    return subcategory;
+  }
+
+  public int getCategory() {
+    return category;
+  }
+
+  public int getPosition() {
+    return position;
   }
 }

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,6 @@ public class TemplateControllerTest extends TestContext {
     clearRepos();
   }
 
-
   @Test
   public void testSaveAndList() throws Exception {
 
@@ -77,20 +77,14 @@ public class TemplateControllerTest extends TestContext {
     assertEquals(1, templates.size());
   }
 
-
-
   @Test
   public void testCreateFromAccountRecord() throws Exception {
-    AccountRecord record = new AccountRecord();
-    record.setSender("hallo");
-    record.setCreated(LocalDate.of(1998, 4, 2));
-    record.setDetails("whatever you will");
-    record.setSubmitter("submitterID");
-    record.setReceiver("receiver");
-    record.setMandate("mandate");
-    record.setReference("refernceID");
-    record.setValue(200);
-    record.setExecuted(LocalDate.of(2000, 4, 2));
+    List<String> details = new ArrayList<>();
+    details.add("whatever you will");
+    AccountRecord record =
+        new AccountRecord(0, null, LocalDate.of(1998, 4, 2), LocalDate.of(2000, 4, 2), null,
+            "hallo", "receiver", 200, details, "submitterID", "mandate", "refernceID");
+
     accountRecordRepository.save(record);
 
     mvc.perform(get("/templates/accountrecord/" + record.getId()))

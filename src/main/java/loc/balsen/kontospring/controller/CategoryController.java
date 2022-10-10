@@ -25,67 +25,67 @@ import loc.balsen.kontospring.repositories.CategoryRepository;
 @RequestMapping("/category")
 @ResponseBody
 public class CategoryController {
-	
+
 	private CategoryService categoryService;
 	private CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	public CategoryController(CategoryService categoryService, CategoryRepository categoryRepository) {
 		this.categoryService = categoryService;
 		this.categoryRepository = categoryRepository;
 	}
-	
+
 	@GetMapping("/catenum")
 	List<EnumDTO> findCategoriesEnum() {
 		List<EnumDTO> list = new ArrayList<>();
-		for(Category cat: categoryService.getAllCategories())
-			list.add(new EnumDTO(cat.getShortdescription(), cat.getId()));
+		for (Category cat : categoryService.getAllCategories())
+			list.add(new EnumDTO(cat.getShortDescription(), cat.getId()));
 		return list;
 	}
-	
+
 	@GetMapping("/subenum/{id}")
 	List<EnumDTO> findSubCategoryEnum(@PathVariable Integer id) {
 		List<EnumDTO> list = new ArrayList<>();
-		for(SubCategory sub: categoryService.getSubCategories(id))
-			list.add(new EnumDTO(sub.getShortdescription(), sub.getId()));
+		for (SubCategory sub : categoryService.getSubCategories(id))
+			list.add(new EnumDTO(sub.getShortDescription(), sub.getId()));
 		return list;
 	}
-	
+
 	@GetMapping("/cat")
 	List<CategoryDTO> findCategories() {
 		List<CategoryDTO> list = new ArrayList<>();
-		for(Category cat: categoryService.getAllCategories())
+		for (Category cat : categoryService.getAllCategories())
 			list.add(new CategoryDTO(cat));
 		return list;
 	}
-	
+
 	@GetMapping("/sub/{id}")
 	List<SubCategoryDTO> findSubCategory(@PathVariable Integer id) {
 		List<SubCategoryDTO> list = new ArrayList<>();
-		for(SubCategory sub: categoryService.getSubCategories(id))
+		for (SubCategory sub : categoryService.getSubCategories(id))
 			list.add(new SubCategoryDTO(sub));
 		return list;
 	}
-	
-	@PostMapping(path="/savesub")
+
+	@PostMapping(path = "/savesub")
 	Integer saveSubCategory(@RequestBody SubCategoryDTO request) {
 		return Integer.valueOf(categoryService.saveSubCategory(request.toSubCategory(categoryRepository)));
 	}
-	
-	@PostMapping(path="/savecat")
+
+	@PostMapping(path = "/savecat")
 	Integer saveCategory(@RequestBody CategoryDTO request) {
 		return Integer.valueOf(categoryService.saveCategory(request.toCategory()));
 	}
-	
-	@GetMapping(path="/delsub/{sub}")
+
+	@GetMapping(path = "/delsub/{sub}")
 	MessageID delSubCategory(@PathVariable Integer sub) {
 		categoryService.delSubCategory(sub);
 		return MessageID.ok;
 	}
-	
-	@GetMapping(path="/delcat/{cat}")
+
+	@GetMapping(path = "/delcat/{cat}")
 	MessageID delCategory(@PathVariable Integer cat) {
 		categoryService.delCategory(cat);
-		return MessageID.ok;	
+		return MessageID.ok;
 	}
 }

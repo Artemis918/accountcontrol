@@ -94,22 +94,13 @@ public class PlanControllerTest extends TestContext {
 
 
   private void createTemplate(int year) {
-    template = new Template();
-    template.setValidFrom(LocalDate.of(year, 9, 1));
-    template.setValidUntil(LocalDate.of(year, 12, 31));
-    template.setStart(LocalDate.of(year, 9, 15));
-    template.setVariance(5);
-    template.setRepeatCount(1);
-    template.setRepeatUnit(TimeUnit.MONTH);
-    template.setSubCategory(subCategory1);
-    template.setDescription("Beschreibung");
-    template.setShortDescription("Kurz1234");
-    template.setValue(100);
-    template.setPosition(4);
-    template.setMatchStyle(MatchStyle.EXACT);
-    template.setPattern(new Pattern("  \"sender\": \"sender\", " + "  \"receiver\": \"Receiver\", "
-        + "  \"referenceID\": \"Reference\", " + "  \"details\": \"*pups*\", "
-        + "  \"mandate\":  \"\" "));
+    template = new Template(0, LocalDate.of(year, 9, 1), LocalDate.of(year, 12, 31),
+        LocalDate.of(year, 9, 15), 5, 1, TimeUnit.MONTH, "Beschreibung", 4, 100, subCategory1,
+        new Pattern(" \"sender\": \"sender\", " + " \"receiver\": \"Receiver\", "
+            + " \"referenceID\": \"Reference\", " + " \"details\": \"*pups*\", "
+            + " \"mandate\": \"\" "),
+        "Kurz1234", MatchStyle.EXACT, 0);
+
     templateRepository.save(template);
   }
 

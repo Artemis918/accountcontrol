@@ -1,7 +1,7 @@
 package loc.balsen.kontospring.dataservice;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,6 +22,7 @@ import loc.balsen.kontospring.data.Assignment;
 import loc.balsen.kontospring.data.Pattern;
 import loc.balsen.kontospring.data.Plan;
 import loc.balsen.kontospring.data.Template;
+import loc.balsen.kontospring.data.Template.TimeUnit;
 import loc.balsen.kontospring.repositories.AssignmentRepository;
 import loc.balsen.kontospring.repositories.PlanRepository;
 import loc.balsen.kontospring.repositories.TemplateRepository;
@@ -47,6 +48,8 @@ public class PlanServiceTest extends TestContext {
 
   private AutoCloseable closeable;
 
+  private final String senderjson = "{\"sender\": \"gulli0\"}";
+
   @BeforeEach
   public void setup() {
     closeable = MockitoAnnotations.openMocks(this);
@@ -67,50 +70,53 @@ public class PlanServiceTest extends TestContext {
   @Test
   public void testSimpleCreatePlansfromTemplate() {
 
+    latestPlan = createPlan(1997, 5, 14);
+    planRepository.save(latestPlan);
     planService.createPlansfromTemplate(template);
     List<Plan> plans = planRepository.findAll();
     assertEquals(1, plans.size());
 
-    latestPlan.setPlanDate(LocalDate.of(1999, 1, 1));
-    planRepository.save(latestPlan);
-    planService.createPlansfromTemplate(template);
-    plans = planRepository.findAll();
-    assertEquals(1, plans.size());
-
-    latestPlan.setPlanDate(LocalDate.of(1999, 1, 31));
-    planRepository.save(latestPlan);
-    planService.createPlansfromTemplate(template);
-    plans = planRepository.findAll();
-    assertEquals(1, plans.size());
-
-    latestPlan.setPlanDate(LocalDate.of(1999, 2, 1));
+    latestPlan = createPlan(1999, 1, 1);
     planRepository.save(latestPlan);
     planService.createPlansfromTemplate(template);
     plans = planRepository.findAll();
     assertEquals(2, plans.size());
 
-    Plan createdplan = (plans.get(1).getId() > plans.get(0).getId()) ? plans.get(1) : plans.get(0);
-
-    assertEquals("tester", createdplan.getShortDescription());
-    assertEquals(LocalDate.of(1999, 2, 2), createdplan.getPlanDate());
-    assertEquals(LocalDate.of(1999, 1, 28), createdplan.getStartDate());
-    assertEquals(LocalDate.of(1999, 2, 7), createdplan.getEndDate());
-    assertEquals(template, createdplan.getTemplate());
-    assertEquals(LocalDate.now(), createdplan.getCreationDate());
-
-    latestPlan.setPlanDate(LocalDate.of(1999, 4, 30));
+    latestPlan = createPlan(1999, 1, 31);
     planRepository.save(latestPlan);
     planService.createPlansfromTemplate(template);
     plans = planRepository.findAll();
-    assertEquals(5, plans.size()); // 3 new plans, 1 by the former call, 1 latestPlan
+    assertEquals(3, plans.size());
+
+    latestPlan = createPlan(1999, 2, 1);
+    planRepository.save(latestPlan);
+    planService.createPlansfromTemplate(template);
+    plans = planRepository.findAll();
+    assertEquals(5, plans.size());
+
+    Plan createdplan = plans.stream().max((Plan a, Plan b) -> {
+      return a.getId() > b.getId() ? 1 : -1;
+    }).orElseThrow();
+    assertEquals("testerShort", createdplan.getShortDescription());
+    assertEquals(LocalDate.of(1999, 2, 2), createdplan.getPlanDate());
+    assertEquals(LocalDate.of(1999, 1, 28), createdplan.getStartDate());
+    assertEquals(LocalDate.of(1999, 2, 7), createdplan.getEndDate());
+    assertEquals("testerLong", createdplan.getTemplate().getDescription());
+    assertEquals(LocalDate.now(), createdplan.getCreationDate());
+
+    latestPlan = createPlan(1999, 4, 30);
+    planRepository.save(latestPlan);
+    planService.createPlansfromTemplate(template);
+    plans = planRepository.findAll();
+    assertEquals(9, plans.size()); // 3 new plans, 1 by the former call, 5 latestPlan
   }
+
 
   @Test
   public void testValidPeriod() {
     template.setValidUntil(LocalDate.of(1999, 6, 2));
     templateRepository.save(template);
-    latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
-    planRepository.save(latestPlan);
+    planRepository.save(createPlan(1999, 8, 30));
 
     planService.createPlansfromTemplate(template);
     List<Plan> plans = planRepository.findAll();
@@ -120,7 +126,7 @@ public class PlanServiceTest extends TestContext {
   @Test
   public void testLastPlanOfTemplate() {
 
-    latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
+    latestPlan = createPlan(1999, 8, 30);
     planRepository.save(latestPlan);
     template.setValidUntil(null);
     templateRepository.save(template);
@@ -151,8 +157,7 @@ public class PlanServiceTest extends TestContext {
   }
 
   private LocalDate createAssignment(Plan plan) {
-    Assignment assignment = new Assignment();
-    assignment.setPlan(plan);
+    Assignment assignment = new Assignment(0, plan, null);
     assignmentRepository.save(assignment);
     return plan.getPlanDate();
   }
@@ -160,8 +165,7 @@ public class PlanServiceTest extends TestContext {
   @Test
   public void testCreateUntil() {
 
-    latestPlan.setPlanDate(LocalDate.of(1999, 8, 30));
-    planRepository.save(latestPlan);
+    planRepository.save(createPlan(1999, 8, 30));
 
     template.setValidUntil(null);
     templateRepository.save(template);
@@ -230,9 +234,7 @@ public class PlanServiceTest extends TestContext {
 
     List<Plan> plans = new ArrayList<Plan>();
     for (int i = 0; i < 10; i++) {
-      Plan plan = new Plan();
-      plan.setTemplate(tempdel);
-      plan.setId(i);
+      Plan plan = new Plan(i, null, null, null, null, 0, 0, null, null, null, null, null, tempdel);
       plans.add(plan);
     }
 
@@ -245,29 +247,24 @@ public class PlanServiceTest extends TestContext {
       verify(mockPlanRepository, times(1)).save(plan);
       assertEquals(null, plan.getTemplate());
     }
-
   }
+
 
   @Test
   public void testReplacePattern() {
     String senderjson = "{\"sender\": \"gulli0\"}";
     List<Plan> plans = new ArrayList<>();
-    Plan plan1 = new Plan();
-    plan1.setId(1);
-    plan1.setPlanDate(LocalDate.of(1997, 5, 14));
+    Plan plan1 = new Plan(1, null, null, LocalDate.of(1997, 5, 14), null, 0, 0,
+        new Pattern(senderjson), null, null, null, null, null);
     plan1.setPattern(new Pattern(senderjson));
     plans.add(plan1);
 
-    Plan plan2 = new Plan();
-    plan2.setId(2);
-    plan2.setPlanDate(LocalDate.of(1997, 6, 14));
-    plan2.setPattern(new Pattern(senderjson));
+    Plan plan2 = new Plan(2, null, null, LocalDate.of(1997, 6, 14), null, 0, 0,
+        new Pattern(senderjson), null, null, null, null, null);
     plans.add(plan2);
 
-    Plan plan3 = new Plan();
-    plan3.setId(3);
-    plan3.setPlanDate(LocalDate.of(1997, 7, 14));
-    plan3.setPattern(new Pattern(senderjson));
+    Plan plan3 = new Plan(3, null, null, LocalDate.of(1997, 7, 14), null, 0, 0,
+        new Pattern(senderjson), null, null, null, null, null);
     plans.add(plan3);
 
     when(mockPlanRepository.findByTemplate(template)).thenReturn(plans);
@@ -285,36 +282,22 @@ public class PlanServiceTest extends TestContext {
 
   }
 
-  public void createTestData() {
-    String senderjson = "{\"sender\": \"gulli0\"}";
 
-    latestPlan = new Plan();
-    latestPlan.setPlanDate(LocalDate.of(1997, 5, 14));
-    latestPlan.setDescription("templatetest");
-    latestPlan.setPattern(new Pattern(senderjson));
-    latestPlan.setSubCategory(subCategory1);
-    planRepository.save(latestPlan);
+  private Plan createPlan(int year, int month, int day) {
+    return new Plan(0, null, null, LocalDate.of(year, month, day), null, 0, 0,
+        new Pattern(senderjson), null, "templatetest", null, subCategory1, null);
+  }
 
-    template = new Template();
-    template.setShortDescription("tester");
-    template.setRepeatCount(1);
-    template.setRepeatUnit(Template.TimeUnit.MONTH);
-    template.setVariance(5);
-    template.setValidFrom(LocalDate.of(1999, 1, 3));
-    template.setStart(LocalDate.of(1998, 10, 2));
-    template.setPattern(new Pattern(senderjson));
-    template.setSubCategory(subCategory2);
+  private void createTestData() {
+
+    template = new Template(0, LocalDate.of(1999, 1, 3), null, LocalDate.of(1998, 10, 2), 5, 1,
+        TimeUnit.MONTH, "testerLong", 0, 0, subCategory2, new Pattern(senderjson), "testerShort",
+        null, 0);
     templateRepository.save(template);
 
-    Template template2 = new Template();
-    template2.setShortDescription("tester2");
-    template2.setRepeatCount(1);
-    template2.setRepeatUnit(Template.TimeUnit.MONTH);
-    template2.setVariance(5);
-    template2.setValidFrom(LocalDate.of(1999, 1, 3));
-    template2.setStart(LocalDate.of(1998, 10, 2));
-    template2.setPattern(new Pattern("\"sender\": \"gulli2\""));
-    template2.setSubCategory(subCategory5);
+    Template template2 = new Template(0, LocalDate.of(1999, 1, 3), null, LocalDate.of(1998, 10, 2),
+        5, 1, TimeUnit.MONTH, "tester2Short", 0, 0, subCategory5,
+        new Pattern("\"sender\": \"gulli2\""), "tester2Short", null, 0);
     templateRepository.save(template2);
   }
 }

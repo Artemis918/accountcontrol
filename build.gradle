@@ -29,7 +29,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'org.postgresql:postgresql'
     implementation 'com.opencsv:opencsv:4.2'
     implementation 'org.jdom:jdom2:2.0.5'
@@ -43,8 +42,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2:1.4.197'   
-
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 test {

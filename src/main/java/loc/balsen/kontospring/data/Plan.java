@@ -10,9 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
-import lombok.Data;
 
-@Data
 @Entity
 public class Plan {
 
@@ -74,6 +72,27 @@ public class Plan {
     matcher = null;
   }
 
+  public Plan(int id, LocalDate creationdate, LocalDate startdate, LocalDate plandate,
+      LocalDate enddate, int position, int value, Pattern pattern, String shortdescription,
+      String description, MatchStyle matchStyle, SubCategory sub, Template temp) {
+    this.id = id;
+    this.creationDate = (id == 0) ? LocalDate.now() : creationdate;
+    this.startDate = startdate;
+    this.planDate = plandate;
+    this.endDate = enddate;
+    this.deactivateDate = null;
+    this.position = position;
+    this.value = value;
+    this.shortDescription = shortdescription;
+    this.description = description;
+    this.matchStyle = matchStyle;
+    this.template = temp;
+    this.subCategory = sub;
+    if (pattern != null) {
+      this.pattern = pattern.toJson();
+    }
+  }
+
   public boolean isInPeriod(LocalDate date) {
     return (startDate == null || !date.isBefore(startDate))
         && (endDate == null || !date.isAfter(endDate));
@@ -91,5 +110,82 @@ public class Plan {
 
   public void setPattern(Pattern p) {
     pattern = p.toJson();
+  }
+
+  public void setMatchStylePattern() {
+    startDate = null;
+    endDate = null;
+    matchStyle = MatchStyle.PATTERN;
+    value = 0;
+  }
+
+  public void setCreationDate(LocalDate date) {
+    this.creationDate = date;
+  }
+
+  public void setDates(LocalDate newPlanDate, int newVariance) {
+    this.planDate = newPlanDate;
+    this.startDate = newPlanDate.minusDays(newVariance);
+    this.endDate = newPlanDate.plusDays(newVariance);
+  }
+
+  public void deactivate() {
+    this.deactivateDate = LocalDate.now();
+  }
+
+  public void removeTemplate() {
+    this.template = null;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public LocalDate getCreationDate() {
+    return creationDate;
+  }
+
+  public LocalDate getStartDate() {
+    return startDate;
+  }
+
+  public LocalDate getPlanDate() {
+    return planDate;
+  }
+
+  public LocalDate getEndDate() {
+    return endDate;
+  }
+
+  public LocalDate getDeactivateDate() {
+    return deactivateDate;
+  }
+
+  public int getPosition() {
+    return position;
+  }
+
+  public int getValue() {
+    return value;
+  }
+
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public MatchStyle getMatchStyle() {
+    return matchStyle;
+  }
+
+  public Template getTemplate() {
+    return template;
+  }
+
+  public SubCategory getSubCategory() {
+    return subCategory;
   }
 }

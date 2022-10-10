@@ -63,8 +63,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	createNewTemplate(): void {
 		this.template = new Template();
 		this.createDesc(this.template);
-		this.template.description = this.label("templates.newdescription");
-		this.template.shortdescription = this.label("templates.newshortdescription");
 	}
 	
 	createDesc(template: Template) : void {

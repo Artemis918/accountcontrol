@@ -6,9 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.Data;
-
-@Data
 public class Pattern {
 
 	private String sender;
@@ -69,6 +66,16 @@ public class Pattern {
 		this.mandate = accountRecord.getMandate();
 	}
 
+	public Pattern(String sender, String receiver, String referenceID, String senderID, String details,
+			String mandate) {
+		this.sender = sender;
+		this.receiver = receiver;
+		this.referenceID = referenceID;
+		this.senderID = senderID;
+		this.details = details;
+		this.mandate = mandate;
+	}
+
 	public String toJson() {
 		try {
 			return mapper.writeValueAsString(this);
@@ -91,4 +98,29 @@ public class Pattern {
 
 		return text != null && !text.isEmpty() && text.contains(pattern);
 	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public String getReferenceID() {
+		return referenceID;
+	}
+
+	public String getSenderID() {
+		return senderID;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public String getMandate() {
+		return mandate;
+	}
+
 }

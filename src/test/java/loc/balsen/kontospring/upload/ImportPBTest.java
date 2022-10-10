@@ -95,7 +95,7 @@ public class ImportPBTest {
 	public void testInsertTwice() throws ParseException, IOException {
 
 		List<AccountRecord> recordList = new ArrayList<>();
-		recordList.add(new AccountRecord());
+		recordList.add(new AccountRecord(0, null, null, null, null, null, null, 0, null, null, null, null));
 		when(accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(eq(-4280), any(LocalDate.class),
 				any(String.class), any(String.class))).thenReturn(recordList);
 
