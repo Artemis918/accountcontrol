@@ -17,7 +17,7 @@ spec:
         app: account-controller
     spec:
       containers:
-        - image: gitlab.balsen.loc:4901/balsen/kontospring/accountcontrol:latest
+        - image: gitlab.balsen.loc:4901/balsen/accountcontrol/accountcontrol:latest
           imagePullPolicy: Always
           name: account-controller
           volumeMounts:

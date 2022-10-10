@@ -72,6 +72,6 @@ clean.delete << file('src/main/webapp/dist')
 // createContainer {
 //   #dependsOn "build"
 //   #cp build/libs/accountcontrol.jar docker
-//   #docker build -t gitlab.balsen.loc:4901/balsen/kontospring/accountcontrol:latest docker
-//   #docker push gitlab.balsen.loc:4901/balsen/kontospring/accountcontrol:latest
+//   #docker build -t gitlab.balsen.loc:4901/balsen/accountcontrol/accountcontrol:latest docker
+//   #docker push gitlab.balsen.loc:4901/balsen/accountcontrol/accountcontrol:latest
 // }

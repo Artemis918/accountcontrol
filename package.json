@@ -1,5 +1,5 @@
 {
-  "name": "kontospring",
+  "name": "accountcontrol",
   "version": "0.6.0",
   "description": "bank account supervisor using spring and react",
   "private": "true",
