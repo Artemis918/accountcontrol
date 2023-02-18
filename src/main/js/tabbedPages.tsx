@@ -11,7 +11,8 @@ import { Planing } from './planing/planing'
 import { PatternPlaning} from './planing/patternplaning'
 import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
-import { OverviewGFX } from './overviewgfx'
+import { OverviewGFX } from './stats/overviewgfx'
+import { OverviewTab } from './stats/overviewtab'
 import { CategoriesConfig } from './configuration/categoriesconfig'
 import { MessageID } from './utils/messageid';
 
@@ -104,7 +105,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
             title: this.label("page.overview"), tasks: 
                 [
                     { name: this.label("task.graph"), comp: ( <OverviewGFX /> ) },
-                    { name: this.label("task.table"), comp: ( <div /> ) }
+                    { name: this.label("task.table"), comp: ( <OverviewTab /> ) }
                 ]
         },
         {

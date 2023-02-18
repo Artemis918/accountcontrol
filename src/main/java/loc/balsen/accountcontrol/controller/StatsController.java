@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import loc.balsen.accountcontrol.data.Category;
+import loc.balsen.accountcontrol.dataservice.CategoryService;
 import loc.balsen.accountcontrol.dataservice.StatsService;
+import loc.balsen.accountcontrol.dto.CatStatsDTO;
 import loc.balsen.accountcontrol.dto.StatsDTO;
 import loc.balsen.accountcontrol.dto.StatsMonthDTO;
 
@@ -20,10 +23,12 @@ import loc.balsen.accountcontrol.dto.StatsMonthDTO;
 public class StatsController {
 
   private StatsService statistikService;
+  private CategoryService categoryService;
 
   @Autowired
-  public StatsController(StatsService statistikService) {
+  public StatsController(StatsService statistikService, CategoryService categoryService) {
     this.statistikService = statistikService;
+    this.categoryService = categoryService;
   }
 
   @GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}")
@@ -66,5 +71,22 @@ public class StatsController {
       curDate = curDate.plusMonths(1);
     }
     return new StatsDTO(result, Math.min(minplan, minval), Math.max(maxplan, maxval));
+  }
+
+  @GetMapping("/catstats/{startyear}/{startmonth}/{endyear}/{endmonth}")
+  public List<CatStatsDTO> getCategoryStats(@PathVariable Integer startyear,
+      @PathVariable Integer startmonth, @PathVariable Integer endyear,
+      @PathVariable Integer endmonth) {
+    LocalDate startDate = LocalDate.of(startyear, startmonth, 1);
+    LocalDate endDate = LocalDate.of(endyear, endmonth, 1).with(TemporalAdjusters.lastDayOfMonth());
+    List<CatStatsDTO> result = new ArrayList<CatStatsDTO>();
+    List<Category> cats = categoryService.getAllCategories();
+
+    for (Category cat : cats) {
+      result.add(new CatStatsDTO(statistikService.getMonthlyCumulatedPlan(startDate, endDate, cat),
+          statistikService.getMonthlyCumulatedAssigns(startDate, endDate, cat), cat.getId()));
+    }
+
+    return result;
   }
 }

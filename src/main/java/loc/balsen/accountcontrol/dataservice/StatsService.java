@@ -1,14 +1,15 @@
 package loc.balsen.accountcontrol.dataservice;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import loc.balsen.accountcontrol.data.Assignment;
+import loc.balsen.accountcontrol.data.Category;
 import loc.balsen.accountcontrol.data.Plan;
 import loc.balsen.accountcontrol.repositories.AssignmentRepository;
 import loc.balsen.accountcontrol.repositories.PlanRepository;
@@ -25,9 +26,42 @@ public class StatsService {
     this.planRepository = planRepository;
   }
 
-  public List<Integer> getMonthlyCumulatedAssigns(LocalDate start) {
-    return getMonthlyCumulatedAssigns(start, LocalDate.now());
+
+  public List<Integer> getMonthlyCumulatedAssigns(LocalDate startDay, LocalDate endDay) {
+    List<Assignment> list = getAssignments(startDay, endDay);
+    return this.<Assignment>getMonthlyCumulated(list, startDay, endDay, Assignment::getStatsDay,
+        Assignment::getValue);
   }
+
+  public List<Integer> getMonthlyCumulatedAssigns(LocalDate startDay, LocalDate endDay,
+      Category category) {
+
+    List<Assignment> list = getAssignments(startDay, endDay).stream().filter((Assignment a) -> {
+      return a.getSubCategory().getCategory() == category;
+    }).collect(Collectors.toList());
+
+    return this.<Assignment>getMonthlyCumulated(list, startDay, endDay, Assignment::getStatsDay,
+        Assignment::getValue);
+  }
+
+
+  public List<Integer> getMonthlyCumulatedPlan(LocalDate startDay, LocalDate endDay) {
+    List<Plan> list = planRepository.findByPlanDate(startDay, endDay);
+    return this.<Plan>getMonthlyCumulated(list, startDay, endDay, Plan::getPlanDate,
+        Plan::getValue);
+  }
+
+  public List<Integer> getMonthlyCumulatedPlan(LocalDate startDay, LocalDate endDay,
+      Category category) {
+
+    List<Plan> list = planRepository.findByPlanDate(startDay, endDay).stream().filter((Plan p) -> {
+      return p.getSubCategory().getCategory() == category;
+    }).collect(Collectors.toList());
+
+    return this.<Plan>getMonthlyCumulated(list, startDay, endDay, Plan::getPlanDate,
+        Plan::getValue);
+  }
+
 
   private List<Assignment> getAssignments(LocalDate start, LocalDate end) {
 
@@ -62,11 +96,6 @@ public class StatsService {
     return resultlist;
   }
 
-  public List<Integer> getMonthlyCumulatedPlan(LocalDate start) {
-    return getMonthlyCumulatedPlan(start, LocalDate.now());
-  }
-
-
   private <T> List<Integer> getMonthlyCumulated(List<T> list, LocalDate start, LocalDate end,
       Function<T, LocalDate> getDate, ToIntFunction<T> getValue) {
     LocalDate curDate = start;
@@ -92,74 +121,6 @@ public class StatsService {
 
     return result;
 
-  }
-
-  public List<Integer> getMonthlyCumulatedAssigns(LocalDate start, LocalDate end) {
-    LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
-    List<Assignment> list = getAssignments(startDay, endDay);
-    return this.<Assignment>getMonthlyCumulated(list, startDay, endDay, Assignment::getStatsDay,
-        Assignment::getValue);
-  }
-
-  public List<Integer> getMonthlyCumulatedPlan(LocalDate start, LocalDate end) {
-    LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
-    List<Plan> list = planRepository.findByPlanDate(startDay, endDay);
-    return this.<Plan>getMonthlyCumulated(list, startDay, endDay, Plan::getPlanDate,
-        Plan::getValue);
-  }
-
-  public List<Integer> getMonthlyCumulatedAssignsOld(LocalDate start, LocalDate end) {
-
-    LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
-    LocalDate curDate = startDay;
-
-    List<Integer> result = new ArrayList<>();
-    int sum = 0;
-
-    for (Assignment assignment : getAssignments(startDay, endDay)) {
-      LocalDate date = assignment.getStatsDay();
-
-      while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
-        result.add(Integer.valueOf(sum));
-        curDate = curDate.plusMonths(1);
-      }
-
-      sum += assignment.getValue();
-    }
-
-    while (curDate.isBefore(endDay)) {
-      result.add(Integer.valueOf(sum));
-      curDate = curDate.plusMonths(1);
-    }
-
-    return result;
-  }
-
-  public List<Integer> getMonthlyCumulatedPlanOld(LocalDate start, LocalDate end) {
-
-    LocalDate startDay = start.with(TemporalAdjusters.firstDayOfMonth());
-    LocalDate endDay = end.with(TemporalAdjusters.lastDayOfMonth());
-
-    List<Integer> result = new ArrayList<>();
-    LocalDate curDate = start;
-    int sum = 0;
-
-    for (Plan plan : planRepository.findByPlanDate(startDay, endDay)) {
-      LocalDate date = plan.getPlanDate();
-      while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
-        result.add(Integer.valueOf(sum));
-        curDate = curDate.plusMonths(1);
-      }
-      sum += plan.getValue();
-    }
-    while (curDate.isBefore(endDay)) {
-      result.add(Integer.valueOf(sum));
-      curDate = curDate.plusMonths(1);
-    }
-    return result;
   }
 
 }

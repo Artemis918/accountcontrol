@@ -3,7 +3,7 @@ bin
 .metadata
 .gradle
 .classpath
-
+.settings
 node_modules/
 .project
 .factorypath
