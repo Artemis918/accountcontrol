@@ -12,9 +12,9 @@
 plugins {
   id "java"
   id "eclipse" 
-  id "org.springframework.boot" version "2.5.6"
-  id "io.spring.dependency-management" version "1.0.11.RELEASE"
-  id "com.github.node-gradle.node" version "3.1.1"
+  id "org.springframework.boot" version "3.1.0"
+  id "io.spring.dependency-management" version "1.1.0"
+  id "com.github.node-gradle.node" version "5.0.0"
 }
 
 repositories {
@@ -30,9 +30,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql'
-    implementation 'com.opencsv:opencsv:4.2'
+    implementation 'com.opencsv:opencsv:5.7.1'
     implementation 'org.jdom:jdom2:2.0.5'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'

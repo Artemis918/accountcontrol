@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class FileImport {
@@ -17,10 +17,13 @@ public class FileImport {
   ImportPBtxt importPBtxt;
 
   @Autowired
-  ImportPBcsv importPBcsv;
+  ImportPBcsv2000 importPBcsv;
 
   @Autowired
   ImportXML importXML;
+
+  @Autowired
+  ImportPBcsv2022 importPBcsv2022;
 
   public FileImport() {
     importer = new ArrayList<Importbase>();
@@ -31,6 +34,7 @@ public class FileImport {
     importer.add(importPBtxt);
     importer.add(importPBcsv);
     importer.add(importXML);
+    importer.add(importPBcsv2022);
   }
 
   public void importFile(String fileName, InputStream data) throws ParseException, IOException {

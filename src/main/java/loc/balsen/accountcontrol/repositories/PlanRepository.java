@@ -14,15 +14,14 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
   LocalDate findMaxPlanDate();
 
   @Query(
-      value = "select * from Plan p" + " left outer join Assignment a on a.plan=p.id"
+      value = "select p.* from Plan p" + " left outer join Assignment a on a.plan=p.id"
           + " where a.id is null" + "   and p.deactivate_date is null" + "   and p.template = ?1",
       nativeQuery = true)
   List<Plan> findActiveByTemplateNotAssigned(Integer template);
 
-  @Query(value = "select * from Plan p" + " left outer join Assignment a on a.plan=p.id"
-      + " where a.id is null" + " and deactivate_date is NULL"
-      + " and (end_date between ?1 and ?2 or start_date between ?1 and ?2 or (start_date <= ?1 and  end_date >= ?2 ) or match_style=3 )",
-      nativeQuery = true)
+  @Query(value = "select p from Assignment a right outer join a.plan p where a.id is null"
+      + " and p.deactivateDate is NULL"
+      + " and (p.endDate between ?1 and ?2 or p.startDate between ?1 and ?2 or (p.startDate <= ?1 and  p.endDate >= ?2 ) or matchStyle=3 )")
   List<Plan> findByPeriodNotAssigned(LocalDate mindate, LocalDate maxdate);
 
   @Query(
@@ -30,7 +29,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
       nativeQuery = true)
   List<Plan> findByPlanDate(LocalDate mindate, LocalDate maxdate);
 
-  @Query(value = "select * from Plan p " + " left join Assignment a on a.plan=p.id"
+  @Query(value = "select p.* from Plan p " + " left join Assignment a on a.plan=p.id"
       + " where a.id is null" + " and p.plan_date between ?1 and ?2"
       + " and p.deactivate_date is null", nativeQuery = true)
   List<Plan> findByPlanDateNotAssigned(LocalDate mindate, LocalDate maxdate);
@@ -38,7 +37,7 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
   List<Plan> findByTemplate(Template template);
 
   @Query(
-      value = "select * from Plan p" + " inner join Sub_Category s on p.subcategory = s.id"
+      value = "select p.* from Plan p" + " inner join Sub_Category s on p.subcategory = s.id"
           + " where p.match_style = 3" + " and s.category = ?1" + " and deactivate_date is null",
       nativeQuery = true)
   Collection<Plan> findByPatternPlansAndCategory(Integer category);

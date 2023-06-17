@@ -3,9 +3,9 @@ package loc.balsen.accountcontrol.upload;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ImportPBcsv extends ImportPB {
+public class ImportPBcsv2000 extends ImportPB {
 
-  ImportPBcsv() {
+  ImportPBcsv2000() {
     super(".csv", "CP1252", ';', 9);
   }
 }

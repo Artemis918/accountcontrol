@@ -49,17 +49,24 @@ public class ImportPB extends Importbase {
         save(parseLine(lines.next()));
       } catch (PSQLException e) {
         throw new ParseException(e.getMessage() + ": Entry " + linenum, 0);
+      } catch (WrongParserException e) {
+        filereader.close();
+        return false;
       }
     }
-
+    filereader.close();
     return true;
   }
 
   static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-  private AccountRecord parseLine(String fields[]) throws ParseException {
+  private AccountRecord parseLine(String fields[]) throws ParseException, WrongParserException {
 
     LocalDate created = LocalDate.parse(fields[0], dateformater);
+
+    if (created.isAfter(LocalDate.of(2022, 11, 30))) {
+      throw new WrongParserException();
+    }
     LocalDate executed = LocalDate.parse(fields[1], dateformater);
 
     AccountRecord.Type type = recordType.get(fields[2].trim());
@@ -155,6 +162,7 @@ public class ImportPB extends Importbase {
     aMap.put("Dauerauftrag", AccountRecord.Type.TRANSFER);
     aMap.put("Kartenzahlung", AccountRecord.Type.CARD);
     aMap.put("Auszahlung Geldautomat", AccountRecord.Type.CARD);
+    aMap.put("Kartenlastschrift", AccountRecord.Type.CARD);
     recordType = Collections.unmodifiableMap(aMap);
 
   }

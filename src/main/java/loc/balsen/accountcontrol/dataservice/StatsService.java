@@ -114,7 +114,7 @@ public class StatsService {
       sum += getValue.applyAsInt(obj);
     }
 
-    while (curDate.isBefore(end)) {
+    while (curDate.isBefore(end) || curDate.isEqual(end)) {
       result.add(Integer.valueOf(sum));
       curDate = curDate.plusMonths(1);
     }
