@@ -12,13 +12,12 @@ public interface AccountRecordRepository extends JpaRepository<AccountRecord, In
   public List<AccountRecord> findByValueAndCreatedAndSenderAndReceiver(int value, LocalDate created,
       String sender, String receiver);
 
-  @Query(value = "select ar.* from account_record ar "
-      + "left join assignment a on a.accountrecord = ar.id " + "where a.id is null "
-      + "order by ar.executed", nativeQuery = true)
+  @Query(value = "select ar from Assignment a right outer join a.accountrecord ar"
+      + " where a.id is null order by ar.executed")
   public List<AccountRecord> findUnresolvedRecords();
 
-  @Query(value = "select ar.* from Account_Record ar " + "where ar.executed between ?1 and ?2 "
-      + "and ar.type = ?3", nativeQuery = true)
+  @Query(value = "select ar from AccountRecord ar where ar.executed between ?1 and ?2 "
+      + "and ar.type = ?3")
   public List<AccountRecord> findByTypeAndPeriod(LocalDate start, LocalDate end, Integer type);
 
 }

@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.testutil;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import loc.balsen.accountcontrol.Application;
@@ -52,39 +53,47 @@ public class TestContext {
 
   protected void createCategoryData() {
 
-    if (categoryRepository.findById(1).isPresent()) {
-      category1 = categoryRepository.findById(1).get();
-      category2 = categoryRepository.findById(2).get();
-      category3 = categoryRepository.findById(3).get();
+    category1 = createCategory(1);
+    category2 = createCategory(2);
+    category3 = createCategory(3);
 
-      subCategory1 = subCategoryRepository.findById(1).get();
-      subCategory2 = subCategoryRepository.findById(2).get();
-      subCategory3 = subCategoryRepository.findById(3).get();
-      subCategory4 = subCategoryRepository.findById(4).get();
-      subCategory5 = subCategoryRepository.findById(5).get();
-    } else {
-      category1 = createCategory(1);
-      category2 = createCategory(2);
-      category3 = createCategory(3);
+    subCategory1 = createSubCategory(1, category1);
+    subCategory2 = createSubCategory(2, category1);
+    subCategory3 = createSubCategory(3, category1);
+    subCategory4 = createSubCategory(4, category1);
+    subCategory5 = createSubCategory(5, category2);
 
-      subCategory1 = createSubCategory(1, category1);
-      subCategory2 = createSubCategory(2, category1);
-      subCategory3 = createSubCategory(3, category1);
-      subCategory4 = createSubCategory(4, category1);
-      subCategory5 = createSubCategory(5, category2);
-    }
+    System.out.println(category1.getShortDescription());
+    System.out.println(category2.getShortDescription());
+    System.out.println(category3.getShortDescription());
+
+
+    System.out.println(subCategory1.getShortDescription());
+    System.out.println(subCategory2.getShortDescription());
+    System.out.println(subCategory3.getShortDescription());
+    System.out.println(subCategory4.getShortDescription());
+    System.out.println(subCategory5.getShortDescription());
   }
 
   private Category createCategory(int desc) {
-    Category cat = new Category(0, "Category " + desc + "short", "Category " + desc + "long");
-    categoryRepository.save(cat);
-    return cat;
+    Optional<Category> optcat = categoryRepository.findById(desc);
+    if (optcat.isPresent()) {
+      return optcat.get();
+    } else {
+      Category cat = new Category(0, "Category " + desc + "short", "Category " + desc + "long");
+      categoryRepository.save(cat);
+      return cat;
+    }
   }
 
   private SubCategory createSubCategory(int desc, Category cat) {
-    SubCategory sub = new SubCategory(0, "SubCat " + desc + "short", "SubCat " + desc + "long",
-        SubCategory.Type.INTERN, cat);
-    subCategoryRepository.save(sub);
-    return sub;
+    if (subCategoryRepository.findById(desc).isPresent()) {
+      return subCategoryRepository.findById(desc).get();
+    } else {
+      SubCategory sub = new SubCategory(0, "SubCat " + desc + "short", "SubCat " + desc + "long",
+          SubCategory.Type.INTERN, cat);
+      subCategoryRepository.save(sub);
+      return sub;
+    }
   }
 }

@@ -191,7 +191,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
                 onBlur={( e: React.FocusEvent<HTMLInputElement> ) => {
                     var newval: number = parseFloat( e.target.value.replace( ',', '.' ) ) * 100;
                     const data: AssignPart[] = this.state.data;
-                    data[index].setValue( newval == NaN ? data[index].value : newval );
+                    data[index].setValue( newval );
                     this.setState( { data: this.recalcData( this.state.data ) } );
                 }}
             />
