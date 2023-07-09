@@ -51,7 +51,6 @@ public class ImportPB extends Importbase {
       } catch (PSQLException e) {
         throw new ParseException(e.getMessage() + ": Entry " + linenum, 0);
       } catch (WrongParserException e) {
-        filereader.close();
         return false;
       }
     }
