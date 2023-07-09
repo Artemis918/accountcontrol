@@ -47,7 +47,7 @@ public class ImportPBcsv2022 extends Importbase {
     return true;
   }
 
-  static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+  static DateTimeFormatter dateformater = DateTimeFormatter.ofPattern("d.M.yyyy");
 
 
 
@@ -117,6 +117,8 @@ public class ImportPBcsv2022 extends Importbase {
     aMap.put("Bargeldauszahlung (Geldautomat)", AccountRecord.Type.CARD);
     aMap.put("Bargeldauszahlung (Kasse)", AccountRecord.Type.CARD);
     aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
+    aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
+    aMap.put("Sonstige", AccountRecord.Type.DEBIT);
     recordType = Collections.unmodifiableMap(aMap);
 
   }
