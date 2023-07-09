@@ -32,7 +32,7 @@ public class ImportPB2022Test {
 
   static String TESTDATA = "11.12.2022;12.12.2022;SEPA Lastschrift;Telecomica;"
       + "\"some more details \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;"
-      + "zzzzzzzzzzzzzzzz;;-42,80;";
+      + "zzzzzzzzzzzzzzzz;;-42,8;";
 
   @Mock
   public AccountRecordRepository accountRecordRepository;
@@ -99,7 +99,7 @@ public class ImportPB2022Test {
     when(accountRecordRepository.findByValueAndCreatedAndSenderAndReceiver(eq(-4280),
         any(LocalDate.class), any(String.class), any(String.class))).thenReturn(recordList);
 
-    String testData2 = new String(TESTDATA).replace("-42,80", "-42,90");
+    String testData2 = new String(TESTDATA).replace("-42,8", "-42,90");
     BufferedInputStream input =
         createInputStream(HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2);
     importer.ImportFile("test.csv", input);

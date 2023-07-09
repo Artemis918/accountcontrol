@@ -39,7 +39,6 @@ public class ImportPBcsv2022 extends Importbase {
       } catch (PSQLException e) {
         throw new ParseException(e.getMessage() + ": Entry " + linenum, 0);
       } catch (WrongParserException e) {
-        filereader.close();
         return false;
       }
     }
@@ -75,6 +74,10 @@ public class ImportPBcsv2022 extends Importbase {
    */
   private AccountRecord parseLine(String fields[]) throws ParseException, WrongParserException {
 
+    if (fields[0].equals("Kontostand")) {
+      return null;
+    }
+
     LocalDate created = LocalDate.parse(fields[0], dateformater);
     if (created.isBefore(LocalDate.of(2022, 11, 30))) {
       throw new WrongParserException();
@@ -89,6 +92,15 @@ public class ImportPBcsv2022 extends Importbase {
 
     // Value interpretieren
     String value = fields[11];
+
+    int comma = value.length() - value.lastIndexOf(",");
+    if (comma > value.length()) {
+      value += ",00";
+    }
+    if (comma == 2) {
+      value += "0";
+    }
+
     value = value.replaceAll("\\.", "");
     value = value.replaceAll(",", "");
     int val = Integer.parseInt(value);
