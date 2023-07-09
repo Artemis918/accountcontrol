@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.data;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +24,10 @@ public class SubCategory {
   @SequenceGenerator(name = "seq_subcategory_name", sequenceName = "seq_subcategory",
       allocationSize = 1)
   private int id;
+
+  @Column(name = "shortdescrition")
   private String shortDescription;
+
   private String description;
   private Type type;
 
