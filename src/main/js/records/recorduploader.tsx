@@ -108,7 +108,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                         </td>
                         <td>
                             <div className={css.dropzone}>
-                                <Dropzone.default accept="text/*, application/pdf" onDrop={this.onDrop} >
+                                <Dropzone.default accept="text/csv, application/xml, text/plain" onDrop={this.onDrop} >
                                     {( { getRootProps, getInputProps, open } ) => (
                                         <div {...getRootProps()}>
                                             <input {...getInputProps()} />
