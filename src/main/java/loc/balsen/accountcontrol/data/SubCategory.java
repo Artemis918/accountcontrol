@@ -25,7 +25,7 @@ public class SubCategory {
       allocationSize = 1)
   private int id;
 
-  @Column(name = "shortdescrition")
+  @Column(name = "shortdescription")
   private String shortDescription;
 
   private String description;
