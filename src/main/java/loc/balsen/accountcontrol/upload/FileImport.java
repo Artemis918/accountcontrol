@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -38,10 +39,13 @@ public class FileImport {
   }
 
   public void importFile(String fileName, InputStream data) throws ParseException, IOException {
+    BufferedInputStream filereader = new BufferedInputStream(data);
     for (Importbase importbase : importer) {
-      if (importbase.ImportFile(fileName, data)) {
+      filereader.mark(2000);
+      if (importbase.ImportFile(fileName, filereader)) {
         return;
       }
+      filereader.reset();
     }
     throw new ParseException("no module found to import file", 0);
   }

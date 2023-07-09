@@ -1,11 +1,12 @@
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class ImportPB extends Importbase {
   }
 
   @Override
-  boolean ImportFile(String filename, InputStream data) throws ParseException, IOException {
+  boolean ImportFile(String filename, BufferedInputStream data) throws ParseException, IOException {
     if (!filename.endsWith(postfix)) {
       return false;
     }
@@ -62,7 +63,12 @@ public class ImportPB extends Importbase {
 
   private AccountRecord parseLine(String fields[]) throws ParseException, WrongParserException {
 
-    LocalDate created = LocalDate.parse(fields[0], dateformater);
+    LocalDate created;
+    try {
+      created = LocalDate.parse(fields[0], dateformater);
+    } catch (DateTimeParseException e) {
+      throw new WrongParserException();
+    }
 
     if (created.isAfter(LocalDate.of(2022, 11, 30))) {
       throw new WrongParserException();

@@ -8,8 +8,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
 
 public class ImportPB2022Test {
 
-  static String HEADER = "\n\n\n\n \n\n\n\n";
+  static String HEADER = "\n\n\n\n; \n\n\n\n";
 
   static String TESTDATA = "11.12.2022;12.12.2022;SEPA Lastschrift;Telecomica;"
       + "\"some more details \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;"
@@ -55,7 +57,7 @@ public class ImportPB2022Test {
 
     LocalDate start = LocalDate.now();
 
-    ByteArrayInputStream input = new ByteArrayInputStream((HEADER + TESTDATA).getBytes("UTF-8"));
+    BufferedInputStream input = createInputStream(HEADER + TESTDATA);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
@@ -78,8 +80,8 @@ public class ImportPB2022Test {
 
   @Test
   public void testParseError() throws IOException, ParseException {
-    ByteArrayInputStream input = new ByteArrayInputStream(
-        (HEADER + TESTDATA).substring(0, TESTDATA.length()).getBytes("UTF-8"));
+    BufferedInputStream input =
+        createInputStream((HEADER + TESTDATA).substring(0, TESTDATA.length()));
     try {
       importer.ImportFile("test.csv", input);
     } catch (RuntimeException e) {
@@ -98,8 +100,8 @@ public class ImportPB2022Test {
         any(LocalDate.class), any(String.class), any(String.class))).thenReturn(recordList);
 
     String testData2 = new String(TESTDATA).replace("-42,80", "-42,90");
-    ByteArrayInputStream input = new ByteArrayInputStream(
-        (HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2).getBytes("UTF-8"));
+    BufferedInputStream input =
+        createInputStream(HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
@@ -110,4 +112,7 @@ public class ImportPB2022Test {
     assertEquals(-4290, res.get(1).getValue());
   }
 
+  private BufferedInputStream createInputStream(String data) throws UnsupportedEncodingException {
+    return new BufferedInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));
+  }
 }

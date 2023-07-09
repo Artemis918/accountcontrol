@@ -1,7 +1,7 @@
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ImportTest extends Importbase {
 
   @Override
-  boolean ImportFile(String filename, InputStream data) throws ParseException, IOException {
+  boolean ImportFile(String filename, BufferedInputStream data) throws ParseException, IOException {
     return false;
   }
 

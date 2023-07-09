@@ -8,8 +8,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class ImportPBTest {
 
     LocalDate start = LocalDate.now();
 
-    ByteArrayInputStream input = new ByteArrayInputStream((HEADER + TESTDATA).getBytes("UTF-8"));
+    BufferedInputStream input = createInputStream(HEADER + TESTDATA);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
@@ -79,8 +81,7 @@ public class ImportPBTest {
 
   @Test
   public void testParseError() throws IOException, ParseException {
-    ByteArrayInputStream input =
-        new ByteArrayInputStream((HEADER + TESTDATA).substring(0, 148).getBytes("UTF-8"));
+    BufferedInputStream input = createInputStream((HEADER + TESTDATA).substring(0, 148));
     try {
       importer.ImportFile("test.csv", input);
     } catch (RuntimeException e) {
@@ -99,8 +100,8 @@ public class ImportPBTest {
         any(LocalDate.class), any(String.class), any(String.class))).thenReturn(recordList);
 
     String testData2 = new String(TESTDATA).replace("-42,80", "-42,90");
-    ByteArrayInputStream input = new ByteArrayInputStream(
-        (HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2).getBytes("UTF-8"));
+    BufferedInputStream input =
+        createInputStream(HEADER + testData2 + "\n" + TESTDATA + "\n" + testData2);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
@@ -109,6 +110,10 @@ public class ImportPBTest {
 
     assertEquals(-4290, res.get(0).getValue());
     assertEquals(-4290, res.get(1).getValue());
+  }
+
+  private BufferedInputStream createInputStream(String data) throws UnsupportedEncodingException {
+    return new BufferedInputStream(new ByteArrayInputStream(data.getBytes("UTF-8")));
   }
 
 }

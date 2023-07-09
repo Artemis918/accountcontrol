@@ -3,8 +3,8 @@
  */
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.List;
 import org.postgresql.util.PSQLException;
@@ -22,7 +22,8 @@ public abstract class Importbase {
   @Autowired
   protected AccountRecordRepository accountRecordRepository;
 
-  abstract boolean ImportFile(String filename, InputStream data) throws ParseException, IOException;
+  abstract boolean ImportFile(String filename, BufferedInputStream data)
+      throws ParseException, IOException;
 
   public Importbase() {}
 

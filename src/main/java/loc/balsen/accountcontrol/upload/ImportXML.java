@@ -1,7 +1,7 @@
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +45,7 @@ public class ImportXML extends Importbase {
   };
 
   @Override
-  boolean ImportFile(String filename, InputStream data) throws ParseException, IOException {
+  boolean ImportFile(String filename, BufferedInputStream data) throws ParseException, IOException {
     if (!filename.endsWith(".xml")) {
       return false;
     }

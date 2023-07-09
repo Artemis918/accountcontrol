@@ -1,7 +1,7 @@
 package loc.balsen.accountcontrol.upload;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -22,12 +22,11 @@ import loc.balsen.accountcontrol.data.AccountRecord;
 public class ImportPBcsv2022 extends Importbase {
 
   @Override
-  boolean ImportFile(String filename, InputStream data) throws ParseException, IOException {
+  boolean ImportFile(String filename, BufferedInputStream data) throws ParseException, IOException {
     if (!filename.endsWith(".csv")) {
       return false;
     }
-
-    InputStreamReader filereader = new InputStreamReader(data, "utf-8");
+    InputStreamReader filereader = new InputStreamReader(data);
 
     Iterator<String[]> lines = new CSVReaderBuilder(filereader).withSkipLines(8)
         .withCSVParser(new CSVParserBuilder().withSeparator(';').withQuoteChar('"').build()).build()
