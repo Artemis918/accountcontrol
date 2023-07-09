@@ -7,6 +7,8 @@ public class StatsDTO {
   int min;
   int max;
 
+  public StatsDTO() {}
+
   public StatsDTO(List<StatsMonthDTO> d, int min, int max) {
     data = d;
     this.min = min;

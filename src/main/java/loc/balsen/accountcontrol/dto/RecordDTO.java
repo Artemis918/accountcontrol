@@ -20,6 +20,8 @@ public class RecordDTO {
   private String mandate;
   private String reference;
 
+  public RecordDTO() {}
+
   public RecordDTO(AccountRecord record) {
     this.id = record.getId();
     this.received = record.getReceived();

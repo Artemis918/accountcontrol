@@ -22,6 +22,8 @@ public class AssignmentDTO {
   private int category;
   private int position;
 
+  public AssignmentDTO() {}
+
   public AssignmentDTO(Assignment z) {
     id = z.getId();
     detail = z.getShortDescription();

@@ -8,6 +8,8 @@ public class CatStatsDTO {
   private List<Integer> real;
   private int catID;
 
+  public CatStatsDTO() {}
+
   public CatStatsDTO(List<Integer> estimated, List<Integer> real, int catID) {
     this.estimated = estimated;
     this.real = real;

@@ -5,6 +5,8 @@ public class EnumDTO {
   private String text;
   private int value;
 
+  public EnumDTO() {}
+
   public EnumDTO(String t, int val) {
     text = t;
     value = val;

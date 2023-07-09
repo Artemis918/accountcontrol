@@ -8,6 +8,9 @@ public class CategoryDTO {
   private String shortdescription;
   private String description;
 
+
+  public CategoryDTO() {};
+
   public CategoryDTO(Category cat) {
     this.id = cat.getId();
     this.description = cat.getDescription();

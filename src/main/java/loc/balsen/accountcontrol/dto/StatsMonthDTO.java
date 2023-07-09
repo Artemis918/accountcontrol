@@ -8,6 +8,8 @@ public class StatsMonthDTO {
   int planvalue;
   int forecast;
 
+  public StatsMonthDTO() {}
+
   public StatsMonthDTO(LocalDate d, int v, int p, int f) {
     day = d;
     value = v;
