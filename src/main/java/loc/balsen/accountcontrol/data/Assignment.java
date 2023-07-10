@@ -1,6 +1,7 @@
 package loc.balsen.accountcontrol.data;
 
 import java.time.LocalDate;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,8 @@ public class Assignment {
   private int id;
 
   private int value;
+
+  @Column(name = "shortdescription")
   private String shortDescription;
   @SuppressWarnings("unused")
   private String description;
