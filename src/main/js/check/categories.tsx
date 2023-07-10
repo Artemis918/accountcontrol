@@ -237,7 +237,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                             <td style={{ border: '1px solid black' }}>
                                 <MultiSelectLister<Assignment>
                                     createFooter={this.createFooter}
-                                    url='assign/'
+                                    url='assign'
                                     lines={28}
                                     ext={this.createExt()}
                                     columns={this.columns}
