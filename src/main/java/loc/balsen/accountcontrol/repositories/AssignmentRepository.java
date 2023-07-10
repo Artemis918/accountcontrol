@@ -23,18 +23,16 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
   @Modifying
   @Transactional
-  @Query(value = "delete from Assignment a where a.accountrecord = ?1", nativeQuery = true)
+  @Query(value = "delete from Assignment a where a.accountrecord = ?1")
   public void deleteByRecordId(Integer id);
 
-  @Query(value = "select a from Assignment a "
-      + "inner join a.accountrecord ar where a.plan.id is null "
-      + "  and ar.executed between ?1 and ?2 and a.committed = true order by ar.executed")
+  @Query(value = "select a from Assignment a inner join a.accountrecord ar where a.plan.id is null "
+      + " and ar.executed between ?1 and ?2 and a.committed = true order by ar.executed")
   public List<Assignment> findAllNotPlannedByPeriod(LocalDate start, LocalDate end);
 
-  @Query(value = "select * from Assignment a "
-      + "inner join account_record ar on a.accountrecord = ar.id "
-      + "inner join plan p on a.plan = p.id " + "  and p.plan_date between ?1 and ?2 "
-      + "  and a.committed = true " + "order by p.plan_date", nativeQuery = true)
+  @Query(value = "select a from Assignment a inner join a.accountrecord ar"
+      + "inner join a.plan p where p.planDate between ?1 and ?2 "
+      + "  and a.committed = true order by p.planDate")
   public List<Assignment> findAllPlannedByPeriod(LocalDate start, LocalDate end);
 
   public int countBySubCategoryId(int subCategory);
