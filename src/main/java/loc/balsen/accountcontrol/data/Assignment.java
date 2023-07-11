@@ -24,6 +24,7 @@ public class Assignment {
 
   @Column(name = "shortdescription")
   private String shortDescription;
+
   @SuppressWarnings("unused")
   private String description;
   private boolean committed;

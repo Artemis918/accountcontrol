@@ -73,7 +73,7 @@ processResources {
 clean.delete << file('src/main/webapp/dist')
 
 task copyDockerJar(type: Copy) {
-	dependsOn "BootJar"
+	dependsOn "Jar"
     from "$buildDir/libs/accountcontrol.jar"
     into "$buildDir/docker"
 }
