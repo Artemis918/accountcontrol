@@ -7,5 +7,5 @@ import loc.balsen.accountcontrol.data.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-  Optional<Category> findByShortDescription(String shortdescription);
+  public Optional<Category> findByShortDescription(String shortdescription);
 }

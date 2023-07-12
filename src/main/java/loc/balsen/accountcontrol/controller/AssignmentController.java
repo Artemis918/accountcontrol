@@ -147,7 +147,7 @@ public class AssignmentController {
   @PostMapping("/remove")
   public MessageID remove(@RequestBody List<Integer> ids) {
     for (Integer id : ids) {
-      assignRepository.deleteByRecordId(id);
+      assignRepository.deleteByAccountrecordId(id);
     }
     return MessageID.ok;
   }

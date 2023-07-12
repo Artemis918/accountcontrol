@@ -3,7 +3,6 @@ package loc.balsen.accountcontrol.repositories;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import jakarta.transaction.Transactional;
 import loc.balsen.accountcontrol.data.Assignment;
@@ -21,10 +20,8 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
       + "and a.subCategory.id = ?3")
   public List<Assignment> findBySubCategoryAndMonth(LocalDate start, LocalDate end, int id);
 
-  @Modifying
   @Transactional
-  @Query(value = "delete from Assignment a where a.accountrecord = ?1")
-  public void deleteByRecordId(Integer id);
+  public void deleteByAccountrecordId(Integer id);
 
   @Query(value = "select a from Assignment a inner join a.accountrecord ar where a.plan.id is null "
       + " and ar.executed between ?1 and ?2 and a.committed = true order by ar.executed")
