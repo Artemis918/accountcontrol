@@ -80,8 +80,8 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
                        accountRecord: undefined,
                        categoryassign: false,
                        deftext: "",
-                       defsubcategory: 1,
-                       defcategory: 1 }
+                       defsubcategory: undefined,
+                       defcategory: undefined }
         this.createPlan = this.createPlan.bind( this );
         this.assignAuto = this.assignAuto.bind( this );
         this.assignManuell = this.assignManuell.bind( this );
