@@ -1,17 +1,13 @@
 import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 import { InitialPage } from './initial'
 import { TabbedPages } from './tabbedPages'
-
-
 
 import * as css from './css/index.css'
 
 import messages_de from "./i18n/de.json";
 import messages_en from "./i18n/en.json";
-
-type renderMethod = () => JSX.Element;
 
 interface IState {
     production: boolean;
@@ -36,8 +32,8 @@ class Main extends React.Component<{}, IState> {
     componentDidMount() {
         var self = this;
         fetch( "production" )
-            .then( ( response: Response ) => response.json() )
-            .then( ( json ) => { self.setState( { production: json.production } ) } )
+            .then( ( response: Response ) => { response.text() 
+            .then( (text: string) => self.setState( { production: text == "true" } ) ) } )
     }
     
     setPage( val: number ): void {
