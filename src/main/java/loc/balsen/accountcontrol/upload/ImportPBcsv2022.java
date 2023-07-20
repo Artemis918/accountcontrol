@@ -125,11 +125,15 @@ public class ImportPBcsv2022 extends Importbase {
   static {
     Map<String, AccountRecord.Type> aMap = new HashMap<String, AccountRecord.Type>(30);
     aMap.put("SEPA Überweisung", AccountRecord.Type.TRANSFER);
+    aMap.put("SEPA Überweisung (Lohn, Gehalt, Rente)", AccountRecord.Type.TRANSFER);
+    aMap.put("SEPA Überweisung (Dauerauftrag)", AccountRecord.Type.TRANSFER);
+    aMap.put("SEPA Überweisung Retoure", AccountRecord.Type.TRANSFER);
     aMap.put("Kartenzahlung", AccountRecord.Type.CARD);
     aMap.put("Bargeldauszahlung (Geldautomat)", AccountRecord.Type.CARD);
+    aMap.put("Auszahlung", AccountRecord.Type.CARD);
     aMap.put("Bargeldauszahlung (Kasse)", AccountRecord.Type.CARD);
     aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
-    aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
+    aMap.put("SEPA Lastschrift (ELV)", AccountRecord.Type.DEBIT);
     aMap.put("Sonstige", AccountRecord.Type.DEBIT);
     recordType = Collections.unmodifiableMap(aMap);
 
