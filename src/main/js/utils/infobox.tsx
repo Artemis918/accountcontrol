@@ -19,8 +19,8 @@ export class InfoBox extends React.Component<{}, InfoBoxState> {
 
     static defaultProps = {width: '250px', height: '180px'}
     
-    constructor( ) {
-        super( {} );
+    constructor(props:{}) {
+        super(props);
         this.state = {
 			showMe: false,
 			data: { info: ['']},
