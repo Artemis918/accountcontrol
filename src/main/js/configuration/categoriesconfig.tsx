@@ -225,7 +225,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
                        </td>
                        <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                  <SingleSelectLister<SubCategory>
-                                    url='category/sub/'
+                                    url='category/sub'
                                     lines={15}
                                     handleChange={this.setSubCategory}
                                     ext={(this.state.category == undefined)?undefined : "/" + this.state.category.id.toString()}
