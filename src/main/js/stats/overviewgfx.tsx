@@ -121,7 +121,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 
 		this.setState({ endYear: endYear, endMonth: endMonth, startYear: startYear, startMonth: startMonth });
 		var self: _OverviewGFX = this;
-		var url: string = "stats/real/" + startYear + "/" + startMonth + "/" + endYear + "/" + endMonth;
+		var url: string = "stats/real/" + startYear + "/" + startMonth + "/" + endYear + "/" + endMonth + "/" + this.state.cumulated;
 
 		fetch(url)
 			.then((response: Response) => response.text())

@@ -66,13 +66,12 @@ public class StatsControllerTest extends TestContext {
     plans.add(Integer.valueOf(5));
     plans.add(Integer.valueOf(4));
 
-    when(
-        statistikServiceMock.getMonthlyCumulatedAssigns(any(LocalDate.class), any(LocalDate.class)))
-            .thenReturn(assigns);
-    when(statistikServiceMock.getMonthlyCumulatedPlan(any(LocalDate.class), any(LocalDate.class)))
-        .thenReturn(plans);
+    when(statistikServiceMock.getMonthlyAssigns(any(LocalDate.class), any(LocalDate.class),
+        any(Boolean.class))).thenReturn(assigns);
+    when(statistikServiceMock.getMonthlyPlan(any(LocalDate.class), any(LocalDate.class),
+        any(Boolean.class))).thenReturn(plans);
 
-    mvc.perform(get("/stats/real/2018/12/2019/5"))
+    mvc.perform(get("/stats/real/2018/12/2019/5/true"))
         .andExpect(content().string(
             "{\"data\":[" + "{\"day\":\"2018-12-01\",\"value\":2,\"planvalue\":9,\"forecast\":0},"
                 + "{\"day\":\"2019-01-01\",\"value\":3,\"planvalue\":8,\"forecast\":3},"

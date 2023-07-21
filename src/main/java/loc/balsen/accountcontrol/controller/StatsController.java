@@ -31,14 +31,15 @@ public class StatsController {
     this.categoryService = categoryService;
   }
 
-  @GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}")
+  @GetMapping("/real/{startyear}/{startmonth}/{endyear}/{endmonth}/{cumulated}")
   public StatsDTO getReal(@PathVariable Integer startyear, @PathVariable Integer startmonth,
-      @PathVariable Integer endyear, @PathVariable Integer endmonth) {
+      @PathVariable Integer endyear, @PathVariable Integer endmonth,
+      @PathVariable Boolean cumulated) {
     LocalDate curDate = LocalDate.of(startyear, startmonth, 1);
     LocalDate endDate = LocalDate.of(endyear, endmonth, 1).with(TemporalAdjusters.lastDayOfMonth());
 
-    List<Integer> monthlyValues = statistikService.getMonthlyCumulatedAssigns(curDate, endDate);
-    List<Integer> monthlyPlanValues = statistikService.getMonthlyCumulatedPlan(curDate, endDate);
+    List<Integer> monthlyValues = statistikService.getMonthlyAssigns(curDate, endDate, cumulated);
+    List<Integer> monthlyPlanValues = statistikService.getMonthlyPlan(curDate, endDate, cumulated);
 
     List<StatsMonthDTO> result = new ArrayList<>();
 
@@ -47,12 +48,15 @@ public class StatsController {
     int minval = monthlyValues.stream().min(Integer::compare).get();
     int minplan = monthlyPlanValues.stream().min(Integer::compare).get();
 
-    int beginforecast = monthlyValues.size() - 1;
+    int beginforecast = monthlyValues.size();
     int diffval = 0;
 
-    while (beginforecast > 0
-        && monthlyValues.get(beginforecast).equals(monthlyValues.get(beginforecast - 1)))
+    if (cumulated) {
       beginforecast--;
+      while (beginforecast > 0
+          && monthlyValues.get(beginforecast).equals(monthlyValues.get(beginforecast - 1)))
+        beginforecast--;
+    }
 
     for (int i = 0; i < monthlyValues.size(); i++) {
       int planval = monthlyPlanValues.get(i);
@@ -73,18 +77,19 @@ public class StatsController {
     return new StatsDTO(result, Math.min(minplan, minval), Math.max(maxplan, maxval));
   }
 
-  @GetMapping("/catstats/{startyear}/{startmonth}/{endyear}/{endmonth}")
+  @GetMapping("/catstats/{startyear}/{startmonth}/{endyear}/{endmonth}/{cumulated}")
   public List<CatStatsDTO> getCategoryStats(@PathVariable Integer startyear,
       @PathVariable Integer startmonth, @PathVariable Integer endyear,
-      @PathVariable Integer endmonth) {
+      @PathVariable Integer endmonth, @PathVariable Boolean cumulated) {
     LocalDate startDate = LocalDate.of(startyear, startmonth, 1);
     LocalDate endDate = LocalDate.of(endyear, endmonth, 1).with(TemporalAdjusters.lastDayOfMonth());
     List<CatStatsDTO> result = new ArrayList<CatStatsDTO>();
     List<Category> cats = categoryService.getAllCategories();
 
     for (Category cat : cats) {
-      result.add(new CatStatsDTO(statistikService.getMonthlyCumulatedPlan(startDate, endDate, cat),
-          statistikService.getMonthlyCumulatedAssigns(startDate, endDate, cat), cat.getId()));
+      result
+          .add(new CatStatsDTO(statistikService.getMonthlyPlan(startDate, endDate, cumulated, cat),
+              statistikService.getMonthlyAssigns(startDate, endDate, cumulated, cat), cat.getId()));
     }
 
     return result;

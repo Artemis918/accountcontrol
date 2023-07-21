@@ -27,38 +27,38 @@ public class StatsService {
   }
 
 
-  public List<Integer> getMonthlyCumulatedAssigns(LocalDate startDay, LocalDate endDay) {
+  public List<Integer> getMonthlyAssigns(LocalDate startDay, LocalDate endDay, boolean cumulated) {
     List<Assignment> list = getAssignments(startDay, endDay);
-    return this.<Assignment>getMonthlyCumulated(list, startDay, endDay, Assignment::getStatsDay,
+    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, Assignment::getStatsDay,
         Assignment::getValue);
   }
 
-  public List<Integer> getMonthlyCumulatedAssigns(LocalDate startDay, LocalDate endDay,
+  public List<Integer> getMonthlyAssigns(LocalDate startDay, LocalDate endDay, boolean cumulated,
       Category category) {
 
     List<Assignment> list = getAssignments(startDay, endDay).stream().filter((Assignment a) -> {
       return a.getSubCategory().getCategory() == category;
     }).collect(Collectors.toList());
 
-    return this.<Assignment>getMonthlyCumulated(list, startDay, endDay, Assignment::getStatsDay,
+    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, Assignment::getStatsDay,
         Assignment::getValue);
   }
 
 
-  public List<Integer> getMonthlyCumulatedPlan(LocalDate startDay, LocalDate endDay) {
+  public List<Integer> getMonthlyPlan(LocalDate startDay, LocalDate endDay, boolean cumulated) {
     List<Plan> list = planRepository.findByPlanDate(startDay, endDay);
-    return this.<Plan>getMonthlyCumulated(list, startDay, endDay, Plan::getPlanDate,
+    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, Plan::getPlanDate,
         Plan::getValue);
   }
 
-  public List<Integer> getMonthlyCumulatedPlan(LocalDate startDay, LocalDate endDay,
+  public List<Integer> getMonthlyPlan(LocalDate startDay, LocalDate endDay, boolean cumulated,
       Category category) {
 
     List<Plan> list = planRepository.findByPlanDate(startDay, endDay).stream().filter((Plan p) -> {
       return p.getSubCategory().getCategory() == category;
     }).collect(Collectors.toList());
 
-    return this.<Plan>getMonthlyCumulated(list, startDay, endDay, Plan::getPlanDate,
+    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, Plan::getPlanDate,
         Plan::getValue);
   }
 
@@ -96,8 +96,8 @@ public class StatsService {
     return resultlist;
   }
 
-  private <T> List<Integer> getMonthlyCumulated(List<T> list, LocalDate start, LocalDate end,
-      Function<T, LocalDate> getDate, ToIntFunction<T> getValue) {
+  private <T> List<Integer> getMonthly(List<T> list, LocalDate start, LocalDate end,
+      boolean cumulated, Function<T, LocalDate> getDate, ToIntFunction<T> getValue) {
     LocalDate curDate = start;
 
     List<Integer> result = new ArrayList<>();
@@ -109,6 +109,9 @@ public class StatsService {
       while (date.getMonth() != curDate.getMonth() || date.getYear() != curDate.getYear()) {
         result.add(Integer.valueOf(sum));
         curDate = curDate.plusMonths(1);
+        if (!cumulated) {
+          sum = 0;
+        }
       }
 
       sum += getValue.applyAsInt(obj);
@@ -116,6 +119,9 @@ public class StatsService {
 
     while (curDate.isBefore(end) || curDate.isEqual(end)) {
       result.add(Integer.valueOf(sum));
+      if (!cumulated) {
+        sum = 0;
+      }
       curDate = curDate.plusMonths(1);
     }
 

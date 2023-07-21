@@ -58,7 +58,7 @@ public class StatsServiceTest extends TestContext {
         .thenReturn(planlist);
 
     List<Integer> result =
-        statsService.getMonthlyCumulatedPlan(LocalDate.of(2018, 10, 3), LocalDate.of(2019, 5, 3));
+        statsService.getMonthlyPlan(LocalDate.of(2018, 10, 3), LocalDate.of(2019, 5, 3), true);
 
     assertEquals(8, result.size());
     assertEquals(0, result.get(0).intValue());
@@ -69,6 +69,19 @@ public class StatsServiceTest extends TestContext {
     assertEquals(8, result.get(5).intValue());
     assertEquals(8, result.get(6).intValue());
     assertEquals(8, result.get(7).intValue());
+
+    result =
+        statsService.getMonthlyPlan(LocalDate.of(2018, 10, 3), LocalDate.of(2019, 5, 3), false);
+
+    assertEquals(8, result.size());
+    assertEquals(0, result.get(0).intValue());
+    assertEquals(0, result.get(1).intValue());
+    assertEquals(25, result.get(2).intValue());
+    assertEquals(0, result.get(3).intValue());
+    assertEquals(-29, result.get(4).intValue());
+    assertEquals(12, result.get(5).intValue());
+    assertEquals(0, result.get(6).intValue());
+    assertEquals(0, result.get(7).intValue());
   }
 
   private Plan createPlan(int value, LocalDate plandate) {
@@ -103,8 +116,8 @@ public class StatsServiceTest extends TestContext {
     when(assignmentRepository.findAllNotPlannedByPeriod(any(LocalDate.class), any(LocalDate.class)))
         .thenReturn(zungeplantlist);
 
-    List<Integer> result = statsService.getMonthlyCumulatedAssigns(LocalDate.of(2018, 10, 3),
-        LocalDate.of(2019, 5, 3));
+    List<Integer> result =
+        statsService.getMonthlyAssigns(LocalDate.of(2018, 10, 3), LocalDate.of(2019, 5, 3), true);
 
     assertEquals(8, result.size());
     assertEquals(0, result.get(0).intValue());
@@ -115,6 +128,21 @@ public class StatsServiceTest extends TestContext {
     assertEquals(213, result.get(5).intValue());
     assertEquals(213, result.get(6).intValue());
     assertEquals(213, result.get(7).intValue());
+
+
+    result =
+        statsService.getMonthlyAssigns(LocalDate.of(2018, 10, 3), LocalDate.of(2019, 5, 3), false);
+
+    assertEquals(8, result.size());
+    assertEquals(0, result.get(0).intValue());
+    assertEquals(0, result.get(1).intValue());
+    assertEquals(210, result.get(2).intValue());
+    assertEquals(0, result.get(3).intValue());
+    assertEquals(-14, result.get(4).intValue());
+    assertEquals(17, result.get(5).intValue());
+    assertEquals(0, result.get(6).intValue());
+    assertEquals(0, result.get(7).intValue());
+
   }
 
 }
