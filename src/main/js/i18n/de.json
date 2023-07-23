@@ -122,8 +122,6 @@
 
 	"overview.lastmonth": "Endmonat",
 	"overview.firstmonth": "Startmonat",
-	"overview.categories": "Kategorien",
-	"overview.cumulated": "Kumuliert",
 			
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",

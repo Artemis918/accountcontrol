@@ -10,11 +10,6 @@ export const OverviewGFX: Create = (p) => { return (<_OverviewGFX {...p} intl={u
 
 export interface OverviewGFXProps { }
 
-interface LineData {
-	x: string;
-	y: string;
-}
-
 interface GraphData {
 	month: string;
 	value: number;
@@ -27,8 +22,6 @@ interface GraphSeries {
 }
 
 interface IState {
-	showCategories: boolean;
-	cumulated: boolean;
 	startYear: number;
 	endYear: number;
 	startMonth: number;
@@ -44,8 +37,6 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 		super(props);
 		var today: Date = new Date();
 		this.state = {
-			showCategories: false,
-			cumulated: true,
 			startYear: today.getFullYear(),
 			endYear: today.getFullYear(),
 			startMonth: 1,
@@ -70,24 +61,15 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 		return (<div>
 			<table>
 				<tr>
-					{this.renderCategoryTree()}
 					<td>
 						<table >
 							<tr>
-								<td>{this.label("overview.categories")}</td>
-								<td>
-									<input type='checkbox' onClick={() => this.setState({ showCategories: !this.state.showCategories })} checked={this.state.showCategories} />
-								</td>
 								<td>{this.label("overview.firstmonth")}</td>
 								<td>
 									<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
 								</td>
 							</tr>
 							<tr>
-								<td>{this.label("overview.cumulated")}</td>
-								<td>
-									<input type='checkbox' onClick={() => this.setState({ cumulated: !this.state.cumulated })} checked={this.state.cumulated} />
-								</td>
 								<td> {this.label("overview.lastmonth")} </td>
 								<td>
 									<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
@@ -121,7 +103,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 
 		this.setState({ endYear: endYear, endMonth: endMonth, startYear: startYear, startMonth: startMonth });
 		var self: _OverviewGFX = this;
-		var url: string = "stats/real/" + startYear + "/" + startMonth + "/" + endYear + "/" + endMonth + "/" + this.state.cumulated;
+		var url: string = "stats/real/" + startYear + "/" + startMonth + "/" + endYear + "/" + endMonth + "/true";
 
 		fetch(url)
 			.then((response: Response) => response.text())
@@ -129,7 +111,6 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 	}
 
 	private setData(stats: StatsDTO): void {
-		var endofreal: boolean = false;
 		var plandata: GraphData[] = [];
 		var forecastdata: GraphData[] = [];
 		var realdata: GraphData[] = [];
@@ -171,10 +152,4 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 	private changeEnd(month: number, year: number): void {
 		this.reload(this.state.startYear, this.state.startMonth, year, month);
 	}
-
-	private renderCategoryTree() {
-		return "";
-	}
-
-
 }

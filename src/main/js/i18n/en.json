@@ -122,8 +122,6 @@
 	
 	"overview.lastmonth": "Last month",
 	"overview.firstmonth": "First month",
-	"overview.categories": "Categories",
-	"overview.cumulated": "Cumulated",
 	
 	"returncode_1": "ok",
 	"returncode_2": "some data is missing",
