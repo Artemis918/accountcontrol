@@ -23,6 +23,9 @@ spec:
           volumeMounts:
           - mountPath: /tmp
             name: tmp-volume
+          env:
+          - name: PROD
+            value: "yes"
       volumes:
       - name: tmp-volume
         emptyDir: {}
