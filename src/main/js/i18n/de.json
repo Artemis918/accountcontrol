@@ -122,6 +122,8 @@
 
 	"overview.lastmonth": "Endmonat",
 	"overview.firstmonth": "Startmonat",
+	"overview.overall": "Gesamt",
+	
 			
 	"returncode_1": "OK",
 	"returncode_2": "Es fehlen Daten",

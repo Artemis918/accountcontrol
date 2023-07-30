@@ -163,6 +163,13 @@ export class StatsMonthDTO {
     forecast: number;
 }
 
+export class CatStatsDTO {
+  estimated: number[];
+  real: number[];
+  catID: number;
+  catName: string;
+}
+
 //=====================================================
 export class  Assignment {
     id: number;

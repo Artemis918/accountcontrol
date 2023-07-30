@@ -1,0 +1,30 @@
+.overviewtable {
+	border: 1px	
+}
+
+.ovtableheader {
+	border: 1px
+}
+
+.positiv {
+	background-color: lightseagreen;
+	text-align: center;
+}
+
+.negative {
+	background-color: lightcoral;
+	text-align: center;
+} 
+
+.plantext {
+	color: black;
+}
+
+.realtext {
+	color: darkred;	
+}
+
+.sumtext {
+	color: darkblue;	
+}
+

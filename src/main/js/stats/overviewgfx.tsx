@@ -63,6 +63,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 				<tr>
 					<td>
 						<table >
+						<tbody>
 							<tr>
 								<td>{this.label("overview.firstmonth")}</td>
 								<td>
@@ -75,6 +76,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 									<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
 								</td>
 							</tr>
+						</tbody>
 						</table >
 						<LineChart
 							width={1000}

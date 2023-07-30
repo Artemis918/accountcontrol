@@ -89,7 +89,8 @@ public class StatsController {
     for (Category cat : cats) {
       result
           .add(new CatStatsDTO(statistikService.getMonthlyPlan(startDate, endDate, cumulated, cat),
-              statistikService.getMonthlyAssigns(startDate, endDate, cumulated, cat), cat.getId()));
+              statistikService.getMonthlyAssigns(startDate, endDate, cumulated, cat), cat.getId(),
+              cat.getShortDescription()));
     }
 
     return result;
