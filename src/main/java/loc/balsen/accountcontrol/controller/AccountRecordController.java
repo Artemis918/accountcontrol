@@ -37,8 +37,8 @@ public class AccountRecordController {
     LocalDate start = LocalDate.of(year, month, 1);
     LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
 
-    return recordRepository.findByTypeAndPeriod(start, end, AccountRecord.Type.MANUEL.ordinal())
-        .stream().map((record) -> {
+    return recordRepository.findByTypeAndPeriod(start, end, AccountRecord.Type.MANUEL).stream()
+        .map((record) -> {
           return new RecordDTO(record);
         }).collect(Collectors.toList());
   }

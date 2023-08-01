@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import loc.balsen.accountcontrol.data.AccountRecord;
+import loc.balsen.accountcontrol.data.AccountRecord.Type;
 
 public interface AccountRecordRepository extends JpaRepository<AccountRecord, Integer> {
 
@@ -18,6 +19,6 @@ public interface AccountRecordRepository extends JpaRepository<AccountRecord, In
 
   @Query(value = "select ar from AccountRecord ar where ar.executed between ?1 and ?2 "
       + "and ar.type = ?3")
-  public List<AccountRecord> findByTypeAndPeriod(LocalDate start, LocalDate end, Integer type);
+  public List<AccountRecord> findByTypeAndPeriod(LocalDate start, LocalDate end, Type type);
 
 }
