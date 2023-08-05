@@ -48,6 +48,7 @@ public class AccountRecordController {
     AccountRecord record = recorddto.toRecord();
     if (record.getId() == 0 || record.getType() == AccountRecord.Type.MANUEL) {
       record.setManuel();
+      recordRepository.save(record);
       return MessageID.ok;
     } else
       return MessageID.invaliddata;
