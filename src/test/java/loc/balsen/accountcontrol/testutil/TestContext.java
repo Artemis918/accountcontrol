@@ -62,17 +62,6 @@ public class TestContext {
     subCategory3 = createSubCategory(3, category1);
     subCategory4 = createSubCategory(4, category1);
     subCategory5 = createSubCategory(5, category2);
-
-    System.out.println(category1.getShortDescription());
-    System.out.println(category2.getShortDescription());
-    System.out.println(category3.getShortDescription());
-
-
-    System.out.println(subCategory1.getShortDescription());
-    System.out.println(subCategory2.getShortDescription());
-    System.out.println(subCategory3.getShortDescription());
-    System.out.println(subCategory4.getShortDescription());
-    System.out.println(subCategory5.getShortDescription());
   }
 
   private Category createCategory(int desc) {

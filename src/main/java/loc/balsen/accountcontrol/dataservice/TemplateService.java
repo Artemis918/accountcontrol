@@ -52,8 +52,6 @@ public class TemplateService {
     if (template.getId() == 0) {
       templateRepository.save(template);
       planService.createPlansfromTemplate(template);
-    } else if (template.getMatchStyle() == MatchStyle.PATTERN) {
-      templateRepository.save(template);
     } else {
       Template templateOrig = templateRepository.findById(template.getId()).get();
 
@@ -61,6 +59,13 @@ public class TemplateService {
         templateOrig.setValidUntil(template.getValidUntil());
       } else {
         LocalDate changeDay = template.getValidFrom();
+
+        if (changeDay.equals(templateOrig.getValidFrom())) {
+          LocalDate lastDayUsed = planService.getLastAssignedPlanOf(templateOrig);
+          if (lastDayUsed != null) {
+            changeDay = lastDayUsed.plusDays(1);
+          }
+        }
 
         template.setId(0);
         template.setValidFrom(changeDay);
@@ -74,6 +79,7 @@ public class TemplateService {
       planService.deactivatePlans(templateOrig);
     }
   }
+
 
   public Template createFromRecord(Integer id) {
     Optional<AccountRecord> record = accountRecordRepository.findById(id);

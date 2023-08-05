@@ -135,23 +135,23 @@ public class PlanServiceTest extends TestContext {
     List<Plan> plans = planRepository.findByTemplate(template);
     plans.sort(Comparator.comparing(Plan::getId));
 
-    LocalDate last = planService.getLastPlanOf(template);
+    LocalDate last = planService.getLastAssignedPlanOf(template);
     assertNull(last);
 
     LocalDate plandate = createAssignment(plans.get(1));
-    last = planService.getLastPlanOf(template);
+    last = planService.getLastAssignedPlanOf(template);
     assertEquals(plandate, last);
 
     plandate = createAssignment(plans.get(2));
-    last = planService.getLastPlanOf(template);
+    last = planService.getLastAssignedPlanOf(template);
     assertEquals(plandate, last);
 
     plandate = createAssignment(plans.get(4));
-    last = planService.getLastPlanOf(template);
+    last = planService.getLastAssignedPlanOf(template);
     assertEquals(plandate, last);
 
     createAssignment(plans.get(3));
-    last = planService.getLastPlanOf(template);
+    last = planService.getLastAssignedPlanOf(template);
     assertEquals(plandate, last);
 
   }

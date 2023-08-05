@@ -43,7 +43,7 @@ public class PlanService {
     createPlansfromTemplate(template, null, null);
   }
 
-  public LocalDate getLastPlanOf(Template template) {
+  public LocalDate getLastAssignedPlanOf(Template template) {
     return planRepository.findMaxAssignedPlanDateByTemplate(template.getId());
   }
 
