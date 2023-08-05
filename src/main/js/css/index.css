@@ -36,7 +36,7 @@
 
 .actionbar {
 	padding: 5px;
-	border: 0px 0px 0xp 2px;
+	border-width: 0px 0px 0px 2px;
 }
 
 .actionbutton {
@@ -118,6 +118,6 @@
 	position: fixed;
 	margin: 0;
 	padding: 2px;
-	border: 2px solid #000;
+	border: 2px solid black;
 	background: lightyellow
 }

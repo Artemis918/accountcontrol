@@ -13,7 +13,7 @@
 
 .delbutton {
 	margin: 0;
-	borderstyle: outset;
+	border-style: outset;
     background-color: lightgray;
     font-size: 15px;
     padding: 2px 10px;
