@@ -26,7 +26,7 @@ export class KSDayPickerInput extends React.Component<KSDayPickerProps,{}> {
 
     localParseDate( str :string, f: string) :Date {
         const parsed: Date = MomentLocaleUtils.parseDate( str, f, this.props.locale);
-        if ( isNaN(parsed.getTime()) || parsed.getFullYear() < 1970)  {
+        if ( parsed == undefined || isNaN(parsed.getTime()) || parsed.getFullYear() < 1970)  {
             return undefined;
         }
         return parsed;
