@@ -1,3 +1,6 @@
-export const tsbutton: string
-export const tsbuttonselected: string
-export const tsline: string
+declare const css: {
+  readonly tsbutton: string
+  readonly tsbuttonselected: string
+  readonly tsline: string
+};
+export = css;

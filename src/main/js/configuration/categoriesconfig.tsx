@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { useIntl, WrappedComponentProps,IntlShape } from 'react-intl'
+import React from 'react'
+import { useIntl, WrappedComponentProps } from 'react-intl'
 
-import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
+import { SingleSelectLister, ColumnInfo } from '../utils/singleselectlister'
 import { Category, SubCategory } from '../utils/dtos'
 import { AddTool } from './addtool'
 import { YesNo } from '../utils/yesno'
-import { SendMessage, MessageID } from '../utils/messageid'
+import { SendMessage } from '../utils/messageid'
 
 type Creator = (props:CategoryConfigProps) => JSX.Element;
 export const CategoriesConfig:Creator = (p) => {return (<_CategoriesConfig {...p} intl={useIntl()}/>); }

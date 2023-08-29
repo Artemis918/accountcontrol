@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { DropdownService } from './dropdownservice'
 
-import * as css from '../css/index.css'
+import css from '../css/index.css'
 
 
 export type HandleCategoryChange = ( subCategory: number, category: number ) => void;

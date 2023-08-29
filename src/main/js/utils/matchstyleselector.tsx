@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { useIntl, IntlShape } from 'react-intl'
 
 type HandleChange = ( id: number ) => void;

@@ -3,8 +3,8 @@ import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
 import { PlanSelect } from './planselect'
-import * as mcss from './css/assign.css'
-import * as css from '../css/index.css'
+import mcss from './css/assign.css'
+import css from '../css/index.css'
 
 type Create = (props:SplitAssignProps) => JSX.Element;
 export const SplitAssign:Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()}/>); }

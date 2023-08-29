@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useIntl, WrappedComponentProps } from'react-intl'
 import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'

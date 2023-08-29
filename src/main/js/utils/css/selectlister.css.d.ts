@@ -1,4 +1,7 @@
-export const selectedrow: string;
-export const unselectedrow: string;
-export const selectlister: string;
-export const singledata: string;
+declare const css: {
+  readonly selectedrow: string;
+  readonly unselectedrow: string;
+  readonly selectlister: string;
+  readonly singledata: string;
+};
+export = css;

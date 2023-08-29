@@ -1,10 +1,10 @@
-import * as React from 'react'
+import React from 'react'
 import { useIntl, WrappedComponentProps } from 'react-intl';
 import { MonthSelect } from '../utils/monthselect';
 import { StatsDTO } from '../utils/dtos';
 import { CatStatsDTO } from '../utils/dtos';
 import { myParseJson } from '../utils/misc'
-import * as mcss from './css/overviewtab.css'
+import mcss from './css/overviewtab.css'
 
 type Create = (props:OverviewTabProps) => JSX.Element;
 export const OverviewTab:Create = (p) => {return (<_OverviewTab {...p} intl={useIntl()}/>); }

@@ -1,4 +1,7 @@
-export const creationPopup: string
-export const creationFrame: string
-export const creationButton: string
-export const creationPopupMonthSelect: string
+declare const css: { 
+  readonly creationPopup: string;
+  readonly creationFrame: string;
+  readonly creationButton: string;
+  readonly creationPopupMonthSelect: string;
+};
+export = css;

@@ -5,7 +5,7 @@ const SRC  = path.resolve( ROOT, 'js');
 const DEST = path.resolve( __dirname , 'build/js');
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   mode: 'development',
   devServer: {
     static: {
@@ -19,15 +19,8 @@ module.exports = {
      app: SRC + '/index.tsx',
   },
   resolve: {
-	  modules: [
-		  "node_modules",
-		  path.resolve(ROOT, 'js'),
-		  path.resolve(ROOT, 'js/utils'),
-	  ],
       extensions: [".ts",".tsx",".js" ]
   },
-  plugins: [
-  ],
   output: {
     path: DEST,
     filename: 'dist/bundle.js',

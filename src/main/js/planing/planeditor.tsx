@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IntlShape } from 'react-intl'
 import { PatternEditor } from './patterneditor'
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { ACDayPickerInput } from '../utils/ACDayPickerInput'
 import { CategorySelector } from '../utils/categoryselector'
 import { Plan } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
@@ -140,7 +140,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         </tr>
                         <tr>
                             <td>{this.label("plan.firstday")}</td>
-                            <td><KSDayPickerInput
+                            <td><ACDayPickerInput
                                 onChange={( d ) => { this.plan.startdate = d; this.setPlanState() }}
                                 startdate={this.state.plan.startdate}
 								locale={this.props.intl.locale} />
@@ -148,7 +148,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
                             <td>{this.label("plan.planedday")}</td>
-                            <td><KSDayPickerInput
+                            <td><ACDayPickerInput
                                 onChange={( d ) => { this.plan.plandate = d; this.setPlanState() }}
                                 startdate={this.state.plan.plandate}
 								locale={this.props.intl.locale}  />
@@ -156,7 +156,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         </tr>
                         <tr>
                             <td>{this.label("plan.endday")}</td>
-                            <td><KSDayPickerInput
+                            <td><ACDayPickerInput
                                 onChange={( d ) => { this.plan.enddate = d; this.setPlanState() }}
                                 startdate={this.state.plan.enddate}
   								locale={this.props.intl.locale}  />

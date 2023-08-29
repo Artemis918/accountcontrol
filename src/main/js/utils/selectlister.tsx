@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { myParseJson } from './misc'
-import * as css from './css/selectlister.css';
+import css from './css/selectlister.css';
 
 export type HandleSelectCallback<D> = (shift: boolean, ctrl: boolean, data: D, index: number) => void;
 export type IsSelectedCallback = (index: number) => boolean;

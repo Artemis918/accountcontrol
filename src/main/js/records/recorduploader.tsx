@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import * as Dropzone from 'react-dropzone'
 import {useIntl, WrappedComponentProps} from 'react-intl'
 import * as axios from 'axios'
@@ -9,6 +9,13 @@ import { SendMessage } from '../utils/messageid'
 
 type Create = (props:RecordUploaderProps) => JSX.Element;
 export const RecordUploader:Create = (p) => {return (<_RecordUploader {...p} intl={useIntl()}/>);}
+
+const accept: Dropzone.Accept = {
+	'text/csv' : [],
+	'text/xml' : [],
+	'application/xml' : [],
+	'text/plain' : []
+}
 
 interface RecordUploaderProps {
     sendmessage: SendMessage;
@@ -43,7 +50,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
         this.setState( { accepted: [] } );
     }
 
-    onDrop( accepted: File[], _rejected: File[], _event: React.DragEvent<HTMLElement> ): void {
+    onDrop( accepted: File[], _rejected: Dropzone.FileRejection[], _event: Dropzone.DropEvent ): void {
         this.setState( { accepted: this.state.accepted.concat( accepted ), fileok: [], fileerr: [] } );
     }
 
@@ -108,7 +115,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                         </td>
                         <td>
                             <div className={css.dropzone}>
-                                <Dropzone.default accept="text/csv, text/xml, application/xml, text/plain" onDrop={this.onDrop} >
+                                <Dropzone.default accept={accept} onDrop={this.onDrop} >
                                     {( { getRootProps, getInputProps, open } ) => (
                                         <div {...getRootProps()}>
                                             <input {...getInputProps()} />

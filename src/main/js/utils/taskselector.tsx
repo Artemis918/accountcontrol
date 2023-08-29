@@ -1,5 +1,5 @@
-import * as React from 'react'
-import * as css from './css/taskselector.css'
+import React from 'react'
+import css from './css/taskselector.css'
 
 export interface Task {
     name: string;
