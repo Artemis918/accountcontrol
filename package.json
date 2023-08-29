@@ -18,7 +18,7 @@
     "react-dropzone": "^14.2.3",
     "react-intl": "^6.4.4",
     "react-popper": "^2.3.0",
-    "recharts": "^2.7.2"
+    "recharts": "^2.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
