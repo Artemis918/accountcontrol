@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import React from 'react'
+import { ACDayPickerInput } from '../utils/ACDayPickerInput'
 import { AccountRecord } from '../utils/dtos'
 import { IntlShape } from 'react-intl' 
-import * as css from '../css/index.css'
+import css from '../css/index.css'
 
 type OnChangeCallback = () => void;
 
@@ -88,7 +88,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
         return (
             <div>
                 <table>
-                    <tbody>
+                    <tbody>x
                         <tr>
                             <td>{this.label("sender")}</td>
                             <td>
@@ -121,7 +121,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                         </tr>
                         <tr>
                             <td>{this.label("date")}</td>
-                            <td className={css.stringinput}><KSDayPickerInput
+                            <td className={css.stringinput}><ACDayPickerInput
                                 locale={this.props.intl.locale}
                                 onChange={( d ) => { this.record.executed = d; this.setState( { record: this.record } ) }}
                                 startdate={this.state.record.executed} />

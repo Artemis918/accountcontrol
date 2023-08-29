@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import * as css from './css/initial.css';
+import css from './css/initial.css';
 
 type SetPage = ( page: number ) => void;
 
@@ -21,33 +21,33 @@ export class InitialPage extends React.Component<InitialProps, {}> {
                 <tbody>
                     <tr>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 0 )}> 
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 0 )}> 
                               <FormattedMessage id="page.plan" defaultMessage="planing"/>
                             </button>
                         </td>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 1 )}> 
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 1 )}> 
                               <FormattedMessage id="page.accountRecords" defaultMessage="accountRecords"/>
                             </button>
                         </td>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 2 )}> 
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 2 )}> 
                                 <FormattedMessage id="page.assign" defaultMessage="assign"/>
                             </button>  </td>
                     </tr>
                     <tr>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 3 )}> 
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 3 )}> 
                                 <FormattedMessage id="page.check" defaultMessage="check"/>
                             </button>
                         </td>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 4 )}> 
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 4 )}> 
                                  <FormattedMessage id="page.overview" defaultMessage="overview"/>
                             </button>
                         </td>
                         <td> 
-                            <button className={css.ksbutton} onClick={() => this.props.setPage( 5 )}>
+                            <button className={css.acbutton} onClick={() => this.props.setPage( 5 )}>
                                 <FormattedMessage id="page.configuration" defaultMessage="configuration"/>
                             </button>
                         </td>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { IntlShape } from 'react-intl'
 
 import { TimeUnitSelector } from '../utils/timeunitselector'
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { ACDayPickerInput } from '../utils/ACDayPickerInput'
 import { Template } from '../utils/dtos'
 
 import css from '../css/index.css'
@@ -118,7 +118,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 								</td>
 							</tr>
 							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
-								<td><KSDayPickerInput
+								<td><ACDayPickerInput
 									    onChange={(d) => { this.setState({ plandate: d }) }}
 									    startdate={this.state.plandate}
 									    locale={this.props.intl.locale} />

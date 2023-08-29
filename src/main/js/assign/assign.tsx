@@ -9,9 +9,8 @@ import { SendMessage, MessageID } from '../utils/messageid';
 import { ContextMenu, ContextMenuTrigger, MenuItem } from 'react-contextmenu';
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-
-import * as mcss from './css/assign.css'
-import * as css from '../css/index.css'
+import  mcss from './css/assign.css'
+import  css from '../css/index.css'
 
 type Create = (props:AssignProps) => JSX.Element;
 export const Assign:Create = (props : AssignProps) => { return (<_Assign {...props} intl={useIntl()}/>);}

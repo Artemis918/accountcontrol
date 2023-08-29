@@ -1,2 +1,5 @@
-export const ksbutton: string;
-export const maintable: string;
+declare const css: {
+  readonly acbutton: string;
+  readonly maintable: string;
+};
+export = css;

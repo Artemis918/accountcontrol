@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { FormattedMessage } from 'react-intl';
 
 type SaveData = ( short: string, descripition:string ) => void;

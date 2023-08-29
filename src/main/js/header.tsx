@@ -1,5 +1,5 @@
-import * as React from 'react'
-import * as css from './css/index.css'
+import React  from 'react'
+import css from './css/index.css'
 
 type SetPage = ( index: number ) => void;
 

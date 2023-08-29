@@ -7,7 +7,7 @@ import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
 import { myParseJson } from '../utils/misc'
 
-import * as css from '../css/index.css'
+import css from '../css/index.css'
 
 
 

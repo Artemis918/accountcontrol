@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, } from 'recharts';
 import { MonthSelect } from '../utils/monthselect'
 import { StatsDTO, StatsMonthDTO } from '../utils/dtos'

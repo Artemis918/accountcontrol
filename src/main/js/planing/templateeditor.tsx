@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { IntlShape } from 'react-intl'
 import { PatternEditor } from './patterneditor'
-import { KSDayPickerInput } from '../utils/KSDayPickerInput'
+import { ACDayPickerInput } from '../utils/ACDayPickerInput'
 import { CategorySelector } from '../utils/categoryselector'
 import { Template } from '../utils/dtos'
 import { TimeUnitSelector } from '../utils/timeunitselector'
@@ -174,14 +174,14 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 							</td>
 						</tr>
 						<tr><td>{this.label("templates.validfrom")}</td>
-							<td><KSDayPickerInput
+							<td><ACDayPickerInput
 								onChange={(d) => { this.template.validFrom = d; this.setTemplateState() }}
 								startdate={this.state.template.validFrom}
 								locale={this.props.intl.locale} />
 							</td>
 						</tr>
 						<tr><td>{this.label("templates.validuntil")}</td>
-							<td><KSDayPickerInput
+							<td><ACDayPickerInput
 								onChange={(d) => { this.template.validUntil = d; this.setTemplateState() }}
 								startdate={this.state.template.validUntil}
 								locale={this.props.intl.locale} />
@@ -204,7 +204,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 							</td>
 						</tr>
 						<tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
-							<td><KSDayPickerInput
+							<td><ACDayPickerInput
 								onChange={(d) => { this.template.start = d; this.setTemplateState() }}
 								startdate={this.state.template.start}
 								locale={this.props.intl.locale} />

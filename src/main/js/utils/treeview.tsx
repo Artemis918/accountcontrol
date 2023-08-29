@@ -1,5 +1,5 @@
-import * as React from 'react'
-import * as tcss from './css/treeview.css'
+import React from 'react'
+import tcss from './css/treeview.css'
 
 export type GetURLCallback = ( level: number, id: number ) => string;
 export type HandleSelectCallback = ( level: number, id: number ) => void;

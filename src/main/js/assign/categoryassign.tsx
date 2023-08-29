@@ -1,9 +1,9 @@
-import * as React from 'react'
-import {useIntl, IntlShape,WrappedComponentProps } from 'react-intl'
+import React from 'react'
+import {useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 
-import * as css from '../css/index.css'
-import * as acss from './css/assign.css'
+import css from '../css/index.css'
+import acss from './css/assign.css'
 
 type Create = (props:CategoryAssignProps) => JSX.Element;
 export const CategoryAssign:Create = (p) => { return (<_CategoryAssign {...p} intl={useIntl()}/>); }

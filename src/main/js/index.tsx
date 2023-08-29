@@ -4,7 +4,7 @@ import { IntlProvider } from 'react-intl'
 import { InitialPage } from './initial'
 import { TabbedPages } from './tabbedPages'
 
-import * as css from './css/index.css'
+import css from './css/index.css'
 
 import messages_de from "./i18n/de.json";
 import messages_en from "./i18n/en.json";

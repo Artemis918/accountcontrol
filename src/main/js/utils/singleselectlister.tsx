@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { SelectLister, ColumnInfo, CreateFooterCallback } from './selectlister'
 
 export { ColumnInfo, CellInfo } from './selectlister'

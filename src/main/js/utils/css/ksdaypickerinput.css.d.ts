@@ -1,3 +1,6 @@
-export const inputOverlay: string;
-export const inputOverlayWrapper: string;
-export const input: string;
+declare const css: { 
+  readonly inputOverlay: string;
+  readonly inputOverlayWrapper: string;
+  readonly input: string;
+}
+export = css;

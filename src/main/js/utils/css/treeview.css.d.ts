@@ -1,6 +1,9 @@
-export const treeview: string;
-export const expandbutton: string;
-export const button: string;
-export const selected: string;
-export const list: string;
-export const list0: string;
+declare const css: {
+  readonly treeview: string;
+  readonly expandbutton: string;
+  readonly button: string;
+  readonly selected: string;
+  readonly list: string;
+  readonly list0: string;
+};
+export = css;
