@@ -1,18 +1,43 @@
-.input {
-  display: inline-block;
+
+.overlay {
   background :lightgray;
-  font-size: 16px;
+  border-width: 2px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+  z-index: 2;
 }
 
-.inputOverlayWrapper {
-  position: relative;
+.day {
+  background :lightblue;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 2px;
+  border: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  width: 25px;
 }
 
-.inputOverlay {
-  position: absolute;
-  left: 0;
-  z-index: 1;
-
-  background: lightgray;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+.cell {
+	width: 30;
+	height: 30;
 }
+
+.nav {
+	scale: 70%;
+}
+
+
+.caption {
+	font-size: 13px;
+	font-style: normal;
+ 	font-family: Arial, Helvetica, sans-serif;
+}
+
+.head {
+	font-size: 13px;
+	font-style: bold;
+ 	font-family: Arial, Helvetica, sans-serif;	
+}
+

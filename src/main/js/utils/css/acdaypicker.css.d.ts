@@ -1,6 +1,9 @@
 declare const css: { 
-  readonly inputOverlay: string;
-  readonly inputOverlayWrapper: string;
-  readonly input: string;
+  readonly cell: string;
+  readonly day: string;
+  readonly caption: string;
+  readonly head: string;
+  readonly nav: string;
+  readonly overlay: string;
 }
 export = css;
