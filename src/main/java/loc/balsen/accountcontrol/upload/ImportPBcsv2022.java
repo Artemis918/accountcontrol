@@ -98,11 +98,9 @@ public class ImportPBcsv2022 extends Importbase {
     int comma = value.length() - value.lastIndexOf(",");
     if (comma > value.length()) {
       value += ",00";
-    }
-    if (comma == 2) {
+    } else if (comma == 2) {
       value += "0";
-    }
-    if (comma == 4) {
+    } else if (comma == 4) {
       value += "00";
     }
 

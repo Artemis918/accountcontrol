@@ -55,7 +55,7 @@ public class ImportPB2022Test {
 
 
   @Test
-  public void testImportGermanNumbers() throws ParseException, IOException {
+  public void testImport() throws ParseException, IOException {
 
     LocalDate start = LocalDate.now();
 
@@ -83,38 +83,81 @@ public class ImportPB2022Test {
   @Test
   public void testImportEnglishNumbers() throws ParseException, IOException {
 
-    final String TESTDATA = "11.12.2022;12.12.2022;SEPA Lastschrift;Telecomica;"
-        + "\"some more details \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;"
-        + "zzzzzzzzzzzzzzzz;;-1,000,042.8;";
+    final String TESTLINE1 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1,000,042.8;\n";
+    final String TESTLINE2 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-10;\n";
+    final String TESTLINE3 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20;\n";
+    final String TESTLINE4 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-20.2;\n";
+    final String TESTLINE5 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20.6;\n";
+    final String TESTLINE6 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20.69;\n";
+    final String TESTLINE7 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-20.30;\n";
+    final String TESTLINE8 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1,110;\n";
 
     LocalDate start = LocalDate.now();
 
-    BufferedInputStream input = createInputStream(HEADER + TESTDATA);
+    BufferedInputStream input = createInputStream(HEADER + TESTLINE1 + TESTLINE2 + TESTLINE3
+        + TESTLINE4 + TESTLINE5 + TESTLINE6 + TESTLINE7 + TESTLINE8);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
-    verify(accountRecordRepository).save(argcap.capture());
-    AccountRecord record = argcap.getValue();
+    verify(accountRecordRepository, times(8)).save(argcap.capture());
+    List<AccountRecord> res = argcap.getAllValues();
 
-    assertEquals(-100004280, record.getValue());
+    assertEquals(-100004280, res.get(0).getValue());
+    assertEquals(-1000, res.get(1).getValue());
+    assertEquals(2000, res.get(2).getValue());
+    assertEquals(-2020, res.get(3).getValue());
+    assertEquals(2060, res.get(4).getValue());
+    assertEquals(2069, res.get(5).getValue());
+    assertEquals(-2030, res.get(6).getValue());
+    assertEquals(-111000, res.get(7).getValue());
   }
 
   @Test
-  public void testImportSpecial() throws ParseException, IOException {
+  public void testImportGermanNumbers() throws ParseException, IOException {
 
-    final String TESTDATA =
-        "1.11.2023;1.11.2023;SEPA Überweisung (Dauerauftrag);E;M;D;;NOTPROVIDED;;;;1,110;;;;;1,110;EUR";
+    final String TESTLINE1 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1.000.042,8;\n";
+    final String TESTLINE2 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-10;\n";
+    final String TESTLINE3 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20;\n";
+    final String TESTLINE4 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-20,2;\n";
+    final String TESTLINE5 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20,6;\n";
+    final String TESTLINE6 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;20,69;\n";
+    final String TESTLINE7 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-20,30;\n";
+    final String TESTLINE8 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
+        + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1.110;\n";
 
     LocalDate start = LocalDate.now();
 
-    BufferedInputStream input = createInputStream(HEADER + TESTDATA);
+    BufferedInputStream input = createInputStream(HEADER + TESTLINE1 + TESTLINE2 + TESTLINE3
+        + TESTLINE4 + TESTLINE5 + TESTLINE6 + TESTLINE7 + TESTLINE8);
     importer.ImportFile("test.csv", input);
 
     ArgumentCaptor<AccountRecord> argcap = ArgumentCaptor.forClass(AccountRecord.class);
-    verify(accountRecordRepository).save(argcap.capture());
-    AccountRecord record = argcap.getValue();
+    verify(accountRecordRepository, times(8)).save(argcap.capture());
+    List<AccountRecord> res = argcap.getAllValues();
 
-    assertEquals(111000, record.getValue());
+    assertEquals(-100004280, res.get(0).getValue());
+    assertEquals(-1000, res.get(1).getValue());
+    assertEquals(2000, res.get(2).getValue());
+    assertEquals(-2020, res.get(3).getValue());
+    assertEquals(2060, res.get(4).getValue());
+    assertEquals(2069, res.get(5).getValue());
+    assertEquals(-2030, res.get(6).getValue());
+    assertEquals(-111000, res.get(7).getValue());
   }
 
   @Test
