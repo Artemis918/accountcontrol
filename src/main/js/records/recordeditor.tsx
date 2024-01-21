@@ -1,5 +1,5 @@
 import React from 'react'
-import { ACDayPickerInput } from '../utils/ACDayPickerInput'
+import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { AccountRecord } from '../utils/dtos'
 import { IntlShape } from 'react-intl' 
 import css from '../css/index.css'

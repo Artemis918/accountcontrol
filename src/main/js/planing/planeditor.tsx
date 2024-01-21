@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { IntlShape } from 'react-intl'
 import { PatternEditor } from './patterneditor'
-import { ACDayPickerInput } from '../utils/ACDayPickerInput'
+import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { CategorySelector } from '../utils/categoryselector'
 import { Plan } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'

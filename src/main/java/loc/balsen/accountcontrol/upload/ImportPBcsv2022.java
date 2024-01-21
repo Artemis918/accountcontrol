@@ -93,6 +93,8 @@ public class ImportPBcsv2022 extends Importbase {
     // Value interpretieren
     String value = fields[11];
 
+    value = value.replaceAll("\\.", ",");
+
     int comma = value.length() - value.lastIndexOf(",");
     if (comma > value.length()) {
       value += ",00";
@@ -100,9 +102,12 @@ public class ImportPBcsv2022 extends Importbase {
     if (comma == 2) {
       value += "0";
     }
+    if (comma == 4) {
+      value += "00";
+    }
 
-    value = value.replaceAll("\\.", "");
     value = value.replaceAll(",", "");
+
     int val = Integer.parseInt(value);
 
     String sender = val > 0 ? fields[3] : "";

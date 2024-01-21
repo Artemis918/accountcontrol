@@ -2,7 +2,7 @@ import * as React from 'react'
 import { IntlShape } from 'react-intl'
 
 import { TimeUnitSelector } from '../utils/timeunitselector'
-import { ACDayPickerInput } from '../utils/ACDayPickerInput'
+import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { Template } from '../utils/dtos'
 
 import css from '../css/index.css'
