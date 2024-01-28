@@ -31,6 +31,7 @@
 	"maxvalue": "Max. value",
 	"maxsum": "Max. sum",
 	"pattern": "Pattern",
+	"plan" : "Plan",
 		
 	"footer.state": "state",
 	"footer.error": "error",

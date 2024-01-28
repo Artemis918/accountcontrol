@@ -100,8 +100,6 @@ public class ImportPB2022Test {
     final String TESTLINE8 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
         + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1,110;\n";
 
-    LocalDate start = LocalDate.now();
-
     BufferedInputStream input = createInputStream(HEADER + TESTLINE1 + TESTLINE2 + TESTLINE3
         + TESTLINE4 + TESTLINE5 + TESTLINE6 + TESTLINE7 + TESTLINE8);
     importer.ImportFile("test.csv", input);
@@ -140,7 +138,6 @@ public class ImportPB2022Test {
     final String TESTLINE8 = "11.12.2022;12.12.2022;SEPA Lastschrift;T;"
         + "\"-- \";IBNA;BIC;xxxxxxxxxxxx;yyyyyyyyyyyy yyyyy;" + "zzzzzzzzzzzzzzzz;;-1.110;\n";
 
-    LocalDate start = LocalDate.now();
 
     BufferedInputStream input = createInputStream(HEADER + TESTLINE1 + TESTLINE2 + TESTLINE3
         + TESTLINE4 + TESTLINE5 + TESTLINE6 + TESTLINE7 + TESTLINE8);

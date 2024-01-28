@@ -1,12 +1,14 @@
 import React from 'react';
 import { myParseJson } from './misc'
 import css from './css/selectlister.css';
+import { ContextMenu, ContextMenuDef } from './contextmenu';
 
 export type HandleSelectCallback<D> = (shift: boolean, ctrl: boolean, data: D, index: number) => void;
 export type IsSelectedCallback = (index: number) => boolean;
 export type SelectTableCellRender<D> = (cell: CellInfo<D>) => JSX.Element;
 export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
+
 
 export interface ColumnInfo<D> {
 	header: string;
@@ -34,10 +36,14 @@ export interface SelectListerProps<D> {
 	handleExecute?: HandleSelectCallback<D>;
 	isSelected?: IsSelectedCallback;
 	columns: ColumnInfo<D>[];
+	menu?: ContextMenuDef<D>;
 }
 
 class CState<D> {
 	data: D[];
+	menuOn: boolean;
+	menuX: number;
+	menuY: number;
 }
 
 export class SelectLister<D> extends React.Component<SelectListerProps<D>, CState<D>> {
@@ -48,12 +54,20 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
 	constructor(props: SelectListerProps<D>) {
 		super(props);
-		this.state = { data: undefined };
+		this.state = {
+			data: undefined,
+			menuOn: false,
+			menuX: 0,
+			menuY: 0
+		};
 		this.renderRow = this.renderRow.bind(this);
 		this.renderHeadCol = this.renderHeadCol.bind(this);
 		this.renderDataCol = this.renderDataCol.bind(this);
 		this.handleClick = this.handleClick.bind(this);
 		this.handleDoubleClick = this.handleDoubleClick.bind(this);
+		this.openContextMenu = this.openContextMenu.bind(this);
+		this.closeContextMenu = this.closeContextMenu.bind(this);
+		this.setMenuOff = this.setMenuOff.bind(this);
 		this.reload();
 	}
 
@@ -62,6 +76,10 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			this.setState({ data: undefined })
 			this.reload();
 		}
+	}
+
+	setMenuOff(): void {
+		this.setState({ menuOn: false });
 	}
 
 	getData(rows: number[]): D[] {
@@ -112,6 +130,19 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			e.ctrlKey,
 			this.state.data[rownum],
 			rownum)
+	}
+
+	openContextMenu(e: React.MouseEvent): void {
+		if (this.props.menu != null) {
+			e.preventDefault();
+			this.setState({ menuOn: true, menuX: e.pageX, menuY: e.pageY });
+			window.addEventListener("click", this.setMenuOff)
+		}
+	}
+
+	closeContextMenu(): void {
+		this.setState({ menuOn: false });
+		window.removeEventListener("click", this.setMenuOff);
 	}
 
 	renderRow(data: D, rownum: number): JSX.Element {
@@ -165,15 +196,18 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
 	render(): JSX.Element {
 		return (
-			<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }}>
-				<thead>
-					<tr>
-						{this.props.columns.map((col: ColumnInfo<D>) => this.renderHeadCol(col))}
-					</tr>
-				</thead>
-				{this.renderData()}
-				{this.renderFooter()}
-			</table>
+			<div>
+				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} onContextMenu={this.openContextMenu}>
+					<thead>
+						<tr>
+							{this.props.columns.map((col: ColumnInfo<D>) => this.renderHeadCol(col))}
+						</tr>
+					</thead>
+					{this.renderData()}
+					{this.renderFooter()}
+				</table>
+				<ContextMenu<D> menudef={this.props.menu} menuOn={this.state.menuOn} menuX={this.state.menuX} menuY={this.state.menuY} />
+			</div>
 		);
 	}
 }
