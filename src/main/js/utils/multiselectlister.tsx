@@ -135,6 +135,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 				lines={this.props.lines}
 				menu={this.props.menu}
 				handleSelect={(s: boolean, c: boolean, _d: D, i: number) => this.handleSelect(s, c, i)}
+				hasSelected={()=> {return this.state.range != undefined || this.state.selectedRows != undefined}}
 				isSelected={(i) => this.isSelected(i)}
 				ref={(r) => { this.lister = r; }} />
 		);

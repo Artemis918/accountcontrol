@@ -8,6 +8,7 @@ export type IsSelectedCallback = (index: number) => boolean;
 export type SelectTableCellRender<D> = (cell: CellInfo<D>) => JSX.Element;
 export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
+export type HasSelectedCallback = () => boolean;
 
 
 export interface ColumnInfo<D> {
@@ -32,8 +33,9 @@ export interface SelectListerProps<D> {
 	url: string;
 	lines?: number;
 	createFooter?: CreateFooterCallback<D>;
-	handleSelect?: HandleSelectCallback<D>;
+	handleSelect: HandleSelectCallback<D>;
 	handleExecute?: HandleSelectCallback<D>;
+	hasSelected?: HasSelectedCallback;
 	isSelected?: IsSelectedCallback;
 	columns: ColumnInfo<D>[];
 	menu?: ContextMenuDef<D>;
@@ -132,9 +134,14 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			rownum)
 	}
 
-	openContextMenu(e: React.MouseEvent): void {
+	openContextMenu(e: React.MouseEvent<HTMLTableRowElement>): void {
 		if (this.props.menu != null) {
 			e.preventDefault();
+			if (this.props.hasSelected && !this.props.hasSelected()) {
+				var rownum: number = e.currentTarget.rowIndex - 1;
+				this.props.handleSelect(false, false, this.state.data[rownum],
+					rownum)
+			}
 			this.setState({ menuOn: true, menuX: e.pageX, menuY: e.pageY });
 			window.addEventListener("click", this.setMenuOff)
 		}
@@ -149,6 +156,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		return (
 			<tr onClick={this.handleClick}
 				onDoubleClick={this.handleDoubleClick}
+				onContextMenu={this.openContextMenu}
 				className={this.props.isSelected(rownum) ? css.selectedrow : css.unselectedrow}
 				key={"slrow" + rownum}>
 				{this.props.columns.map((col: ColumnInfo<D>) => this.renderDataCol(col, data, rownum))}
@@ -197,7 +205,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 	render(): JSX.Element {
 		return (
 			<div>
-				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} onContextMenu={this.openContextMenu}>
+				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >
 					<thead>
 						<tr>
 							{this.props.columns.map((col: ColumnInfo<D>) => this.renderHeadCol(col))}

@@ -83,6 +83,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
                 handleSelect={( _s, _c, d, i ) => this.changeSelected( d, i )}
                 handleExecute={( _s, _c, d, i ) => this.executeSelected( d, i )}
                 isSelected={( i ) => this.isSelected( i )}
+                hasSelected={() => this.state.selectedRow != undefined}
                 ref={( r ) => { this.lister = r; }} />
         );
     }
