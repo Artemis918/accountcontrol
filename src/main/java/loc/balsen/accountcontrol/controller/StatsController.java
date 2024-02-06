@@ -43,10 +43,12 @@ public class StatsController {
 
     List<StatsMonthDTO> result = new ArrayList<>();
 
-    int maxval = monthlyValues.stream().max(Integer::compare).get();
-    int maxplan = monthlyPlanValues.stream().max(Integer::compare).get();
-    int minval = monthlyValues.stream().min(Integer::compare).get();
-    int minplan = monthlyPlanValues.stream().min(Integer::compare).get();
+    int maxval = monthlyValues.size() == 0 ? 0 : monthlyValues.stream().max(Integer::compare).get();
+    int maxplan =
+        monthlyPlanValues.size() == 0 ? 0 : monthlyPlanValues.stream().max(Integer::compare).get();
+    int minval = monthlyValues.size() == 0 ? 0 : monthlyValues.stream().min(Integer::compare).get();
+    int minplan =
+        monthlyPlanValues.size() == 0 ? 0 : monthlyPlanValues.stream().min(Integer::compare).get();
 
     int beginforecast = monthlyValues.size();
     int diffval = 0;
