@@ -7,6 +7,7 @@ public class CategoryDTO {
   private int id;
   private String shortdescription;
   private String description;
+  private boolean active;
 
 
   public CategoryDTO() {};
@@ -15,10 +16,13 @@ public class CategoryDTO {
     this.id = cat.getId();
     this.description = cat.getDescription();
     this.shortdescription = cat.getShortDescription();
+    this.active = cat.isActive();
   }
 
   public Category toCategory() {
-    return new Category(id, shortdescription, description);
+    Category res = new Category(id, shortdescription, description);
+    res.setActive(active);
+    return res;
   }
 
   // for serialization only
@@ -33,5 +37,9 @@ public class CategoryDTO {
 
   public String getDescription() {
     return description;
+  }
+
+  public boolean isActive() {
+    return active;
   }
 }

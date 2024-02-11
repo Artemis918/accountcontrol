@@ -30,6 +30,8 @@ public class SubCategory {
 
   private String description;
   private Type type;
+  private Boolean active;
+  private Boolean favorite;
 
   @ManyToOne
   @JoinColumn(name = "category")
@@ -43,6 +45,8 @@ public class SubCategory {
     this.description = description;
     this.type = type;
     this.category = cat;
+    this.active = true;
+    this.favorite = false;
   }
 
   public void setDescription(String shortDescription, String description) {
@@ -68,5 +72,21 @@ public class SubCategory {
 
   public Type getType() {
     return type;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
+  public boolean isFavorite() {
+    return favorite;
+  }
+
+  public void setFavorite(boolean favorite) {
+    this.favorite = favorite;
   }
 }

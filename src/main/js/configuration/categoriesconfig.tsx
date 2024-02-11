@@ -99,7 +99,16 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     saveSub(short: string, desc: string):void {
         var self = this;
         if (short != undefined && short != '') {
-            var subCategory:SubCategory = {id: 0, shortdescription:short, description: desc, category: this.state.category.id, art: 0};
+            var subCategory:SubCategory = 
+              { id: 0,
+                shortdescription:short,
+                description: desc,
+                category: this.state.category.id,
+                art: 0,
+                active: true,
+                favorite: false,
+                categoryName: this.state.category.description
+              };
             var jsonbody = JSON.stringify( subCategory );
             fetch( 'category/savesub', {
                        method: 'post',
@@ -121,7 +130,12 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
     saveCat(short: string, desc: string):void {
         var self = this;
         if (short != undefined && short != '') {
-            var category:Category = {id: 0, shortdescription:short, description: desc};
+            var category:Category = 
+              {
+				  id: 0,
+				  shortdescription:short,
+				  description: desc,
+				  active: true};
             var jsonbody = JSON.stringify( category );
             fetch( 'category/savecat', {
                        method: 'post',

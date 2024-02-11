@@ -22,6 +22,7 @@ public class Category {
   private String shortDescription;
 
   private String description;
+  private boolean active;
 
   public Category() {}
 
@@ -29,6 +30,7 @@ public class Category {
     this.id = id;
     this.shortDescription = shortdescription;
     this.description = description;
+    this.active = true;
   }
 
   public void setDescription(String shortDescription, String description) {
@@ -50,5 +52,14 @@ public class Category {
 
   public String getDescription() {
     return description;
+  }
+
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 }

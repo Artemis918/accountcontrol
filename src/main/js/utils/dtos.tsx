@@ -187,15 +187,19 @@ export class  Assignment {
 export interface SubCategory {
     id: number;
     shortdescription: string;
-    description:string;
+    description: string;
     art: number;
-    category:number;
+    category: number;
+    categoryName: string;
+    favorite: boolean;
+    active: boolean;
 }
 
 export interface Category {
     id: number;
     shortdescription: string;
     description: string;
+    active: boolean;
 }
 
 //=====================================================

@@ -11,6 +11,9 @@ public class SubCategoryDTO {
   private String description;
   private int type;
   private int category;
+  private String categoryDesc;
+  private boolean favorite;
+  private boolean active;;
 
 
   public SubCategoryDTO(SubCategory cat) {
@@ -18,14 +21,21 @@ public class SubCategoryDTO {
     this.description = cat.getDescription();
     this.shortdescription = cat.getShortDescription();
     this.type = cat.getType().ordinal();
-    if (cat.getCategory() != null)
+    if (cat.getCategory() != null) {
       this.category = cat.getCategory().getId();
+      this.categoryDesc = cat.getCategory().getDescription();
+    }
+    this.active = cat.isActive();
+    this.favorite = cat.isFavorite();
   }
 
   public SubCategory toSubCategory(CategoryRepository categoryRepository) {
     Category cat = categoryRepository.findById(category).orElse(null);
-    return new SubCategory(id, shortdescription, description, SubCategory.Type.values()[this.type],
-        cat);
+    SubCategory res = new SubCategory(id, shortdescription, description,
+        SubCategory.Type.values()[this.type], cat);
+    res.setActive(active);
+    res.setFavorite(favorite);
+    return res;
   }
 
   // for serialization only
@@ -50,5 +60,17 @@ public class SubCategoryDTO {
 
   public int getCategory() {
     return category;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public boolean isFavorite() {
+    return favorite;
+  }
+
+  public String getCategoryDescription() {
+    return categoryDesc;
   }
 }

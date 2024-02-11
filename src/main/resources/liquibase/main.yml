@@ -3,3 +3,6 @@ databaseChangeLog:
     path: initial
     relativeToChangelogFile: true
 
+- include:
+    file: catactive.yml
+    relativeToChangelogFile: true

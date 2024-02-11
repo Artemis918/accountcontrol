@@ -1,0 +1,23 @@
+databaseChangeLog:
+- changeSet:
+    id: add-active-category
+    author: balsen
+    changes:
+      - addColumn:
+          tableName: category
+          columns:
+          - column:
+              name: active
+              type: boolean
+              value: "true"
+      - addColumn:
+          tableName: sub_category
+          columns:
+          - column:
+              name: active
+              type: boolean
+              value: "true"
+          - column:
+              name: favorite
+              type: boolean
+              value: "false"
