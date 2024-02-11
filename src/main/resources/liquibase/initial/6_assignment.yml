@@ -1,0 +1,99 @@
+databaseChangeLog:
+- changeSet:
+    id: create-assignment
+    author: balsen (generated)
+    preConditions:
+      - onFail: MARK_RAN
+      - not:
+          - tableExists:
+             tableName: assignment
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: assignment_pkey
+            name: id
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: committed
+            type: BOOLEAN
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: short_description
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: value
+            type: INTEGER
+        - column:
+            name: accountrecord
+            type: INTEGER
+        - column:
+            name: plan
+            type: INTEGER
+        - column:
+            name: subcategory
+            type: INTEGER
+        - column:
+            name: shortdescription
+            type: VARCHAR(255)
+        tableName: assignment
+        
+    - addUniqueConstraint:
+        columnNames: plan
+        constraintName: uk_assignment_plan
+        tableName: assignment
+        
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: seq_assignment
+        startValue: 1
+        
+    - addForeignKeyConstraint:
+        baseColumnNames: accountrecord
+        baseTableName: assignment
+        constraintName: fk_assignment_accountrecord
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: account_record
+        validate: true
+
+    - addForeignKeyConstraint:
+        baseColumnNames: plan
+        baseTableName: assignment
+        constraintName: fk_assignment_plan
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: plan
+        validate: true
+
+    - addForeignKeyConstraint:
+        baseColumnNames: subcategory
+        baseTableName: assignment
+        constraintName: fk_assignment_subcategory
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: sub_category
+        validate: true

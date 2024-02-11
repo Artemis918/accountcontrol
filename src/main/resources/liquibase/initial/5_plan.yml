@@ -1,0 +1,101 @@
+databaseChangeLog:
+- changeSet:
+    id: create-plan
+    author: balsen (generated)
+    preConditions:
+      - onFail: MARK_RAN
+      - not:
+          - tableExists:
+             tableName: plan
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: plan_pkey
+            name: id
+            type: INTEGER
+        - column:
+            name: creation_date
+            type: date
+        - column:
+            name: deactivate_date
+            type: date
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: end_date
+            type: date
+        - column:
+            name: match_style
+            type: SMALLINT
+        - column:
+            constraints:
+              nullable: false
+            name: pattern
+            type: VARCHAR(255)
+        - column:
+            name: plan_date
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: position
+            type: INTEGER
+        - column:
+            name: short_description
+            type: VARCHAR(255)
+        - column:
+            name: start_date
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: value
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: subcategory
+            type: INTEGER
+        - column:
+            name: template
+            type: INTEGER
+        tableName: plan
+
+    - createSequence:
+        cacheSize: 1
+        cycle: false
+        dataType: bigint
+        incrementBy: 1
+        maxValue: 9223372036854775807
+        minValue: 1
+        sequenceName: seq_plan
+        startValue: 1
+
+    - addForeignKeyConstraint:
+        baseColumnNames: subcategory
+        baseTableName: plan
+        constraintName: fk_plan_subcategory
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: sub_category
+        validate: true
+
+    - addForeignKeyConstraint:
+        baseColumnNames: template
+        baseTableName: plan
+        constraintName: fk_plan_template
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: template
+        validate: true
