@@ -46,11 +46,11 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	}
 
 	renderRow(entry: ContextMenuEntry<D>, index: number): JSX.Element {
-
-		return <tr>
+		return <tr key={entry.name}>
 			<td onClick={() => this.executeMenu(index)} style={{ background: index == this.state.highlighted ? 'white' : 'lightblue' }}
 				onMouseEnter={() => { this.highlightMenu(index, true) }}
 				onMouseLeave={() => { this.highlightMenu(index, false) }}
+				key={entry.name}
 			>{entry.name}  </td>
 		</tr>
 	}
@@ -58,9 +58,11 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	renderHead(title: string): JSX.Element {
 		if (title != null) {
 			return (
-				<th style={{ borderBottomWidth: '1px', borderBottomStyle: 'solid', color: 'black' }} >
-					{title}
-				</th>
+				<tr key={"head"}>
+					<th key={"title"} style={{ borderBottomWidth: '1px', borderBottomStyle: 'solid', color: 'black' }} >
+						{title}
+					</th>
+				</tr>
 			)
 		}
 	}
@@ -81,7 +83,9 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 						color: 'blue'
 					}}>
 						<table>
-							{this.renderHead(this.props.menudef.title)}
+							<thead>
+								{this.renderHead(this.props.menudef.title)}
+							</thead>
 							<tbody>
 								{this.props.menudef.entries.map(this.renderRow)}
 							</tbody>

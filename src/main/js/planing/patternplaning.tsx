@@ -71,7 +71,7 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
                             <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
                                 className={css.catselector3}
-								url='category/catenum'
+								url='category/catenum/true'
                                 value={this.state.category}
                             />
                         </div>

@@ -12,4 +12,6 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory, Intege
 
   Optional<SubCategory> findByCategoryAndShortDescription(Category category,
       String shortdescription);
+
+  List<SubCategory> findAllByOrderByShortDescription();
 }

@@ -95,7 +95,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
 							<p style={{ padding: '1px', margin: '5px', borderBottom: '1px solid black' }}>
 								<DropdownService className={css.catselector3}
 									onChange={(val: number): void => this.setState({ category: val })}
-									url='category/catenum'
+									url='category/catenum/true'
 									value={this.state.category}
 								/>
 							</p>

@@ -118,7 +118,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 				headers: { "Content-Type": "application/json" }
 			}
 			).then(
-				function(response) {
+				() => {
 					self.setState({ addsub: false });
 					self.sublister.current.reload();
 				}
@@ -264,7 +264,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 								<div style={{ textAlign: "center" }}>
 									<input type='checkbox'
 										checked={cell.data.active}
-										onClick={() => this.invertActiveCat(cell.data)} />
+										onChange={() => this.invertActiveCat(cell.data)} />
 								</div>
 							)
 					}
@@ -284,7 +284,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 								<div style={{ textAlign: "center" }}>
 									<input type='checkbox'
 										checked={cell.data.favorite}
-										onClick={() => this.invertFavorite(cell.data)} />
+										onChange={() => this.invertFavorite(cell.data)} />
 								</div>
 							)
 					}

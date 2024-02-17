@@ -47,14 +47,14 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     render(): JSX.Element {
-		var caturlextension = this.state.category==undefined?'':this.state.category.toString();
+		var caturlextension = this.state.category==undefined?"":this.state.category.toString() + "/true";
         if ( this.props.horiz ) {
             return (
                 <span>
                     <DropdownService 
 						value={this.state.category}
                         onChange={this.setCategory}
-                        url='category/catenum'
+                        url='category/catenum/true'
 						className={css.catselector2} />
                     <DropdownService 
 						value={this.state.subcategory}
@@ -71,7 +71,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                         <DropdownService className={css.catselector} 
 							value={this.state.category}
                             onChange={this.setCategory}
-                            url='category/catenum' />
+                            url='category/catenum/true' />
                     </td></tr>
                     <tr><td>
                         <DropdownService className={css.catselector} 

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import loc.balsen.accountcontrol.data.Category;
-import loc.balsen.accountcontrol.data.SubCategory;
 import loc.balsen.accountcontrol.dataservice.CategoryService;
 import loc.balsen.accountcontrol.dto.CategoryDTO;
 import loc.balsen.accountcontrol.dto.EnumDTO;
@@ -34,36 +32,42 @@ public class CategoryController {
     this.categoryRepository = categoryRepository;
   }
 
-  @GetMapping("/catenum")
-  List<EnumDTO> findCategoriesEnum() {
-    List<EnumDTO> list = new ArrayList<>();
-    for (Category cat : categoryService.getAllCategories())
-      list.add(new EnumDTO(cat.getShortDescription(), cat.getId()));
-    return list;
+  @GetMapping("/catenum/{activeonly}")
+  List<EnumDTO> findCategoriesEnum(boolean activeonly) {
+    return categoryService.getAllCategories(activeonly).stream().map(cat -> {
+      return new EnumDTO(cat.getShortDescription(), cat.getId());
+    }).toList();
   }
 
-  @GetMapping("/subenum/{id}")
-  List<EnumDTO> findSubCategoryEnum(@PathVariable Integer id) {
-    List<EnumDTO> list = new ArrayList<>();
-    for (SubCategory sub : categoryService.getSubCategories(id))
-      list.add(new EnumDTO(sub.getShortDescription(), sub.getId()));
-    return list;
+  @GetMapping("/subenumfavorite")
+  List<EnumDTO> findFavoriteSubCategoriesEnum() {
+    return categoryService.getFavoriteSubCategories().stream().map(sub -> {
+      String text = sub.getCategory().getShortDescription() + "/" + sub.getShortDescription();
+      return new EnumDTO(text, sub.getId());
+    }).toList();
+  }
+
+
+  @GetMapping("/subenum/{id}/{activeonly}")
+  List<EnumDTO> findSubCategoryEnum(@PathVariable Integer id, @PathVariable boolean activeonly) {
+    return categoryService.getSubCategories(id, activeonly).stream().map(sub -> {
+      return new EnumDTO(sub.getShortDescription(), sub.getId());
+    }).toList();
   }
 
   @GetMapping("/cat")
   List<CategoryDTO> findCategories() {
-    List<CategoryDTO> list = new ArrayList<>();
-    for (Category cat : categoryService.getAllCategories())
-      list.add(new CategoryDTO(cat));
-    return list;
+    return categoryService.getAllCategories(false).stream().map(cat -> {
+      return new CategoryDTO(cat);
+    }).toList();
   }
 
   @GetMapping("/sub/{id}")
   List<SubCategoryDTO> findSubCategory(@PathVariable Integer id) {
     List<SubCategoryDTO> list = new ArrayList<>();
-    for (SubCategory sub : categoryService.getSubCategories(id))
-      list.add(new SubCategoryDTO(sub));
-    return list;
+    return categoryService.getSubCategories(id, false).stream().map(sub -> {
+      return new SubCategoryDTO(sub);
+    }).toList();
   }
 
   @PostMapping(path = "/savesub")

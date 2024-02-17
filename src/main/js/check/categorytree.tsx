@@ -53,10 +53,10 @@ export class CategoryTree extends React.Component<CategoryTreeProps, IState> {
 
     getURL( level: number, id: number) :string {
         if (level == 0) {
-            return 'category/catenum';
+            return 'category/catenum/true';
         } 
         else if (level == 1 ) {
-            return 'category/subenum/' + id;
+            return 'category/subenum/' + id + "/true";
         }
         else return undefined;
     }

@@ -86,7 +86,7 @@ public class StatsController {
     LocalDate startDate = LocalDate.of(startyear, startmonth, 1);
     LocalDate endDate = LocalDate.of(endyear, endmonth, 1).with(TemporalAdjusters.lastDayOfMonth());
     List<CatStatsDTO> result = new ArrayList<CatStatsDTO>();
-    List<Category> cats = categoryService.getAllCategories();
+    List<Category> cats = categoryService.getAllCategories(false);
 
     for (Category cat : cats) {
       result

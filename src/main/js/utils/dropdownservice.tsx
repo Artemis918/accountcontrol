@@ -43,7 +43,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
 
     setData( data: EnumDTO[] ): void {
         this.setState( { data: data } );
-        if (this.props.value == undefined)
+        if (this.props.value == undefined && data.length > 0)
             this.props.onChange(data[0].value);
     }
 
