@@ -8,7 +8,7 @@ import loc.balsen.accountcontrol.data.SubCategory;
 
 public interface SubCategoryRepository extends JpaRepository<SubCategory, Integer> {
 
-  List<SubCategory> findByCategoryId(Integer id);
+  List<SubCategory> findByCategoryIdOrderByShortDescription(Integer id);
 
   Optional<SubCategory> findByCategoryAndShortDescription(Category category,
       String shortdescription);

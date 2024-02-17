@@ -63,6 +63,8 @@
 	"category.createcat": "Neue Kategorie",
 	"category.createsub": "Neue Unterategorie für",
 	"category.woulddelete": "Diese Aktion löscht folgendes:",
+	"category.active": "Aktiv",
+	"category.favorite": "Favorit",
 	
     "assign.assignplan": "Plan zuweisen",
     "assign.catassign": "Kat. zuweisen",

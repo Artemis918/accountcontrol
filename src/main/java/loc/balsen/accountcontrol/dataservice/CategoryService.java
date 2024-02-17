@@ -26,11 +26,11 @@ public class CategoryService {
   }
 
   public List<Category> getAllCategories() {
-    return categoryRepository.findAll();
+    return categoryRepository.findAllByOrderByShortDescription();
   }
 
   public List<SubCategory> getSubCategories(int id) {
-    return subCategoryRepository.findByCategoryId(id);
+    return subCategoryRepository.findByCategoryIdOrderByShortDescription(id);
   }
 
   public int saveSubCategory(SubCategory subCategory) {
@@ -86,10 +86,38 @@ public class CategoryService {
   }
 
   public void delCategory(int category) {
-    List<SubCategory> subs = subCategoryRepository.findByCategoryId(category);
+    List<SubCategory> subs =
+        subCategoryRepository.findByCategoryIdOrderByShortDescription(category);
     for (SubCategory sub : subs) {
       delSubCategory(sub.getId());
     }
     categoryRepository.deleteById(category);
+  }
+
+  public void invertActiveCat(Integer cat) {
+    Optional<Category> catentry = categoryRepository.findById(cat);
+    if (catentry.isPresent()) {
+      Category category = catentry.get();
+      category.setActive(!category.isActive());
+      categoryRepository.save(category);
+    }
+  }
+
+  public void invertActiveSubCat(Integer subcat) {
+    Optional<SubCategory> subentry = subCategoryRepository.findById(subcat);
+    if (subentry.isPresent()) {
+      SubCategory subCategory = subentry.get();
+      subCategory.setActive(!subCategory.isActive());
+      subCategoryRepository.save(subCategory);
+    }
+  }
+
+  public void invertFavoriteSubCat(Integer subcat) {
+    Optional<SubCategory> subentry = subCategoryRepository.findById(subcat);
+    if (subentry.isPresent()) {
+      SubCategory subCategory = subentry.get();
+      subCategory.setFavorite(!subCategory.isFavorite());
+      subCategoryRepository.save(subCategory);
+    }
   }
 }

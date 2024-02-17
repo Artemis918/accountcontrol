@@ -65,7 +65,8 @@ public class AssignmentController {
   public List<AssignmentDTO> getCategory(@PathVariable int id, @PathVariable int month,
       @PathVariable int year) {
     List<Assignment> assignments = new ArrayList<>();
-    List<SubCategory> subcategories = subCategoryRepository.findByCategoryId(id);
+    List<SubCategory> subcategories =
+        subCategoryRepository.findByCategoryIdOrderByShortDescription(id);
     LocalDate start = LocalDate.of(year, month, 1);
     LocalDate end = LocalDate.of(year, month, start.lengthOfMonth());
     for (SubCategory subcategory : subcategories) {

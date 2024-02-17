@@ -88,4 +88,23 @@ public class CategoryController {
     categoryService.delCategory(cat);
     return MessageID.ok;
   }
+
+  @GetMapping(path = "/invertactivecat/{cat}")
+  MessageID invertCategoryActive(@PathVariable Integer cat) {
+    categoryService.invertActiveCat(cat);
+    return MessageID.ok;
+  }
+
+  @GetMapping(path = "/invertactivesub/{subcat}")
+  MessageID invertSubCategoryActive(@PathVariable Integer subcat) {
+    categoryService.invertActiveSubCat(subcat);
+    return MessageID.ok;
+  }
+
+  @GetMapping(path = "/invertfavorite/{subcat}")
+  MessageID invertSubCategoryFavorite(@PathVariable Integer subcat) {
+    categoryService.invertFavoriteSubCat(subcat);
+    return MessageID.ok;
+  }
+
 }
