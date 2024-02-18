@@ -49,32 +49,51 @@ public class CategoryControllerTest extends TestContext {
 
   @Test
   public void testCategory() throws Exception {
-    mvc.perform(get("/category/catenum").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()).andExpect(jsonPath("$.[2].text", is("Category 3short")))
+    mvc.perform(get("/category/catenum/false").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(3)))
+        .andExpect(jsonPath("$.[2].text", is("Category 3short")))
         .andExpect(jsonPath("$.[0].value", is(1))).andExpect(jsonPath("$.[2].value", is(3)));
 
+    mvc.perform(get("/category/catenum/true").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(2)))
+        .andExpect(jsonPath("$.[1].text", is("Category 3short")))
+        .andExpect(jsonPath("$.[0].value", is(1))).andExpect(jsonPath("$.[1].value", is(3)));
+
     mvc.perform(get("/category/cat").contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(3)))
         .andExpect(jsonPath("$.[2].shortdescription", is("Category 3short")))
         .andExpect(jsonPath("$.[0].id", is(1))).andExpect(jsonPath("$.[2].id", is(3)));
   }
 
   @Test
   public void testSubCategories() throws Exception {
-    mvc.perform(get("/category/subenum/1").contentType(MediaType.APPLICATION_JSON))
+    mvc.perform(get("/category/subenum/1/false").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(4)))
         .andExpect(jsonPath("$.[0].text", is("SubCat 1short")))
         .andExpect(jsonPath("$.[2].value", is(3)));
 
-    mvc.perform(get("/category/subenum/2").contentType(MediaType.APPLICATION_JSON))
+    mvc.perform(get("/category/subenum/1/true").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(3)))
+        .andExpect(jsonPath("$.[0].text", is("SubCat 1short")))
+        .andExpect(jsonPath("$.[2].value", is(4)));
+
+    mvc.perform(get("/category/subenum/2/false").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(1)))
         .andExpect(jsonPath("$.[0].text", is("SubCat 5short")))
         .andExpect(jsonPath("$.[0].value", is(5)));
+
+    mvc.perform(get("/category/subenum/2/true").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(0)));
 
     mvc.perform(get("/category/sub/2").contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(1)))
         .andExpect(jsonPath("$.[0].shortdescription", is("SubCat 5short")))
         .andExpect(jsonPath("$.[0].id", is(5)));
+
+    mvc.perform(get("/category/subenumfavorite").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(jsonPath("$[*]", hasSize(2)))
+        .andExpect(jsonPath("$.[0].text", is("Category 1short/SubCat 2short")))
+        .andExpect(jsonPath("$.[1].value", is(3)));
   }
 
   @Test
@@ -91,6 +110,7 @@ public class CategoryControllerTest extends TestContext {
 
     // same sub in other category
     SubCategory sub1 = new SubCategory(0, null, "testing", SubCategory.Type.INTERN, category3);
+    sub1.setFavorite(true);
     SubCategoryDTO testsub1 = new SubCategoryDTO(sub1);
     result = mvc.perform(post("/category/savesub").contentType(MediaType.APPLICATION_JSON)
         .content(gson.toJson(testsub1))).andExpect(status().isOk()).andReturn();
@@ -105,6 +125,7 @@ public class CategoryControllerTest extends TestContext {
 
     // modify sub
     SubCategory sub2 = new SubCategory(res, null, "testingNew", SubCategory.Type.INTERN, category3);
+    sub2.setActive(false);
     SubCategoryDTO testsub2 = new SubCategoryDTO(sub2);
     result = mvc.perform(post("/category/savesub").contentType(MediaType.APPLICATION_JSON)
         .content(gson.toJson(testsub2))).andExpect(status().isOk()).andReturn();

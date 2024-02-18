@@ -33,7 +33,7 @@ public class CategoryController {
   }
 
   @GetMapping("/catenum/{activeonly}")
-  List<EnumDTO> findCategoriesEnum(boolean activeonly) {
+  List<EnumDTO> findCategoriesEnum(@PathVariable boolean activeonly) {
     return categoryService.getAllCategories(activeonly).stream().map(cat -> {
       return new EnumDTO(cat.getShortDescription(), cat.getId());
     }).toList();

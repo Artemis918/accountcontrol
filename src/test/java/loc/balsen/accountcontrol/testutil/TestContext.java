@@ -53,34 +53,37 @@ public class TestContext {
 
   protected void createCategoryData() {
 
-    category1 = createCategory(1);
-    category2 = createCategory(2);
-    category3 = createCategory(3);
+    category1 = createCategory(1, true);
+    category2 = createCategory(2, false);
+    category3 = createCategory(3, true);
 
-    subCategory1 = createSubCategory(1, category1);
-    subCategory2 = createSubCategory(2, category1);
-    subCategory3 = createSubCategory(3, category1);
-    subCategory4 = createSubCategory(4, category1);
-    subCategory5 = createSubCategory(5, category2);
+    subCategory1 = createSubCategory(1, category1, true, false);
+    subCategory2 = createSubCategory(2, category1, false, true);
+    subCategory3 = createSubCategory(3, category1, true, true);
+    subCategory4 = createSubCategory(4, category1, true, false);
+    subCategory5 = createSubCategory(5, category2, false, false);
   }
 
-  private Category createCategory(int desc) {
+  private Category createCategory(int desc, boolean active) {
     Optional<Category> optcat = categoryRepository.findById(desc);
     if (optcat.isPresent()) {
       return optcat.get();
     } else {
       Category cat = new Category(0, "Category " + desc + "short", "Category " + desc + "long");
+      cat.setActive(active);
       categoryRepository.save(cat);
       return cat;
     }
   }
 
-  private SubCategory createSubCategory(int desc, Category cat) {
+  private SubCategory createSubCategory(int desc, Category cat, boolean active, boolean favorite) {
     if (subCategoryRepository.findById(desc).isPresent()) {
       return subCategoryRepository.findById(desc).get();
     } else {
       SubCategory sub = new SubCategory(0, "SubCat " + desc + "short", "SubCat " + desc + "long",
           SubCategory.Type.INTERN, cat);
+      sub.setActive(active);
+      sub.setFavorite(favorite);
       subCategoryRepository.save(sub);
       return sub;
     }
