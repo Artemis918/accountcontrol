@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react';
 
-export type HandleMenu<D> = (index: number) => void;
+export type HandleMenu<D> = (index: number, entry: ContextMenuEntry<D>) => void;
 
 export interface ContextMenuEntry<D> {
 	name: string;
@@ -15,6 +15,7 @@ export interface ContextMenuDef<D> {
 export interface ContextMenuEntry<D> {
 	name: string;
 	func: HandleMenu<D>;
+	data?: any; 
 }
 
 export interface ContextMenuProps<D> {
@@ -42,7 +43,8 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	}
 
 	executeMenu(index: number): void {
-		this.props.menudef.entries[index].func(index);
+		if (this.props.menudef.entries[index].func != null)
+			this.props.menudef.entries[index].func(index,this.props.menudef.entries[index]);
 	}
 
 	renderRow(entry: ContextMenuEntry<D>, index: number): JSX.Element {

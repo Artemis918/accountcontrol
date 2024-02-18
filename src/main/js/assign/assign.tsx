@@ -5,12 +5,13 @@ import { CategoryAssign } from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
 import { PlanSelect } from './planselect';
-import { AccountRecord, Plan } from '../utils/dtos';
+import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
 import mcss from './css/assign.css'
 import css from '../css/index.css'
+import { myParseJson } from '../utils/misc';
 
 type Create = (props: AssignProps) => JSX.Element;
 export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
@@ -27,7 +28,8 @@ interface IState {
 	categoryassign: boolean;
 	deftext: string;
 	defsubcategory: number;
-	defcategory: number
+	defcategory: number;
+	favcategory: EnumDTO[];
 }
 
 const assignmenu: string = "assignmenu";
@@ -44,8 +46,6 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	menusplitlabel: string;
 	menucatlabel: string;
 	menuplanlabel: string;
-
-	contextMenu: ContextMenuDef<AccountRecord>;
 
 	columns: ColumnInfo<AccountRecord>[] = [
 		{
@@ -87,8 +87,11 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			categoryassign: false,
 			deftext: "",
 			defsubcategory: undefined,
-			defcategory: undefined
+			defcategory: undefined,
+			favcategory: [],
 		}
+		this.reload = this.reload.bind(this);
+		this.loadFav = this.loadFav.bind(this);
 		this.createPlan = this.createPlan.bind(this);
 		this.assignAuto = this.assignAuto.bind(this);
 		this.assignManuell = this.assignManuell.bind(this);
@@ -96,9 +99,14 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.assignCategory = this.assignCategory.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.assignSelected = this.assignSelected.bind(this);
+		this.assignDirect = this.assignDirect.bind(this);
 		this.assignSelectedPlan = this.assignSelectedPlan.bind(this);
 	}
 
+	componentDidMount(): void {
+		this.loadFav();
+	}
+		
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
 	createLabel(): void {
@@ -114,10 +122,21 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.menusplitlabel = this.label("assign.split");
 	}
 
+	loadFav(): void {
+		var self = this;
+		fetch('category/subenumfavorite')
+			.then((response: Response) => response.text())
+			.then((text: string) => { self.setState({ favcategory: myParseJson(text) }) })		
+	}
+
+	reload(): void {
+		this.loadFav();
+		this.lister.reload();
+	}
+
 	assignAuto(): void {
 		fetch('assign/all')
-			.then(() => { this.lister.reload(); }
-			);
+			.then(this.reload);
 	}
 
 	assignCategory(): void {
@@ -151,7 +170,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 				}
 			}).then(function() {
 				self.setState({ categoryassign: false });
-				self.lister.reload();
+				self.reload();
 			});
 		}
 		else {
@@ -171,7 +190,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
 	onChange(): void {
 		this.setState({ plan: undefined, accountRecord: undefined });
-		this.lister.reload();
+		this.reload();
 	}
 
 	assignSelectedPlan(plan: Plan): void {
@@ -181,7 +200,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			fetch('assign/toplan/' + plan.id + '/' + this.state.planassign.id)
 				.then(function() {
 					self.setState({ planassign: undefined });
-					self.lister.reload();
+					self.reload();
 				});
 		}
 		else
@@ -209,19 +228,32 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		else
 			return null;
 	}
+	
+	assignDirect(inedx: number, entry: ContextMenuEntry<AccountRecord>) : void {
+		let fav:EnumDTO = entry.data;
+		this.assignSelected(fav.value,"");
+	}
 
 	render(): JSX.Element {
 
 		this.createLabel();
-
-		this.contextMenu = {
-			entries: [
+		
+		let mainentries:ContextMenuEntry<AccountRecord>[] =  [
 				{ name: this.menucatlabel, func: this.assignCategory },
 				{ name: this.menuplanlabel, func: this.assignPlan },
 				{ name: this.menusplitlabel, func: this.assignManuell },
-			],
+				{ name: "------------", func: null }
+				
+			];
+		let faventries:ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e)=>{ return {name:e.text,func: this.assignDirect, data: e}; });
+
+		var contextMenu: ContextMenuDef<AccountRecord>= {
+			entries: mainentries.concat(faventries),
 			title: this.menutitle
 		}
+		
+
+
 
 		if (this.state.plan !== undefined) {
 			return <TemplateEditor intl={this.props.intl} accountRecord={this.state.plan} onDetach={() => this.onChange()} />
@@ -241,7 +273,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					<button className={css.actionbutton} onClick={() => this.createPlan()}>{this.planlabel}</button>
 				</div>
 				<MultiSelectLister<AccountRecord> columns={this.columns}
-					menu={this.contextMenu}
+					menu={contextMenu}
 					url='accountrecord/unassigned'
 					lines={28}
 					ext=''
