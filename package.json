@@ -7,7 +7,7 @@
     "serve": "webpack serve --open"
   },
   "dependencies": {
-    "@types/recharts": "^1.8.4",
+    "@types/recharts": "^1.8.29",
     "axios": "^1.6.7",
     "babel-runtime": "^6.26.0",
     "date-fns": "^2.8.1",
