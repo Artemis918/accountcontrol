@@ -13,7 +13,12 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    proxy: { '/' : 'http://localhost:8080' }
+    proxy: [ 
+      {
+          context: ['/'],
+          target: 'http://localhost:8080/',
+        }
+      ]
   },
   entry: {
      app: SRC + '/index.tsx',
