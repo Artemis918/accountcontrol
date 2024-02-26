@@ -42,7 +42,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-suite:1.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-suite-api:1.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-commons:1.10.2'
-    testImplementation 'com.h2database:h2:1.4.197'   
+    testImplementation 'com.h2database:h2:2.2.224'   
 }
 
 test {
