@@ -39,7 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.10.2'
-    testRuntimeOnly 'org.junit.platform:junit-platform-suite:1.8.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-suite:1.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-suite-api:1.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-commons:1.10.2'
     testImplementation 'com.h2database:h2:1.4.197'   
