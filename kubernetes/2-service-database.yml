@@ -2,9 +2,11 @@ kind: Service
 apiVersion: v1
 metadata:
   name: account-db
+  namespace: production
 spec:
   type: ClusterIP
   ports:
     - protocol: TCP
       port: 7000
       targetPort: 5434
+      name: postgres

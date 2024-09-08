@@ -20,6 +20,8 @@ spec:
         - image: gitlab.balsen.loc:4901/balsen/accountcontrol/accountcontrol:latest
           imagePullPolicy: Always
           name: account-controller
+          ports:
+          - containerPort: 8080
           volumeMounts:
           - mountPath: /tmp
             name: tmp-volume
