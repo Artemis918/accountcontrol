@@ -127,6 +127,7 @@ public class ImportPBcsv2022 extends Importbase {
   private static final Map<String, AccountRecord.Type> recordType;
   static {
     Map<String, AccountRecord.Type> aMap = new HashMap<String, AccountRecord.Type>(30);
+    aMap.put("Überweisung", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung (Lohn, Gehalt, Rente)", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung (Dauerauftrag)", AccountRecord.Type.TRANSFER);
