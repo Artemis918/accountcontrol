@@ -28,6 +28,39 @@
 	font-size: 16px;
 }
 
+.pageNavigation {
+	float: right;
+	padding: 5px;
+}
+
+.pageLink {
+	padding: 8px 12px;
+	margin: 0px 2px;
+	font-size: 16px;
+	background-color: lightgray;
+	cursor: pointer;
+	border-radius: 3px;
+	display: inline-block;
+	border: 1px solid #ccc;
+}
+
+.pageLink:hover {
+	background-color: #e0e0e0;
+}
+
+.activePageLink {
+	padding: 8px 12px;
+	margin: 0px 2px;
+	font-size: 16px;
+	background-color: royalblue;
+	color: white;
+	cursor: pointer;
+	border-radius: 3px;
+	display: inline-block;
+	border: 1px solid royalblue;
+	font-weight: bold;
+}
+
 .langselector {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
