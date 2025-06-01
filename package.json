@@ -4,7 +4,8 @@
   "description": "bank account supervisor using spring and react",
   "private": "true",
   "scripts": {
-    "serve": "webpack serve --open"
+    "serve": "webpack serve --open",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "@types/recharts": "^1.8.4",
