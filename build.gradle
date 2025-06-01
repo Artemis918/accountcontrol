@@ -46,26 +46,41 @@ node {
   download = true
 }
 
-task webpack(type: NodeTask, dependsOn: 'npmInstall') {
-	script = project.file('node_modules/.bin/webpack')
+task webpack(type: com.github.gradle.node.npm.task.NpmTask, dependsOn: 'npmInstall') {
+  args = ['run', 'build']
+  inputs.dir("src/main/js")
+  outputs.dir("${buildDir}/js")
 }
 
-processResources.dependsOn 'webpack'
+processResources.dependsOn webpack
 
 processResources {
-  with copySpec {
-      from "${buildDir}/js"
-      include "**/*.js"
-      into "static"
+  from("${buildDir}/js") {
+    include "**/*.js"
+    into "static"
   }
 }
 
 clean.delete << file('src/main/webapp/dist')
 
 task copyDockerJar(type: Copy) {
-	dependsOn "Jar"
-    from "$buildDir/libs/accountcontrol.jar"
-    into "$buildDir/docker"
+  dependsOn bootJar
+  from "$buildDir/libs/${rootProject.name}-${version}.jar"
+  into "$buildDir/docker"
+}
+
+eclipse {
+  classpath {
+    plusConfigurations += [configurations.compileClasspath]
+    file {
+      whenMerged {
+        def jsSrc = new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/js', null)
+        if (!entries.contains(jsSrc)) {
+          entries.add(jsSrc)
+        }
+      }
+    }
+  }
 }
 
 // createContainer {
