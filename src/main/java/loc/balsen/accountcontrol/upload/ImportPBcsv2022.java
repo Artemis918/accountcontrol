@@ -131,6 +131,7 @@ public class ImportPBcsv2022 extends Importbase {
     aMap.put("SEPA Überweisung", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung (Lohn, Gehalt, Rente)", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung (Dauerauftrag)", AccountRecord.Type.TRANSFER);
+    aMap.put("SEPA Überweisung (Übertrag)", AccountRecord.Type.TRANSFER);
     aMap.put("SEPA Überweisung Retoure", AccountRecord.Type.TRANSFER);
     aMap.put("Kartenzahlung", AccountRecord.Type.CARD);
     aMap.put("Bargeldauszahlung (Geldautomat)", AccountRecord.Type.CARD);
@@ -139,6 +140,7 @@ public class ImportPBcsv2022 extends Importbase {
     aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
     aMap.put("SEPA Lastschrift (ELV)", AccountRecord.Type.DEBIT);
     aMap.put("Sonstige", AccountRecord.Type.DEBIT);
+    aMap.put("Kontoabrechnung", AccountRecord.Type.DEBIT); //???
     recordType = Collections.unmodifiableMap(aMap);
 
   }
