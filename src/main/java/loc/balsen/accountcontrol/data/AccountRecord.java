@@ -2,6 +2,7 @@ package loc.balsen.accountcontrol.data;
 
 import java.time.LocalDate;
 import java.util.List;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,6 +38,7 @@ public class AccountRecord {
   private String sender;
   private String receiver;
   private int value;
+  @Column(length = 1000)
   private String details;
   private String submitter;
   private String mandate;
