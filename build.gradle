@@ -23,6 +23,7 @@ dependencies {
   implementation 'com.opencsv:opencsv:5.9'
   implementation 'org.jdom:jdom2:2.0.6.1'
   implementation 'com.google.code.gson:gson:2.13.1'
+  runtimeOnly 'com.h2database:h2:2.2.224'
 
   testImplementation 'org.mockito:mockito-junit-jupiter'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
