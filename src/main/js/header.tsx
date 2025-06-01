@@ -20,22 +20,27 @@ export class Header extends React.Component<HeaderProps, {}> {
 
     constructor( props: HeaderProps ) {
         super( props );
-        this.setPage = this.setPage.bind( this );
+        this.handlePageClick = this.handlePageClick.bind( this );
     }
 
-    setPage( event: React.ChangeEvent<HTMLSelectElement> ): void {
-        this.props.setPage( parseInt( event.target.value ) );
+    handlePageClick( pageIndex: number ): void {
+        this.props.setPage( pageIndex );
     }
 
     render(): JSX.Element {
         return (
             <div className={css.header}>
-                <div>
-                    <select value={this.props.currentpage} onChange={this.setPage} className={css.headerselector}>
-                          {this.props.pages.map((page:Page) => <option key={page.index} value={page.index}>{page.name}</option>)}
-                    </select>
+                <div className={css.pageNavigation}>
+                    {this.props.pages.map((page: Page) => (
+                        <span
+                            key={page.index}
+                            className={page.index === this.props.currentpage ? css.activePageLink : css.pageLink}
+                            onClick={() => this.handlePageClick(page.index)}
+                        >
+                            {page.name}
+                        </span>
+                    ))}
                 </div>
-                <div className={css.title}> -- {this.props.title} --</div>
             </div>
 
         );
