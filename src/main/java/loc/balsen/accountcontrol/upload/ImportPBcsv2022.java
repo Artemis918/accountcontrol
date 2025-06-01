@@ -69,7 +69,7 @@ public class ImportPBcsv2022 extends Importbase {
    * 15 - +Soll
    * 16 - +Haben
    * 17 - +Währung
-   * + = ingnored
+   * + = ignored
    * @formatter:on
    */
   private AccountRecord parseLine(String fields[]) throws ParseException, WrongParserException {
