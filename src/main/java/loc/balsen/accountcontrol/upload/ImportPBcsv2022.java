@@ -139,6 +139,7 @@ public class ImportPBcsv2022 extends Importbase {
     aMap.put("Bargeldauszahlung (Kasse)", AccountRecord.Type.CARD);
     aMap.put("SEPA Lastschrift", AccountRecord.Type.DEBIT);
     aMap.put("SEPA Lastschrift (ELV)", AccountRecord.Type.DEBIT);
+    aMap.put("SEPA Echtzeitüberweisung", AccountRecord.Type.TRANSFER);
     aMap.put("Sonstige", AccountRecord.Type.DEBIT);
     aMap.put("Kontoabrechnung", AccountRecord.Type.DEBIT); //???
     recordType = Collections.unmodifiableMap(aMap);
