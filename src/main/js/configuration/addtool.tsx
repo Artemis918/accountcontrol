@@ -23,6 +23,7 @@ export class AddTool extends React.Component<AddToolProps, {}> {
         this.description = React.createRef();
         this.createcat = this.createcat.bind( this );
         this.cancel = this.cancel.bind( this );
+        this.handleKeyPress = this.handleKeyPress.bind( this );
     }
 
     componentDidMount(): void {
@@ -32,14 +33,22 @@ export class AddTool extends React.Component<AddToolProps, {}> {
         }
     }
 
+    handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
+        if (event.key === 'Enter') {
+            this.createcat();
+        } else if (event.key === 'Escape') {
+            this.cancel();
+        }
+    }
+
     createcat() :void {
         this.props.save( this.short.current.value, this.description.current.value );
     }
-    
+
     cancel() : void {
         this.props.save( undefined, undefined );
     }
-    
+
     createTitle(): JSX.Element {
         if (this.props.category == undefined ) {
             return ( <p style={{ textAlign: 'center' }} ><FormattedMessage id="category.createcat" /> </p>)
@@ -68,9 +77,9 @@ export class AddTool extends React.Component<AddToolProps, {}> {
                 }}>
                     {this.createTitle()}
                     <FormattedMessage id='shortdescription'/>
-                    <div><input type='text' ref={this.short} size={20} style={{ fontSize: '15px'}}/></div>                    
+                    <div><input type='text' ref={this.short} size={20} style={{ fontSize: '15px'}} onKeyDown={this.handleKeyPress}/></div>
                     <FormattedMessage id='description'/>
-                    <div><input type='text' ref={this.description} size={20} style={{ fontSize: '15px'}}/></div>
+                    <div><input type='text' ref={this.description} size={20} style={{ fontSize: '15px'}} onKeyDown={this.handleKeyPress}/></div>
                     <div style={{marginTop: '10px'}}><button onClick={this.createcat} style={{ width: '47%', fontSize: '15px'}}>{this.props.createlabel}</button>
                         <button onClick={this.cancel} style={{width: '47%', fontSize: '15px'}}>{this.props.cancellabel}</button>
                     </div>
