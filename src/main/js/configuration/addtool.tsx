@@ -71,7 +71,7 @@ export class AddTool extends React.Component<AddToolProps, {}> {
                     margin: '15% auto',
                     padding: '20px',
                     border: '1px solid #888',
-                    width: '250px', height: '160px',
+                    width: '250px',
                     background: 'darkgray',
                     fontSize: '15px'
                 }}>
