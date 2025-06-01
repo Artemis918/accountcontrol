@@ -42,6 +42,10 @@ node {
   download = true
 }
 
+bootRun {
+  systemProperty 'spring.profiles.active', 'dev'
+}
+
 task webpack(type: com.github.gradle.node.npm.task.NpmTask, dependsOn: 'npmInstall') {
   args = ['run', 'build']
   inputs.dir("src/main/js")
