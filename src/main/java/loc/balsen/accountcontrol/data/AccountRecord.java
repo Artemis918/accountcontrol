@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 @Entity
 public class AccountRecord {
@@ -18,10 +20,9 @@ public class AccountRecord {
     CREDIT, DEBIT, DEBITCARD, TRANSFER, CARD, REMUNERATION, PAYINGOUT, STANDINGORDER, MANUEL, REBOOKING, INTEREST, PAYDIREKT
   }
 
-  public static int LEN_DETAILS = 200;
-  public static int LEN_SENDER = 80;
-  public static int LEN_RECEIVER = 80;
-
+  public static final int LEN_DETAILS = 200;
+  public static final int LEN_SENDER = 80;
+  public static final int LEN_RECEIVER = 80;
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_accountrecord_name")
   @SequenceGenerator(name = "seq_accountrecord_name", sequenceName = "seq_accountrecord",
@@ -38,7 +39,7 @@ public class AccountRecord {
   private String sender;
   private String receiver;
   private int value;
-  @Column(length = 1000)
+  @Column(length = LEN_DETAILS)
   private String details;
   private String submitter;
   private String mandate;
@@ -142,5 +143,19 @@ public class AccountRecord {
 
   public String getReference() {
     return reference;
+  }
+
+  @PrePersist
+  @PreUpdate
+  private void truncateFields() {
+    if (details != null && details.length() > LEN_DETAILS) {
+      details = details.substring(0, LEN_DETAILS);
+    }
+    if (sender != null && sender.length() > LEN_SENDER) {
+      sender = sender.substring(0, LEN_SENDER);
+    }
+    if (receiver != null && receiver.length() > LEN_RECEIVER) {
+      receiver = receiver.substring(0, LEN_RECEIVER);
+    }
   }
 }
