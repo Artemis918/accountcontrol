@@ -25,14 +25,14 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
         this.fetchData = this.fetchData.bind( this );
         this.setData = this.setData.bind( this );
     }
-    
+
     componentDidUpdate(prevProps: DropdownServiceProps) :void {
         if ( this.props.param != prevProps.param )
-            this.fetchData();   
+            this.fetchData();
     }
 
     componentDidMount() :void {
-        this.fetchData();     
+        this.fetchData();
     }
 
     handleChange( value: string ) {
@@ -47,7 +47,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
             this.props.onChange(data[0].value);
     }
 
-    fetchData(): void {        
+    fetchData(): void {
         var url = this.props.url;
         var param = this.props.param;
         if ( param != undefined ) {
@@ -64,7 +64,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     render(): JSX.Element {
 		var index = (this.state.data!=undefined) ? this.state.data.findIndex((t,_i,_o)=>{return t.value == this.props.value}) : 0;
         return (
-            <select className={this.props.className} 
+            <select className={this.props.className}
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
                 {this.state.data.map( ( t, i ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>
