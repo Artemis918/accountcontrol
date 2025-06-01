@@ -25,6 +25,13 @@ export class AddTool extends React.Component<AddToolProps, {}> {
         this.cancel = this.cancel.bind( this );
     }
 
+    componentDidMount(): void {
+        // Focus on the name field when the popup appears
+        if (this.short.current) {
+            this.short.current.focus();
+        }
+    }
+
     createcat() :void {
         this.props.save( this.short.current.value, this.description.current.value );
     }
