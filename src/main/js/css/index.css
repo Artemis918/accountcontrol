@@ -9,11 +9,14 @@
 }
 
 .header {
-	padding: 10px;
+	padding: 10px 5px 0px 5px;
 	border-style: solid;
-	border-width: 0px 0px 10px 0px; 
+	border-width: 0px 0px 10px 0px;
 	border-color: royalblue;
-	padding: 5px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-end;
+	min-height: 40px;
 }
 
 .title {
@@ -29,14 +32,14 @@
 }
 
 .pageNavigation {
-	float: right;
-	padding: 5px;
+	padding: 5px 5px 0px 5px;
 }
 
 .pageLink {
 	padding: 8px 12px;
 	margin: 0px 2px;
 	font-size: 16px;
+	font-weight: bold;
 	background-color: lightgray;
 	cursor: pointer;
 	border-radius: 3px;
@@ -52,13 +55,13 @@
 	padding: 8px 12px;
 	margin: 0px 2px;
 	font-size: 16px;
+	font-weight: bold;
 	background-color: royalblue;
 	color: white;
 	cursor: pointer;
 	border-radius: 3px;
 	display: inline-block;
 	border: 1px solid royalblue;
-	font-weight: bold;
 }
 
 .langselector {
@@ -137,7 +140,7 @@
 .editortitle {
 	font-size: 20px;
 	border-bottom: 1px solid black;
-	margin: 5px;	
+	margin: 5px;
 }
 
 .dropzone {
