@@ -36,7 +36,9 @@ public class AccountRecord {
   private LocalDate executed;
 
   private Type type;
+  @Column(length = LEN_SENDER)
   private String sender;
+  @Column(length = LEN_RECEIVER)
   private String receiver;
   private int value;
   @Column(length = LEN_DETAILS)
