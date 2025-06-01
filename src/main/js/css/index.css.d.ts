@@ -1,4 +1,4 @@
-declare const css: { 
+declare const css: {
   readonly production: string;
   readonly testing: string;
   readonly header: string;
