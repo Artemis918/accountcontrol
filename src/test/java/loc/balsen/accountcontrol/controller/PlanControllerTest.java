@@ -31,14 +31,14 @@ import loc.balsen.accountcontrol.testutil.TestContext;
 @WebAppConfiguration
 public class PlanControllerTest extends TestContext {
 
-  static private String planjson = "{  " + "\"id\": \"1234\", "
-      + "\"creationdate\": \"1797-12-03\", " + "\"startdate\": \"1797-10-03\", "
-      + "\"plandate\": \"1797-10-31\", " + "\"enddate\": \"1797-10-03\", "
-      + "\"subcategory\": SUBCATEGORY, " + "\"description\": \"Beschreibung\", "
-      + "\"shortdescription\": \"Kurz\", " + "\"position\": 5, " + "\"value\": 100, "
-      + "\"matchstyle\": 1, " + "\"patterndto\": { " + "  \"sender\": \"sender\", "
-      + "  \"receiver\": \"Receiver\", " + "  \"referenceID\": \"Reference\", "
-      + "  \"details\": \"*pups*\", " + "  \"mandate\":  \"\" " + "}" + "}";
+  static private String planjson = "{  " + "\"id\": null, " + "\"creationdate\": \"1797-12-03\", "
+      + "\"startdate\": \"1797-10-03\", " + "\"plandate\": \"1797-10-31\", "
+      + "\"enddate\": \"1797-10-03\", " + "\"subcategory\": SUBCATEGORY, "
+      + "\"description\": \"Beschreibung\", " + "\"shortdescription\": \"Kurz\", "
+      + "\"position\": 5, " + "\"value\": 100, " + "\"matchstyle\": 1, " + "\"patterndto\": { "
+      + "  \"sender\": \"sender\", " + "  \"receiver\": \"Receiver\", "
+      + "  \"referenceID\": \"Reference\", " + "  \"details\": \"*pups*\", "
+      + "  \"mandate\":  \"\" " + "}" + "}";
 
   @Autowired
   MockMvc mvc;
@@ -58,13 +58,16 @@ public class PlanControllerTest extends TestContext {
   @Test
   public void testSaveAndList() throws Exception {
 
+    List<Plan> plans;
+    Plan plan;
+
     String planjsonk = planjson.replace("SUBCATEGORY", Integer.toString(subCategory1.getId()));
     mvc.perform(post("/plans/save").content(planjsonk).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
-    List<Plan> plans = planRepository.findAll();
+    plans = planRepository.findAll();
     assertEquals(1, plans.size());
-    Plan plan = plans.get(0);
+    plan = plans.get(0);
     assertEquals(100, plan.getValue());
     assertEquals(subCategory1.getId(), plan.getSubCategory().getId());
 
@@ -72,6 +75,23 @@ public class PlanControllerTest extends TestContext {
 
     mvc.perform(get("/plans/list/1797/10")).andExpect(jsonPath("$.[*]", hasSize(1)))
         .andExpect(jsonPath("$.[0].shortdescription").value("Kurz"));
+
+
+    // change plan
+    String planjsonk1 =
+        planjsonk.replace("null", Integer.toString(plan.getId())).replace("Kurz", "Short");
+    mvc.perform(post("/plans/save").content(planjsonk1).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+
+    plans = planRepository.findAll();
+    assertEquals(1, plans.size());
+    plan = plans.get(0);
+    assertEquals(100, plan.getValue());
+    assertEquals(subCategory1.getId(), plan.getSubCategory().getId());
+
+    mvc.perform(get("/plans/list/1797/10")).andExpect(jsonPath("$.[*]", hasSize(1)))
+        .andExpect(jsonPath("$.[0].shortdescription").value("Short"));
+
 
     mvc.perform(get("/plans/delete/" + plan.getId())).andExpect(status().isOk());
 
