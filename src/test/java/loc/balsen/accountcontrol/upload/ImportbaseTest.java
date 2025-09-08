@@ -42,8 +42,6 @@ public class ImportbaseTest {
   @Test
   public void testSave() throws PSQLException {
 
-    List<AccountRecord> result = null;
-
     LocalDate now = LocalDate.now();
 
     AccountRecord record1 = createRecord("ich", "du", now, 100);

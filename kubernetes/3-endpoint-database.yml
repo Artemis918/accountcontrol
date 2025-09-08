@@ -7,3 +7,4 @@ subsets:
       - ip: 192.168.17.5
     ports:
       - port: 5434
+        name: postgres

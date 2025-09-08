@@ -4,8 +4,13 @@ metadata:
   name: account-ingress
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+      - web.balsen.loc
+      secretName: account-secret 
   rules:
-  - http:
+  - host: web.balsen.loc
+    http:
       paths:
         - path: /account
           pathType: Prefix
