@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import { ContextMenuDef, ContextMenuEntry, HandleMenu } from '../utils/contextmenu';
+import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu';
 import { CategoryAssign } from './categoryassign'
 import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
@@ -12,6 +12,7 @@ import { useIntl, WrappedComponentProps } from 'react-intl';
 import mcss from './css/assign.css'
 import css from '../css/index.css'
 import { myParseJson } from '../utils/misc';
+import { AssignEdit } from './assignedit';
 
 type Create = (props: AssignProps) => React.JSX.Element;
 export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
@@ -25,7 +26,7 @@ interface IState {
 	selectedplan: Plan;
 	planassign: AccountRecord;
 	accountRecord: AccountRecord;
-	categoryassign: boolean;
+	assignEditorOn: boolean;
 	deftext: string;
 	defsubcategory: number;
 	defcategory: number;
@@ -84,7 +85,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			selectedplan: undefined,
 			planassign: undefined,
 			accountRecord: undefined,
-			categoryassign: false,
+			assignEditorOn: false,
 			deftext: "",
 			defsubcategory: undefined,
 			defcategory: undefined,
@@ -141,7 +142,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
 	assignCategory(): void {
 		if (this.lister.hasSelectedData())
-			this.setState({ categoryassign: true });
+			this.setState({ assignEditorOn: true });
 		else
 			this.props.sendmessage(this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
 	}
@@ -169,12 +170,12 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					"Content-Type": "application/json"
 				}
 			}).then(function() {
-				self.setState({ categoryassign: false });
+				self.setState({ assignEditorOn: false });
 				self.reload();
 			});
 		}
 		else {
-			self.setState({ categoryassign: false });
+			self.setState({ assignEditorOn: false });
 		}
 	}
 
@@ -278,16 +279,17 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					lines={28}
 					ext=''
 					ref={(ref) => { this.lister = ref }} />
-				{this.state.categoryassign ? <CategoryAssign
-					text={this.state.deftext}
-					subcategory={this.state.defsubcategory}
-					category={this.state.defcategory}
-					handleAssign={(sub, text) => { this.assignSelected(sub, text) }} />
-					: null
-				}
-				{this.renderPlanSelect()}
+				{this.state.assignEditorOn ? <AssignEdit sendMessage={this.props.sendmessage} />  : null }
+
 			</div>
 		)
 	}
 }
-
+//				{this.state.categoryassign ? <CategoryAssign
+//					text={this.state.deftext}
+//					subcategory={this.state.defsubcategory}
+//					category={this.state.defcategory}
+//					handleAssign={(sub, text) => { this.assignSelected(sub, text) }} />
+//					: null
+//				}
+//				{this.renderPlanSelect()}

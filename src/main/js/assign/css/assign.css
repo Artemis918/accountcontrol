@@ -31,4 +31,13 @@
 	font-size: 15px
 }
 
+.assigneditorbox {
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 300px;
+	height: 180px;
+	background: darkgray;
+}
+
 
