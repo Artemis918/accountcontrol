@@ -13,6 +13,7 @@ But after all I was interested in all the new stuff around there in the world an
 Here some Buzzwords of the used tools and stuff:
 
 * Springboot 
+* Liquibase
 * React
 * javascript
 * Typescript
@@ -31,8 +32,7 @@ Comments and contributions are welcome
 
 1. Database: 
    * I use postgresql. But should work with other databases too.
-      * create a database
-      * execute the sql-scripts in `src/sql`. This creates the tables and fills in some basic stuff. Hibernate should create the tables, but preferred this way
+   * create a database. The tables will be setup with liquibase
    * fill in the connection in `docker/Dockerfile` as parameter to the ENTRYPOINT
 
 2. Build:
