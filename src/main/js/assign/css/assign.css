@@ -40,4 +40,13 @@
 	background: darkgray;
 }
 
+.assigneditorboxbig {
+	margin: 15% auto;
+	padding: 10px;
+	border: 1px solid #888;
+	width: 600px;
+	height: 180px;
+	background: darkgray;
+}
+
 
