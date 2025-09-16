@@ -5,28 +5,28 @@ import { CategorySelector } from '../utils/categoryselector'
 import css from '../css/index.css'
 import acss from './css/assign.css'
 
-type Create = (props:CategoryAssignProps) => React.JSX.Element;
-export const CategoryAssign:Create = (p) => { return (<_CategoryAssign {...p} intl={useIntl()}/>); }
+
+type Create = (props:CategorySelectProps) => React.JSX.Element;
+export const CategorySelect:Create = (p) => { return (<_CategorySelect {...p} intl={useIntl()}/>); }
 
 
-export default CategoryAssign;
+export default CategorySelect;
 
-type HandleAssignCallback = ( subCategory: number, text: string ) => void;
+export type AssignCategoryCallback = ( subCategory: number, text: string ) => void;
 
-export interface CategoryAssignProps {
-    handleAssign: HandleAssignCallback;
+export interface CategorySelectProps {
+    assignCategory: AssignCategoryCallback;
     text: string;
-    category?: number;
     subcategory?: number;
 }
 
 
-class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedComponentProps, {}> {
+class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps, {}> {
 
     categoryselector: React.RefObject<CategorySelector>;
     comment: React.RefObject<HTMLInputElement>;
 
-    constructor( props: CategoryAssignProps & WrappedComponentProps ) {
+    constructor( props: CategorySelectProps & WrappedComponentProps ) {
         super( props );
         this.state = {};
         this.categoryselector = React.createRef();
@@ -42,31 +42,19 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
 	}
 	
     assign() :void {
-        this.props.handleAssign( this.categoryselector.current.getSubCategory(), this.comment.current.value );
+        this.props.assignCategory( this.categoryselector.current.getSubCategory(), this.comment.current.value );
     }
     
     cancel() : void {
-        this.props.handleAssign( undefined, this.comment.current.value );        
+        this.props.assignCategory( undefined, this.comment.current.value );        
     }
 
     render() {
         return (
-            <div style={{
-                position: 'fixed',
-                zIndex: 1,
-                left: '0', top: '0', width: '100%', height: '100%'
-            }}>
-                <div style={{
-                    margin: '15% auto',
-                    padding: '20px',
-                    border: '1px solid #888',
-                    width: '300px', height: '180px',
-                    background: 'darkgray'
-                }}>
+                <div>
                     <div> {this.label("assign.categoryassign")} </div>
                     <div>
                         <CategorySelector
-                            category={this.props.category}
                             subcategory={this.props.subcategory}
                             ref={this.categoryselector}
                             horiz={false}
@@ -90,7 +78,6 @@ class _CategoryAssign extends React.Component<CategoryAssignProps & WrappedCompo
 						</button>
                     </div>
                 </div>
-            </div>
         );
     }
 }
