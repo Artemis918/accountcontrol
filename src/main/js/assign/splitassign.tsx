@@ -168,11 +168,10 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         )
     }
 
-    renderSubCategory( subcategory:number, category:number, index: number ): React.JSX.Element {
+    renderSubCategory( subcategory:number, index: number ): React.JSX.Element {
         return (
             <CategorySelector horiz={true}
                 subcategory={subcategory}
-                category={category}
                 onChange={( subcategory, category ) => this.setSubCategory( index, subcategory, category)} />
         )
     }
@@ -219,7 +218,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         return (
             <tr key={'row' + index}>
                 <td style={{width: "50%"}}>{this.renderDetails( data.details , index)}</td>
-                <td style={{width: "30%"}}>{this.renderSubCategory( data.subcategory, data.category, index )}</td>
+                <td style={{width: "30%"}}>{this.renderSubCategory( data.subcategory, index )}</td>
                 <td style={{width: "10%"}}>{this.renderValue( data.valuestring, index )}</td>
                 <td style={{width: "5%"}}>{this.renderDelButton( index )}</td>
             </tr> )

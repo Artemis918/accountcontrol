@@ -62,11 +62,11 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     }
 
     render(): React.JSX.Element {
-		var index = (this.state.data!=undefined) ? this.state.data.findIndex((t,_i,_o)=>{return t.value == this.props.value}) : 0;
+
         return (
             <select className={this.props.className}
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => this.handleChange( e.target.value )}>
-                {this.state.data.map( ( t, i ) => <option key={t.value} value={t.value}>{t.text}</option> )}
+                {this.state.data.map( ( t,_ ) => <option key={t.value} value={t.value}>{t.text}</option> )}
             </select>
         );
     }

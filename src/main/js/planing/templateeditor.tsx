@@ -228,8 +228,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 							<td><CategorySelector
 								horiz={false}
 								onChange={(s, c) => this.setSubCategory(s, c)}
-								subcategory={this.state.template.subcategory}
-								category={this.state.template.category} /></td>
+								subcategory={this.state.template.subcategory} /></td>
 						</tr>
 						<tr><td>{this.label("plan.matchstyle")}</td>
 							<td>

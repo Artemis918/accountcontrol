@@ -141,8 +141,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( s, c ) => this.setSubCategory( s, c )}
-                                subcategory={this.state.plan.subcategory}
-                                category={this.state.plan.category} />
+                                subcategory={this.state.plan.subcategory} />
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

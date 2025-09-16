@@ -33,6 +33,14 @@ public class CategoryService {
           .filter(Category::isActive).toList();
   }
 
+  public List<SubCategory> getAllSubCategories(boolean activeOnly) {
+    if (!activeOnly)
+      return subCategoryRepository.findAllByOrderByShortDescription();
+    else
+      return subCategoryRepository.findAllByOrderByShortDescription().stream()
+          .filter(SubCategory::isActive).toList();
+  }
+
   public List<SubCategory> getSubCategories(int id, boolean activeonly) {
     if (!activeonly)
       return subCategoryRepository.findByCategoryIdOrderByShortDescription(id);
