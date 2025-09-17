@@ -5,6 +5,7 @@ import { useIntl, WrappedComponentProps } from "react-intl";
 import css from "./css/assign.css";
 import CategorySelect, { AssignCategoryCallback } from "./categoryselect";
 import { AssignPlanCallback } from "./planselect";
+import { RecordInfo } from "./recordinfo";
 
 type Create = (props: AssignEditProps) => JSX.Element;
 export const AssignEdit: Create = (props: AssignEditProps) => { return (<_AssignEdit {...props} intl={useIntl()} />); }
@@ -67,10 +68,6 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			return <CategorySelect text= {""} assignCategory={this.props.assignCatCallBack}/>
 		}
 	}
-
-	renderAccountRecordInfo(): React.ReactNode {
-	    return <div> recordinfo </div>
-	}
 				
 	render(): JSX.Element {
 		return (
@@ -88,7 +85,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 					      {this.renderExpandButton()}
 					   </td>
 					   <td style = {{ width: '60%'}}>
-					   	  {this.renderAccountRecordInfo()}
+					   	  <RecordInfo accountRecord={this.props.record}/>
 					   </td>
 				    </table>
 				</div>

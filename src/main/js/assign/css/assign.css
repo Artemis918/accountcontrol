@@ -45,8 +45,18 @@
 	padding: 10px;
 	border: 1px solid #888;
 	width: 600px;
-	height: 180px;
+	height: 300px;
 	background: darkgray;
+}
+
+.recordinfofield {
+	padding: 2px;
+	border: 1px solid #888;
+	background: darkgray;
+}
+
+.recordinfolabel {
+	padding: 2px;
 }
 
 
