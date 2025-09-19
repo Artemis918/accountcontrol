@@ -22,7 +22,7 @@
     "recharts": "^2.12.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
+    "@babel/core": "^7.28.4",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.1",
     "css-loader": "^6.10.0",
