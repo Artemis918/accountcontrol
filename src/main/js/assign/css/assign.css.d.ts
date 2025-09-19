@@ -5,6 +5,7 @@ declare const css: {
   readonly assigncontextitem: string;
   readonly assigneditorbox: string;
   readonly assigneditorboxbig: string;
+  readonly recordinfoframe: string;
   readonly recordinfolabel: string;
   readonly recordinfofield: string;
 };

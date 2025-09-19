@@ -7,7 +7,7 @@ import CategorySelect, { AssignCategoryCallback } from "./categoryselect";
 import { AssignPlanCallback } from "./planselect";
 import { RecordInfo } from "./recordinfo";
 
-type Create = (props: AssignEditProps) => JSX.Element;
+type Create = (props: AssignEditProps) => React.JSX.Element;
 export const AssignEdit: Create = (props: AssignEditProps) => { return (<_AssignEdit {...props} intl={useIntl()} />); }
 
 interface AssignEditProps {
@@ -41,7 +41,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 	
 	
-	renderExpandButton(): JSX.Element {
+	renderExpandButton(): React.JSX.Element {
 		if ( this.props.record == undefined )
 			  return null;
 	
@@ -58,7 +58,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				</div>	);  	
 	}
 	
-	renderAssignment() :JSX.Element {
+	renderAssignment() :React.JSX.Element {
 		if (this.props.assignPlanCallBack && !this.props.assignCatCallBack || (this.props.assignment && this.props.assignment.plan) ) 
 			return <div> planassignment </div>
 		else {
@@ -69,7 +69,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		}
 	}
 				
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 		     <div style={{
 		         position: 'fixed',

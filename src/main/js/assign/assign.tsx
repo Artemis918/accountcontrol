@@ -230,7 +230,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.assignSelectedCategory(fav.value,"");
 	}
 	
-	renderAssignEditor(): JSX.Element {
+	renderAssignEditor(): React.JSX.Element {
 		if (!this.state.assignEditorOn)
 			return null;
 		

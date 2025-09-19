@@ -52,11 +52,15 @@
 .recordinfofield {
 	padding: 2px;
 	border: 1px solid #888;
-	background: darkgray;
+	background: lightgray;
 }
 
 .recordinfolabel {
 	padding: 2px;
+}
+
+.recordinfoframe { 
+	background: gray;
 }
 
 
