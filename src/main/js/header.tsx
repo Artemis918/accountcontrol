@@ -27,7 +27,7 @@ export class Header extends React.Component<HeaderProps, {}> {
         this.props.setPage( pageIndex );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div className={css.header}>
                 <div className={css.pageNavigation}>

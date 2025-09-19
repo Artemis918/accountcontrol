@@ -72,7 +72,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
         return this.lister.getDataAll();
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <SelectLister<D>
                 columns={this.props.columns}

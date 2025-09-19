@@ -6,7 +6,7 @@ import { PlanSelect } from './planselect'
 import mcss from './css/assign.css'
 import css from '../css/index.css'
 
-type Create = (props:SplitAssignProps) => JSX.Element;
+type Create = (props:SplitAssignProps) => React.JSX.Element;
 export const SplitAssign:Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()}/>); }
 
 
@@ -154,7 +154,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
 
     }
 
-    renderDetails( details: string, index:number ): JSX.Element {
+    renderDetails( details: string, index:number ): React.JSX.Element {
         return (
             <input type='text'
                 value={details}
@@ -168,7 +168,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         )
     }
 
-    renderSubCategory( subcategory:number, category:number, index: number ): JSX.Element {
+    renderSubCategory( subcategory:number, category:number, index: number ): React.JSX.Element {
         return (
             <CategorySelector horiz={true}
                 subcategory={subcategory}
@@ -177,7 +177,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         )
     }
 
-    renderValue( value: string, index: number ): JSX.Element {
+    renderValue( value: string, index: number ): React.JSX.Element {
         return (
             <input type='text'
                 value={value}
@@ -198,7 +198,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         )
     }
 
-    renderDelButton( index: number ): JSX.Element {
+    renderDelButton( index: number ): React.JSX.Element {
         if ( index == this.state.data.length - 1 ) {
             return ( <button className={mcss.delbutton} onClick={() => { this.removeLastRow() }}>^</button> );
 
@@ -206,7 +206,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         return ( <button className={mcss.delbutton} onClick={() => { this.removeRow( index ) }}>x</button> );
     }
 
-    renderPlanSelect(): JSX.Element {
+    renderPlanSelect(): React.JSX.Element {
         if ( this.state.planselect == true ) {
             var now: Date = new Date;
             return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onAssign={this.addPlan} /> );
@@ -215,7 +215,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
             return ( <div /> );
     }
 
-    renderRow( data: AssignPart , index: number ): JSX.Element {
+    renderRow( data: AssignPart , index: number ): React.JSX.Element {
         return (
             <tr key={'row' + index}>
                 <td style={{width: "50%"}}>{this.renderDetails( data.details , index)}</td>
@@ -225,7 +225,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
             </tr> )
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div>
                 <table>

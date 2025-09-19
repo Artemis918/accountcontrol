@@ -5,7 +5,7 @@ import { ContextMenu, ContextMenuDef } from './contextmenu';
 
 export type HandleSelectCallback<D> = (shift: boolean, ctrl: boolean, data: D, index: number) => void;
 export type IsSelectedCallback = (index: number) => boolean;
-export type SelectTableCellRender<D> = (cell: CellInfo<D>) => JSX.Element;
+export type SelectTableCellRender<D> = (cell: CellInfo<D>) => React.JSX.Element;
 export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
 export type HasSelectedCallback = () => boolean;
@@ -108,7 +108,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		}
 	}
 
-	renderHeadCol(col: ColumnInfo<D>): JSX.Element {
+	renderHeadCol(col: ColumnInfo<D>): React.JSX.Element {
 		return (
 			<td key={col.header + "_head"} > {col.header} </td>
 		)
@@ -152,7 +152,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		window.removeEventListener("click", this.setMenuOff);
 	}
 
-	renderRow(data: D, rownum: number): JSX.Element {
+	renderRow(data: D, rownum: number): React.JSX.Element {
 		return (
 			<tr onClick={this.handleClick}
 				onDoubleClick={this.handleDoubleClick}
@@ -164,7 +164,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		);
 	}
 
-	renderDataCol(col: ColumnInfo<D>, data: D, index: number): JSX.Element {
+	renderDataCol(col: ColumnInfo<D>, data: D, index: number): React.JSX.Element {
 		if (col.cellrender != undefined)
 			return (<td key={col.header + index}> {col.cellrender({ data: data, rownum: index, col: col })} </td>);
 		else if (col.getdata != undefined) {
@@ -174,7 +174,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			return (<td> </td>);
 	}
 
-	renderFooter(): JSX.Element {
+	renderFooter(): React.JSX.Element {
 		if (this.props.createFooter != undefined && this.state.data != undefined) {
 			var data: D = this.props.createFooter(this.state.data);
 			return (
@@ -189,7 +189,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 			return null;
 	}
 
-	renderData(): JSX.Element {
+	renderData(): React.JSX.Element {
 		if (this.state.data == undefined) {
 			return (<tbody />);
 		}
@@ -202,7 +202,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		}
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<div>
 				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >

@@ -5,7 +5,7 @@ import { CategorySelector } from '../utils/categoryselector'
 import css from '../css/index.css'
 import acss from './css/assign.css'
 
-type Create = (props:CategoryAssignProps) => JSX.Element;
+type Create = (props:CategoryAssignProps) => React.JSX.Element;
 export const CategoryAssign:Create = (p) => { return (<_CategoryAssign {...p} intl={useIntl()}/>); }
 
 

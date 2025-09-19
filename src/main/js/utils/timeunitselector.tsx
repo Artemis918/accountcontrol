@@ -9,7 +9,7 @@ export interface TimeUnitProps {
 	className: string;
 }
 
-export function TimeUnitSelector( props: TimeUnitProps) :JSX.Element {
+export function TimeUnitSelector( props: TimeUnitProps) :React.JSX.Element {
 	const intl: IntlShape = useIntl();
 	function getName(key:string):string {return intl.formatMessage({id: key})};
 	

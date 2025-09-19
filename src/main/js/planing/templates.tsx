@@ -10,7 +10,7 @@ import { SendMessage, MessageID } from '../utils/messageid'
 
 import css from '../css/index.css'
 
-type Create = (props: TemplateProps) => JSX.Element;
+type Create = (props: TemplateProps) => React.JSX.Element;
 export const Templates: Create = (p) => { return (<_Templates {...p} intl={useIntl()} />); }
 
 interface TemplateProps {
@@ -82,7 +82,7 @@ export class _Templates extends React.Component<TemplateProps & WrappedComponent
 		}]
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<table style={{ border: '1px solid black' }}>
 				<tbody>

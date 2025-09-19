@@ -40,7 +40,7 @@ export class PatternEditor extends React.Component<PatternEditorProps,IState> {
         this.props.sendPattern( this.state.pattern );
     }
 
-    render() : JSX.Element {
+    render() : React.JSX.Element {
         return (
             <div style={{
                 position: 'fixed',

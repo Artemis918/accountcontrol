@@ -8,7 +8,7 @@ import acss from './css/account.css'
 import css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
 
-type Create = (props:CategoriesProps) => JSX.Element;
+type Create = (props:CategoriesProps) => React.JSX.Element;
 export const Categories:Create = (p) => {return (<_Categories {...p} intl={useIntl()}/>);}
 
 interface CategoriesProps {
@@ -196,7 +196,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         return footer;
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
 		this.createColumns();
         return (
             <div>

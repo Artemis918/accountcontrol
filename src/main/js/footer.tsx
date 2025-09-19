@@ -34,7 +34,7 @@ export class Footer extends React.PureComponent<FooterProps, CState> {
       ]});
   }
   
-  getLabel() : JSX.Element {
+  getLabel() : React.JSX.Element {
       if ( this.state.errorcode == MessageID.OK ) {
           return ( <FormattedMessage id="footer.state" defaultMessage="state" />)
       }
@@ -44,7 +44,7 @@ export class Footer extends React.PureComponent<FooterProps, CState> {
                   
   }
   
-  render():JSX.Element {
+  render():React.JSX.Element {
     return (
       <div>
           <label>

@@ -9,7 +9,7 @@ import { SendMessage } from '../utils/messageid'
 
 import css from '../css/index.css'
 
-type Create = (props:PatternPlaningProps) => JSX.Element;
+type Create = (props:PatternPlaningProps) => React.JSX.Element;
 export const PatternPlaning:Create = (p) => {return (<_PatternPlaning {...p} intl={useIntl()}/>);}
 
 interface PatternPlaningProps {
@@ -55,7 +55,7 @@ export class _PatternPlaning extends React.Component<PatternPlaningProps & Wrapp
         this.editor.setPlan( data );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <table style={{ border: '1px solid black' }}>
                 <tbody>

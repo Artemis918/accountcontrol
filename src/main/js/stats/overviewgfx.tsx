@@ -5,7 +5,7 @@ import { StatsDTO, StatsMonthDTO } from '../utils/dtos'
 import { myParseJson } from '../utils/misc'
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-type Create = (props: OverviewGFXProps) => JSX.Element;
+type Create = (props: OverviewGFXProps) => React.JSX.Element;
 export const OverviewGFX: Create = (p) => { return (<_OverviewGFX {...p} intl={useIntl()} />); }
 
 export interface OverviewGFXProps { }
@@ -57,7 +57,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 		this.reload(this.state.startYear, this.state.startMonth, this.state.endYear, this.state.endMonth);
 	}
 
-	public render(): JSX.Element {
+	public render(): React.JSX.Element {
 		return (<div>
 			<table>
 				<tr>

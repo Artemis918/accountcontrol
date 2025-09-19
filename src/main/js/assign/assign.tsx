@@ -13,7 +13,7 @@ import mcss from './css/assign.css'
 import css from '../css/index.css'
 import { myParseJson } from '../utils/misc';
 
-type Create = (props: AssignProps) => JSX.Element;
+type Create = (props: AssignProps) => React.JSX.Element;
 export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
 
 interface AssignProps {
@@ -217,7 +217,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 	}
 
-	renderPlanSelect(): JSX.Element {
+	renderPlanSelect(): React.JSX.Element {
 		if (this.state.planassign != undefined) {
 			var date: Date = this.state.planassign.executed;
 			return (<PlanSelect month={date.getMonth() + 1}
@@ -234,7 +234,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.assignSelected(fav.value,"");
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 
 		this.createLabel();
 		

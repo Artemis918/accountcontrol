@@ -103,7 +103,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
         this.setState( { plan: this.plan, message: '' } );
     }
 
-    renderButton(): JSX.Element {
+    renderButton(): React.JSX.Element {
         return (
                 <div>
                     <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
@@ -114,7 +114,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
         );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div>
                 <label>{this.state.message}</label>

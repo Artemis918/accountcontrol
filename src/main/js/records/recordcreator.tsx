@@ -7,7 +7,7 @@ import { AccountRecord } from '../utils/dtos'
 import { SendMessage } from '../utils/messageid'
 import css from '../css/index.css'
 
-type Create = (props:RecordCreatorProps) => JSX.Element;
+type Create = (props:RecordCreatorProps) => React.JSX.Element;
 export const RecordCreator:Create = (p) => {return (<_RecordCreator {...p} intl={useIntl()}/>);}
 
 interface RecordCreatorProps {
@@ -76,7 +76,7 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
         this.editor.setRecord( record );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <table style={{ border: '1px solid black' }}>
                 <tbody>

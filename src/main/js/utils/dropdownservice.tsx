@@ -61,7 +61,7 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
         }
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
 		var index = (this.state.data!=undefined) ? this.state.data.findIndex((t,_i,_o)=>{return t.value == this.props.value}) : 0;
         return (
             <select className={this.props.className}

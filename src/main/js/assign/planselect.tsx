@@ -11,7 +11,7 @@ import css from '../css/index.css'
 
 
 
-type Create = (props:PlanSelectProps) => JSX.Element;
+type Create = (props:PlanSelectProps) => React.JSX.Element;
 export const PlanSelect:Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()}/>);} 
 
 type OnAssignCallBack = ( plan: Plan ) => void;
@@ -62,7 +62,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
             getdata: ( p: Plan ): string => { return p.shortdescription }
         }, {
             header: this.label("value"),
-            cellrender: ( cell: CellInfo<Plan> ): JSX.Element => {
+            cellrender: ( cell: CellInfo<Plan> ): React.JSX.Element => {
                 return (
                     <div style={{
                         color: cell.data.value >= 0 ? 'green' : 'red',
@@ -117,7 +117,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
     }
 
 	
-	renderAdjustButtons(): JSX.Element {
+	renderAdjustButtons(): React.JSX.Element {
 		if (this.props.recordid == undefined) {
 			return null;
 		}
@@ -141,7 +141,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	
-	renderPatternEditor(): JSX.Element {
+	renderPatternEditor(): React.JSX.Element {
 		if  (this.state.patterneditor) {
 			var plan: Plan = this.lister.getSelected();
 			return (<PatternEditor intl={this.props.intl} pattern={plan.patterndto} sendPattern={(p: Pattern) => this.setPattern(p)} zIndex={4}/> );
@@ -151,7 +151,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		}
 	}
 	
-	renderTimRangeEditor() : JSX.Element {
+	renderTimRangeEditor() : React.JSX.Element {
 		if  (this.state.timerangeeditor) {
 			var plan: Plan = this.lister.getSelected();
 			return (<TimeRangeEditor 
@@ -167,7 +167,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		}
 	}
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
 		<div>
             <div style={{

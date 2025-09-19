@@ -3,7 +3,7 @@ import css from './css/taskselector.css'
 
 export interface Task {
     name: string;
-    comp: JSX.Element;
+    comp: React.JSX.Element;
 }
 
 interface TaskSelectorProps {
@@ -36,7 +36,7 @@ export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
         this.setState( { currenttask: i } )
     }
 
-    render() : JSX.Element { 
+    render() : React.JSX.Element { 
         return (
             <div>
                 <div className={css.tsline}>

@@ -46,7 +46,7 @@ class Main extends React.Component<{}, IState> {
 		this.setState({ locale: event.target.value });
 	}
 
-	createLangSelector(): JSX.Element {
+	createLangSelector(): React.JSX.Element {
 		return (
 			<div style={{ textAlign: "right" }}>
 				<select value={this.state.locale} onChange={this.setLang} className={css.langselector} >
@@ -57,14 +57,14 @@ class Main extends React.Component<{}, IState> {
 		)
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (<IntlProvider locale={this.state.locale} messages={messages[this.state.locale]} >
 			{this.renderContent()}
 		</IntlProvider>
 		)
 	}
 
-	renderContent(): JSX.Element {
+	renderContent(): React.JSX.Element {
 		var cname: string = this.state.production ? css.production : css.testing;
 		if (this.state.startpage == -1) {
 			return (<div className={cname}>

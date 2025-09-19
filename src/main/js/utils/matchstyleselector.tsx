@@ -9,7 +9,7 @@ export interface MatchStyleProps {
 	className: string;
 }
 
-export function MatchStyleSelector( props: MatchStyleProps) :JSX.Element {
+export function MatchStyleSelector( props: MatchStyleProps) :React.JSX.Element {
 	const intl: IntlShape = useIntl();
 	return (
             <select className={props.className}

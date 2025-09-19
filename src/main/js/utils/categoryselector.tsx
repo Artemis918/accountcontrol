@@ -46,7 +46,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
         return this.state.subcategory;
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
 		var caturlextension = this.state.category==undefined?"":this.state.category.toString() + "/true";
         if ( this.props.horiz ) {
             return (

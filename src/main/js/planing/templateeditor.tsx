@@ -140,7 +140,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
-	renderButton(): JSX.Element {
+	renderButton(): React.JSX.Element {
 		if (this.props.accountRecord == undefined) {
 			return (
 				<div>
@@ -161,7 +161,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<div>
 
