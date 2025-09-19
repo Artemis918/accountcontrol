@@ -68,6 +68,13 @@ public class CategoryController {
     }).toList();
   }
 
+  @GetMapping("/suball")
+  List<SubCategoryDTO> findSubCategories() {
+    return categoryService.getAllSubCategories(false).stream().map(sub -> {
+      return new SubCategoryDTO(sub);
+    }).toList();
+  }
+
   @PostMapping(path = "/savesub")
   Integer saveSubCategory(@RequestBody SubCategoryDTO request) {
     return Integer

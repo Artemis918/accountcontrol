@@ -175,8 +175,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
-                                subcategory={this.state.plan.subcategory}
-                                category={this.state.plan.category} />
+                                subcategory={this.state.plan.subcategory}/>
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

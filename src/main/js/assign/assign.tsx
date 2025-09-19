@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import { ContextMenuDef, ContextMenuEntry, HandleMenu } from '../utils/contextmenu';
-import { CategoryAssign } from './categoryassign'
+import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu';
 import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
 import { PlanSelect } from './planselect';
@@ -9,9 +8,9 @@ import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-import mcss from './css/assign.css'
 import css from '../css/index.css'
 import { myParseJson } from '../utils/misc';
+import { AssignEdit } from './assignedit';
 
 type Create = (props: AssignProps) => React.JSX.Element;
 export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
@@ -25,11 +24,10 @@ interface IState {
 	selectedplan: Plan;
 	planassign: AccountRecord;
 	accountRecord: AccountRecord;
-	categoryassign: boolean;
-	deftext: string;
-	defsubcategory: number;
-	defcategory: number;
+	assignEditorOn: boolean;
 	favcategory: EnumDTO[];
+	
+	planSelect: boolean;
 }
 
 const assignmenu: string = "assignmenu";
@@ -84,11 +82,9 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			selectedplan: undefined,
 			planassign: undefined,
 			accountRecord: undefined,
-			categoryassign: false,
-			deftext: "",
-			defsubcategory: undefined,
-			defcategory: undefined,
+			assignEditorOn: false,
 			favcategory: [],
+			planSelect: false,
 		}
 		this.reload = this.reload.bind(this);
 		this.loadFav = this.loadFav.bind(this);
@@ -98,7 +94,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.assignPlan = this.assignPlan.bind(this);
 		this.assignCategory = this.assignCategory.bind(this);
 		this.onChange = this.onChange.bind(this);
-		this.assignSelected = this.assignSelected.bind(this);
+		this.assignSelectedCategory = this.assignSelectedCategory.bind(this);
 		this.assignDirect = this.assignDirect.bind(this);
 		this.assignSelectedPlan = this.assignSelectedPlan.bind(this);
 	}
@@ -141,7 +137,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
 	assignCategory(): void {
 		if (this.lister.hasSelectedData())
-			this.setState({ categoryassign: true });
+			this.setState({ assignEditorOn: true, planSelect: false });
 		else
 			this.props.sendmessage(this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
 	}
@@ -156,7 +152,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 	}
 
-	assignSelected(sub: number, t: string): void {
+	assignSelectedCategory(sub: number, t: string): void {
 		var self = this;
 		if (sub != undefined) {
 			var request = { text: t, subcategory: sub, ids: this.lister.getSelectedData().map(d => d.id) };
@@ -169,12 +165,12 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					"Content-Type": "application/json"
 				}
 			}).then(function() {
-				self.setState({ categoryassign: false });
+				self.setState({ assignEditorOn: false });
 				self.reload();
 			});
 		}
 		else {
-			self.setState({ categoryassign: false });
+			self.setState({ assignEditorOn: false });
 		}
 	}
 
@@ -231,7 +227,19 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	
 	assignDirect(inedx: number, entry: ContextMenuEntry<AccountRecord>) : void {
 		let fav:EnumDTO = entry.data;
-		this.assignSelected(fav.value,"");
+		this.assignSelectedCategory(fav.value,"");
+	}
+	
+	renderAssignEditor(): React.JSX.Element {
+		if (!this.state.assignEditorOn)
+			return null;
+		
+		var record: AccountRecord = null;
+		
+		if (this.lister.getSelectedData().length == 1 )
+			record = this.lister.getSelectedData().at(0);
+		
+		return <AssignEdit sendMessage={this.props.sendmessage} record={record} assignCatCallBack={(sub: number ,t:string) => this.assignSelectedCategory(sub,t)}/> ;
 	}
 
 	render(): React.JSX.Element {
@@ -252,8 +260,6 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			title: this.menutitle
 		}
 		
-
-
 
 		if (this.state.plan !== undefined) {
 			return <TemplateEditor intl={this.props.intl} accountRecord={this.state.plan} onDetach={() => this.onChange()} />
@@ -278,16 +284,16 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					lines={28}
 					ext=''
 					ref={(ref) => { this.lister = ref }} />
-				{this.state.categoryassign ? <CategoryAssign
-					text={this.state.deftext}
-					subcategory={this.state.defsubcategory}
-					category={this.state.defcategory}
-					handleAssign={(sub, text) => { this.assignSelected(sub, text) }} />
-					: null
-				}
-				{this.renderPlanSelect()}
+				{this.renderAssignEditor()}
 			</div>
 		)
 	}
 }
-
+//				{this.state.categoryassign ? <CategoryAssign
+//					text={this.state.deftext}
+//					subcategory={this.state.defsubcategory}
+//					category={this.state.defcategory}
+//					handleAssign={(sub, text) => { this.assignSelected(sub, text) }} />
+//					: null
+//				}
+//				{this.renderPlanSelect()}

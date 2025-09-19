@@ -14,10 +14,10 @@ import css from '../css/index.css'
 type Create = (props:PlanSelectProps) => React.JSX.Element;
 export const PlanSelect:Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()}/>);} 
 
-type OnAssignCallBack = ( plan: Plan ) => void;
+export type AssignPlanCallback = ( plan: Plan ) => void;
 
 export interface PlanSelectProps {
-    onAssign: OnAssignCallBack;
+    onAssign: AssignPlanCallback;
 	recordid?: number
     month: number
     year: number;
