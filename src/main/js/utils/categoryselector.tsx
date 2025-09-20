@@ -14,8 +14,8 @@ export interface CategorySelectorProps {
 }
 
 interface IState {
-    category: number;
-    subcategory: number
+    category?: number;
+    subcategory?: number
 	allSubs: SubCategory[]
 }
 
@@ -23,7 +23,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
 
     constructor( props: CategorySelectorProps ) {
         super( props );
-        this.state = { category: undefined , subcategory: this.props.subcategory, allSubs: [] };
+        this.state = { category: undefined, subcategory: this.props.subcategory, allSubs: [] };
         this.setCategory = this.setCategory.bind( this );
         this.setSubCategory = this.setSubCategory.bind( this );
     }
@@ -39,14 +39,14 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
         this.setState( { category: e, subcategory: undefined } );
     }
 
-    setSubCategory( e: number ): void {
-        if (this.props.onChange != undefined )
+    setSubCategory( e: number | undefined  ): void {
+        if (this.props.onChange != undefined && this.state.category != undefined  && e != undefined )
             this.props.onChange( e, this.state.category );
         this.setState( { subcategory: e} );
     }
     
-	findCategory(subCategory:number) : number {
-		if (this.state.allSubs)
+	findCategory(subCategory:number | undefined ) : number | undefined {
+		if (this.state.allSubs && subCategory != undefined  )
 			return this.state.allSubs.filter( (s) => { return subCategory == s.id;} )[0].category;
 		else
 			return undefined;
@@ -54,10 +54,10 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
 	
     componentDidUpdate(prevProps: CategorySelectorProps) :void {
         if (prevProps.subcategory != this.props.subcategory )
-            this.setState({category: this.findCategory(this.props.subcategory ) });
+            this.setState({category: this.findCategory( this.props.subcategory ) });
     }
 
-    getSubCategory() : number {
+    getSubCategory() : number | undefined {
         return this.state.subcategory;
     }
 

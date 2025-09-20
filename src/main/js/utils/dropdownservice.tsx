@@ -8,7 +8,7 @@ export interface DropdownServiceProps {
     onChange: HandleChange;
     url: string;
     param?: string;    // undefined->ignored,  ''->no select, value-> urlextension
-    value: number;
+    value?: number;
 	className?: string;
 }
 

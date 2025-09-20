@@ -43,7 +43,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	
 	renderExpandButton(): React.JSX.Element {
 		if ( this.props.record == undefined )
-			  return null;
+			  return <></>;
 	
 		else if ( this.state.expanded)
 			 return ( 
@@ -60,13 +60,14 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	
 	renderAssignment() :React.JSX.Element {
 		if (this.props.assignPlanCallBack && !this.props.assignCatCallBack || (this.props.assignment && this.props.assignment.plan) ) 
-			return <div> planassignment </div>
-		else {
+			return <></>
+		else if (this.props.assignCatCallBack && !this.props.assignPlanCallBack ) {
 			var text:string = "";
 			var subcategory = undefined;
 			var category = undefined;
 			return <CategorySelect text= {""} assignCategory={this.props.assignCatCallBack}/>
 		}
+		return <></>
 	}
 				
 	render(): React.JSX.Element {
@@ -76,7 +77,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		         zIndex: 1,
 		         left: '0', top: '0', width: '100%', height: '100%'
 		     }}>
-		       { this.state.expanded ?  <div className = {css.assigneditorboxbig } >
+		       { this.state.expanded && this.props.record ?  <div className = {css.assigneditorboxbig } >
 				 	<table  style={{left: '0', top: '0', width: '100%', height: '100%'}}>
 					   <td style={{ width: '40%' }} > 
 						  {this.renderAssignment()}
