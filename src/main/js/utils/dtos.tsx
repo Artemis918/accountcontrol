@@ -172,7 +172,7 @@ export class CatStatsDTO {
 
 //=====================================================
 export class  Assignment {
-    id: number;
+    id?: number;
     detail: string;
     description: string;
     planed?: number;

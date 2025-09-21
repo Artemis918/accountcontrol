@@ -2,17 +2,19 @@ import * as React from 'react'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
-import { PlanSelect } from './planselect'
+import { AssignEdit } from './assignedit'
 import mcss from './css/assign.css'
 import css from '../css/index.css'
+import { SendMessage } from '../utils/messageid'
 
-type Create = (props:SplitAssignProps) => React.JSX.Element;
-export const SplitAssign:Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()}/>); }
+type Create = (props: SplitAssignProps) => React.JSX.Element;
+export const SplitAssign: Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()} />); }
 
 
 type onCommitCallback = () => void;
 
 export interface SplitAssignProps {
+    sendMessage: SendMessage;
     accountRecord: AccountRecord;
     onCommit: onCommitCallback;
 }
@@ -23,34 +25,34 @@ interface IState {
 }
 
 class AssignPart {
-    value: number;
+    value: number = 0;
     details: string;
     subcategory: number;
     category: number;
-    valuestring: string;
+    valuestring: string = "0.00";
     plan?: Plan;
 
-    constructor( details: string, value: number, subcategory: number, category: number, plan?: Plan ) {
-        this.setValue( value );
+    constructor(details: string, value: number, subcategory: number, category: number, plan?: Plan) {
+        this.setValue(value);
         this.subcategory = subcategory;
         this.category = category;
         this.details = details;
         this.plan = plan;
     }
 
-    setValue( v: number ): void {
-        this.valuestring = ( Math.abs( v ) / 100 ).toFixed( 2 );
+    setValue(v: number): void {
+        this.valuestring = (Math.abs(v) / 100).toFixed(2);
         this.value = Math.abs(v);
     }
 
-    getAssignment( accountRecord: AccountRecord ): Assignment {
+    getAssignment(accountRecord: AccountRecord): Assignment {
         return {
             id: undefined,
             detail: this.details,
             description: this.details,
-            real: accountRecord.value >=0 ? this.value: this.value*-1,
+            real: accountRecord.value >= 0 ? this.value : this.value * -1,
             committed: false,
-            plan: ( this.plan == undefined ) ? undefined : this.plan.id,
+            plan: (this.plan == undefined) ? undefined : this.plan.id,
             accountrecord: accountRecord.id,
             subcategory: this.subcategory
         }
@@ -60,81 +62,81 @@ class AssignPart {
 
 export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComponentProps, IState> {
 
-    constructor( props: SplitAssignProps & WrappedComponentProps) {
-        super( props )
-        var initial: AssignPart = new AssignPart( props.accountRecord.details, props.accountRecord.value, 1, 1 );
+    constructor(props: SplitAssignProps & WrappedComponentProps) {
+        super(props)
+        var initial: AssignPart = new AssignPart(props.accountRecord.details, props.accountRecord.value, 1, 1);
         this.state = { data: [initial], planselect: false };
-        this.setSubCategory = this.setSubCategory.bind( this );
-        this.renderDetails = this.renderDetails.bind( this );
-        this.renderSubCategory = this.renderSubCategory.bind( this );
-        this.renderValue = this.renderValue.bind( this );
-        this.addPlan = this.addPlan.bind( this );
-        this.renderPlanSelect = this.renderPlanSelect.bind( this );
-        this.recalcData = this.recalcData.bind( this );
-        this.save = this.save.bind( this );
+        this.setSubCategory = this.setSubCategory.bind(this);
+        this.renderDetails = this.renderDetails.bind(this);
+        this.renderSubCategory = this.renderSubCategory.bind(this);
+        this.renderValue = this.renderValue.bind(this);
+        this.addPlan = this.addPlan.bind(this);
+        this.renderPlanSelect = this.renderPlanSelect.bind(this);
+        this.recalcData = this.recalcData.bind(this);
+        this.save = this.save.bind(this);
     }
-	
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+
+    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
     save(): void {
-        var assignments: Assignment[] = this.state.data.map( ( t: AssignPart ) => { return t.getAssignment( this.props.accountRecord) } );
-        assignments.forEach( ( z: Assignment ) => { z.committed = true } );
+        var assignments: Assignment[] = this.state.data.map((t: AssignPart) => { return t.getAssignment(this.props.accountRecord) });
+        assignments.forEach((z: Assignment) => { z.committed = true });
 
         var self: _SplitAssign = this;
-        fetch( 'assign/parts', {
+        fetch('assign/parts', {
             method: 'post',
-            body: JSON.stringify( assignments ),
+            body: JSON.stringify(assignments),
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function() {
+        }).then(function () {
             self.props.onCommit();
-        } );
+        });
 
     }
 
-    addPlan( plan: Plan ): void {
-        if ( plan != undefined ) {
-            var planbuchung: AssignPart = new AssignPart( plan.shortdescription, plan.value, plan.subcategory, plan.category, plan )
+    addPlan(plan: Plan | undefined): void {
+        if (plan != undefined) {
+            var planbuchung: AssignPart = new AssignPart(plan.shortdescription, plan.value, plan.subcategory, plan.category, plan)
             var data: AssignPart[] = this.state.data;
-            data.splice( 0, 0, planbuchung );
-            this.setState( { data: this.recalcData( data ), planselect: false } );
+            data.splice(0, 0, planbuchung);
+            this.setState({ data: this.recalcData(data), planselect: false });
         }
         else
-            this.setState( { planselect: false } );
+            this.setState({ planselect: false });
     }
 
-    setSubCategory( index: number, subcategory: number, group: number ): void {
+    setSubCategory(index: number, subcategory: number, group: number): void {
         const data: AssignPart[] = this.state.data;
         data[index].subcategory = subcategory;
         data[index].category = group;
-        this.setState( { data: data } );
+        this.setState({ data: data });
     }
 
 
-    recalcData( data: AssignPart[] ): AssignPart[] {
+    recalcData(data: AssignPart[]): AssignPart[] {
         var result: AssignPart[] = [];
         var sum: number = 0
         var recordValue = Math.abs(this.props.accountRecord.value);
 
-        for ( var row of data ) {
-            if ( sum + row.value > recordValue ) {
+        for (var row of data) {
+            if (sum + row.value > recordValue) {
                 var value: number = recordValue - sum;
                 row.value = value > 0 ? value : 0;
-                row.valuestring = ( row.value / 100 ).toFixed( 2 );
+                row.valuestring = (row.value / 100).toFixed(2);
             }
-            result.push( row );
+            result.push(row);
             sum += row.value;
         }
 
-        if ( sum < recordValue ) {
+        if (sum < recordValue) {
 
-            if ( result[result.length - 1].details == 'Rest' ) {
-                result[result.length - 1].setValue( result[result.length - 1].value + recordValue - sum );
+            if (result[result.length - 1].details == 'Rest') {
+                result[result.length - 1].setValue(result[result.length - 1].value + recordValue - sum);
             }
             else {
-                var newbuch: AssignPart = new AssignPart( 'Rest', recordValue - sum, result[result.length - 1].subcategory, result[result.length - 1].category )
-                result.push( newbuch );
+                var newbuch: AssignPart = new AssignPart('Rest', recordValue - sum, result[result.length - 1].subcategory, result[result.length - 1].category)
+                result.push(newbuch);
             }
         }
         return result;
@@ -142,19 +144,19 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
 
     removeLastRow(): void {
         var data: AssignPart[] = this.state.data;
-        data[data.length - 2].setValue( data[data.length - 2].value + data[data.length - 1].value )
-        data.splice( data.length - 1 , 1 );
-        this.setState( { data: data } );
+        data[data.length - 2].setValue(data[data.length - 2].value + data[data.length - 1].value)
+        data.splice(data.length - 1, 1);
+        this.setState({ data: data });
     }
 
-    removeRow( index: number ): void {
+    removeRow(index: number): void {
         var data: AssignPart[] = this.state.data;
-        data.splice( index, 1 );
-        this.setState( { data: this.recalcData( data ) } );
+        data.splice(index, 1);
+        this.setState({ data: this.recalcData(data) });
 
     }
 
-    renderDetails( details: string, index:number ): React.JSX.Element {
+    renderDetails(details: string, index: number): React.JSX.Element {
         return (
             <input type='text'
                 value={details}
@@ -162,66 +164,66 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
                 onChange={e => {
                     const data: AssignPart[] = this.state.data;
                     data[index].details = e.target.value;
-                    this.setState( { data } );
+                    this.setState({ data });
                 }}
             />
         )
     }
 
-    renderSubCategory( subcategory:number, index: number ): React.JSX.Element {
+    renderSubCategory(subcategory: number, index: number): React.JSX.Element {
         return (
             <CategorySelector horiz={true}
                 subcategory={subcategory}
-                onChange={( subcategory, category ) => this.setSubCategory( index, subcategory, category)} />
+                onChange={(subcategory, category) => this.setSubCategory(index, subcategory, category)} />
         )
     }
 
-    renderValue( value: string, index: number ): React.JSX.Element {
+    renderValue(value: string, index: number): React.JSX.Element {
         return (
             <input type='text'
                 value={value}
                 className={mcss.descinput}
-                onChange={( e: React.ChangeEvent<HTMLInputElement> ) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     const data: AssignPart[] = this.state.data;
                     data[index].valuestring = e.target.value;
-                    this.setState( { data } );
+                    this.setState({ data });
 
                 }}
-                onBlur={( e: React.FocusEvent<HTMLInputElement> ) => {
-                    var newval: number = parseFloat( e.target.value.replace( ',', '.' ) ) * 100;
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                    var newval: number = parseFloat(e.target.value.replace(',', '.')) * 100;
                     const data: AssignPart[] = this.state.data;
-                    data[index].setValue( newval );
-                    this.setState( { data: this.recalcData( this.state.data ) } );
+                    data[index].setValue(newval);
+                    this.setState({ data: this.recalcData(this.state.data) });
                 }}
             />
         )
     }
 
-    renderDelButton( index: number ): React.JSX.Element {
-        if ( index == this.state.data.length - 1 ) {
-            return ( <button className={mcss.delbutton} onClick={() => { this.removeLastRow() }}>^</button> );
+    renderDelButton(index: number): React.JSX.Element {
+        if (index == this.state.data.length - 1) {
+            return (<button className={mcss.delbutton} onClick={() => { this.removeLastRow() }}>^</button>);
 
         }
-        return ( <button className={mcss.delbutton} onClick={() => { this.removeRow( index ) }}>x</button> );
+        return (<button className={mcss.delbutton} onClick={() => { this.removeRow(index) }}>x</button>);
     }
 
     renderPlanSelect(): React.JSX.Element {
-        if ( this.state.planselect == true ) {
+        if (this.state.planselect == true) {
             var now: Date = new Date;
-            return ( <PlanSelect month={now.getMonth() + 1} year={now.getFullYear()} onAssign={this.addPlan} /> );
+            return (<AssignEdit record={this.props.accountRecord} assignPlanCallBack={this.addPlan} sendMessage={this.props.sendMessage} />);
         }
         else
-            return ( <div /> );
+            return (<div />);
     }
 
-    renderRow( data: AssignPart , index: number ): React.JSX.Element {
+    renderRow(data: AssignPart, index: number): React.JSX.Element {
         return (
             <tr key={'row' + index}>
-                <td style={{width: "50%"}}>{this.renderDetails( data.details , index)}</td>
-                <td style={{width: "30%"}}>{this.renderSubCategory( data.subcategory, index )}</td>
-                <td style={{width: "10%"}}>{this.renderValue( data.valuestring, index )}</td>
-                <td style={{width: "5%"}}>{this.renderDelButton( index )}</td>
-            </tr> )
+                <td style={{ width: "50%" }}>{this.renderDetails(data.details, index)}</td>
+                <td style={{ width: "30%" }}>{this.renderSubCategory(data.subcategory, index)}</td>
+                <td style={{ width: "10%" }}>{this.renderValue(data.valuestring, index)}</td>
+                <td style={{ width: "5%" }}>{this.renderDelButton(index)}</td>
+            </tr>)
     }
 
     render(): React.JSX.Element {
@@ -237,19 +239,19 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.data.map( ( d: AssignPart, i: number ) => this.renderRow( d ,i ) )}
+                        {this.state.data.map((d: AssignPart, i: number) => this.renderRow(d, i))}
                     </tbody>
                 </table>
-                <button className={css.addonbutton} 
-                        onClick={() => this.setState( { planselect: true } )} > 
-                    {this.label("assign.selectplan")} 
-				</button>
+                <button className={css.addonbutton}
+                    onClick={() => this.setState({ planselect: true })} >
+                    {this.label("assign.selectplan")}
+                </button>
                 <button className={css.addonbutton} onClick={this.props.onCommit} >
-                    {this.label("cancel")} 
- 				</button>
-                <button className={css.addonbutton} onClick={this.save} > 
-					{this.label("save")}
-				</button>
+                    {this.label("cancel")}
+                </button>
+                <button className={css.addonbutton} onClick={this.save} >
+                    {this.label("save")}
+                </button>
                 {this.renderPlanSelect()}
             </div>
         )
