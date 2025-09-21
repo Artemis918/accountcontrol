@@ -31,22 +31,13 @@
 	font-size: 15px
 }
 
-.assigneditorbox {
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 300px;
-	height: 180px;
-	background: darkgray;
-}
-
-.assigneditorboxbig {
+.assignselectbox {
 	margin: 15% auto;
 	padding: 10px;
 	border: 1px solid #888;
-	width: 600px;
-	height: 300px;
 	background: darkgray;
+	border-radius: 10px;
+	box-shadow: 5px 5px 10px #444;
 }
 
 .recordinfofield {
@@ -60,7 +51,12 @@
 }
 
 .recordinfoframe { 
+	padding: 5px;
+	width: 100%;
 	background: gray;
+	border-radius: 10px;
+	border-style: inset;
+	border-width: 2px;
 }
 
 

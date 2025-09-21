@@ -3,8 +3,7 @@ declare const css: {
   readonly descinput: string;
   readonly assigncontext: string;
   readonly assigncontextitem: string;
-  readonly assigneditorbox: string;
-  readonly assigneditorboxbig: string;
+  readonly assignselectbox: string;
   readonly recordinfoframe: string;
   readonly recordinfolabel: string;
   readonly recordinfofield: string;

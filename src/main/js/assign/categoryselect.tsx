@@ -79,7 +79,7 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
                         }
                     }}
                     onChange={(e)=>{this.setState({comment: e.currentTarget.value});}}
-                    placeholder={this.label("assign.comment")}  
+                    placeholder={this.label("assign.description")}  
                     ref={this.comment} />
                 </div>
                 <div><button onClick={this.assign} className={css.addonbutton} >

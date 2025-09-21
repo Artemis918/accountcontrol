@@ -30,7 +30,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
 	
 	componentDidMount() :void {
         var self: CategorySelector = this;
-        fetch( "suball" )
+        fetch( "category/suball" )
             .then( response => response.json() )
             .then( d => { self.setState( {allSubs: d }) } )
 	}
