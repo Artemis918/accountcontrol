@@ -8,7 +8,6 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@types/recharts": "^1.8.4",
     "axios": "^1.12.0",
     "babel-runtime": "^6.26.0",
     "core-js": "^3.45.1",
