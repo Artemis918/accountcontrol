@@ -8,7 +8,6 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@types/recharts": "^1.8.4",
     "axios": "^1.12.0",
     "babel-runtime": "^6.26.0",
     "core-js": "^3.45.1",
@@ -26,7 +25,8 @@
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.1",
     "css-loader": "^6.10.0",
-    "style-loader": "^3.3.4",
+    "html-webpack-plugin": "^5.6.4",
+    "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "webpack": "^5.90.3",
