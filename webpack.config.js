@@ -1,10 +1,20 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const ROOT = path.resolve(__dirname, 'src/main');
-const SRC  = path.resolve( ROOT, 'js');
-const DEST = path.resolve( __dirname , 'build/js');
+const SRC = path.resolve(ROOT, 'js');
+const DEST = path.resolve(__dirname, 'build/js');
+
+
 
 module.exports = {
+  plugins: [
+    new HtmlWebpackPlugin({
+      favicon: './favicon.png',
+      template: './src/main/resources/templates/index.html',
+      title: 'Account Control',
+    })
+  ],
   devtool: 'source-map',
   mode: 'development',
   devServer: {
@@ -13,18 +23,18 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    proxy: [ 
+    proxy: [
       {
-          context: ['/'],
-          target: 'http://localhost:8080/',
-        }
-      ]
+        context: ['/'],
+        target: 'http://localhost:8080/',
+      }
+    ]
   },
   entry: {
-     app: SRC + '/index.tsx',
+    app: SRC + '/index.tsx',
   },
   resolve: {
-      extensions: [".ts",".tsx",".js" ]
+    extensions: [".ts", ".tsx", ".js"]
   },
   output: {
     path: DEST,
@@ -33,10 +43,11 @@ module.exports = {
   module: {
     rules: [
       {
-         test: /\.tsx?$/,
-         loader: "ts-loader"
+        test: /\.tsx?$/,
+        loader: "ts-loader"
       },
-	  { test: /\.css$/,
+      {
+        test: /\.css$/,
         include: [SRC],
         use: [
           'style-loader',
@@ -48,8 +59,9 @@ module.exports = {
           }
         ]
       },
-      { test: /\.css$/, 
-    	exclude: [SRC],
+      {
+        test: /\.css$/,
+        exclude: [SRC],
         use: [
           'style-loader',
           {
