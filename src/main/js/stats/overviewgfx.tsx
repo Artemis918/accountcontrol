@@ -5,7 +5,7 @@ import { StatsDTO, StatsMonthDTO } from '../utils/dtos'
 import { myParseJson } from '../utils/misc'
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-type Create = (props: OverviewGFXProps) => JSX.Element;
+type Create = (props: OverviewGFXProps) => React.JSX.Element;
 export const OverviewGFX: Create = (p) => { return (<_OverviewGFX {...p} intl={useIntl()} />); }
 
 export interface OverviewGFXProps { }
@@ -57,45 +57,47 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 		this.reload(this.state.startYear, this.state.startMonth, this.state.endYear, this.state.endMonth);
 	}
 
-	public render(): JSX.Element {
+	public render(): React.JSX.Element {
 		return (<div>
 			<table>
-				<tr>
-					<td>
-						<table >
-						<tbody>
-							<tr>
-								<td>{this.label("overview.firstmonth")}</td>
-								<td>
-									<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
-								</td>
-							</tr>
-							<tr>
-								<td> {this.label("overview.lastmonth")} </td>
-								<td>
-									<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
-								</td>
-							</tr>
-						</tbody>
-						</table >
-						<LineChart
-							width={1000}
-							height={500}
-							margin={{
-								top: 5, right: 30, left: 20, bottom: 5,
-							}}
-						>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="month" type="category" allowDuplicatedCategory={false} />
-							<YAxis />
-							<Tooltip />
-							<Legend />
-							{this.state.graphdata.map(s => (
-								<Line type="monotone" stroke={s.color} activeDot={{ r: 8 }} dataKey="value" data={s.data} name={s.name} key={s.name} />
-							))}
-						</LineChart>
-					</td>
-				</tr>
+				<tbody>
+					<tr>
+						<td>
+							<table >
+								<tbody>
+									<tr>
+										<td>{this.label("overview.firstmonth")}</td>
+										<td>
+											<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
+										</td>
+									</tr>
+									<tr>
+										<td> {this.label("overview.lastmonth")} </td>
+										<td>
+											<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
+										</td>
+									</tr>
+								</tbody>
+							</table >
+							<LineChart
+								width={1000}
+								height={500}
+								margin={{
+									top: 5, right: 30, left: 20, bottom: 5,
+								}}
+							>
+								<CartesianGrid strokeDasharray="3 3" />
+								<XAxis dataKey="month" type="category" allowDuplicatedCategory={false} />
+								<YAxis />
+								<Tooltip />
+								<Legend />
+								{this.state.graphdata.map(s => (
+									<Line type="monotone" stroke={s.color} activeDot={{ r: 8 }} dataKey="value" data={s.data} name={s.name} key={s.name} />
+								))}
+							</LineChart>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 		)

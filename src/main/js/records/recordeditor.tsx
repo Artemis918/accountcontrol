@@ -84,7 +84,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
         this.setState( { record: this.record } );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div>
                 <table>

@@ -113,7 +113,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setState( { plan: this.plan, message: '' } );
     }
 
-    renderButton(): JSX.Element {
+    renderButton(): React.JSX.Element {
         return (
             <div>
                 <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
@@ -124,7 +124,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div>
                 <label>{this.state.message}</label>
@@ -175,8 +175,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( k, g ) => this.setSubCategory( k, g )}
-                                subcategory={this.state.plan.subcategory}
-                                category={this.state.plan.category} />
+                                subcategory={this.state.plan.subcategory}/>
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>

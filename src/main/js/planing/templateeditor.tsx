@@ -16,7 +16,7 @@ type OnChangeCallback = () => void;
 
 interface TemplateEditorProps {
 	onDetach: OnChangeCallback;
-	accountRecord?: number;
+	accountRecordId?: number;
 	intl: IntlShape;
 }
 
@@ -29,7 +29,7 @@ interface IState {
 
 export class TemplateEditor extends React.Component<TemplateEditorProps, IState> {
 
-	template: Template;
+	template: Template | undefined = undefined;
 
 	constructor(props: TemplateEditorProps) {
 		super(props);
@@ -46,14 +46,14 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
 	componentDidMount() {
-		if (this.props.accountRecord != undefined) {
+		if (this.props.accountRecordId != undefined) {
 			var self = this;
-			fetch('templates/accountrecord/' + this.props.accountRecord)
+			fetch('templates/accountrecord/' + this.props.accountRecordId)
 				.then(response => response.text())
 				.then(t => {
 				    if (t) {
 					    let template:Template = myParseJson(t);
-			 			this.createDesc(template);
+			 			self.createDesc(template);
 						self.setTemplate(template) 
 					}
 		   		});
@@ -140,8 +140,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
-	renderButton(): JSX.Element {
-		if (this.props.accountRecord == undefined) {
+	renderButton(): React.JSX.Element {
+		if (this.props.accountRecordId == undefined) {
 			return (
 				<div>
 					<button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
@@ -161,7 +161,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<div>
 
@@ -228,8 +228,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 							<td><CategorySelector
 								horiz={false}
 								onChange={(s, c) => this.setSubCategory(s, c)}
-								subcategory={this.state.template.subcategory}
-								category={this.state.template.category} /></td>
+								subcategory={this.state.template.subcategory} /></td>
 						</tr>
 						<tr><td>{this.label("plan.matchstyle")}</td>
 							<td>

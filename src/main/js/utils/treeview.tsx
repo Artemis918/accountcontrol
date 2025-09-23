@@ -86,7 +86,7 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
         this.props.handleSelect( node.level, node.id );
     }
 
-    renderButton( node: Node ): JSX.Element {
+    renderButton( node: Node ): React.JSX.Element {
         if ( node.url ) {
             return ( <div>
                 <button className={tcss.expandbutton} onClick={( e ) => this.expandNode( node )}>+</button>
@@ -98,7 +98,7 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
             return ( <button className={tcss.button} onClick={( e ) => this.treeSelect( node )}>{node.name}</button> )
     }
 
-    renderNode( node: Node ): JSX.Element {
+    renderNode( node: Node ): React.JSX.Element {
         if ( node.children && node.expanded ) {
             return ( <li key={node.name + node.id} >{this.renderButton( node )}{this.renderChildren( node )}</li> );
         }
@@ -108,7 +108,7 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
     }
 
 
-    renderChildren( node: Node ): JSX.Element {
+    renderChildren( node: Node ): React.JSX.Element {
         if ( node.children != undefined ) {
             return ( <div className={tcss.treeview}><ul className={node.level==0?tcss.list0:tcss.list}>{node.children.map( this.renderNode )}</ul></div> )
         }
@@ -117,7 +117,7 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
         }
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return this.renderChildren( this.state.root );
     }
 

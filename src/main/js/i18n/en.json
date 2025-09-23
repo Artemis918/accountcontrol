@@ -80,6 +80,7 @@
 	"assign.adjust": "Adjust",
 	"assign.adjustpattern": "Pattern",
 	"assign.adjusttime": "Timerange",
+	"assign.description": "Short Description",
 	
 	"records.recorddata": "Record data",
 	"records.upload": "Upload",

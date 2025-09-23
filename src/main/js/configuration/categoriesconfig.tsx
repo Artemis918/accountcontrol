@@ -7,7 +7,7 @@ import { AddTool } from './addtool'
 import { YesNo } from '../utils/yesno'
 import { SendMessage } from '../utils/messageid'
 
-type Creator = (props: CategoryConfigProps) => JSX.Element;
+type Creator = (props: CategoryConfigProps) => React.JSX.Element;
 export const CategoriesConfig: Creator = (p) => { return (<_CategoriesConfig {...p} intl={useIntl()} />); }
 
 interface CategoryConfigProps {
@@ -157,7 +157,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		}
 	}
 
-	renderAdd(): JSX.Element {
+	renderAdd(): React.JSX.Element {
 		var create: string = this.label("create");
 		var cancel: string = this.label("cancel");
 		var dellabel: string = this.label("delete");
@@ -247,7 +247,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	}
 
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		var activelabel: string = this.label("category.active");
 		var favoritelabel: string = this.label("category.favorite");
 		var columnsCat: ColumnInfo<Category>[] =

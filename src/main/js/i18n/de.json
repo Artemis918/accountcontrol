@@ -80,7 +80,8 @@
 	"assign.adjust": "Anpassen",
 	"assign.adjustpattern": "Muster",
 	"assign.adjusttime": "Zeitraum",
-	
+	"assign.description": "Beschreibung",
+
 	"records.recorddata": "Belegdaten",
 	"records.upload": "Einspielen",
 	"records.opendialog": "Dateibrowser öffnen",

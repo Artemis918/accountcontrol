@@ -31,4 +31,32 @@
 	font-size: 15px
 }
 
+.assignselectbox {
+	margin: 15% auto;
+	padding: 10px;
+	border: 1px solid #888;
+	background: darkgray;
+	border-radius: 10px;
+	box-shadow: 5px 5px 10px #444;
+}
+
+.recordinfofield {
+	padding: 2px;
+	border: 1px solid #888;
+	background: lightgray;
+}
+
+.recordinfolabel {
+	padding: 2px;
+}
+
+.recordinfoframe { 
+	padding: 5px;
+	width: 100%;
+	background: gray;
+	border-radius: 10px;
+	border-style: inset;
+	border-width: 2px;
+}
+
 

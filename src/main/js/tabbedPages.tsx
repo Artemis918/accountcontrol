@@ -17,7 +17,7 @@ import { CategoriesConfig } from './configuration/categoriesconfig'
 import { MessageID } from './utils/messageid';
 
 
-type Create = (props:TabbedPagesProps) => JSX.Element;
+type Create = (props:TabbedPagesProps) => React.JSX.Element;
 export const TabbedPages:Create = (p) => {return (<_TabbedPages {...p} intl={useIntl()}/>); }
 
 type ChangeValue = ( index: number ) => void;
@@ -117,11 +117,11 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
     ];
     }
 
-    renderPage (page: Page,index:number): JSX.Element {
+    renderPage (page: Page,index:number): React.JSX.Element {
         return ( <TaskSelector tasks={page.tasks} pageindex={index} currenttask={0} /> );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         this.createPages();
         this.createHeaderData();
         return (

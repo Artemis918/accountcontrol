@@ -6,7 +6,7 @@ import { CatStatsDTO } from '../utils/dtos';
 import { myParseJson } from '../utils/misc'
 import mcss from './css/overviewtab.css'
 
-type Create = (props:OverviewTabProps) => JSX.Element;
+type Create = (props:OverviewTabProps) => React.JSX.Element;
 export const OverviewTab:Create = (p) => {return (<_OverviewTab {...p} intl={useIntl()}/>); }
 
 export interface OverviewTabProps {
@@ -58,7 +58,7 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		this.reload(this.state.startYear, this.state.startMonth, this.state.endYear, this.state.endMonth);
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 		<div>
 			<table >
@@ -94,8 +94,8 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		)
 	}
 	
-	private renderHeader(startmonth: number, startyear: number, endmonth: number, endyear: number, locale: string): JSX.Element[] {
-		var header: JSX.Element[]= [];
+	private renderHeader(startmonth: number, startyear: number, endmonth: number, endyear: number, locale: string): React.JSX.Element[] {
+		var header: React.JSX.Element[]= [];
 		var curmonth = startmonth;
 		var curyear = startyear;
 		header.push(
@@ -120,7 +120,7 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		return header;
 	}
 	
-	private renderValue(value: Dataset): JSX.Element {
+	private renderValue(value: Dataset): React.JSX.Element {
 		var style:string = ((value.real - value.plan) >= 0 || (value.plan == 0 ) || (value.real == 0)) ? mcss.positiv: mcss.negative;
 		return (
 			<td className={style}>
@@ -132,8 +132,8 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		)
 	}
 	
-	private renderValues(label:string, data: Dataset[]): JSX.Element[] {
-		var values: JSX.Element[]= [];
+	private renderValues(label:string, data: Dataset[]): React.JSX.Element[] {
+		var values: React.JSX.Element[]= [];
 		values.push(<td>{label}</td>);
 		for (var i: number = 0; i < data.length; i++) {
 			values.push(this.renderValue(data[i]));
@@ -141,7 +141,7 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		return values;
 	}
 	
-	private renderCatValues(catdata:CatDataset[]) : JSX.Element[] {
+	private renderCatValues(catdata:CatDataset[]) : React.JSX.Element[] {
 		return catdata.map((c)=>{
 			return ( <tr> {this.renderValues(c.name,c.datasets)} </tr>);
 		})

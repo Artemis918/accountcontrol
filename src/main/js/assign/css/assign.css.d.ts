@@ -3,5 +3,9 @@ declare const css: {
   readonly descinput: string;
   readonly assigncontext: string;
   readonly assigncontextitem: string;
+  readonly assignselectbox: string;
+  readonly recordinfoframe: string;
+  readonly recordinfolabel: string;
+  readonly recordinfofield: string;
 };
 export = css;

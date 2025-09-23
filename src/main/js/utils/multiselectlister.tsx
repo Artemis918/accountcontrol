@@ -125,7 +125,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 		return false;
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<SelectLister<D>
 				columns={this.props.columns}

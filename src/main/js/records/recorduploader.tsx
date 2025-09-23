@@ -7,7 +7,7 @@ import css from '../css/index.css'
 import { SendMessage } from '../utils/messageid'
 
 
-type Create = (props:RecordUploaderProps) => JSX.Element;
+type Create = (props:RecordUploaderProps) => React.JSX.Element;
 export const RecordUploader:Create = (p) => {return (<_RecordUploader {...p} intl={useIntl()}/>);}
 
 const accept: Dropzone.Accept = {
@@ -87,7 +87,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
         this.setState( { accepted: [] } )
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <table>
                 <colgroup>

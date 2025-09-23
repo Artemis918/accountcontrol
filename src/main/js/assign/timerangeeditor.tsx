@@ -70,7 +70,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 		})
 	}
 
-	renderHovertext() :JSX.Element {
+	renderHovertext() :React.JSX.Element {
 		if ( this.state.hovertext != undefined) {
 			return (
 				<div className={css.hoverbox} 
@@ -84,7 +84,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 		}
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		return (
 			<div style={{
 				position: 'fixed',

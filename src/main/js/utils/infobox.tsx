@@ -40,7 +40,7 @@ export class InfoBox extends React.Component<{}, InfoBoxState> {
 	     });
     }
     
-    createLine(s: string, i:number): JSX.Element {
+    createLine(s: string, i:number): React.JSX.Element {
             return ( <p key={"info"+i} style={{ textAlign: 'center', fontSize: '15px' }} > {s} </p>)
     }
 

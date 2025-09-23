@@ -47,7 +47,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 			this.props.menudef.entries[index].func(index,this.props.menudef.entries[index]);
 	}
 
-	renderRow(entry: ContextMenuEntry<D>, index: number): JSX.Element {
+	renderRow(entry: ContextMenuEntry<D>, index: number): React.JSX.Element {
 		return <tr key={entry.name}>
 			<td onClick={() => this.executeMenu(index)} style={{ background: index == this.state.highlighted ? 'white' : 'lightblue' }}
 				onMouseEnter={() => { this.highlightMenu(index, true) }}
@@ -57,7 +57,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 		</tr>
 	}
 
-	renderHead(title: string): JSX.Element {
+	renderHead(title: string): React.JSX.Element {
 		if (title != null) {
 			return (
 				<tr key={"head"}>
@@ -69,7 +69,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 		}
 	}
 
-	render(): JSX.Element {
+	render(): React.JSX.Element {
 		if (this.props.menuOn && this.props.menudef != null) {
 			return (
 				<div style={{

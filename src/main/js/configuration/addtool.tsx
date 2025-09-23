@@ -49,7 +49,7 @@ export class AddTool extends React.Component<AddToolProps, {}> {
         this.props.save( undefined, undefined );
     }
 
-    createTitle(): JSX.Element {
+    createTitle(): React.JSX.Element {
         if (this.props.category == undefined ) {
             return ( <p style={{ textAlign: 'center' }} ><FormattedMessage id="category.createcat" /> </p>)
         }

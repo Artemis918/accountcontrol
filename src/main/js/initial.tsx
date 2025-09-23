@@ -15,7 +15,7 @@ export class InitialPage extends React.Component<InitialProps, {}> {
         super( props );
     }
     
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <table className={css.maintable}>
                 <tbody>

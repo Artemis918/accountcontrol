@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister';
-import { ContextMenuDef, ContextMenuEntry, HandleMenu } from '../utils/contextmenu';
-import { CategoryAssign } from './categoryassign'
+import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu';
 import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
 import { PlanSelect } from './planselect';
@@ -9,43 +8,35 @@ import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-import mcss from './css/assign.css'
 import css from '../css/index.css'
 import { myParseJson } from '../utils/misc';
+import { AssignEdit } from './assignedit';
 
-type Create = (props: AssignProps) => JSX.Element;
+type Create = (props: AssignProps) => React.JSX.Element;
 export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
+
+enum AssignAction {
+	NONE,
+	CATEGORY,
+	PLAN,
+	SPLIT,
+	TEMPLATE
+}
 
 interface AssignProps {
 	sendmessage: SendMessage;
 }
 
 interface IState {
-	plan: number;
-	selectedplan: Plan;
-	planassign: AccountRecord;
-	accountRecord: AccountRecord;
-	categoryassign: boolean;
-	deftext: string;
-	defsubcategory: number;
-	defcategory: number;
+	plan: number | undefined;
+	accountRecords: AccountRecord[];
 	favcategory: EnumDTO[];
+	action: AssignAction;
 }
 
 const assignmenu: string = "assignmenu";
 
 class _Assign extends React.Component<AssignProps & WrappedComponentProps, IState> {
-
-	assignplanlabel: string;
-	assigncatlabel: string;
-	splitlabel: string;
-	autolabel: string;
-	planlabel: string;
-
-	menutitle: string;
-	menusplitlabel: string;
-	menucatlabel: string;
-	menuplanlabel: string;
 
 	columns: ColumnInfo<AccountRecord>[] = [
 		{
@@ -74,92 +65,93 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 
 			)
 		}];
-	lister: MultiSelectLister<AccountRecord>;
+	recordLister: MultiSelectLister<AccountRecord> | null = null;
 
 	constructor(props: AssignProps & WrappedComponentProps) {
 		super(props)
-		this.lister = undefined;
 		this.state = {
 			plan: undefined,
-			selectedplan: undefined,
-			planassign: undefined,
-			accountRecord: undefined,
-			categoryassign: false,
-			deftext: "",
-			defsubcategory: undefined,
-			defcategory: undefined,
+			accountRecords: [],
 			favcategory: [],
+			action: AssignAction.NONE
 		}
+
 		this.reload = this.reload.bind(this);
 		this.loadFav = this.loadFav.bind(this);
-		this.createPlan = this.createPlan.bind(this);
+
 		this.assignAuto = this.assignAuto.bind(this);
 		this.assignManuell = this.assignManuell.bind(this);
-		this.assignPlan = this.assignPlan.bind(this);
+		this.createTemplate = this.createTemplate.bind(this);
+		
 		this.assignCategory = this.assignCategory.bind(this);
-		this.onChange = this.onChange.bind(this);
-		this.assignSelected = this.assignSelected.bind(this);
 		this.assignDirect = this.assignDirect.bind(this);
-		this.assignSelectedPlan = this.assignSelectedPlan.bind(this);
+		this.executeAssignCategory = this.executeAssignCategory.bind(this);
+	
+		this.assignPlan = this.assignPlan.bind(this);
+		this.executeAssignPlan = this.executeAssignPlan.bind(this);
 	}
 
 	componentDidMount(): void {
 		this.loadFav();
 	}
-		
+
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
-	createLabel(): void {
-		this.assignplanlabel = this.label("assign.assignplan");
-		this.assigncatlabel = this.label("assign.catassign");
-		this.splitlabel = this.label("assign.split");
-		this.autolabel = this.label("assign.auto");
-		this.planlabel = this.label("assign.plan");
-
-		this.menutitle = this.label("assign.assign");
-		this.menucatlabel = this.label("category");
-		this.menuplanlabel = this.label("plan");
-		this.menusplitlabel = this.label("assign.split");
-	}
 
 	loadFav(): void {
 		var self = this;
 		fetch('category/subenumfavorite')
 			.then((response: Response) => response.text())
-			.then((text: string) => { self.setState({ favcategory: myParseJson(text) }) })		
+			.then((text: string) => { self.setState({ favcategory: myParseJson(text) }) })
 	}
 
 	reload(): void {
 		this.loadFav();
-		this.lister.reload();
+		if (this.recordLister)
+			this.recordLister.reload();
 	}
+
+	clearAction(): void {
+		this.setState({ action: AssignAction.NONE, accountRecords: [] });
+		this.reload();
+	};
 
 	assignAuto(): void {
 		fetch('assign/all')
 			.then(this.reload);
 	}
 
+	assignManuell(): void {
+		if (this.state.accountRecords.length == 1)
+			this.setState({ action: AssignAction.SPLIT });
+		else {
+			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+		}
+	}
+
+	createTemplate(): void {
+		if (this.state.accountRecords.length == 1)
+			this.setState({ action: AssignAction.TEMPLATE });
+		else {
+			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+		}
+	}
+
 	assignCategory(): void {
-		if (this.lister.hasSelectedData())
-			this.setState({ categoryassign: true });
+		if (this.state.accountRecords.length > 0)
+			this.setState({ action: AssignAction.CATEGORY });
 		else
 			this.props.sendmessage(this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
 	}
 
-	assignManuell(): void {
-		var data: AccountRecord[] = this.lister.getSelectedData();
-		if (data.length != 1) {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
-		}
-		else {
-			this.setState({ accountRecord: data[0] })
-		}
+	assignDirect(_: number, entry: ContextMenuEntry<AccountRecord>): void {
+		let fav: EnumDTO = entry.data;
+		this.executeAssignCategory(fav.value, "");
 	}
 
-	assignSelected(sub: number, t: string): void {
+	executeAssignCategory(sub: number | undefined, comment: string): void {
 		var self = this;
 		if (sub != undefined) {
-			var request = { text: t, subcategory: sub, ids: this.lister.getSelectedData().map(d => d.id) };
+			var request = { text: comment, subcategory: sub, ids: this.state.accountRecords.map(d => d.id) };
 			var self = this;
 			var jsonbody = JSON.stringify(request);
 			fetch('assign/tosubcategory', {
@@ -168,126 +160,87 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 				headers: {
 					"Content-Type": "application/json"
 				}
-			}).then(function() {
-				self.setState({ categoryassign: false });
-				self.reload();
-			});
+			}).then(() => self.clearAction());
 		}
 		else {
-			self.setState({ categoryassign: false });
+			self.setState({ action: AssignAction.NONE });
 		}
-	}
-
-	createPlan(): void {
-		var data: AccountRecord[] = this.lister.getSelectedData();
-		if (data.length != 1) {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
-		}
-		else {
-			this.setState({ plan: data[0].id })
-		}
-	}
-
-	onChange(): void {
-		this.setState({ plan: undefined, accountRecord: undefined });
-		this.reload();
-	}
-
-	assignSelectedPlan(plan: Plan): void {
-		var self = this;
-		if (plan != undefined) {
-			var self = this;
-			fetch('assign/toplan/' + plan.id + '/' + this.state.planassign.id)
-				.then(function() {
-					self.setState({ planassign: undefined });
-					self.reload();
-				});
-		}
-		else
-			this.setState({ planassign: undefined });
 	}
 
 	assignPlan(): void {
-		var data: AccountRecord[] = this.lister.getSelectedData();
-		if (data.length != 1) {
+		if (this.state.accountRecords.length == 1)
+			this.setState({ action: AssignAction.PLAN });
+		else {
 			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
 		}
-		else {
-			this.setState({ planassign: data[0] })
-		}
 	}
 
-	renderPlanSelect(): JSX.Element {
-		if (this.state.planassign != undefined) {
-			var date: Date = this.state.planassign.executed;
-			return (<PlanSelect month={date.getMonth() + 1}
-				year={date.getFullYear()}
-				onAssign={this.assignSelectedPlan}
-				recordid={this.state.planassign.id} />);
+	executeAssignPlan(plan: Plan | undefined): void {
+		if (plan != undefined) {
+			var self = this;
+			fetch('assign/toplan/' + plan.id + '/' + this.state.accountRecords[0].id)
+				.then(() => self.clearAction());
 		}
 		else
-			return null;
-	}
-	
-	assignDirect(inedx: number, entry: ContextMenuEntry<AccountRecord>) : void {
-		let fav:EnumDTO = entry.data;
-		this.assignSelected(fav.value,"");
+			this.setState({ action: AssignAction.NONE });
 	}
 
-	render(): JSX.Element {
 
-		this.createLabel();
-		
-		let mainentries:ContextMenuEntry<AccountRecord>[] =  [
-				{ name: this.menucatlabel, func: this.assignCategory },
-				{ name: this.menuplanlabel, func: this.assignPlan },
-				{ name: this.menusplitlabel, func: this.assignManuell },
-				{ name: "------------", func: null }
-				
-			];
-		let faventries:ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e)=>{ return {name:e.text,func: this.assignDirect, data: e}; });
+	renderAssignEditor(): React.JSX.Element {
+		var record: AccountRecord | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0] : undefined;
 
-		var contextMenu: ContextMenuDef<AccountRecord>= {
+		if (this.state.action == AssignAction.CATEGORY) {
+			return <AssignEdit sendMessage={this.props.sendmessage} record={record} assignCatCallBack={(sub: number | undefined, t: string) => this.executeAssignCategory(sub, t)} />;
+		}
+		else if (this.state.action == AssignAction.PLAN) {
+			return <AssignEdit sendMessage={this.props.sendmessage} record={record} assignPlanCallBack={(p: Plan | undefined) => this.executeAssignPlan(p)} />;
+		}
+		else {
+			return <></>;
+		}
+	}
+
+	render(): React.JSX.Element {
+
+		if (this.state.action == AssignAction.TEMPLATE) {
+			return <TemplateEditor intl={this.props.intl} accountRecordId={this.state.accountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
+		}
+
+		if (this.state.action == AssignAction.SPLIT) {
+			return <SplitAssign accountRecord={this.state.accountRecords[0]} onCommit={() => this.clearAction()} sendMessage = {this.props.sendmessage} />
+		}
+
+		let mainentries: ContextMenuEntry<AccountRecord>[] = [
+			{ name: this.label("category"), func: this.assignCategory },
+			{ name: this.label("plan"), func: this.assignPlan },
+			{ name: this.label("assign.split"), func: this.assignManuell },
+			{ name: "------------", func: () => { } }
+		];
+		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e }; });
+
+		var contextMenu: ContextMenuDef<AccountRecord> = {
 			entries: mainentries.concat(faventries),
-			title: this.menutitle
-		}
-		
-
-
-
-		if (this.state.plan !== undefined) {
-			return <TemplateEditor intl={this.props.intl} accountRecord={this.state.plan} onDetach={() => this.onChange()} />
-		}
-
-		if (this.state.accountRecord !== undefined) {
-			return <SplitAssign accountRecord={this.state.accountRecord} onCommit={() => this.onChange()} />
+			title: this.label("assign.assign")
 		}
 
 		return (
 			<div>
 				<div className={css.actionbar}>
-					<button className={css.actionbutton} onClick={() => this.assignAuto()}>{this.autolabel}</button> |
-					<button className={css.actionbutton} onClick={() => this.assignCategory()}>{this.assigncatlabel}</button>
-					<button className={css.actionbutton} onClick={() => this.assignManuell()}>{this.splitlabel}</button>
-					<button className={css.actionbutton} onClick={() => this.assignPlan()}>{this.assignplanlabel}</button> |
-					<button className={css.actionbutton} onClick={() => this.createPlan()}>{this.planlabel}</button>
+					<button className={css.actionbutton} onClick={() => this.assignAuto()}>{this.label("assign.auto")}</button> |
+					<button className={css.actionbutton} onClick={() => this.assignCategory()}>{this.label("assign.catassign")}</button>
+					<button className={css.actionbutton} onClick={() => this.assignManuell()}>{this.label("assign.split")}</button>
+					<button className={css.actionbutton} onClick={() => this.assignPlan()}>{this.label("assign.assignplan")}</button> |
+					<button className={css.actionbutton} onClick={() => this.createTemplate()}>{this.label("assign.plan")}</button>
 				</div>
 				<MultiSelectLister<AccountRecord> columns={this.columns}
 					menu={contextMenu}
 					url='accountrecord/unassigned'
 					lines={28}
 					ext=''
-					ref={(ref) => { this.lister = ref }} />
-				{this.state.categoryassign ? <CategoryAssign
-					text={this.state.deftext}
-					subcategory={this.state.defsubcategory}
-					category={this.state.defcategory}
-					handleAssign={(sub, text) => { this.assignSelected(sub, text) }} />
-					: null
-				}
-				{this.renderPlanSelect()}
+					ref={(ref) => { this.recordLister = ref }}
+					handleselect={(data: AccountRecord[]) => { this.setState({ accountRecords: data }); }} />
+				{this.renderAssignEditor()}
 			</div>
 		)
 	}
 }
-

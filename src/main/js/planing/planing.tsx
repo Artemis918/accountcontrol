@@ -10,7 +10,7 @@ import { SendMessage, MessageID } from '../utils/messageid'
 import pcss from './css/planing.css'
 import css from '../css/index.css'
 
-type Create = (props:PlaningProps) => JSX.Element;
+type Create = (props:PlaningProps) => React.JSX.Element;
 export const Planing:Create = (p) => {return (<_Planing {...p} intl={useIntl()}/>);}
 
 interface PlaningProps {
@@ -62,7 +62,7 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
             getdata: ( data: Plan ): string => { return data.categoryname + "/" + data.subcategoryname }
         }, {
             header: this.label("value"),
-            cellrender: ( cell: CellInfo<Plan> ): JSX.Element => (
+            cellrender: ( cell: CellInfo<Plan> ): React.JSX.Element => (
 
                 <div style={{
                     color: cell.data.value >= 0 ? 'green' : 'red',
@@ -94,7 +94,7 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
                            self.props.sendmessage( this.label("plan.planscreated"),  MessageID.OK);  } );
     }
 
-    renderCreation(): JSX.Element {
+    renderCreation(): React.JSX.Element {
         if ( this.state.creationPopup ) {
             return (
                 <div className={pcss.creationFrame}>
@@ -129,7 +129,7 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
         this.setState( { creationPopup: visible } );
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <div>
                 <table style={{ border: '1px solid black' }}>

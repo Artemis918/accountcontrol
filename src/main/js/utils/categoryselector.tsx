@@ -2,51 +2,66 @@ import React from 'react'
 import { DropdownService } from './dropdownservice'
 
 import css from '../css/index.css'
+import { SubCategory } from './dtos';
 
 
 export type HandleCategoryChange = ( subCategory: number, category: number ) => void;
 
 export interface CategorySelectorProps {
     onChange?: HandleCategoryChange;
-    category?: number;
     subcategory?: number;
     horiz: boolean;
 }
 
 interface IState {
-    category: number;
-    subcategory: number
+    category?: number;
+    subcategory?: number
+	allSubs: SubCategory[]
 }
 
 export class CategorySelector extends React.Component<CategorySelectorProps, IState>{
 
     constructor( props: CategorySelectorProps ) {
         super( props );
-        this.state = { category: this.props.category, subcategory: this.props.subcategory };
+        this.state = { category: undefined, subcategory: this.props.subcategory, allSubs: [] };
         this.setCategory = this.setCategory.bind( this );
         this.setSubCategory = this.setSubCategory.bind( this );
     }
+	
+	componentDidMount() :void {
+        var self: CategorySelector = this;
+        fetch( "category/suball" )
+            .then( response => response.json() )
+            .then( d => { self.setState( {allSubs: d }) } )
+	}
     
     setCategory( e: number ): void {
         this.setState( { category: e, subcategory: undefined } );
     }
 
-    setSubCategory( e: number ): void {
-        if (this.props.onChange != undefined )
+    setSubCategory( e: number | undefined  ): void {
+        if (this.props.onChange != undefined && this.state.category != undefined  && e != undefined )
             this.props.onChange( e, this.state.category );
         this.setState( { subcategory: e} );
     }
     
+	findCategory(subCategory:number | undefined ) : number | undefined {
+		if (this.state.allSubs && subCategory != undefined  )
+			return this.state.allSubs.filter( (s) => { return subCategory == s.id;} )[0].category;
+		else
+			return undefined;
+	}
+	
     componentDidUpdate(prevProps: CategorySelectorProps) :void {
-        if (prevProps.subcategory != this.props.subcategory || prevProps.category != this.props.category)
-            this.setState({ category: this.props.category, subcategory: this.props.subcategory } )
+        if (prevProps.subcategory != this.props.subcategory )
+            this.setState({category: this.findCategory( this.props.subcategory ) });
     }
-    
-    getSubCategory() : number {
+
+    getSubCategory() : number | undefined {
         return this.state.subcategory;
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
 		var caturlextension = this.state.category==undefined?"":this.state.category.toString() + "/true";
         if ( this.props.horiz ) {
             return (

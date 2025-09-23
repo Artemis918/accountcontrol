@@ -57,7 +57,7 @@ export class MonthSelect extends React.Component<MonthSelectProps, CState> {
         }
     }
 
-    render(): JSX.Element {
+    render(): React.JSX.Element {
         return (
             <span>
                 {this.props.label}
