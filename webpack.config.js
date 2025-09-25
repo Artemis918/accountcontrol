@@ -11,8 +11,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       favicon: './favicon.png',
-      template: './src/main/resources/templates/index.html',
-      title: 'Account Control',
+      template: './src/main/resources/templates/index.html'
     })
   ],
   devtool: 'source-map',
