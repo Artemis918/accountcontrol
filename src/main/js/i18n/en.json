@@ -1,5 +1,6 @@
 {
 	"create": "Create",
+	"edit": "Edit",
 	"cancel": "Cancel",
 	"save": "Save",
 	"new": "New",
@@ -70,7 +71,7 @@
 
     "assign.assignplan": "Assign plan",
     "assign.catassign": "Assign cat",
-    "assign.categoryassign": "Assign category",
+    "assign.to": "Assign to",
     "assign.assign": "Assign",
 	"assign.split": "Split",
 	"assign.auto": "Auto assign",

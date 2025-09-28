@@ -19,7 +19,7 @@ export type AssignPlanCallback = (plan: Plan | undefined) => void;
 export interface PlanSelectProps {
 	onAssign: AssignPlanCallback;
 	record: AccountRecord;
-	plan?: Plan;
+	planId?: number;
 }
 
 interface IState {
@@ -30,7 +30,8 @@ interface IState {
 	template: Template | null;
 	currentPlan: Plan | undefined;
 	month: number;
-	year: number;
+	year: number
+	planassign: boolean
 }
 
 export class _PlanSelect extends React.Component<PlanSelectProps & WrappedComponentProps, IState> {
@@ -42,10 +43,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		super(props);
 
 		var date: Date = new Date();
-		if (this.props.plan != undefined) {
-			date = this.props.plan.plandate;
-		}
-		else if (this.props.record != undefined) {
+		if (this.props.record != undefined) {
 			date = this.props.record.executed;
 		}
 
@@ -55,9 +53,10 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			patterneditor: false,
 			timerangeeditor: false,
 			template: null,
-			currentPlan: this.props.plan,
+			currentPlan: undefined,
 			year: date.getFullYear(),
-			month: date.getMonth() + 1
+			month: date.getMonth() + 1,
+			planassign: false
 		};
 
 		this.lister = null;
@@ -89,8 +88,22 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	componentDidMount(): void {
-		if (this.props.plan != undefined) {
-			this.handleChange(this.props.plan);
+		var date: Date = new Date();
+		if (this.props.planId != undefined) {
+			var self = this;
+			fetch('plans/id/' + this.props.planId)
+				.then((response: Response) => response.text())
+				.then((text: string) => {
+					var plan: Plan = myParseJson(text);
+					var date = plan.plandate
+					self.setState({
+						year: date.getFullYear(),
+						month: date.getMonth() + 1
+					});
+					fetch("assign/analyze/" + this.props.record.id + "/" + plan.id)
+						.then((response: Response) => response.text())
+						.then((text) => { self.setAnaylzeData(myParseJson(text)) })
+				})
 		}
 	}
 

@@ -210,10 +210,15 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
     renderPlanSelect(): React.JSX.Element {
         if (this.state.planselect == true) {
             var now: Date = new Date;
-            return (<AssignEdit record={this.props.accountRecord} assignPlanCallBack={this.addPlan} sendMessage={this.props.sendMessage} />);
+            return <AssignEdit
+                recordId={this.props.accountRecord.id}
+                assignPlan={this.addPlan}
+                onAssign={() => { }}
+                sendMessage={this.props.sendMessage}
+            />;
         }
         else
-            return (<div />);
+            return <></>;
     }
 
     renderRow(data: AssignPart, index: number): React.JSX.Element {
