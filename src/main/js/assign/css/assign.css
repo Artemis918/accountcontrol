@@ -1,4 +1,3 @@
-
 .assigncontext {
 	background-color: lightgray;
 	border: thin;
@@ -14,10 +13,10 @@
 .delbutton {
 	margin: 0;
 	border-style: outset;
-    background-color: lightgray;
-    font-size: 15px;
-    padding: 2px 10px;
-    margin: 0px 2px;
+	background-color: lightgray;
+	font-size: 15px;
+	padding: 2px 10px;
+	margin: 0px 2px;
 }
 
 .descinput {
@@ -40,6 +39,23 @@
 	box-shadow: 5px 5px 10px #444;
 }
 
+.plansize {
+	width: 300px;
+	height: 500
+}
+.catsize {
+	width: 300px;
+	height: 200px;
+}
+.planexpsize {
+	width: 600px;
+	height: 500px;
+}
+.catexpsize {
+	width: 600px;
+	height: 330px;
+}
+
 .recordinfofield {
 	padding: 2px;
 	border: 1px solid #888;
@@ -50,7 +66,7 @@
 	padding: 2px;
 }
 
-.recordinfoframe { 
+.recordinfoframe {
 	padding: 5px;
 	width: 100%;
 	background: gray;
@@ -58,5 +74,3 @@
 	border-style: inset;
 	border-width: 2px;
 }
-
-

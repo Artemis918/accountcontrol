@@ -152,14 +152,11 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	render(): React.JSX.Element {
-		var boxsize = { width: this.state.expanded ? '600px' : '300px', height: '0px' };
-		if (this.state.planassign) {
-			boxsize.height = '500px';
-		}
-		else {
-			boxsize.height = this.state.expanded ? '330px' : '200px';
-		}
-		var title = this.label(this.state.planassign ? "plan" : "category");
+		var boxsize: string = this.state.expanded ?
+			(this.state.planassign ? css.planexpsize : css.catexpsize)
+			: (this.state.planassign ? css.plansize : css.catsize)
+		var boxstyle: string = css.assignselectbox + " " + boxsize;
+		var title: string = this.label(this.state.planassign ? "plan" : "category");
 
 
 		return (
@@ -169,7 +166,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				zIndex: 1,
 				left: '0', top: '0', width: '100%', height: '100%'
 			}}>
-				<div className={css.assignselectbox} style={boxsize} >
+				<div className={boxstyle} >
 					<div style={{ textAlign: 'center' }}>
 						{this.label("assign.to")} &nbsp;
 						<button className={gcss.addonbutton} onClick={() => this.setState({ planassign: !this.state.planassign })}> {title} </button>
