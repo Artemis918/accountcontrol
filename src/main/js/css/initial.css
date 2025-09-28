@@ -12,6 +12,18 @@
     border-radius: 20px 10px
 }
 
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
+.buttonfield {
+    text-align: center;
+    margin-top: 50px;
+}
+
 .maintable {
 	width: 100%;
 }
