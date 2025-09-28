@@ -37,6 +37,8 @@
 	"footer.state": "Status",
 	"footer.error": "Fehler",
 	
+	"page.welcome": "Willkommen zu",
+
 	"page.plan": "Planen",
 	"task.template": "Vorlagen",
 	"task.plan" : "Plan",

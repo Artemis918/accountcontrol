@@ -34,7 +34,7 @@ class Main extends React.Component<{}, IState> {
 		fetch("production")
 			.then((response: Response) => {
 				response.text()
-				.then((text: string) => self.setState({ production: text == "true" }))
+					.then((text: string) => self.setState({ production: text == "true" }))
 			})
 	}
 
@@ -66,20 +66,13 @@ class Main extends React.Component<{}, IState> {
 
 	renderContent(): React.JSX.Element {
 		var cname: string = this.state.production ? css.production : css.testing;
-		if (this.state.startpage == -1) {
-			return (<div className={cname}>
+		return <div id={'main'} className={cname}>
+			{this.state.startpage == -1 ?
 				<InitialPage setPage={this.setPage} />
-				{this.createLangSelector()}
-			</div>);
-		}
-		else {
-			return (
-				<div className={cname}>
-					<TabbedPages page={this.state.startpage} />
-					{this.createLangSelector()}
-				</div>
-			)
-		}
+				: <TabbedPages page={this.state.startpage} />
+			}
+			{this.createLangSelector()}
+		</div>;
 	}
 }
 
