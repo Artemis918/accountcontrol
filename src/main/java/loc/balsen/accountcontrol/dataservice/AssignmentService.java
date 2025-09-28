@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import loc.balsen.accountcontrol.data.AccountRecord;
 import loc.balsen.accountcontrol.data.Assignment;
@@ -119,12 +120,21 @@ public class AssignmentService {
     if (text.isEmpty())
       text = record.getOtherParty();
 
+    try {
+      assignmentRepository.deleteByAccountrecordId(record.getId());
+    } catch (DataAccessException e) {
+      // ignore
+
+    }
     Assignment assignment = new Assignment(text, text, subCategory, record, null);
 
     assignmentRepository.save(assignment);
   }
 
   public void assignToPlan(Plan plan, AccountRecord record) {
+
+    assignmentRepository.deleteByAccountrecordId(record.getId());
+
     Assignment assignment = new Assignment(plan, record);
     assignment.setCommitted(true);
     assignmentRepository.save(assignment);
