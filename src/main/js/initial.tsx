@@ -21,7 +21,7 @@ export class InitialPage extends React.Component<InitialProps, {}> {
                 <tbody>
                     <tr>
                         <td> 
-                            <button className={css.acbutton} onClick={() => this.props.setPage( 0 )}> 
+                            <button id={'planbutton'} className={css.acbutton} onClick={() => this.props.setPage( 0 )}> 
                               <FormattedMessage id="page.plan" defaultMessage="planing"/>
                             </button>
                         </td>
