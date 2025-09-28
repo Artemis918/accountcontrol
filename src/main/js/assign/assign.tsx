@@ -86,9 +86,8 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.assignCategory = this.assignCategory.bind(this);
 		this.assignDirect = this.assignDirect.bind(this);
 		this.executeAssignCategory = this.executeAssignCategory.bind(this);
-	
+		this.onAssign = this.onAssign.bind(this);
 		this.assignPlan = this.assignPlan.bind(this);
-		this.executeAssignPlan = this.executeAssignPlan.bind(this);
 	}
 
 	componentDidMount(): void {
@@ -143,12 +142,21 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			this.props.sendmessage(this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
 	}
 
+
+	assignPlan(): void {
+		if (this.state.accountRecords.length == 1)
+			this.setState({ action: AssignAction.PLAN });
+		else {
+			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+		}
+	}
+
 	assignDirect(_: number, entry: ContextMenuEntry<AccountRecord>): void {
 		let fav: EnumDTO = entry.data;
 		this.executeAssignCategory(fav.value, "");
 	}
 
-	executeAssignCategory(sub: number | undefined, comment: string): void {
+	executeAssignCategory(sub: number, comment: string): void {
 		var self = this;
 		if (sub != undefined) {
 			var request = { text: comment, subcategory: sub, ids: this.state.accountRecords.map(d => d.id) };
@@ -167,33 +175,22 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 	}
 
-	assignPlan(): void {
-		if (this.state.accountRecords.length == 1)
-			this.setState({ action: AssignAction.PLAN });
-		else {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
-		}
-	}
-
-	executeAssignPlan(plan: Plan | undefined): void {
-		if (plan != undefined) {
-			var self = this;
-			fetch('assign/toplan/' + plan.id + '/' + this.state.accountRecords[0].id)
-				.then(() => self.clearAction());
+	onAssign(changed: boolean): void {
+		if (changed) {
+			this.clearAction();
 		}
 		else
 			this.setState({ action: AssignAction.NONE });
 	}
-
-
+	
 	renderAssignEditor(): React.JSX.Element {
 		var record: AccountRecord | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0] : undefined;
 
 		if (this.state.action == AssignAction.CATEGORY) {
-			return <AssignEdit sendMessage={this.props.sendmessage} record={record} assignCatCallBack={(sub: number | undefined, t: string) => this.executeAssignCategory(sub, t)} />;
+			return <AssignEdit sendMessage={this.props.sendmessage} recordId={record.id} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory}/>;
 		}
 		else if (this.state.action == AssignAction.PLAN) {
-			return <AssignEdit sendMessage={this.props.sendmessage} record={record} assignPlanCallBack={(p: Plan | undefined) => this.executeAssignPlan(p)} />;
+			return <AssignEdit sendMessage={this.props.sendmessage} recordId={record.id} onAssign={this.onAssign} />;
 		}
 		else {
 			return <></>;
@@ -226,11 +223,11 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		return (
 			<div>
 				<div className={css.actionbar}>
-					<button className={css.actionbutton} onClick={() => this.assignAuto()}>{this.label("assign.auto")}</button> |
-					<button className={css.actionbutton} onClick={() => this.assignCategory()}>{this.label("assign.catassign")}</button>
-					<button className={css.actionbutton} onClick={() => this.assignManuell()}>{this.label("assign.split")}</button>
-					<button className={css.actionbutton} onClick={() => this.assignPlan()}>{this.label("assign.assignplan")}</button> |
-					<button className={css.actionbutton} onClick={() => this.createTemplate()}>{this.label("assign.plan")}</button>
+					<button className={css.actionbutton} onClick={this.assignAuto}>{this.label("assign.auto")}</button> |
+					<button className={css.actionbutton} onClick={this.assignCategory}>{this.label("assign.catassign")}</button>
+					<button className={css.actionbutton} onClick={this.assignManuell}>{this.label("assign.split")}</button>
+					<button className={css.actionbutton} onClick={this.assignPlan}>{this.label("assign.assignplan")}</button> |
+					<button className={css.actionbutton} onClick={this.createTemplate}>{this.label("assign.plan")}</button>
 				</div>
 				<MultiSelectLister<AccountRecord> columns={this.columns}
 					menu={contextMenu}

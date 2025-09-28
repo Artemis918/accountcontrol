@@ -1,5 +1,6 @@
 {
 	"create": "Anlegen",
+	"edit": "Bearbeiten",
 	"cancel": "Abbrechen",
 	"save": "Speichern",
 	"new": "Neu",	
@@ -68,7 +69,7 @@
 	
     "assign.assignplan": "Plan zuweisen",
     "assign.catassign": "Kat. zuweisen",
-    "assign.categoryassign": "Zuweisen an Kategorie",
+    "assign.to": "Zuweisen an",
     "assign.assign": "Zuweisen",
 	"assign.split": "Verteilen",
 	"assign.auto": "Automatisch",

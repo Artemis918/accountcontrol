@@ -17,7 +17,7 @@ export type AssignCategoryCallback = (subCategory: number | undefined, text: str
 export interface CategorySelectProps {
     assignCategory: AssignCategoryCallback;
     text: string;
-    subcategory?: number;
+    subCatId?: number;
 }
 
 interface IState {
@@ -33,7 +33,7 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
 
     constructor(props: CategorySelectProps & WrappedComponentProps) {
         super(props);
-        this.state = { category: undefined, subcategory: this.props.subcategory, comment: "" };
+        this.state = { category: undefined, subcategory: this.props.subCatId, comment: "" };
         this.comment = React.createRef<HTMLInputElement |null >();
         this.assign = this.assign.bind(this);
         this.cancel = this.cancel.bind(this);
@@ -62,10 +62,9 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
     render() {
         return (
             <div>
-                <div> {this.label("assign.categoryassign")} </div>
                 <div>
                     <CategorySelector
-                        subcategory={this.props.subcategory}
+                        subcategory={this.props.subCatId}
                         horiz={false}
                         onChange={this.setCategory}
                     />

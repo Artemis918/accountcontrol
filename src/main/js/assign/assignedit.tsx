@@ -1,34 +1,44 @@
 import React from "react";
-import { AccountRecord, Assignment } from "../utils/dtos";
+import { AccountRecord, Assignment, Plan } from "../utils/dtos";
 import { SendMessage } from "../utils/messageid";
 import { useIntl, WrappedComponentProps } from "react-intl";
-import css from "./css/assign.css";
 import CategorySelect, { AssignCategoryCallback } from "./categoryselect";
 import { AssignPlanCallback, PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
+import { myParseJson } from "../utils/misc";
+
+import css from './css/assign.css';
+import gcss from '../css/index.css';
+
 
 type Create = (props: AssignEditProps) => React.JSX.Element;
 export const AssignEdit: Create = (props: AssignEditProps) => { return (<_AssignEdit {...props} intl={useIntl()} />); }
 
+export type OnAssign = (changed: boolean) => void
+export type OnAssignNewCats = (newSubCat: number, comment: string) => void
+
 interface AssignEditProps {
 	sendMessage: SendMessage;
-	record?: AccountRecord;
+	recordId?: number;
 	assignment?: Assignment;
-	assignCatCallBack?: AssignCategoryCallback;
-	assignPlanCallBack?: AssignPlanCallback;
+	onAssign: OnAssign;
+	onAssignNewCats?: OnAssignNewCats;  // only if recordID is undefined
+	assignPlan?: AssignPlanCallback;  // to overide default plan assign behavior
 }
 
 // use cases:
-// record | assignment  | callback   |  use case                           | cat | plan | expand | expanded 
+// record | assignment  | onAssignNC |  use case                           | cat | plan | expand | expanded 
 // -------+-------------+------------+-------------------------------------+-----+------+--------+----------
 // null   | null        |            | assign multiple rows to subcategory | on  | off  | off    | off 
-//   +    |             | plan       | assign to new plan                  | off | on   | on     | off
-//   +    |             | cat        | assign to new category              | on  | off  | on     | off
-//   +    | with plan   | plan/cat   | change/show existing plan           | off | on   | on     | on
-//   +    | without plan| plan/cat   | change/show existing category       | on  | off  | on     | on
+//   +    |             | not set    | assign to new plan                  | off | on   | on     | off
+//   +    |             | set        | assign to new category              | on  | off  | on     | off
+//   +    | with plan   |            | change/show existing plan           | off | on   | on     | on
+//   +    | without plan|            | change/show existing category       | on  | off  | on     | on
 
 interface IState {
-	expanded: Boolean
+	expanded: Boolean;
+	record: AccountRecord | undefined;
+	planassign: Boolean;
 }
 
 class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProps, IState> {
@@ -36,13 +46,75 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	constructor(props: AssignEditProps & WrappedComponentProps) {
 		super(props)
 		this.state = {
-			expanded: props.assignment != undefined
+			expanded: props.assignment != undefined,
+			record: undefined,
+			planassign: props.recordId == undefined
+				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
+					|| (props.assignment != undefined && this.props.assignment.plan != undefined))
+		}
+
+		this.assignCatCallBack = this.assignCatCallBack.bind(this);
+		this.assignPlanCallBack = this.assignPlanCallBack.bind(this);
+	}
+
+	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
+
+	componentDidMount(): void {
+		if (this.props.recordId != undefined) {
+			var self = this;
+			fetch('accountrecord/id/' + this.props.recordId)
+				.then((response: Response) => response.text())
+				.then((text: string) => { self.setState({ record: myParseJson(text) }) })
 		}
 	}
 
+	assignCatCallBack(subcat: number | undefined, comment: string): void {
+		if (subcat == undefined) {
+			if (this.props.onAssign != undefined)
+				this.props.onAssign(false);
+		}
+		else if (this.props.recordId == undefined) {
+			if (this.props.onAssignNewCats != undefined)
+				this.props.onAssignNewCats(subcat, comment);
+		}
+		else {
+			var request = { text: comment, subcategory: subcat, ids: [this.state.record.id] };
+			var self = this;
+			var jsonbody = JSON.stringify(request);
+			fetch('assign/tosubcategory', {
+				method: 'post',
+				body: jsonbody,
+				headers: {
+					"Content-Type": "application/json"
+				}
+			}).then(
+				() => {
+					if (self.props.onAssign != undefined)
+						self.props.onAssign(true)
+				}
+			);
+		}
+	};
+
+	assignPlanCallBack(plan: Plan | undefined): void {
+		if (this.props.assignPlan != undefined)
+			this.props.assignPlan(plan);
+
+		else if (plan == undefined) {
+			if (this.props.onAssign != undefined)
+				this.props.onAssign(false);
+		}
+		else {
+			// default behavior: assign to plan and remove previous assignment	
+			var self = this;
+			fetch('assign/toplan/' + plan.id + '/' + this.props.recordId)
+				.then(() => { if (self.props.onAssign) self.props.onAssign(true); });
+		}
+	};
+
 
 	renderExpandButton(): React.JSX.Element {
-		if (this.props.record == undefined)
+		if (this.state.record == undefined)
 			return <></>;
 
 		else if (this.state.expanded)
@@ -58,62 +130,66 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				</div>);
 	}
 
-	isPlanAssignment(): boolean {
-		return this.props.record != undefined
-			&& this.props.assignPlanCallBack != undefined
-			&& (this.props.assignCatCallBack == undefined
-				|| (this.props.assignment != undefined && this.props.assignment.plan != undefined));
+	renderSelector(): React.JSX.Element {
+		if (this.state.planassign && this.state.record) {
+			var planId: number = this.props.assignment ? this.props.assignment.plan! : undefined;
+			return <PlanSelect record={this.state.record} planId={planId} onAssign={this.assignPlanCallBack} />;
+		}
+		else if (this.state.record) {
+			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
+			return <CategorySelect text={""} subCatId={subCatId} assignCategory={this.assignCatCallBack} />
+		}
+		return <></>;
 	}
 
 	renderAssignment(): React.JSX.Element {
+		return (
+			<div>
 
-		if (this.isPlanAssignment()
-			&& this.props.record && this.props.assignPlanCallBack) {
-			return <PlanSelect record={this.props.record} onAssign={this.props.assignPlanCallBack} />;
-		}
-		else if (this.props.assignCatCallBack && !this.props.assignPlanCallBack) {
-			return <CategorySelect text={""} assignCategory={this.props.assignCatCallBack} />
-		}
-		return <></>
+				{this.renderSelector()}
+			</div>
+		)
 	}
 
 	render(): React.JSX.Element {
-		var boxsize = { width: this.state.expanded ? '550px' : '300px', height: '0px' };
-		if (this.isPlanAssignment()) {
-			boxsize.height = '440px';
+		var boxsize = { width: this.state.expanded ? '600px' : '300px', height: '0px' };
+		if (this.state.planassign) {
+			boxsize.height = '500px';
 		}
 		else {
-			boxsize.height = this.state.expanded ? '300px' : '180px';
+			boxsize.height = this.state.expanded ? '330px' : '200px';
 		}
+		var title = this.label(this.state.planassign ? "plan" : "category");
+
 
 		return (
+
 			<div style={{
 				position: 'fixed',
 				zIndex: 1,
 				left: '0', top: '0', width: '100%', height: '100%'
 			}}>
-				{this.state.expanded && this.props.record ?
-					<div className={css.assignselectbox} style={boxsize }>
-						<table style={{ left: '0', top: '0', width: '100%', height: '100%' }}>
-							<tbody>
+				<div className={css.assignselectbox} style={boxsize} >
+					<div style={{ textAlign: 'center' }}>
+						{this.label("assign.to")} &nbsp;
+						<button className={gcss.addonbutton} onClick={() => this.setState({ planassign: !this.state.planassign })}> {title} </button>
+					</div>
+					<table style={{ left: '0', top: '0', width: '100%', height: '100%' }}>
+						<tbody>
+
+							{this.state.expanded && this.state.record ?
 								<tr>
-									<td style={{ verticalAlign: 'top', minWidth: '40%'}} >
+									<td style={{ verticalAlign: 'top', minWidth: '45%' }} >
 										{this.renderAssignment()}
 									</td>
 									<td style={{ verticalAlign: 'top' }} >
 										{this.renderExpandButton()}
 									</td>
-									<td style={{ verticalAlign: 'top', maxWidth: '60%'}} >
-										<RecordInfo accountRecord={this.props.record} />
+									<td style={{ verticalAlign: 'top', maxWidth: '55%' }} >
+										<RecordInfo accountRecord={this.state.record} />
 									</td>
 								</tr>
-							</tbody>
-						</table>
-					</div>
-					:
-					<div className={css.assignselectbox} style={boxsize} >
-						<table style={{ left: '0', top: '0', width: '100%', height: '100%' }}>
-							<tbody>
+								:
 								<tr>
 									<td style={{ verticalAlign: 'top' }}>
 										{this.renderAssignment()}
@@ -122,11 +198,11 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 										{this.renderExpandButton()}
 									</td>
 								</tr>
-							</tbody>
-						</table>
-					</div>
-				}
-			</div>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div >
 		)
 	}
 

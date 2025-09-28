@@ -1,15 +1,16 @@
 import * as React from 'react'
-import {useIntl,WrappedComponentProps} from 'react-intl'
+import { useIntl, WrappedComponentProps } from 'react-intl'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
 import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
-import { Assignment } from '../utils/dtos'
+import { AccountRecord, Assignment, Plan } from '../utils/dtos'
 import acss from './css/account.css'
 import css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
+import { AssignEdit } from '../assign/assignedit'
 
-type Create = (props:CategoriesProps) => React.JSX.Element;
-export const Categories:Create = (p) => {return (<_Categories {...p} intl={useIntl()}/>);}
+type Create = (props: CategoriesProps) => React.JSX.Element;
+export const Categories: Create = (p) => { return (<_Categories {...p} intl={useIntl()} />); }
 
 interface CategoriesProps {
     sendmessage: SendMessage;
@@ -20,6 +21,7 @@ interface IState {
     selectedCategory: number;
     month: number;
     year: number;
+    assignEdit: boolean;
 }
 
 export class _Categories extends React.Component<CategoriesProps & WrappedComponentProps, IState> {
@@ -27,44 +29,47 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     columns: ColumnInfo<Assignment>[];
     lister: React.RefObject<MultiSelectLister<Assignment>>;
 
-    constructor( props: CategoriesProps & WrappedComponentProps ) {
-        super( props );
+    constructor(props: CategoriesProps & WrappedComponentProps) {
+        super(props);
         var currentTime = new Date();
         this.state = {
             selectedSubCategory: undefined,
             selectedCategory: undefined,
             month: currentTime.getMonth() + 1,
-            year: currentTime.getFullYear()
+            year: currentTime.getFullYear(),
+            assignEdit: false
         };
         this.lister = React.createRef();
 
 
-        this.commitAssignment = this.commitAssignment.bind( this );
-        this.commitSelected = this.commitSelected.bind( this );
-        this.commitAll = this.commitAll.bind( this );
-        this.removeAssignment = this.removeAssignment.bind( this );
-        this.acceptValueAssignment = this.acceptValueAssignment.bind( this );
-		this.createFooter = this.createFooter.bind(this);
+        this.commitAssignment = this.commitAssignment.bind(this);
+        this.commitSelected = this.commitSelected.bind(this);
+        this.commitAll = this.commitAll.bind(this);
+        this.removeAssignment = this.removeAssignment.bind(this);
+        this.acceptValueAssignment = this.acceptValueAssignment.bind(this);
+        this.editAssignment = this.editAssignment.bind(this);
+        this.createFooter = this.createFooter.bind(this);
+        this.onAssign = this.onAssign.bind(this);
     }
 
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
+    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
-	createColumns():void {
+    createColumns(): void {
         this.columns = [
             {
                 header: this.label("shortdescription"),
-                getdata: ( z: Assignment ) => { return z.detail }
+                getdata: (z: Assignment) => { return z.detail }
             },
             {
                 header: this.label("check.plan"),
-                cellrender: ( cell: CellInfo<Assignment> ) => {
-                    if ( cell.data.planed == 0 ) {
+                cellrender: (cell: CellInfo<Assignment>) => {
+                    if (cell.data.planed == 0) {
                         return null;
                     }
                     else {
                         return (
                             <div style={{ textAlign: 'right' }}>
-                                {( cell.data.planed / 100 ).toFixed( 2 )}
+                                {(cell.data.planed / 100).toFixed(2)}
                             </div>
                         )
                     }
@@ -72,112 +77,126 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             },
             {
                 header: this.label("check.real"),
-                cellrender: ( cell: CellInfo<Assignment> ) => {
+                cellrender: (cell: CellInfo<Assignment>) => {
                     return (
-                        <div style={{ textAlign: 'right', backgroundColor: this.getColor( cell.data ) }}>
-                            {( cell.data.accountrecord == 0 ) ? '--' : ( cell.data.real / 100 ).toFixed( 2 )}
+                        <div style={{ textAlign: 'right', backgroundColor: this.getColor(cell.data) }}>
+                            {(cell.data.accountrecord == 0) ? '--' : (cell.data.real / 100).toFixed(2)}
                         </div>
                     )
                 },
             },
             {
                 header: 'ok',
-                cellrender: ( cell: CellInfo<Assignment> ) => {
-                    if ( cell.data.accountrecord != 0 && cell.rownum != -1 )
+                cellrender: (cell: CellInfo<Assignment>) => {
+                    if (cell.data.accountrecord != 0 && cell.rownum != -1)
                         return (
                             <input type='checkbox'
                                 checked={cell.data.committed}
-                                onClick={() => this.commitAssignment( cell.data )} />
+                                onClick={() => this.commitAssignment(cell.data)} />
                         )
                 },
             }
         ];
-	}
-	
-    getColor( a: Assignment ): string {
-        if ( a.accountrecord == 0 || a.plan == 0 )
+    }
+
+    getColor(a: Assignment): string {
+        if (a.accountrecord == 0 || a.plan == 0)
             return 'lightgrey';
-        else if ( a.planed > a.real )
+        else if (a.planed > a.real)
             return 'red';
         else
             return 'green';
     }
 
-    commit( alist: Assignment[] ): void {
-        var ids: number[] = alist.map( ( a: Assignment ) => { return a.id; } );
+    commit(alist: Assignment[]): void {
+        var ids: number[] = alist.map((a: Assignment) => { return a.id; });
         var self: _Categories = this;
-        fetch( 'assign/commit', {
+        fetch('assign/commit', {
             method: 'post',
-            body: JSON.stringify( ids ),
+            body: JSON.stringify(ids),
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function() {
+        }).then(function () {
             self.lister.current.reload();
-        } );
+        });
     }
 
-    commitAssignment( a: Assignment ): void {
+    commitAssignment(a: Assignment): void {
         var self: _Categories = this;
-        fetch( 'assign/invertcommit/' + a.id )
-            .then( function() {
+        fetch('assign/invertcommit/' + a.id)
+            .then(function () {
                 self.lister.current.reload();
-            } );
+            });
     }
 
     commitSelected(): void {
-        this.commit( this.lister.current.getSelectedData() );
+        this.commit(this.lister.current.getSelectedData());
         this.lister.current.reload();
     }
 
     commitAll(): void {
-        this.commit( this.lister.current.getDataAll() );
+        this.commit(this.lister.current.getDataAll());
         this.lister.current.reload();
+    }
+
+    editAssignment(): void {
+        if (this.lister.current.getSelectedData().length != 1) {
+            this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+        }
+        this.setState({ assignEdit: true });
     }
 
     acceptValueAssignment(): void {
         var assignments: Assignment[] = this.lister.current.getSelectedData();
-        if ( assignments.length != 1 ) {
-            this.props.sendmessage( this.label("assign.onevalue"), MessageID.INVALID_DATA );
+        if (assignments.length != 1) {
+            this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
         }
         else {
             var id: number = assignments[0].id;
             var url: string = 'assign/newvalue/';
 
-            if ( id == 0 || id == undefined ) {
+            if (id == 0 || id == undefined) {
                 id = assignments[0].plan;
                 url = 'assign/endplan/';
             }
 
-            if ( id != undefined ) {
+            if (id != undefined) {
                 var self: _Categories = this;
-                fetch( url + id, { headers: { "Content-Type": "application/json" } } )
-                    .then( ( response: Response ) => response.text() )
-                    .then( () => self.lister.current.reload() );
+                fetch(url + id, { headers: { "Content-Type": "application/json" } })
+                    .then((response: Response) => response.text())
+                    .then(() => self.lister.current.reload());
             }
         }
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map( ( assign: Assignment ) => { return assign.accountrecord; } );
+        var ids: number[] = this.lister.current.getSelectedData().map((assign: Assignment) => { return assign.accountrecord; });
         var self: _Categories = this;
-        fetch( 'assign/remove', {
+        fetch('assign/remove', {
             method: 'post',
-            body: JSON.stringify( ids ),
+            body: JSON.stringify(ids),
             headers: {
                 "Content-Type": "application/json"
             }
-        } ).then( function() {
+        }).then(function () {
             self.lister.current.reload();
-        } );
+        });
+    }
+
+    onAssign(changed: boolean): void {
+        this.setState({ assignEdit: false });
+        if (changed) {
+            this.lister.current.reload();
+        }
     }
 
     createExt(): string {
         var date: string = '/' + this.state.year + '/' + this.state.month + '/';
-        if ( this.state.selectedSubCategory != undefined ) {
+        if (this.state.selectedSubCategory != undefined) {
             return '/getsubcategory' + date + this.state.selectedSubCategory;
         }
-        else if ( this.state.selectedCategory != undefined ) {
+        else if (this.state.selectedCategory != undefined) {
             return '/getcategory' + date + this.state.selectedCategory;
         }
         else {
@@ -185,11 +204,25 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         }
     }
 
-    createFooter( z: Assignment[] ): Assignment {
+    renderAssignEdit(): React.JSX.Element {
+        if (this.state.assignEdit) {
+            var assignment: Assignment = this.lister.current.getSelectedData()[0]
+            var recordId: number | undefined = assignment.accountrecord
+
+            return <AssignEdit sendMessage={this.props.sendmessage}
+                recordId={recordId}
+                assignment={assignment}
+                onAssign={this.onAssign}
+            />;}
+        else
+            return <></>;
+    }
+
+    createFooter(z: Assignment[]): Assignment {
         var footer: Assignment = new Assignment();
         var real: number = 0;
         var planed: number = 0;
-        z.map( ( assignment: Assignment ) => { real += assignment.real; if ( assignment.planed != undefined ) planed += assignment.planed; } )
+        z.map((assignment: Assignment) => { real += assignment.real; if (assignment.planed != undefined) planed += assignment.planed; })
         footer.detail = this.label("check.sum");
         footer.real = real;
         footer.planed = planed;
@@ -197,27 +230,32 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     render(): React.JSX.Element {
-		this.createColumns();
+        this.createColumns();
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
 
-                    <button className={css.actionbutton} 
-                            onClick={() => this.commitSelected()}>
-							{this.label("check.commitselected")}
-					 </button>
-                    <button className={css.actionbutton} 
-                            onClick={() => this.commitAll()}>
-							{this.label("check.commitall")}
+                    <button className={css.actionbutton}
+                        onClick={() => this.commitSelected()}>
+                        {this.label("check.commitselected")}
                     </button>
-                    <button className={css.actionbutton} 
-                            onClick={() => this.removeAssignment()}>
-							{this.label("check.removeassign")}
-							</button>
-                    <button className={css.actionbutton} 
-                            onClick={() => this.acceptValueAssignment()}>
-							{this.label("check.acceptvalue")}
-                            </button>
+                    <button className={css.actionbutton}
+                        onClick={() => this.commitAll()}>
+                        {this.label("check.commitall")}
+                    </button>
+
+                    <button className={css.actionbutton}
+                        onClick={() => this.acceptValueAssignment()}>
+                        {this.label("check.acceptvalue")}
+                    </button>
+                    <button className={css.actionbutton}
+                        onClick={() => this.editAssignment()}>
+                        {this.label("edit")}
+                    </button>
+                    <button className={css.actionbutton}
+                        onClick={() => this.removeAssignment()}>
+                        {this.label("check.removeassign")}
+                    </button>
                 </div>
                 <table>
                     <tbody>
@@ -225,13 +263,13 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                             <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                 <div className={acss.monthselect}>
                                     <MonthSelect label={this.label("month")}
-                                        onChange={( m: number, y: number ) => this.setState( { month: m, year: y } )}
+                                        onChange={(m: number, y: number) => this.setState({ month: m, year: y })}
                                         month={this.state.month}
                                         year={this.state.year} />
                                 </div>
                                 <CategoryTree
-                                    handleCatSelect={( kg: number ) => this.setState( { selectedCategory: kg, selectedSubCategory: undefined } )}
-                                    handleSubSelect={( k: number ) => this.setState( { selectedCategory: undefined, selectedSubCategory: k } )}
+                                    handleCatSelect={(kg: number) => this.setState({ selectedCategory: kg, selectedSubCategory: undefined })}
+                                    handleSubSelect={(k: number) => this.setState({ selectedCategory: undefined, selectedSubCategory: k })}
                                 />
                             </td>
                             <td style={{ border: '1px solid black' }}>
@@ -246,6 +284,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                         </tr>
                     </tbody>
                 </table>
+                {this.renderAssignEdit()}
             </div>
         );
     }
