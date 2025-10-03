@@ -14,10 +14,10 @@ import css from '../css/index.css'
 type Create = (props: PlanSelectProps) => React.JSX.Element;
 export const PlanSelect: Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()} />); }
 
-export type AssignPlanCallback = (plan: Plan | undefined) => void;
+export type OnPlanChange = (plan: Plan | undefined) => void;
 
 export interface PlanSelectProps {
-	onAssign: AssignPlanCallback;
+	onChange: OnPlanChange;
 	record: AccountRecord;
 	planId?: number;
 }
@@ -31,7 +31,6 @@ interface IState {
 	currentPlan: Plan | undefined;
 	month: number;
 	year: number
-	planassign: boolean
 }
 
 export class _PlanSelect extends React.Component<PlanSelectProps & WrappedComponentProps, IState> {
@@ -56,13 +55,11 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			currentPlan: undefined,
 			year: date.getFullYear(),
 			month: date.getMonth() + 1,
-			planassign: false
 		};
 
 		this.lister = null;
 		this.setFilter = this.setFilter.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		this.assign = this.assign.bind(this);
 		this.setPattern = this.setPattern.bind(this);
 		this.settimerange = this.settimerange.bind(this);
 
@@ -100,9 +97,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 						year: date.getFullYear(),
 						month: date.getMonth() + 1
 					});
-					fetch("assign/analyze/" + this.props.record.id + "/" + plan.id)
-						.then((response: Response) => response.text())
-						.then((text) => { self.setAnaylzeData(myParseJson(text)) })
+					this.handleChange(plan);
 				})
 		}
 	}
@@ -124,14 +119,12 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	handleChange(plan: Plan): void {
 		var self: _PlanSelect = this;
 		this.setState({ timerangefailed: false, patternfailed: false, currentPlan: plan });
+		if (this.props.onChange)
+			this.props.onChange(plan);
 
 		fetch("assign/analyze/" + this.props.record.id + "/" + plan.id)
 			.then((response: Response) => response.text())
 			.then((text) => { self.setAnaylzeData(myParseJson(text)) })
-	}
-
-	assign(): void {
-		this.props.onAssign(this.state.currentPlan);
 	}
 
 	setPattern(p: Pattern): void {
@@ -203,16 +196,6 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 						columns={this.columns}
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}
-					<p>
-						<button onClick={() => this.assign()}
-							className={css.addonbutton}>
-							{this.label("assign.assign")}
-						</button>
-						<button onClick={() => this.props.onAssign(undefined)}
-							className={css.addonbutton}>
-							{this.label("cancel")}
-						</button>
-					</p>
 				</div>
 				{this.renderPatternEditor()}
 				{this.renderTimRangeEditor()}

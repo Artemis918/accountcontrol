@@ -2,8 +2,8 @@ import React from "react";
 import { AccountRecord, Assignment, Plan } from "../utils/dtos";
 import { SendMessage } from "../utils/messageid";
 import { useIntl, WrappedComponentProps } from "react-intl";
-import CategorySelect, { AssignCategoryCallback } from "./categoryselect";
-import { AssignPlanCallback, PlanSelect } from "./planselect";
+import { CategorySelect } from "./categoryselect";
+import { PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
 import { myParseJson } from "../utils/misc";
 
@@ -16,6 +16,7 @@ export const AssignEdit: Create = (props: AssignEditProps) => { return (<_Assign
 
 export type OnAssign = (changed: boolean) => void
 export type OnAssignNewCats = (newSubCat: number, comment: string) => void
+export type OnAssignPlan = (plan: Plan) => void
 
 interface AssignEditProps {
 	sendMessage: SendMessage;
@@ -23,7 +24,7 @@ interface AssignEditProps {
 	assignment?: Assignment;
 	onAssign: OnAssign;
 	onAssignNewCats?: OnAssignNewCats;  // only if recordID is undefined
-	assignPlan?: AssignPlanCallback;  // to overide default plan assign behavior
+	assignPlan?: OnAssignPlan;  // to overide default plan assign behavior
 }
 
 // use cases:
@@ -39,6 +40,9 @@ interface IState {
 	expanded: Boolean;
 	record: AccountRecord | undefined;
 	planassign: Boolean;
+	cur_comment: string;
+	cur_subcat: number | undefined;
+	cur_plan: Plan | undefined;
 }
 
 class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProps, IState> {
@@ -48,13 +52,18 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		this.state = {
 			expanded: props.assignment != undefined,
 			record: undefined,
+			cur_comment: undefined,
+			cur_subcat: undefined,
+			cur_plan: undefined,
 			planassign: props.recordId == undefined
 				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
 					|| (props.assignment != undefined && this.props.assignment.plan != undefined))
 		}
 
-		this.assignCatCallBack = this.assignCatCallBack.bind(this);
-		this.assignPlanCallBack = this.assignPlanCallBack.bind(this);
+		this.assign = this.assign.bind(this);
+		this.cancel = this.cancel.bind(this);
+		this.onPlanChange = this.onPlanChange.bind(this);
+		this.onCatChange = this.onCatChange.bind(this);
 	}
 
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
@@ -68,12 +77,27 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		}
 	}
 
+	cancel(): void {
+		if (this.props.onAssign != undefined)
+			this.props.onAssign(false);
+	}
+
+	assign() {
+		if (this.state.planassign)
+			this.assignPlanCallBack(this.state.cur_plan);
+		this.assignCatCallBack(this.state.cur_subcat, this.state.cur_comment)
+	}
+
+	onPlanChange(plan: Plan) {
+		this.setState({ cur_plan: plan });
+	}
+
+	onCatChange(subcat: number, comment: string) {
+		this.setState({ cur_subcat: subcat, cur_comment: comment });
+	}
+
 	assignCatCallBack(subcat: number | undefined, comment: string): void {
-		if (subcat == undefined) {
-			if (this.props.onAssign != undefined)
-				this.props.onAssign(false);
-		}
-		else if (this.props.recordId == undefined) {
+		if (this.props.recordId == undefined) {
 			if (this.props.onAssignNewCats != undefined)
 				this.props.onAssignNewCats(subcat, comment);
 		}
@@ -99,11 +123,6 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	assignPlanCallBack(plan: Plan | undefined): void {
 		if (this.props.assignPlan != undefined)
 			this.props.assignPlan(plan);
-
-		else if (plan == undefined) {
-			if (this.props.onAssign != undefined)
-				this.props.onAssign(false);
-		}
 		else {
 			// default behavior: assign to plan and remove previous assignment	
 			var self = this;
@@ -131,22 +150,31 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	renderSelector(): React.JSX.Element {
-		if (this.state.planassign && this.state.record) {
+		if (this.state.planassign) {
 			var planId: number = this.props.assignment ? this.props.assignment.plan! : undefined;
-			return <PlanSelect record={this.state.record} planId={planId} onAssign={this.assignPlanCallBack} />;
+			return <PlanSelect record={this.state.record} planId={planId} onChange={this.onPlanChange} />;
 		}
-		else if (this.state.record) {
+		else {
 			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
-			return <CategorySelect text={""} subCatId={subCatId} assignCategory={this.assignCatCallBack} />
+			return <CategorySelect text={""} subCatId={subCatId} onChange={this.onCatChange} />
 		}
-		return <></>;
 	}
 
 	renderAssignment(): React.JSX.Element {
 		return (
 			<div>
-
 				{this.renderSelector()}
+				<div>
+					<button onClick={this.assign} className={gcss.addonbutton} testdata-id={'assign.assign'}>
+						{this.label("assign.assign")}
+					</button>
+					<button onClick={this.cancel}
+					    testdata-id={'assign.cancel'}
+						style={{ float: "right" }}
+						className={gcss.addonbutton}>
+						{this.label("cancel")}
+					</button>
+				</div>
 			</div>
 		)
 	}
@@ -166,10 +194,17 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				zIndex: 1,
 				left: '0', top: '0', width: '100%', height: '100%'
 			}}>
-				<div className={boxstyle} >
+				<div className={boxstyle}
+					testdata-id={'assignedit'}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							this.assign();
+						}
+					}}
+				>
 					<div style={{ textAlign: 'center' }}>
 						{this.label("assign.to")} &nbsp;
-						<button className={gcss.addonbutton} onClick={() => this.setState({ planassign: !this.state.planassign })}> {title} </button>
+						<button className={gcss.addonbutton} onClick={() => this.setState({ planassign: !this.state.planassign })} testdata-id={'typebutton'} >{title}</button>
 					</div>
 					<table style={{ left: '0', top: '0', width: '100%', height: '100%' }}>
 						<tbody>
