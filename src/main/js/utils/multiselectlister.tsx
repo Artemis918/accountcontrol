@@ -39,13 +39,13 @@ class CState {
 	range: Range;
 }
 
-export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps<D>, CState> {
+export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps<D> & { 'testdata-id'?: string }, CState> {
 	lister: SelectLister<D>;
 
 	constructor(props: MultiSelectlisterProps<D>) {
 		super(props);
 		this.lister = undefined;
-		this.state = { range: undefined, selectedRows: undefined }
+		this.state = { range: undefined, selectedRows: undefined};
 		this.handleSelect = this.handleSelect.bind(this);
 		this.isSelected = this.isSelected.bind(this);
 	}
@@ -137,7 +137,8 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 				handleSelect={(s: boolean, c: boolean, _d: D, i: number) => this.handleSelect(s, c, i)}
 				hasSelected={()=> {return this.state.range != undefined || this.state.selectedRows != undefined}}
 				isSelected={(i) => this.isSelected(i)}
-				ref={(r) => { this.lister = r; }} />
+				ref={(r) => { this.lister = r; }} 
+				testdata-id= {this.props['testdata-id']} />
 		);
 	}
 }
