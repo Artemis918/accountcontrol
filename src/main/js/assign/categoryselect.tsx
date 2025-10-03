@@ -12,10 +12,10 @@ export const CategorySelect: Create = (p) => { return (<_CategorySelect {...p} i
 
 export default CategorySelect;
 
-export type AssignCategoryCallback = (subCategory: number | undefined, text: string) => void;
+export type OnCatChange = (subCategory: number | undefined, text: string) => void;
 
 export interface CategorySelectProps {
-    assignCategory: AssignCategoryCallback;
+    onChange: OnCatChange;
     text: string;
     subCatId?: number;
 }
@@ -29,15 +29,13 @@ interface IState {
 
 class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps, IState> {
 
-        comment: React.RefObject<HTMLInputElement |null>;
+    comment: React.RefObject<HTMLInputElement | null>;
 
     constructor(props: CategorySelectProps & WrappedComponentProps) {
         super(props);
         this.state = { category: undefined, subcategory: this.props.subCatId, comment: "" };
-        this.comment = React.createRef<HTMLInputElement |null >();
-        this.assign = this.assign.bind(this);
-        this.cancel = this.cancel.bind(this);
-        this.setCategory = this.setCategory.bind(this); 
+        this.comment = React.createRef<HTMLInputElement | null>();
+        this.setCategory = this.setCategory.bind(this);
     }
 
     label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
@@ -47,16 +45,16 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
             this.comment.current.focus();
     }
 
-    assign(): void {
-        this.props.assignCategory(this.state.subcategory, this.state.comment);
+    setCategory(category?: number, subcategory?: number) {
+        this.setState({ category: category, subcategory: subcategory });
+        if (this.props.onChange)
+            this.props.onChange(this.state.subcategory,this.state.comment)
     }
 
-    cancel(): void {
-        this.props.assignCategory(undefined, this.state.comment); 
-    }
-
-    setCategory(category? : number, subcategory?: number) {
-        this.setState({ category: category, subcategory: subcategory });    
+    setComment(comment: string) {
+        this.setState({ comment: comment });
+        if (this.props.onChange)
+            this.props.onChange(this.state.subcategory,this.state.comment)
     }
 
     render() {
@@ -69,26 +67,14 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
                         onChange={this.setCategory}
                     />
                 </div>
-                <div><input className={acss.descinput}
-                    type='text'
-                    defaultValue={this.props.text}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            this.assign();
-                        }
-                    }}
-                    onChange={(e)=>{this.setState({comment: e.currentTarget.value});}}
-                    placeholder={this.label("assign.description")}  
-                    ref={this.comment} />
-                </div>
-                <div><button onClick={this.assign} className={css.addonbutton} >
-                    {this.label("assign.assign")}
-                </button>
-                    <button onClick={this.cancel}
-                        style={{ float: "right" }}
-                        className={css.addonbutton}>
-                        {this.label("cancel")}
-                    </button>
+                <div>
+                    <input className={acss.descinput}
+                        type='text'
+                        defaultValue={this.props.text}
+                        onChange={(e) => { this.setComment(e.currentTarget.value); }}
+                        placeholder={this.label("assign.description")}
+                        ref={this.comment}
+                    />
                 </div>
             </div>
         );
