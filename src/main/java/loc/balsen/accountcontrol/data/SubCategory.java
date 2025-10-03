@@ -15,6 +15,7 @@ public class SubCategory {
   public static final int LEN_DESCRIPTION = 512;
   public static final int LEN_SHORTDESCRIPTIION = 80;
 
+  // TODO: remove type from database and source code, because nobody knows what I wanted here
   public enum Type {
     EXTERN, INTERN
   }

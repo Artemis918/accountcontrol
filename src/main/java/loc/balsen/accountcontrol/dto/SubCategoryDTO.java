@@ -9,7 +9,6 @@ public class SubCategoryDTO {
   private int id;
   private String shortdescription;
   private String description;
-  private int type;
   private int category;
   private String categoryDesc;
   private boolean favorite;
@@ -20,7 +19,6 @@ public class SubCategoryDTO {
     this.id = cat.getId();
     this.description = cat.getDescription();
     this.shortdescription = cat.getShortDescription();
-    this.type = cat.getType().ordinal();
     if (cat.getCategory() != null) {
       this.category = cat.getCategory().getId();
       this.categoryDesc = cat.getCategory().getDescription();
@@ -32,7 +30,7 @@ public class SubCategoryDTO {
   public SubCategory toSubCategory(CategoryRepository categoryRepository) {
     Category cat = categoryRepository.findById(category).orElse(null);
     SubCategory res = new SubCategory(id, shortdescription, description,
-        SubCategory.Type.values()[this.type], cat);
+        SubCategory.Type.INTERN, cat);
     res.setActive(active);
     res.setFavorite(favorite);
     return res;
@@ -52,10 +50,6 @@ public class SubCategoryDTO {
 
   public String getDescription() {
     return description;
-  }
-
-  public int getType() {
-    return type;
   }
 
   public int getCategory() {
