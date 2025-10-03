@@ -80,7 +80,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		this.loadFav = this.loadFav.bind(this);
 
 		this.assignAuto = this.assignAuto.bind(this);
-		this.assignManuell = this.assignManuell.bind(this);
+		this.assignSplit = this.assignSplit.bind(this);
 		this.createTemplate = this.createTemplate.bind(this);
 		
 		this.assignCategory = this.assignCategory.bind(this);
@@ -119,7 +119,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			.then(this.reload);
 	}
 
-	assignManuell(): void {
+	assignSplit(): void {
 		if (this.state.accountRecords.length == 1)
 			this.setState({ action: AssignAction.SPLIT });
 		else {
@@ -197,6 +197,17 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 	}
 
+	renderActionButton(func: () => void, labelid: string): React.JSX.Element {
+		return (
+			<button className={css.actionbutton} 
+			onClick={func}
+			testdata-id={labelid}
+			>
+				{this.label(labelid)}
+			</button>
+		)
+	}
+
 	render(): React.JSX.Element {
 
 		if (this.state.action == AssignAction.TEMPLATE) {
@@ -210,7 +221,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		let mainentries: ContextMenuEntry<AccountRecord>[] = [
 			{ name: this.label("category"), func: this.assignCategory },
 			{ name: this.label("plan"), func: this.assignPlan },
-			{ name: this.label("assign.split"), func: this.assignManuell },
+			{ name: this.label("assign.split"), func: this.assignSplit },
 			{ name: "------------", func: () => { } }
 		];
 		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e }; });
@@ -223,13 +234,14 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		return (
 			<div>
 				<div className={css.actionbar}>
-					<button className={css.actionbutton} onClick={this.assignAuto}>{this.label("assign.auto")}</button> |
-					<button className={css.actionbutton} onClick={this.assignCategory}>{this.label("assign.catassign")}</button>
-					<button className={css.actionbutton} onClick={this.assignManuell}>{this.label("assign.split")}</button>
-					<button className={css.actionbutton} onClick={this.assignPlan}>{this.label("assign.assignplan")}</button> |
-					<button className={css.actionbutton} onClick={this.createTemplate}>{this.label("assign.plan")}</button>
+					{this.renderActionButton(this.assignAuto, "assign.auto")}
+					{this.renderActionButton(this.assignCategory, "assign.cat")}
+					{this.renderActionButton(this.assignSplit, "assign.split")}
+					{this.renderActionButton(this.assignPlan, "assign.plan")}
+					{this.renderActionButton(this.createTemplate, "assign.template")}
 				</div>
 				<MultiSelectLister<AccountRecord> columns={this.columns}
+					testdata-id={"assignlister"}
 					menu={contextMenu}
 					url='accountrecord/unassigned'
 					lines={28}
