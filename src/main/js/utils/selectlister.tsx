@@ -48,7 +48,7 @@ class CState<D> {
 	menuY: number;
 }
 
-export class SelectLister<D> extends React.Component<SelectListerProps<D>, CState<D>> {
+export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 'testdata-id'?: string }, CState<D>> {
 
 	static defaultProps = {
 		lines: 10
@@ -204,7 +204,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
 	render(): React.JSX.Element {
 		return (
-			<div>
+			<div testdata-id={this.props['testdata-id']} style={{ position: 'relative', display: 'inline-block' }} >
 				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >
 					<thead>
 						<tr>
