@@ -14,6 +14,12 @@ export function postRequest(url:string, data:any, answer:handleJsonAnswer): void
     } );
 }
 
+export function fetchJson(url:string, handleAnswer:handleJsonAnswer): void {
+    fetch( url ) 
+         .then( response => response.json() )
+         .then( response => handleAnswer( response ));
+}
+
 
 // =====================================================
 export class AccountRecord {
