@@ -49,7 +49,7 @@ class Main extends React.Component<{}, IState> {
 	createLangSelector(): React.JSX.Element {
 		return (
 			<div style={{ textAlign: "right" }}>
-				<select id={"langselect"} value={this.state.locale} onChange={this.setLang} className={css.langselector} >
+				<select testdata-id={"langselect"} value={this.state.locale} onChange={this.setLang} className={css.langselector} >
 					<option key="en" value="en"> en </option>
 					<option key="de" value="de"> de </option>
 				</select>
