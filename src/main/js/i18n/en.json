@@ -75,7 +75,7 @@
     "assign.assign": "Assign",
 	"assign.split": "Split",
 	"assign.auto": "Auto assign",
-	"assign.template": "Create plan",
+	"assign.template": "Create template",
 	"assign.selectplan": "Select plan",
 	"assign.onevalue": "you must select exactly one record",
     "assign.atleastonevalue": "you must select at least one record",

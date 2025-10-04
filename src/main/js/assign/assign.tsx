@@ -3,7 +3,6 @@ import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlis
 import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu';
 import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
-import { PlanSelect } from './planselect';
 import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { useIntl, WrappedComponentProps } from 'react-intl';

@@ -2,7 +2,7 @@ import React from 'react'
 import { DropdownService } from './dropdownservice'
 
 import css from '../css/index.css'
-import { SubCategory } from './dtos';
+import { fetchJson, SubCategory } from './dtos';
 
 
 export type HandleCategoryChange = ( subCategory: number, category: number ) => void;
@@ -30,10 +30,15 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
 	
 	componentDidMount() :void {
         var self: CategorySelector = this;
-        fetch( "category/suball" )
-            .then( response => response.json() )
-            .then( d => { self.setState( {allSubs: d }) } )
-	}
+        fetchJson( "category/suball" , 
+                   (d:SubCategory[]) => { 
+                        var cat = undefined;
+                        if (self.props.subcategory)
+                            cat = d.filter((s) => { return self.props.subcategory == s.id;} )[0].category;
+                        self.setState( {allSubs: d, category: cat });
+	                }
+        )
+    }
     
     setCategory( e: number ): void {
         this.setState( { category: e, subcategory: undefined } );
@@ -44,19 +49,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
             this.props.onChange( e, this.state.category );
         this.setState( { subcategory: e} );
     }
-    
-	findCategory(subCategory:number | undefined ) : number | undefined {
-		if (this.state.allSubs && subCategory != undefined  )
-			return this.state.allSubs.filter( (s) => { return subCategory == s.id;} )[0].category;
-		else
-			return undefined;
-	}
-	
-    componentDidUpdate(prevProps: CategorySelectorProps) :void {
-        if (prevProps.subcategory != this.props.subcategory )
-            this.setState({category: this.findCategory( this.props.subcategory ) });
-    }
-
+    	
     getSubCategory() : number | undefined {
         return this.state.subcategory;
     }

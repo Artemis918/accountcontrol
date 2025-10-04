@@ -185,7 +185,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	render(): React.JSX.Element {
 		return (
-			<div>
+			<div testdata-id={"planselect"}>
 				<MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
 				<div style={{ padding: '10px' }}>
 					<SingleSelectLister<Plan>

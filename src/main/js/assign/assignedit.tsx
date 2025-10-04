@@ -55,7 +55,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			cur_comment: undefined,
 			cur_subcat: undefined,
 			cur_plan: undefined,
-			planassign: props.recordId == undefined
+			planassign: props.recordId != undefined
 				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
 					|| (props.assignment != undefined && this.props.assignment.plan != undefined))
 		}
