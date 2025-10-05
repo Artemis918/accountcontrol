@@ -66,7 +66,6 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     }
 
     render(): React.JSX.Element {
-
         return (
             <select className={this.props.className} value={this.state.curval}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.handleChange(e.target.value)}>
