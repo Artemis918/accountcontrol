@@ -1,5 +1,5 @@
 import React from "react";
-import { AccountRecord, Assignment, Plan } from "../utils/dtos";
+import { AccountRecord, Assignment, fetchJson, Plan } from "../utils/dtos";
 import { SendMessage } from "../utils/messageid";
 import { useIntl, WrappedComponentProps } from "react-intl";
 import { CategorySelect } from "./categoryselect";
@@ -40,24 +40,32 @@ interface IState {
 	expanded: Boolean;
 	record: AccountRecord | undefined;
 	planassign: Boolean;
-	cur_comment: string;
-	cur_subcat: number | undefined;
-	cur_plan: Plan | undefined;
+}
+
+interface LocalState {
+	comment: string;
+	subcat: number | undefined;
+	plan: Plan | undefined;
 }
 
 class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProps, IState> {
+
+	lstate: LocalState | undefined = undefined;
 
 	constructor(props: AssignEditProps & WrappedComponentProps) {
 		super(props)
 		this.state = {
 			expanded: props.assignment != undefined,
 			record: undefined,
-			cur_comment: undefined,
-			cur_subcat: undefined,
-			cur_plan: undefined,
 			planassign: props.recordId != undefined
 				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
 					|| (props.assignment != undefined && this.props.assignment.plan != undefined))
+		}
+
+		this.lstate = {
+			comment: undefined,
+			subcat: undefined,
+			plan: undefined
 		}
 
 		this.assign = this.assign.bind(this);
@@ -71,38 +79,39 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	componentDidMount(): void {
 		if (this.props.recordId != undefined) {
 			var self = this;
-			fetch('accountrecord/id/' + this.props.recordId)
-				.then((response: Response) => response.text())
-				.then((text: string) => { self.setState({ record: myParseJson(text) }) })
+			fetchJson('accountrecord/id/' + this.props.recordId,
+				(r) => { self.setState({ record: r }) });
 		}
 	}
 
-	cancel(): void {
+	private cancel(): void {
 		if (this.props.onAssign != undefined)
 			this.props.onAssign(false);
 	}
 
-	assign() {
+	private assign() {
 		if (this.state.planassign)
-			this.assignPlanCallBack(this.state.cur_plan);
-		this.assignCatCallBack(this.state.cur_subcat, this.state.cur_comment)
+			this.assignPlanCallBack();
+		this.assignCatCallBack()
 	}
 
-	onPlanChange(plan: Plan) {
-		this.setState({ cur_plan: plan });
+	private onPlanChange(plan: Plan) {
+		this.lstate.plan = plan;
 	}
 
-	onCatChange(subcat: number, comment: string) {
-		this.setState({ cur_subcat: subcat, cur_comment: comment });
+	private onCatChange(subcat: number, comment: string) {
+		this.lstate.subcat=subcat;
+		this.lstate.comment=comment;
 	}
 
-	assignCatCallBack(subcat: number | undefined, comment: string): void {
+	private assignCatCallBack(): void {
+		this.lstate.subcat, this.lstate.comment
 		if (this.props.recordId == undefined) {
 			if (this.props.onAssignNewCats != undefined)
-				this.props.onAssignNewCats(subcat, comment);
+				this.props.onAssignNewCats(this.lstate.subcat, this.lstate.comment);
 		}
 		else {
-			var request = { text: comment, subcategory: subcat, ids: [this.state.record.id] };
+			var request = { text: this.lstate.comment, subcategory: this.lstate.subcat, ids: [this.state.record.id] };
 			var self = this;
 			var jsonbody = JSON.stringify(request);
 			fetch('assign/tosubcategory', {
@@ -120,19 +129,19 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		}
 	};
 
-	assignPlanCallBack(plan: Plan | undefined): void {
+	private assignPlanCallBack(): void {
 		if (this.props.assignPlan != undefined)
-			this.props.assignPlan(plan);
+			this.props.assignPlan(this.lstate.plan);
 		else {
 			// default behavior: assign to plan and remove previous assignment	
 			var self = this;
-			fetch('assign/toplan/' + plan.id + '/' + this.props.recordId)
+			fetch('assign/toplan/' + this.lstate.plan.id + '/' + this.props.recordId)
 				.then(() => { if (self.props.onAssign) self.props.onAssign(true); });
 		}
 	};
 
 
-	renderExpandButton(): React.JSX.Element {
+	private renderExpandButton(): React.JSX.Element {
 		if (this.state.record == undefined)
 			return <></>;
 
@@ -149,18 +158,26 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				</div>);
 	}
 
-	renderSelector(): React.JSX.Element {
+	private renderSelector(): React.JSX.Element {
 		if (this.state.planassign) {
 			var planId: number = this.props.assignment ? this.props.assignment.plan! : undefined;
-			return <PlanSelect record={this.state.record} planId={planId} onChange={this.onPlanChange} />;
+			return <PlanSelect 
+				record={this.state.record} 
+				planId={this.lstate.plan == undefined ? undefined: this.lstate.plan.id }
+				onChange={this.onPlanChange} 
+			/>;
 		}
 		else {
 			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
-			return <CategorySelect text={""} subCatId={subCatId} onChange={this.onCatChange} />
+			return <CategorySelect
+			             text={this.lstate.comment}
+			             subCatId={this.lstate.subcat}
+						 onChange={this.onCatChange}
+					 />
 		}
 	}
 
-	renderAssignment(): React.JSX.Element {
+	private renderAssignment(): React.JSX.Element {
 		return (
 			<div>
 				{this.renderSelector()}
@@ -169,7 +186,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 						{this.label("assign.assign")}
 					</button>
 					<button onClick={this.cancel}
-					    testdata-id={'assign.cancel'}
+						testdata-id={'assign.cancel'}
 						style={{ float: "right" }}
 						className={gcss.addonbutton}>
 						{this.label("cancel")}
@@ -180,6 +197,9 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	render(): React.JSX.Element {
+		if (this.props.recordId != undefined && this.state.record == undefined)
+			return <></>
+
 		var boxsize: string = this.state.expanded ?
 			(this.state.planassign ? css.planexpsize : css.catexpsize)
 			: (this.state.planassign ? css.plansize : css.catsize)

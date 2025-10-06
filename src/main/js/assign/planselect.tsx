@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils/monthselect'
-import { Plan, Pattern, Template, postRequest, AccountRecord } from '../utils/dtos'
+import { Plan, Pattern, Template, postRequest, AccountRecord, fetchJson } from '../utils/dtos'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
@@ -40,6 +40,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	constructor(props: PlanSelectProps & WrappedComponentProps) {
 		super(props);
+		console.log('Planselect.record : ' + props.record);
 
 		var date: Date = new Date();
 		if (this.props.record != undefined) {
@@ -88,17 +89,16 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		var date: Date = new Date();
 		if (this.props.planId != undefined) {
 			var self = this;
-			fetch('plans/id/' + this.props.planId)
-				.then((response: Response) => response.text())
-				.then((text: string) => {
-					var plan: Plan = myParseJson(text);
+			fetchJson('plans/id/' + this.props.planId,
+				(plan: Plan) => {
 					var date = plan.plandate
 					self.setState({
 						year: date.getFullYear(),
 						month: date.getMonth() + 1
 					});
 					this.handleChange(plan);
-				})
+				}
+			)
 		}
 	}
 
@@ -122,9 +122,8 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		if (this.props.onChange)
 			this.props.onChange(plan);
 
-		fetch("assign/analyze/" + this.props.record.id + "/" + plan.id)
-			.then((response: Response) => response.text())
-			.then((text) => { self.setAnaylzeData(myParseJson(text)) })
+		fetchJson("assign/analyze/" + this.props.record.id + "/" + plan.id,
+			(r) => { self.setAnaylzeData(r) })
 	}
 
 	setPattern(p: Pattern): void {
@@ -190,10 +189,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 				<div style={{ padding: '10px' }}>
 					<SingleSelectLister<Plan>
 						ext={this.state.year + '/' + this.state.month}
+						testdata-id={'planlister'}
 						url='plans/unassigned/'
 						lines={12}
 						handleChange={this.handleChange}
 						columns={this.columns}
+						value={this.state.currentPlan}
+						isEqualValue={(p1:Plan, p2:Plan)=>{return p1.id == p2.id}}
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}
 				</div>
