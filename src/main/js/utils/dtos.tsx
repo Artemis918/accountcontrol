@@ -1,3 +1,4 @@
+import { myParseJson } from "./misc";
 
 export type handleJsonAnswer = (answer: any) => void;
 
@@ -16,8 +17,8 @@ export function postRequest(url:string, data:any, answer:handleJsonAnswer): void
 
 export function fetchJson(url:string, handleAnswer:handleJsonAnswer): void {
     fetch( url ) 
-         .then( response => response.json() )
-         .then( response => handleAnswer( response ));
+         .then( response => response.text() )
+         .then( text => handleAnswer( myParseJson(text) ));
 }
 
 
