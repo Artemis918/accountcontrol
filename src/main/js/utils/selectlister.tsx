@@ -99,7 +99,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 		var lo: number = start > end ? end : start;
 		var hi: number = start > end ? start : end;
 		return Array.from(Array(hi - lo + 1).keys())
-			.map((i: number): D => this.state.data[i + start]);
+			.map((i: number): D => this.state.data[i + lo]);
 	}
 
 	reload(): void {
