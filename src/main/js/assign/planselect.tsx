@@ -40,7 +40,6 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	constructor(props: PlanSelectProps & WrappedComponentProps) {
 		super(props);
-		console.log('Planselect.record : ' + props.record);
 
 		var date: Date = new Date();
 		if (this.props.record != undefined) {
