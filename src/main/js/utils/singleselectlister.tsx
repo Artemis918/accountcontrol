@@ -63,7 +63,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
                 break;
         
         if ( row < data.length ) {
-            this.setState({selectedRow:row+1, selectedData: data[row]});
+            this.setState({selectedRow:row, selectedData: data[row]});
             return data;
         }
         else {

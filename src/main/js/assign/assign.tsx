@@ -183,13 +183,13 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	}
 	
 	renderAssignEditor(): React.JSX.Element {
-		var record: AccountRecord | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0] : undefined;
+		var recordId: number | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0].id : undefined;
 
 		if (this.state.action == AssignAction.CATEGORY) {
-			return <AssignEdit sendMessage={this.props.sendmessage} recordId={record.id} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory}/>;
+			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory}/>;
 		}
 		else if (this.state.action == AssignAction.PLAN) {
-			return <AssignEdit sendMessage={this.props.sendmessage} recordId={record.id} onAssign={this.onAssign} />;
+			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} />;
 		}
 		else {
 			return <></>;

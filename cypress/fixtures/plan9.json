@@ -1,30 +1,4 @@
-[
-    {
-        "id": 8,
-        "creationdate": "2025-09-21",
-        "startdate": "2025-09-28",
-        "plandate": "2025-10-02",
-        "enddate": "2025-10-06",
-        "position": 1,
-        "value": 20000,
-        "patterndto": {
-            "sender": "",
-            "receiver": "Landlord",
-            "referenceID": "",
-            "senderID": "",
-            "details": "",
-            "mandate": ""
-        },
-        "shortdescription": "Rent",
-        "description": "Rent for my appartment in Somewhere",
-        "matchstyle": 0,
-        "template": 2,
-        "subcategory": 1,
-        "category": 1,
-        "subcategoryname": "Cat - 1",
-        "categoryname": "SubCat - 1.1"
-    },
-    {
+{
         "id": 9,
         "creationdate": "2025-09-21",
         "startdate": "2025-09-28",
@@ -48,5 +22,4 @@
         "category": 1,
         "subcategoryname": "Cat - 2",
         "categoryname": "SubCat - 2.2"
-    }
-]
+}
