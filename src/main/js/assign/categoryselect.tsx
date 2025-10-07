@@ -23,14 +23,12 @@ export interface CategorySelectProps {
 class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps,{}> {
 
     comment_obj: React.RefObject<HTMLInputElement | null>;
-    cur_category: number| undefined;
     cur_subcategory: number | undefined;
     cur_comment: string;
 
     constructor(props: CategorySelectProps & WrappedComponentProps) {
         super(props);
         this.cur_comment = props.text;
-        this.cur_category = undefined;
         this.cur_subcategory = props.subCatId;
 
         this.comment_obj = React.createRef<HTMLInputElement | null>();
@@ -45,7 +43,6 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
     }
 
     setCategory(subcategory?: number, category?: number) {
-        this.cur_category = category;
         this.cur_subcategory =subcategory;
         if (this.props.onChange)
             this.props.onChange(this.cur_subcategory,this.cur_comment)

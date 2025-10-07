@@ -72,6 +72,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		this.cancel = this.cancel.bind(this);
 		this.onPlanChange = this.onPlanChange.bind(this);
 		this.onCatChange = this.onCatChange.bind(this);
+		this.changeMode = this.changeMode.bind(this);
 	}
 
 	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
@@ -100,8 +101,12 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	private onCatChange(subcat: number, comment: string) {
-		this.lstate.subcat=subcat;
-		this.lstate.comment=comment;
+		this.lstate.subcat = subcat;
+		this.lstate.comment = comment;
+	}
+
+	private changeMode(): void {
+		this.setState({ planassign: !this.state.planassign });
 	}
 
 	private assignCatCallBack(): void {
@@ -142,38 +147,37 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 
 
 	private renderExpandButton(): React.JSX.Element {
-		if (this.state.record == undefined)
+		if (this.state.record == undefined )
 			return <></>;
 
-		else if (this.state.expanded)
-			return (
-				<div style={{ textAlign: 'right' }}>
-					<button onClick={() => this.setState({ expanded: false })}> {'\<'} </button>
-				</div>);
-
-		else
-			return (
-				<div style={{ textAlign: 'right' }}>
-					<button onClick={() => this.setState({ expanded: true })}> {'\>'} </button>
-				</div>);
+		const content = (this.state.expanded ? '\<' : '\>');
+		return (
+			<div style={{ textAlign: 'right' }}>
+				<button
+					testdata-id={'assignedit.expand'}
+					onClick={() => this.setState({ expanded: !this.state.expanded })}>
+					{content}
+				</button>
+			</div>
+		);
 	}
 
 	private renderSelector(): React.JSX.Element {
 		if (this.state.planassign) {
 			var planId: number = this.props.assignment ? this.props.assignment.plan! : undefined;
-			return <PlanSelect 
-				record={this.state.record} 
-				planId={this.lstate.plan == undefined ? undefined: this.lstate.plan.id }
-				onChange={this.onPlanChange} 
+			return <PlanSelect
+				record={this.state.record}
+				planId={this.lstate.plan == undefined ? undefined : this.lstate.plan.id}
+				onChange={this.onPlanChange}
 			/>;
 		}
 		else {
 			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
 			return <CategorySelect
-			             text={this.lstate.comment}
-			             subCatId={this.lstate.subcat}
-						 onChange={this.onCatChange}
-					 />
+				text={this.lstate.comment}
+				subCatId={this.lstate.subcat}
+				onChange={this.onCatChange}
+			/>
 		}
 	}
 
@@ -224,7 +228,11 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				>
 					<div style={{ textAlign: 'center' }}>
 						{this.label("assign.to")} &nbsp;
-						<button className={gcss.addonbutton} onClick={() => this.setState({ planassign: !this.state.planassign })} testdata-id={'typebutton'} >{title}</button>
+						<button className={gcss.addonbutton}
+							onClick={this.changeMode}
+							testdata-id={'typebutton'} >
+							{title}
+						</button>
 					</div>
 					<table style={{ left: '0', top: '0', width: '100%', height: '100%' }}>
 						<tbody>
