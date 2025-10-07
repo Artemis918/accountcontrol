@@ -3,6 +3,7 @@ import { DropdownService } from './dropdownservice'
 
 import css from '../css/index.css'
 import { fetchJson, SubCategory } from './dtos';
+import { lastDayOfQuarter } from 'date-fns';
 
 
 export type HandleCategoryChange = (subCategory: number, category: number) => void;
@@ -39,6 +40,11 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
         fetchJson("category/suball", this.setCatFromProps)
     }
 
+    componentDidUpdate(prevProps: CategorySelectorProps): void {
+        if (this.lstate.subcategory == undefined)
+            this.lstate.subcategory = this.props.subcategory;
+    }
+
     private setCatFromProps(d: SubCategory[]) {
         if (this.props.subcategory) {
             var cat = d.filter((s) => { return this.props.subcategory == s.id; })[0].category;
@@ -54,12 +60,16 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     private setSubCategory(e: number | undefined): void {
-        if (this.props.onChange != undefined && this.state.category != undefined && e != undefined)
+        if (this.props.onChange != undefined
+            && this.lstate.subcategory != e)
             this.props.onChange(e, this.state.category);
         this.lstate.subcategory = e;
     }
 
     render(): React.JSX.Element {
+        if (this.state.allSubs.length == 0)
+            return <></>;
+
         var caturlextension = this.state.category == undefined ? "" : this.state.category.toString() + "/true";
         if (this.props.horiz) {
             return (

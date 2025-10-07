@@ -28,6 +28,8 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
     }
 
     componentDidUpdate(prevProps: DropdownServiceProps): void {
+        if (this.props.value != prevProps.value)
+            this.setState({ curval: this.props.value });      
         if (this.props.param != prevProps.param)
             this.fetchData();
     }
@@ -38,8 +40,11 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
 
     handleChange(value: string) {
         var v: number = parseInt(value);
-        if (this.props.onChange)
-            this.props.onChange(v);
+        if (this.state.curval != v) {
+            this.setState({curval: v});
+            if (this.props.onChange)
+                this.props.onChange(v);
+        }
     }
 
     setData(data: EnumDTO[]): void {
@@ -67,7 +72,8 @@ export class DropdownService extends React.Component<DropdownServiceProps, IStat
 
     render(): React.JSX.Element {
         return (
-            <select className={this.props.className} value={this.state.curval}
+            <select className={this.props.className}
+                value={this.state.curval}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.handleChange(e.target.value)}>
                 {this.state.data.map((t, _) => <option key={t.value} value={t.value}>{t.text}</option>)}
             </select>
