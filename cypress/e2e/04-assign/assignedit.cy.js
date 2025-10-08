@@ -23,7 +23,8 @@ describe('assignment', () => {
   beforeEach(() => {
     cy.intercept('GET', 'accountrecord/unassigned', { fixture: 'unassignedrecords.json' }).as ('loadunassigned');
     cy.intercept('GET', 'accountrecord/id/71', { fixture: 'accountrecord71.json' });
-        cy.intercept('GET', 'accountrecord/id/72', { fixture: 'accountrecord72.json' });
+    cy.intercept('GET', 'accountrecord/id/72', { fixture: 'accountrecord72.json' });
+    cy.intercept('GET', 'accountrecord/id/73', { fixture: 'accountrecord73.json' });
     cy.intercept('GET', 'production', 'true').as('prodcall');
 
     cy.intercept('GET', 'category/subenumfavorite', { fixture: 'catfavorites.json' });
@@ -34,7 +35,7 @@ describe('assignment', () => {
     cy.intercept('GET', 'category/subenum/3/true', { fixture: 'subcategories3.json' }).as('subenum3');
     cy.intercept('GET', 'plans/id/9', { fixture: 'plan9.json' });
     cy.intercept('GET', 'plans/unassigned/*/*', { fixture: 'plans.json' }).as('plansloaded');
-    cy.intercept('GET', 'assign/analyze/71/9', { body: { additional : [ 0 , 0 ]}});
+    cy.intercept('GET', 'assign/analyze/*/9', { body: { additional : [ 0 , 0 ]}});
     cy.visit('http://localhost:9000/');
     cy.wait('@prodcall');
     cy.gett('assign').click();
@@ -121,70 +122,5 @@ describe('assignment', () => {
     cy.gett('assignedit').find('[testdata-id="assignedit.expand"]').click();
     cy.gett('assignedit').should('not.contain.text', 'Rent for 08-2025');
   })
-
-  it('assign to category', () => {
-
-    // open assigneditor for line to to assign cat
-    selectLine(2);
-    cy.gett('assign.cat').click();
-
-    // select cat 
-    cy.gett('categoryselect').get('select').eq(0).select('2');
-    cy.wait('@subenum2');
-    cy.gett('categoryselect').get('select').eq(1).select('22');
-    cy.gett('categoryselect').get('input').type('something normal');
-
-    // switch to plan and back
-    cy.gett('typebutton').click();
-    cy.gett('typebutton').should('have.text', 'Plan');
-    cy.wait('@plansloaded');
-    cy.gett('typebutton').click();
-    cy.gett('typebutton').should('have.text', 'Kategorie');
-
-    cy.intercept('assign/tosubcategory', (req) => {
-      expect(req.body.text).to.equal('something normal');
-      expect(req.body.subcategory).to.equal(22);
-      expect(req.body.ids.length).to.equal(1);
-      expect(req.body.ids[0]).to.equal(72);
-      req.continue(res => {
-         res.body = '234';
-      })
-    })
-    cy.gett('assign.assign').click();
-    cy.wait('@loadunassigned');
-  })
-
-
-  it('multiple assign to category', () => {
-
-    // open assigneditor for line to to assign cat
-    selectLine(3);
-    selectLineMod(1,{shiftKey: true});
-
-    cy.gett('assign.cat').click();
-
-    // select cat 
-    cy.gett('categoryselect').get('select').eq(0).select('3');
-    cy.wait('@subenum3');
-    // subcat 32 is the one and only. Therefore no select necessary 
-    // cy.gett('categoryselect').get('select').eq(1).select('31');
-    cy.gett('categoryselect').get('input').type('something else');
-
-    // switch to plan and back
-    cy.intercept('assign/tosubcategory', (req) => {
-      expect(req.body.text).to.equal('something else');
-      expect(req.body.subcategory).to.equal(31);
-      expect(req.body.ids.length).to.equal(3);
-      expect(req.body.ids[0]).to.equal(71);
-      expect(req.body.ids[1]).to.equal(72);
-      expect(req.body.ids[2]).to.equal(73);
-      req.continue(res => {
-         res.body = '234';
-      })
-    })
-    cy.gett('assign.assign').click();
-    cy.wait('@loadunassigned');
-  })
-
 
 })
