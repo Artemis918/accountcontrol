@@ -109,7 +109,8 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	setAnaylzeData(template: Template): void {
 		this.setState({
-			timerangefailed: template.additional[1] == '1',
+			// TODO implemtn backend	timerangefailed: template.additional[1] == '1',
+			timerangefailed: false,
 			patternfailed: template.additional[0] == '1',
 			template: template
 		})
@@ -126,15 +127,17 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	setPattern(p: Pattern): void {
-		if (this.state.currentPlan != undefined)
+		if (this.state.currentPlan != undefined && p != undefined) {
 			this.state.currentPlan.patterndto = p;
-		postRequest('templates/changepattern', this.state.currentPlan, () => { });
+			postRequest('templates/changepattern', this.state.currentPlan, () => { });
+		}
 		this.setState({ patterneditor: false });
 	}
 
 	settimerange(template: Template): void {
-		fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
-		this.setState({ timerangeeditor: false });
+		// TODO implemtn backend
+		// fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
+		// this.setState({ timerangeeditor: false });
 	}
 
 
@@ -143,11 +146,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			<p style={{ borderStyle: 'solid' }}>
 				{this.label("assign.adjust")}
 				<button onClick={() => this.setState({ patterneditor: true })}
+					testdata-id={'assign.adjustpattern'}
 					className={css.addonbutton}
 					hidden={!this.state.patternfailed}>
-					{this.label("assign.adjustpattern")}
+					{this.label('assign.adjustpattern')}
 				</button>
 				<button onClick={() => this.setState({ timerangeeditor: true })}
+					testdata-id={'assign.adjusttime'}
 					className={css.addonbutton}
 					hidden={!this.state.timerangefailed}>
 					{this.label("assign.adjusttime")}
@@ -159,7 +164,10 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	renderPatternEditor(): React.JSX.Element {
 		if (this.state.patterneditor && this.state.currentPlan) {
-			return (<PatternEditor intl={this.props.intl} pattern={this.state.currentPlan.patterndto} sendPattern={(p: Pattern) => this.setPattern(p)} zIndex={4} />);
+			return (<PatternEditor intl={this.props.intl}
+				pattern={this.state.currentPlan.patterndto}
+				sendPattern={(p: Pattern) => this.setPattern(p)}
+				zIndex={4} />);
 		}
 		else {
 			return <></>;
@@ -194,7 +202,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 						handleChange={this.handleChange}
 						columns={this.columns}
 						value={this.state.currentPlan}
-						isEqualValue={(p1:Plan, p2:Plan)=>{return p1.id == p2.id}}
+						isEqualValue={(p1: Plan, p2: Plan) => { return p1.id == p2.id }}
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}
 				</div>

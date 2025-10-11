@@ -16,7 +16,7 @@
 	"description": "Beschreibung",
 	"assingments": "Zuordnungen",
 	"details": "Details",
-	"refid": "ReferenzID",
+	"referenceID": "ReferenzID",
 	"mandate": "Mandat",
 	"submitter": "Einreicher", 
 	"value": "Wert",
