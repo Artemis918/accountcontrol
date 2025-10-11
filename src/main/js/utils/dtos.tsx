@@ -71,7 +71,6 @@ export class Pattern {
         this.details = '';
         this.mandate = '';
     }
-
 }
 
 //=====================================================

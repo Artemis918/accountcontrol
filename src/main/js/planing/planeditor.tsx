@@ -220,7 +220,11 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         zIndex={1}
 						intl={this.props.intl}
                         pattern={this.state.plan.patterndto}
-                        sendPattern={( e ) => { this.plan.patterndto = e; this.setState( { patternEdit: false, plan: this.plan, message: "" } ) }}
+                        sendPattern={( e ) => { 
+                            if (e != undefined) 
+                                this.plan.patterndto = e;
+                            this.setState( { patternEdit: false, plan: this.plan, message: "" } )
+                        }}
                     />
                     : null
                 }

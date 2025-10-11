@@ -56,25 +56,25 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 		template.repeatcount = this.state.count;
 		this.props.sendResult(template);
 	}
-	
+
 	copyDate(): void {
-		this.setState({plandate: this.props.template.start});
+		this.setState({ plandate: this.props.template.start });
 	}
 
 	setHovertext(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, date: Date): void {
 		var text: string = this.props.intl.formatDate(date);
 		this.setState({
 			hovertext: text,
-			hoverleft: e.clientX+5,
-			hovertop: e.clientY+5
+			hoverleft: e.clientX + 5,
+			hovertop: e.clientY + 5
 		})
 	}
 
-	renderHovertext() :React.JSX.Element {
-		if ( this.state.hovertext != undefined) {
+	renderHovertext(): React.JSX.Element {
+		if (this.state.hovertext != undefined) {
 			return (
-				<div className={css.hoverbox} 
-						style={{ zIndex: this.props.zIndex +1, left: this.state.hoverleft, top: this.state.hovertop }}>
+				<div className={css.hoverbox}
+					style={{ zIndex: this.props.zIndex + 1, left: this.state.hoverleft, top: this.state.hovertop }}>
 					{this.state.hovertext}
 				</div>
 			);
@@ -91,13 +91,14 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 				zIndex: this.props.zIndex,
 				left: '0', top: '0', width: '100%', height: '100%'
 			}}>
-				<div style={{
-					margin: '15% auto',
-					padding: '20px',
-					border: '3px outset #888',
-					width: '420px', height: '140px',
-					background: 'darkgray'
-				}}>
+				<div testdata-id={'timerange.editor'}
+					style={{
+						margin: '15% auto',
+						padding: '20px',
+						border: '3px outset #888',
+						width: '420px', height: '140px',
+						background: 'darkgray'
+					}}>
 					<table>
 						<tbody>
 							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.repetition")}</td>
@@ -119,13 +120,13 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 							</tr>
 							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
 								<td><ACDayPickerInput
-									    onChange={(d) => { this.setState({ plandate: d }) }}
-									    startdate={this.state.plandate}
-									    locale={this.props.intl.locale} />
+									onChange={(d) => { this.setState({ plandate: d }) }}
+									startdate={this.state.plandate}
+									locale={this.props.intl.locale} />
 									<button className={css.charbutton}
 										onMouseEnter={(e) => this.setHovertext(e, this.props.template.start)}
-										onMouseLeave={() => this.setState({ hovertext: undefined })} 
-										onSelect={()=>this.copyDate()}>?</button>
+										onMouseLeave={() => this.setState({ hovertext: undefined })}
+										onSelect={() => this.copyDate()}>?</button>
 								</td>
 							</tr>
 							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.variance")}</td>
