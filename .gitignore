@@ -14,3 +14,4 @@ node_modules/
 .vscode
 dist
 cypress/screenshots/
+assignment-ki/assignments.csv

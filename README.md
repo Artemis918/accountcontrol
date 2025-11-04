@@ -21,6 +21,8 @@ Here some Buzzwords of the used tools and stuff:
 * npm
 * gradle
 * docker
+* kubernetes
+* pytorch
 
 ## Current state
 
@@ -86,3 +88,10 @@ My idea of filling the empty database:
 6. In the category section now you can control all the revolving data and commit them with "commit". Then the data will get into account for the statistical overview which contains also a small forecast
 
 There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)
+
+## Addons
+
+There are some directories containing experimental stuff, which may be used as examples 
+
+    * kubernetes: contains example yaml files to deploy accountcontrol into a kubernetes cluster
+    * accountcontrol-ki: trying to create a model to automate assignments with KI :-D
