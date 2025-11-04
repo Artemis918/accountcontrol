@@ -10,16 +10,16 @@ I used [https://pythonguides.com/pytorch-mnist/](https://pythonguides.com/pytorc
 
 since I didn't use alot of fancy stuff you only need torch and pandas. I added torchvision as recommended in the example, but didn't really use it. To setup a working environment create a python venv with
 
-``python3 -m venv .venv``
+```python3 -m venv .venv```
 
 activate this environment with
 
-``source .venv/bin/activate``
+```source .venv/bin/activate```
 
 and finally install neccessary modules
 
-``pip install torch torchvision pandas``
+```pip install torch torchvision pandas```
 
-now you can try with your own csv data in 'assignment.csv'. just type 
+Now you hould be able to try with your own csv data in 'assignment.csv'. Just type 
 
-``python3 ./accountassign.py`` 
+```python3 ./accountassign.py``` 

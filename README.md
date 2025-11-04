@@ -89,9 +89,10 @@ My idea of filling the empty database:
 
 There are some more functions and buttons, helping me planing and supervising my money, but I currently have no time to write a complete handbook. Fell free to look at the source code :-)
 
-## Addons
+# Addons
 
 There are some directories containing experimental stuff, which may be used as examples 
 
-    * kubernetes: contains example yaml files to deploy accountcontrol into a kubernetes cluster
-    * accountcontrol-ki: trying to create a model to automate assignments with KI :-D
+1. kubernetes: contains example yaml files to deploy accountcontrol into a kubernetes cluster
+
+2. accountcontrol-ki: trying to create a model to automate assignments with KI :-D
