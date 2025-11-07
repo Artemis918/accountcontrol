@@ -93,8 +93,8 @@ def createLabelTensors(y) :
   return y1
 
 def createWeight(y ) :
-  w = [float(0) for _ in range(NUM_CATEGORIES)]
-  for i in y[0] :
+  w = [0 for _ in range(NUM_CATEGORIES)]
+  for i in y:
     w[i] += 1
 
   for i in range(NUM_CATEGORIES) :
@@ -115,10 +115,12 @@ def splitdata(data, size) :
 
 X, y = load_data()
 
-X1 = createInputTensor(X);
-y1 = createLabelTensors(y);
+X1 = createInputTensor(X)
+y1 = createLabelTensors(y)
+weight = createWeight(y)
 
-trainsize = int(len(X1)*95/100);
+
+trainsize = int(len(X1)*95/100)
 Xtrain,Xtest = splitdata(X1,trainsize)
 ytrain,ytest = splitdata(y1,trainsize)
 _,yabs = splitdata(y,trainsize)
@@ -129,6 +131,7 @@ model = MyModel(s)
 
 # Define loss function and optimizer
 criterion = nn.CrossEntropyLoss()
+#criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
 
 # Check if GPU is available
@@ -147,7 +150,7 @@ for epoch in range(num_epochs):
   iter = DataIterator( Xtrain, ytrain, BLOCK_SIZE )
 
   runs = int( trainsize / BLOCK_SIZE ) + 1
-  w = createWeight(ytrain)
+
 
   for step in range(runs) :
     inputs, categories = iter.next()
@@ -155,7 +158,7 @@ for epoch in range(num_epochs):
     categories = categories.to(device)
 
     # Zero the parameter gradients
-    #optimizer.zero_grad()
+    optimizer.zero_grad()
 
     outputs = model(inputs)
     loss = criterion(outputs, categories)
