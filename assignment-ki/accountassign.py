@@ -11,7 +11,7 @@ DATA_PATH = "./assignments.csv"
 MODEL_PATH = "./trained_model.joblib"
 TARGET_COL = "subcategory"
 BLOCK_SIZE = 64
-DETAILS_LEN = 100
+DETAILS_LEN = 50
 NUM_CATEGORIES = 41
 
 class DataIterator() :
@@ -36,15 +36,15 @@ class DataIterator() :
         di = self.range[i]
         data.append(self.input[di])
         res.append(self.result[di])
-
+    self.cnt += 1
     return torch.tensor(data), torch.tensor(res)
 
 class MyModel(nn.Module):
-  def __init__(self):
+  def __init__(self, input_size):
     super(MyModel, self).__init__()
-    self.fc1 = nn.Linear(DETAILS_LEN, 64)
+    self.fc1 = nn.Linear(input_size, 128)
     self.relu = nn.ReLU()
-    self.fc2 = nn.Linear(64, 64)
+    self.fc2 = nn.Linear(128, 64)
     self.fc3 = nn.Linear(64, NUM_CATEGORIES)
 
   def forward(self, x):
@@ -58,29 +58,51 @@ class MyModel(nn.Module):
 
 def load_data():
   df = pd.read_csv(DATA_PATH, delimiter=';',dtype={'details': str},keep_default_na=False)
-  if TARGET_COL not in df.columns:
-    raise KeyError(f"Target column '{TARGET_COL}' not found in {path}") 
-  #X = df.drop(columns=[TARGET_COL])
-  X = df['details']
-  y = df['subcategory']
+  X = df.drop(columns=[TARGET_COL])
+  y = df[TARGET_COL]
+
+  for i in range (len(y)) :
+    y.at[i] = y.at[i]-1
+
   return X,y
+
+def append(te,s) : 
+  for c in s :
+    te.append( float(ord(c)-32) )
+
+  return te
 
 def createInputTensor(X) :
   X1 = []
-  for x in X :
-    te = []
-    for c in x.ljust(DETAILS_LEN)[:DETAILS_LEN] :
-      te.append( float(ord(c)) )
+  s,_ = X.shape
+  for i in range(s) :
+    te = append( [], X.at[i,'details'].ljust(DETAILS_LEN)[:DETAILS_LEN] )
+    te = append( te, str(X.at[i,'value']).ljust(8))
+    te = append( te, X.at[i,'executed'])
+    te = append( te, X.at[i,'mandate'].ljust(20)[:20])
     X1.append(te)
   return X1
+
 
 def createLabelTensors(y) :
   y1 = []
   for i in range(len(y)) :
     res = [float(0) for _ in range(NUM_CATEGORIES)]
-    res[y[i]-1] = float(1)
+    res[y[i]] = float(1)
     y1.append(res)
   return y1
+
+def createWeight(y ) :
+  w = [float(0) for _ in range(NUM_CATEGORIES)]
+  for i in y[0] :
+    w[i] += 1
+
+  for i in range(NUM_CATEGORIES) :
+    w[i] = 1/w[i];
+
+  print (w)
+  return w
+ 
 
 def splitdata(data, size) :
   trainkeys = range(size)
@@ -96,12 +118,14 @@ X, y = load_data()
 X1 = createInputTensor(X);
 y1 = createLabelTensors(y);
 
-trainsize = int(len(X1)*80/100);
+trainsize = int(len(X1)*95/100);
 Xtrain,Xtest = splitdata(X1,trainsize)
 ytrain,ytest = splitdata(y1,trainsize)
 _,yabs = splitdata(y,trainsize)
 
-model = MyModel()
+s = len(X1[1])
+print (s)
+model = MyModel(s)
 
 # Define loss function and optimizer
 criterion = nn.CrossEntropyLoss()
@@ -114,31 +138,32 @@ device = "cpu"
 model.to(device)
 
 # Training loop
-num_epochs = 1
+num_epochs = 5
 
 
 for epoch in range(num_epochs):
-    print ("---------------- epoch ", epoch)
-    running_loss = 0.0
+  print ("---------------- epoch ", epoch)
 
-    iter = DataIterator( Xtrain, ytrain, BLOCK_SIZE )
+  iter = DataIterator( Xtrain, ytrain, BLOCK_SIZE )
 
-    runs = int( trainsize / BLOCK_SIZE ) + 1
-    for step in range(runs) :
-      inputs, categories = iter.next()
-      inputs = inputs.to(device)
-      categories = categories.to(device)
+  runs = int( trainsize / BLOCK_SIZE ) + 1
+  w = createWeight(ytrain)
 
-      # Zero the parameter gradients
-      optimizer.zero_grad()
+  for step in range(runs) :
+    inputs, categories = iter.next()
+    inputs = inputs.to(device)
+    categories = categories.to(device)
 
-      outputs = model(inputs)
-      loss = criterion(outputs, categories)
+    # Zero the parameter gradients
+    #optimizer.zero_grad()
 
-      loss.backward()
-      optimizer.step()
+    outputs = model(inputs)
+    loss = criterion(outputs, categories)
 
-      print (step, loss)
+    loss.backward()
+    optimizer.step()
+
+  print ( loss )
 
 print ("finish training")
 
@@ -147,9 +172,6 @@ correct = 0
 total = 0
 
 testiter = DataIterator(Xtest,yabs,BLOCK_SIZE)
-
-for i in range (len(ytest)) :
-  yabs[i] = yabs[i]-1
 
 with torch.no_grad():
     runs = int( len(yabs) / BLOCK_SIZE ) + 1
@@ -161,11 +183,10 @@ with torch.no_grad():
 
       outputs = model(inputs)
       _, predicted = torch.max(outputs, 1)
-      #print(predicted,categories))
 
       total += categories.size(0)
+      
       correct += (predicted == categories).sum().item()
-      #print (step, total, correct)
 
 accuracy = 100 * correct / total
 print(f'Accuracy on the test set: {accuracy:.2f}%')
