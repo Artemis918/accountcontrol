@@ -23,13 +23,13 @@ dependencies {
   implementation 'com.opencsv:opencsv:5.9'
   implementation 'org.jdom:jdom2:2.0.6.1'
   implementation 'com.google.code.gson:gson:2.13.1'
-  runtimeOnly 'com.h2database:h2:2.3.232'
+  runtimeOnly 'com.h2database:h2:2.4.240'
 
   testImplementation 'org.mockito:mockito-junit-jupiter'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.12.2'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.12.2'
-  testImplementation 'com.h2database:h2:2.3.232'
+  testImplementation 'com.h2database:h2:2.4.240'
 }
 
 test {
