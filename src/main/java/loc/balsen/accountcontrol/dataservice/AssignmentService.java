@@ -117,17 +117,24 @@ public class AssignmentService {
   }
 
   public void assignToSubCategory(SubCategory subCategory, String text, AccountRecord record) {
-    if (text.isEmpty())
+    System.out.print("Step 1");
+    if (text == null || text.isEmpty())
       text = record.getOtherParty();
+
+    System.out.print("Step 2 " + text);
 
     try {
       assignmentRepository.deleteByAccountrecordId(record.getId());
+      System.out.print("Step 3");
     } catch (DataAccessException e) {
       // ignore
-
+      System.out.print("Step 4");
     }
+
+    System.out.print("Step 5");
     Assignment assignment = new Assignment(text, text, subCategory, record, null);
 
+    System.out.print("Step 5 " + assignment);
     assignmentRepository.save(assignment);
   }
 
