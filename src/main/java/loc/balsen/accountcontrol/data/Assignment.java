@@ -103,8 +103,8 @@ public class Assignment {
   }
 
   public void setNatural(Double val) {
-    val *= 100;
-    value = (val.intValue());
+    Double cents = val * 100;
+    value = (cents.intValue());
   }
 
   public LocalDate getStatsDay() {
