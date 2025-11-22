@@ -57,6 +57,8 @@ processResources.dependsOn webpack
 processResources {
   from("${buildDir}/js") {
     include "**/*.js"
+    include "**/*.html"
+    include "**/*.png"
     into "static"
   }
 }
