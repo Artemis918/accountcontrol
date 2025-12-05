@@ -16,6 +16,7 @@ export interface ContextMenuEntry<D> {
 	name: string;
 	func: HandleMenu<D>;
 	data?: any; 
+	active: boolean;
 }
 
 export interface ContextMenuProps<D> {
@@ -43,13 +44,17 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	}
 
 	executeMenu(index: number): void {
-		if (this.props.menudef.entries[index].func != null)
+		if (this.props.menudef.entries[index].func != null && ( this.props.menudef.entries[index].active==null 
+			                                                 || this.props.menudef.entries[index].active==true))
 			this.props.menudef.entries[index].func(index,this.props.menudef.entries[index]);
 	}
 
 	renderRow(entry: ContextMenuEntry<D>, index: number): React.JSX.Element {
 		return <tr key={entry.name}>
-			<td onClick={() => this.executeMenu(index)} style={{ background: index == this.state.highlighted ? 'white' : 'lightblue' }}
+			<td onClick={() => this.executeMenu(index)} 
+			    style={{ background: index == this.state.highlighted && entry.active ? 'white' : 'lightblue',
+					     color: entry.active ? 'blue' : 'gray'
+				       }}
 				onMouseEnter={() => { this.highlightMenu(index, true) }}
 				onMouseLeave={() => { this.highlightMenu(index, false) }}
 				key={entry.name}
