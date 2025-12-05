@@ -112,6 +112,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 
 	reload(): void {
 		this.setState({ range: undefined, selectedRows: undefined });
+		this.props.handleselect([]);
 		this.lister.reload();
 	}
 
