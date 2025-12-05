@@ -8,6 +8,7 @@ import acss from './css/account.css'
 import css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
 import { AssignEdit } from '../assign/assignedit'
+import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu'
 
 type Create = (props: CategoriesProps) => React.JSX.Element;
 export const Categories: Create = (p) => { return (<_Categories {...p} intl={useIntl()} />); }
@@ -22,6 +23,7 @@ interface IState {
     month: number;
     year: number;
     assignEdit: boolean;
+    selectedAssignments: Assignment[];
 }
 
 export class _Categories extends React.Component<CategoriesProps & WrappedComponentProps, IState> {
@@ -37,11 +39,12 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             selectedCategory: undefined,
             month: currentTime.getMonth() + 1,
             year: currentTime.getFullYear(),
-            assignEdit: false
+            assignEdit: false,
+            selectedAssignments: []
         };
         this.lister = React.createRef();
 
-
+        this.handleSelected = this.handleSelected.bind(this);
         this.commitAssignment = this.commitAssignment.bind(this);
         this.commitSelected = this.commitSelected.bind(this);
         this.commitAll = this.commitAll.bind(this);
@@ -131,7 +134,8 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     commitSelected(): void {
-        this.commit(this.lister.current.getSelectedData());
+        this.commit(this.state.selectedAssignments);
+        this.setState({selectedAssignments: []});
         this.lister.current.reload();
     }
 
@@ -141,14 +145,21 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     editAssignment(): void {
-        if (this.lister.current.getSelectedData().length != 1) {
+        if (this.state.selectedAssignments.length != 1) {
             this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+            return;
         }
+
+        if (this.state.selectedAssignments[0].accountrecord == 0 ) {
+            this.props.sendmessage(this.label("check.noassignment"), MessageID.INVALID_DATA);
+            return;
+        }
+
         this.setState({ assignEdit: true });
     }
 
     acceptValueAssignment(): void {
-        var assignments: Assignment[] = this.lister.current.getSelectedData();
+        var assignments: Assignment[] = this.state.selectedAssignments;
         if (assignments.length != 1) {
             this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
         }
@@ -171,7 +182,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     removeAssignment(): void {
-        var ids: number[] = this.lister.current.getSelectedData().map((assign: Assignment) => { return assign.accountrecord; });
+        var ids: number[] = this.state.selectedAssignments.map((assign: Assignment) => { return assign.accountrecord; });
         var self: _Categories = this;
         fetch('assign/remove', {
             method: 'post',
@@ -204,16 +215,20 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         }
     }
 
+    handleSelected(data: Assignment[]): void {
+        this.setState({selectedAssignments: data});
+    }
+
     renderAssignEdit(): React.JSX.Element {
         if (this.state.assignEdit) {
-            var assignment: Assignment = this.lister.current.getSelectedData()[0]
+            var assignment: Assignment = this.state.selectedAssignments[0]
             var recordId: number | undefined = assignment.accountrecord
 
             return <AssignEdit sendMessage={this.props.sendmessage}
                 recordId={recordId}
                 assignment={assignment}
                 onAssign={this.onAssign}
-            />;}
+                />;}
         else
             return <></>;
     }
@@ -231,6 +246,22 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     render(): React.JSX.Element {
         this.createColumns();
+
+        let singleline: boolean = this.lister.current != null && this.state.selectedAssignments.length == 1;
+        let hasPlan: boolean = singleline && this.state.selectedAssignments[0].plan != 0 
+                                          && this.state.selectedAssignments[0].planed != this.state.selectedAssignments[0].real;
+
+        let mainentries: ContextMenuEntry<AccountRecord>[] = [
+            { name: this.label("check.removeassign"), func: this.removeAssignment, active: true },
+            { name: this.label("check.acceptvalue"), func: this.acceptValueAssignment, active: hasPlan },
+            { name: this.label("edit"), func: this.editAssignment, active: singleline},
+        ];
+
+        var contextMenu: ContextMenuDef<AccountRecord> = {
+            entries: mainentries,
+            title: this.label("check.check")
+        }
+
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
@@ -279,7 +310,9 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                                     lines={28}
                                     ext={this.createExt()}
                                     columns={this.columns}
-                                    ref={this.lister} />
+                                    ref={this.lister}
+                                    handleselect={this.handleSelected}
+                                    menu={contextMenu} />
                             </td>
                         </tr>
                     </tbody>
