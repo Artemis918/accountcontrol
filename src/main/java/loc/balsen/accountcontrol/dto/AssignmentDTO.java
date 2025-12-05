@@ -32,12 +32,17 @@ public class AssignmentDTO {
     setCommitted(z.isCommitted());
     position = 2000;
     Plan p = z.getPlan();
+    plan = 0;
+    planed = 0;
+    position = 0;
     if (p != null) {
       plan = p.getId();
       planed = p.getValue();
       position = p.getPosition();
     }
 
+    category = 0;
+    subcategory = 0;
     SubCategory s = z.getSubCategory();
     if (s != null) {
       category = s.getCategory().getId();
