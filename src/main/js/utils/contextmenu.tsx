@@ -1,4 +1,5 @@
 import React, { MouseEvent } from 'react';
+import css from './css/contextmenu.css';
 
 export type HandleMenu<D> = (index: number, entry: ContextMenuEntry<D>) => void;
 
@@ -50,11 +51,16 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	}
 
 	renderRow(entry: ContextMenuEntry<D>, index: number): React.JSX.Element {
+		var classname = ""
+		if (index == this.state.highlighted) {
+			classname = entry.active ? css.entryactivehighlight : css.entryinactivehighlight
+		}
+		else {
+			classname = entry.active ? css.entryactive : css.entryinactive
+		}
 		return <tr key={entry.name}>
 			<td onClick={() => this.executeMenu(index)} 
-			    style={{ background: index == this.state.highlighted && entry.active ? 'white' : 'lightblue',
-					     color: entry.active ? 'blue' : 'gray'
-				       }}
+			    className = {classname}
 				onMouseEnter={() => { this.highlightMenu(index, true) }}
 				onMouseLeave={() => { this.highlightMenu(index, false) }}
 				key={entry.name}
@@ -66,7 +72,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 		if (title != null) {
 			return (
 				<tr key={"head"}>
-					<th key={"title"} style={{ borderBottomWidth: '1px', borderBottomStyle: 'solid', color: 'black' }} >
+					<th key={"title"} className = {css.contextmenuhead} >
 						{title}
 					</th>
 				</tr>
@@ -82,13 +88,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 					zIndex: 1,
 					left: this.props.menuX, top: this.props.menuY
 				}}>
-					<div style={{
-						padding: '3px',
-						border: '1px solid darkblue',
-						background: 'lightblue',
-						fontSize: '14px',
-						color: 'blue'
-					}}>
+					<div className={css.contextmenubody}>
 						<table>
 							<thead>
 								{this.renderHead(this.props.menudef.title)}
