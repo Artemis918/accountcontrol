@@ -116,7 +116,8 @@
 	"plan.plandata": "Planing data",
 	"plan.plansfor": "Plan for ",
 	"plan.planscreated": "Plans created",
-		
+	
+	"check.check": "Check",
 	"check.plan": "Planned value",
 	"check.real": "Real value",
 	"check.sum": "Total",
@@ -124,6 +125,7 @@
 	"check.commitall": "Commit all",
 	"check.removeassign": "Revoke assignment",
 	"check.acceptvalue": "Accept value",
+	"check.noassignment" : "No assignment to edit",
 	
 	"pattern.patterndata": "Pattern data",
 	

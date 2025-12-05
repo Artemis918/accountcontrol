@@ -218,12 +218,12 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 
 		let mainentries: ContextMenuEntry<AccountRecord>[] = [
-			{ name: this.label("category"), func: this.assignCategory },
-			{ name: this.label("plan"), func: this.assignPlan },
-			{ name: this.label("assign.split"), func: this.assignSplit },
-			{ name: "------------", func: () => { } }
+			{ name: this.label("category"), func: this.assignCategory, active: true },
+			{ name: this.label("plan"), func: this.assignPlan, active: true },
+			{ name: this.label("assign.split"), func: this.assignSplit, active: true },
+			{ name: "------------", func: () => { }, active: true }
 		];
-		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e }; });
+		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
 
 		var contextMenu: ContextMenuDef<AccountRecord> = {
 			entries: mainentries.concat(faventries),

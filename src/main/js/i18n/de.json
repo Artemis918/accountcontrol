@@ -117,6 +117,7 @@
 	"plan.plansfor": "Pläne für ",
 	"plan.planscreated": "Pläne erstellt",
 	
+	"check.check": "Prüfen",
 	"check.plan": "Planwert",
 	"check.real": "Istwert",
 	"check.sum": "Summe",
@@ -124,6 +125,7 @@
 	"check.commitall": "Alles bestätigen",
 	"check.removeassign": "Zuordnung lösen",
 	"check.acceptvalue": "Wert übernehmen",
+	"check.noassignment" : "Keine Zuweisung zum Bearbeiten",
 	
 	"pattern.patterndata": "Musterdaten",
 
