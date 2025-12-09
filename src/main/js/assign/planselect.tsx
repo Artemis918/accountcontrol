@@ -5,10 +5,9 @@ import { Plan, Pattern, Template, postRequest, AccountRecord, fetchJson } from '
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
-import { myParseJson } from '../utils/misc'
 
 import css from '../css/index.css'
-
+import pcss from './css/planselect.css'
 
 
 type Create = (props: PlanSelectProps) => React.JSX.Element;
@@ -143,20 +142,30 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	renderAdjustButtons(): React.JSX.Element {
 		return (
-			<p style={{ borderStyle: 'solid' }}>
-				{this.label("assign.adjust")}
-				<button onClick={() => this.setState({ patterneditor: true })}
-					testdata-id={'assign.adjustpattern'}
-					className={css.addonbutton}
-					hidden={!this.state.patternfailed}>
-					{this.label('assign.adjustpattern')}
-				</button>
-				<button onClick={() => this.setState({ timerangeeditor: true })}
-					testdata-id={'assign.adjusttime'}
-					className={css.addonbutton}
-					hidden={!this.state.timerangefailed}>
-					{this.label("assign.adjusttime")}
-				</button>
+			<p className={pcss.adjustbody}>
+				<table>
+					<tbody>
+						<tr>
+							<td className={pcss.adjustlabel}> {this.label("assign.adjust")}  </td>
+							<td>
+								<button onClick={() => this.setState({ patterneditor: true })}
+									testdata-id={'assign.adjustpattern'}
+									className={css.addonbutton}
+									hidden={!this.state.patternfailed}>
+									{this.label('assign.adjustpattern')}
+								</button>
+							</td>
+							<td>
+								<button onClick={() => this.setState({ timerangeeditor: true })}
+									testdata-id={'assign.adjusttime'}
+									className={css.addonbutton}
+									hidden={!this.state.timerangefailed}>
+									{this.label("assign.adjusttime")}
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</p>
 		);
 	}
@@ -193,7 +202,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		return (
 			<div testdata-id={"planselect"}>
 				<MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
-				<div style={{ padding: '10px' }}>
+				<div className={pcss.planselectbody}>
 					<SingleSelectLister<Plan>
 						ext={this.state.year + '/' + this.state.month}
 						testdata-id={'planlister'}
