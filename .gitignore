@@ -14,3 +14,6 @@ node_modules/
 .vscode
 dist
 cypress/screenshots/
+assignment-ki/assignments.csv
+assignment-ai/assignments.csv
+assignment-ai/__pycache__

@@ -212,7 +212,7 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
             var now: Date = new Date;
             return <AssignEdit
                 recordId={this.props.accountRecord.id}
-                assignPlan={this.addPlan}
+                onAssignPlan={this.addPlan}
                 onAssign={() => { }}
                 sendMessage={this.props.sendMessage}
             />;

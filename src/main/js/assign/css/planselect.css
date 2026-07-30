@@ -1,0 +1,14 @@
+.planselectbody {
+    padding: 0px;
+}
+
+.adjustbody {
+    border-style: solid;
+    padding: 0px;
+    margin: 0px;
+}
+
+.adjustlabel {
+    padding: 5px 0 5px 0;
+	margin: 5px 0 5px 2px;
+}

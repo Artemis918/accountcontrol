@@ -24,7 +24,7 @@ interface AssignEditProps {
 	assignment?: Assignment;
 	onAssign: OnAssign;
 	onAssignNewCats?: OnAssignNewCats;  // only if recordID is undefined
-	assignPlan?: OnAssignPlan;  // to overide default plan assign behavior
+	onAssignPlan?: OnAssignPlan;  // to overide default plan assign behavior
 }
 
 // use cases:
@@ -59,7 +59,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			record: undefined,
 			planassign: props.recordId != undefined
 				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
-					|| (props.assignment != undefined && this.props.assignment.plan != undefined))
+					|| (props.assignment != undefined && this.props.assignment.plan != 0))
 		}
 
 		this.lstate = {
@@ -93,7 +93,8 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	private assign() {
 		if (this.state.planassign)
 			this.assignPlanCallBack();
-		this.assignCatCallBack()
+		else
+			this.assignCatCallBack()
 	}
 
 	private onPlanChange(plan: Plan) {
@@ -135,8 +136,8 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	};
 
 	private assignPlanCallBack(): void {
-		if (this.props.assignPlan != undefined)
-			this.props.assignPlan(this.lstate.plan);
+		if (this.props.onAssignPlan != undefined)
+			this.props.onAssignPlan(this.lstate.plan);
 		else {
 			// default behavior: assign to plan and remove previous assignment	
 			var self = this;
