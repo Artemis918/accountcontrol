@@ -117,7 +117,7 @@ public class AssignmentService {
   }
 
   public void assignToSubCategory(SubCategory subCategory, String text, AccountRecord record) {
-    System.out.print("Step 1");
+
     String comment = text;
     if (comment == null || comment.isEmpty())
       comment = record.getOtherParty();

@@ -19,9 +19,12 @@ import loc.balsen.accountcontrol.data.Assignment;
 import loc.balsen.accountcontrol.data.Plan;
 import loc.balsen.accountcontrol.data.SubCategory;
 import loc.balsen.accountcontrol.data.Template;
+import loc.balsen.accountcontrol.dataservice.AIService;
 import loc.balsen.accountcontrol.dataservice.AssignmentService;
+import loc.balsen.accountcontrol.dataservice.CategoryService;
 import loc.balsen.accountcontrol.dataservice.TemplateService;
 import loc.balsen.accountcontrol.dto.AssignmentDTO;
+import loc.balsen.accountcontrol.dto.EnumDTO;
 import loc.balsen.accountcontrol.dto.MessageID;
 import loc.balsen.accountcontrol.dto.TemplateDTO;
 import loc.balsen.accountcontrol.repositories.AccountRecordRepository;
@@ -35,23 +38,27 @@ import loc.balsen.accountcontrol.repositories.SubCategoryRepository;
 public class AssignmentController {
 
   private SubCategoryRepository subCategoryRepository;
+  private AIService aiService;
   private AssignmentRepository assignRepository;
   private AssignmentService assignService;
   private TemplateService templateService;
   private AccountRecordRepository accountRecordRepository;
   private PlanRepository planRepository;
+  private CategoryService categoryService;
 
   @Autowired
   public AssignmentController(SubCategoryRepository subCategoryRepository,
       AssignmentRepository assignmentRepository, AssignmentService assignmentService,
       TemplateService templateService, AccountRecordRepository accountRecordRepository,
-      PlanRepository planRepository) {
+      PlanRepository planRepository, AIService aiService, CategoryService categoryService) {
     this.subCategoryRepository = subCategoryRepository;
     this.assignRepository = assignmentRepository;
     this.assignService = assignmentService;
     this.templateService = templateService;
     this.accountRecordRepository = accountRecordRepository;
     this.planRepository = planRepository;
+    this.aiService = aiService;
+    this.categoryService = categoryService;
   }
 
   @GetMapping("/all")
@@ -157,6 +164,20 @@ public class AssignmentController {
     public int subcategory;
     public String text;
     public List<Integer> ids;
+  }
+
+  @GetMapping("/getpredictions/{recordid}")
+  public List<EnumDTO> getPredictions(@PathVariable int recordid) {
+
+    AccountRecord record = accountRecordRepository.findById(recordid).orElseThrow();
+    System.out.println("AssignmentController.getPredictions()");
+    List<Integer> preds = aiService.getPredictions(record);
+    return categoryService.getAllSubCategories(false).stream().filter((sub) -> {
+      return preds.contains(sub.getId());
+    }).map(sub -> {
+      return new EnumDTO(sub.getCategory().getDescription() + "/" + sub.getShortDescription(),
+          sub.getId());
+    }).toList();
   }
 
   @PostMapping("/tosubcategory")

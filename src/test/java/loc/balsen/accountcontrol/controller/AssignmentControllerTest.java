@@ -130,7 +130,7 @@ public class AssignmentControllerTest extends TestContext {
         .thenReturn(Optional.of(assignment2));
 
     AssignmentController controller = new AssignmentController(null, mockAssignmentRepository,
-        mockAssignmentService, mockTemplateService, null, null);
+        mockAssignmentService, mockTemplateService, null, null, null, null);
 
     // do nothing
     controller.setNewValue(100);
@@ -223,7 +223,7 @@ public class AssignmentControllerTest extends TestContext {
   public void testAnalyze() {
 
     AssignmentController controller = new AssignmentController(subCategoryRepository, null, null,
-        null, accountRecordRepository, planRepository);
+        null, accountRecordRepository, planRepository, null, null);
 
     LocalDate templatedate = LocalDate.of(1977, 1, 2);
     Template template = new Template(0, null, null, templatedate, 0, 0, TimeUnit.MONTH, null, 0, 0,

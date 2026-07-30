@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbconfig
+data: 
+  dbconfig: |
+    [database]
+    dbname=account-db
+    user=account
+    password=helpme45
+    host=gitlab.balsen.loc
+    port=5434

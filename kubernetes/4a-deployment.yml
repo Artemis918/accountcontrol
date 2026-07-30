@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  labels:
+    app: assign-ai
+  name: assign-ai-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assign-ai
+  template:
+    metadata:
+      labels:
+        app: assign-ai
+    spec:
+      containers:
+        - image: gitlab.balsen.loc:4901/balsen/accountcontrol/assignai:latest
+          imagePullPolicy: Always
+          name: assign-ai
+          ports:
+          - containerPort: 5000
+          volumeMounts:
+          - mountPath: /dbconfig.ini
+            name: config-volume
+          env:
+          - name: PROD
+            value: "yes"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: dbconfig
+          items: 
+          - key: dbconfig 
+            path: dbconfig
+      imagePullSecrets:
+      - name: regcred
