@@ -30,6 +30,7 @@ interface IState {
 	plan: number | undefined;
 	accountRecords: AccountRecord[];
 	favcategory: EnumDTO[];
+	predictedCategories: EnumDTO[];
 	action: AssignAction;
 }
 
@@ -72,16 +73,18 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			plan: undefined,
 			accountRecords: [],
 			favcategory: [],
+			predictedCategories: [],
 			action: AssignAction.NONE
 		}
 
 		this.reload = this.reload.bind(this);
 		this.loadFav = this.loadFav.bind(this);
+		this.onSelect = this.onSelect.bind(this);
 
 		this.assignAuto = this.assignAuto.bind(this);
 		this.assignSplit = this.assignSplit.bind(this);
 		this.createTemplate = this.createTemplate.bind(this);
-		
+
 		this.assignCategory = this.assignCategory.bind(this);
 		this.assignDirect = this.assignDirect.bind(this);
 		this.executeAssignCategory = this.executeAssignCategory.bind(this);
@@ -109,7 +112,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	}
 
 	clearAction(): void {
-		this.setState({ action: AssignAction.NONE, accountRecords: [] });
+		this.setState({ action: AssignAction.NONE, accountRecords: [],predictedCategories: [] });
 		this.reload();
 	};
 
@@ -181,6 +184,16 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		else
 			this.setState({ action: AssignAction.NONE });
 	}
+
+	onSelect (data: AccountRecord[]) :void {
+        this.setState({ accountRecords: data });
+		if (data.length > 0) {
+			var self = this;
+			fetch('assign/getpredictions/' + data[0].id)
+			.then((response: Response) => response.text())
+			.then((text: string) => { self.setState({ predictedCategories: myParseJson(text) }) })
+		}
+	}
 	
 	renderAssignEditor(): React.JSX.Element {
 		var recordId: number | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0].id : undefined;
@@ -223,10 +236,16 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			{ name: this.label("assign.split"), func: this.assignSplit, active: true },
 			{ name: "------------", func: () => { }, active: true }
 		];
-		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
+		let assignentries: ContextMenuEntry<AccountRecord>[] = [];
+		if (this.state.predictedCategories.length > 0) {
+			assignentries = this.state.predictedCategories.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
+		}
+		else {
+		    assignentries = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
+		}
 
 		var contextMenu: ContextMenuDef<AccountRecord> = {
-			entries: mainentries.concat(faventries),
+			entries: mainentries.concat(assignentries),
 			title: this.label("assign.assign")
 		}
 
@@ -246,7 +265,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 					lines={28}
 					ext=''
 					ref={(ref) => { this.recordLister = ref }}
-					handleselect={(data: AccountRecord[]) => { this.setState({ accountRecords: data }); }} />
+					handleselect={this.onSelect} />
 				{this.renderAssignEditor()}
 			</div>
 		)
