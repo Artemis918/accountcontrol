@@ -13,7 +13,7 @@ import pcss from './css/planselect.css'
 type Create = (props: PlanSelectProps) => React.JSX.Element;
 export const PlanSelect: Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()} />); }
 
-export type OnPlanChange = (plan: Plan | undefined) => void;
+export type OnPlanChange = (plan: Plan) => void;
 
 export interface PlanSelectProps {
 	onChange: OnPlanChange;

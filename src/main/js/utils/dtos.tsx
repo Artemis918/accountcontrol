@@ -75,15 +75,15 @@ export class Pattern {
 
 //=====================================================
 export class Plan {
-    id: number;
+    id?: number;
     startdate: Date;
     plandate: Date;
     enddate: Date;
     position: number;
     description: string;
     shortdescription: string;
-    category: number;
-    subcategory: number;
+    category?: number;
+    subcategory?: number;
     categoryname: string;
     subcategoryname: string;
     value: number;

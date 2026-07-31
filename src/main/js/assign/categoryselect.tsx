@@ -2,7 +2,6 @@ import React from 'react'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 
-import css from '../css/index.css'
 import acss from './css/assign.css'
 
 
@@ -12,11 +11,11 @@ export const CategorySelect: Create = (p) => { return (<_CategorySelect {...p} i
 
 export default CategorySelect;
 
-export type OnCatChange = (subCategory: number | undefined, text: string) => void;
+export type OnCatChange = (subCategory: number , text?: string ) => void;
 
 export interface CategorySelectProps {
     onChange: OnCatChange;
-    text: string;
+    text?: string;
     subCatId?: number;
 }
 
@@ -24,7 +23,7 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
 
     comment_obj: React.RefObject<HTMLInputElement | null>;
     cur_subcategory: number | undefined;
-    cur_comment: string;
+    cur_comment?: string;
 
     constructor(props: CategorySelectProps & WrappedComponentProps) {
         super(props);
@@ -42,15 +41,15 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
             this.comment_obj.current.focus();
     }
 
-    setCategory(subcategory?: number, category?: number) {
+    setCategory(subcategory: number, category: number) {
         this.cur_subcategory =subcategory;
-        if (this.props.onChange)
-            this.props.onChange(this.cur_subcategory,this.cur_comment)
+        if (this.props.onChange && this.cur_subcategory != undefined)
+            this.props.onChange(this.cur_subcategory,this.cur_comment);
     }
 
     setComment(comment: string) {
         this.cur_comment = comment;
-        if (this.props.onChange)
+        if (this.props.onChange && this.cur_subcategory != undefined)
             this.props.onChange(this.cur_subcategory,this.cur_comment)
     }
 
