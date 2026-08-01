@@ -1,4 +1,4 @@
-FROM arm64v8/eclipse-temurin:24-jre-alpine@sha256:bdc001f77fd0dc9937ec1866b87c87d2563f1dd2829ccf981abf56c87c0f9ba1
+FROM arm64v8/eclipse-temurin:25-jre-alpine@sha256:6ecf9dc44dc6dba8e2ccd154687053a1f7b0e86f7e2ba04b548650538f5d1cc9
 EXPOSE 8080
 COPY accountcontrol.jar .
 CMD ["java" ,"-Dspring.profiles.active=kube" , "-jar", "accountcontrol.jar"]

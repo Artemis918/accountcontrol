@@ -1,3 +1,4 @@
+import { myParseJson } from "./misc";
 
 export type handleJsonAnswer = (answer: any) => void;
 
@@ -12,6 +13,12 @@ export function postRequest(url:string, data:any, answer:handleJsonAnswer): void
 		if (answer != undefined )
             answer( response.json() );
     } );
+}
+
+export function fetchJson(url:string, handleAnswer:handleJsonAnswer): void {
+    fetch( url ) 
+         .then( response => response.text() )
+         .then( text => handleAnswer( myParseJson(text) ));
 }
 
 
@@ -64,20 +71,19 @@ export class Pattern {
         this.details = '';
         this.mandate = '';
     }
-
 }
 
 //=====================================================
 export class Plan {
-    id: number;
+    id?: number;
     startdate: Date;
     plandate: Date;
     enddate: Date;
     position: number;
     description: string;
     shortdescription: string;
-    category: number;
-    subcategory: number;
+    category?: number;
+    subcategory?: number;
     categoryname: string;
     subcategoryname: string;
     value: number;

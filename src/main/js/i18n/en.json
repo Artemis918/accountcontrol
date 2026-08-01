@@ -1,5 +1,6 @@
 {
 	"create": "Create",
+	"edit": "Edit",
 	"cancel": "Cancel",
 	"save": "Save",
 	"new": "New",
@@ -15,7 +16,7 @@
 	"description": "Description",
 	"assingments": "Assignments",
 	"details": "Details",
-	"refid": "Ref. ID",
+	"referenceID": "Ref. ID",
 	"mandate": "Mandate",
 	"submitter": "Submitter", 
 	"value": "Value",
@@ -68,13 +69,13 @@
 	"category.active": "active",
 	"category.favorite": "favorite",
 
-    "assign.assignplan": "Assign plan",
-    "assign.catassign": "Assign cat",
-    "assign.categoryassign": "Assign category",
+    "assign.plan": "Assign plan",
+    "assign.cat": "Assign cat",
+    "assign.to": "Assign to",
     "assign.assign": "Assign",
 	"assign.split": "Split",
 	"assign.auto": "Auto assign",
-	"assign.plan": "Create plan",
+	"assign.template": "Create template",
 	"assign.selectplan": "Select plan",
 	"assign.onevalue": "you must select exactly one record",
     "assign.atleastonevalue": "you must select at least one record",
@@ -115,7 +116,8 @@
 	"plan.plandata": "Planing data",
 	"plan.plansfor": "Plan for ",
 	"plan.planscreated": "Plans created",
-		
+	
+	"check.check": "Check",
 	"check.plan": "Planned value",
 	"check.real": "Real value",
 	"check.sum": "Total",
@@ -123,6 +125,7 @@
 	"check.commitall": "Commit all",
 	"check.removeassign": "Revoke assignment",
 	"check.acceptvalue": "Accept value",
+	"check.noassignment" : "No assignment to edit",
 	
 	"pattern.patterndata": "Pattern data",
 	

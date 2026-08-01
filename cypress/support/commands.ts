@@ -35,3 +35,12 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('gett' ,(testdataid) => { return cy.get(`[testdata-id="${testdataid}"]`); });
+
+declare global {
+   namespace Cypress {
+     interface Chainable {
+         gett(testdataid: string): Chainable<Element>
+     }
+   }}

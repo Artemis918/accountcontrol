@@ -1,4 +1,5 @@
 import React, { MouseEvent } from 'react';
+import css from './css/contextmenu.css';
 
 export type HandleMenu<D> = (index: number, entry: ContextMenuEntry<D>) => void;
 
@@ -16,6 +17,7 @@ export interface ContextMenuEntry<D> {
 	name: string;
 	func: HandleMenu<D>;
 	data?: any; 
+	active: boolean;
 }
 
 export interface ContextMenuProps<D> {
@@ -43,13 +45,22 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 	}
 
 	executeMenu(index: number): void {
-		if (this.props.menudef.entries[index].func != null)
+		if (this.props.menudef.entries[index].func != null && ( this.props.menudef.entries[index].active==null 
+			                                                 || this.props.menudef.entries[index].active==true))
 			this.props.menudef.entries[index].func(index,this.props.menudef.entries[index]);
 	}
 
 	renderRow(entry: ContextMenuEntry<D>, index: number): React.JSX.Element {
+		var classname = ""
+		if (index == this.state.highlighted) {
+			classname = entry.active ? css.entryactivehighlight : css.entryinactivehighlight
+		}
+		else {
+			classname = entry.active ? css.entryactive : css.entryinactive
+		}
 		return <tr key={entry.name}>
-			<td onClick={() => this.executeMenu(index)} style={{ background: index == this.state.highlighted ? 'white' : 'lightblue' }}
+			<td onClick={() => this.executeMenu(index)} 
+			    className = {classname}
 				onMouseEnter={() => { this.highlightMenu(index, true) }}
 				onMouseLeave={() => { this.highlightMenu(index, false) }}
 				key={entry.name}
@@ -61,7 +72,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 		if (title != null) {
 			return (
 				<tr key={"head"}>
-					<th key={"title"} style={{ borderBottomWidth: '1px', borderBottomStyle: 'solid', color: 'black' }} >
+					<th key={"title"} className = {css.contextmenuhead} >
 						{title}
 					</th>
 				</tr>
@@ -77,13 +88,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 					zIndex: 1,
 					left: this.props.menuX, top: this.props.menuY
 				}}>
-					<div style={{
-						padding: '3px',
-						border: '1px solid darkblue',
-						background: 'lightblue',
-						fontSize: '14px',
-						color: 'blue'
-					}}>
+					<div className={css.contextmenubody}>
 						<table>
 							<thead>
 								{this.renderHead(this.props.menudef.title)}

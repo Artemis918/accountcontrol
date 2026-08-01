@@ -2,10 +2,11 @@ import React from 'react'
 import { DropdownService } from './dropdownservice'
 
 import css from '../css/index.css'
-import { SubCategory } from './dtos';
+import { fetchJson, SubCategory } from './dtos';
+import { lastDayOfQuarter } from 'date-fns';
 
 
-export type HandleCategoryChange = ( subCategory: number, category: number ) => void;
+export type HandleCategoryChange = (subCategory: number, category: number) => void;
 
 export interface CategorySelectorProps {
     onChange?: HandleCategoryChange;
@@ -15,82 +16,92 @@ export interface CategorySelectorProps {
 
 interface IState {
     category?: number;
-    subcategory?: number
-	allSubs: SubCategory[]
+    allSubs: SubCategory[]
 }
 
-export class CategorySelector extends React.Component<CategorySelectorProps, IState>{
+interface LocalState {
+    subcategory?: number
+}
 
-    constructor( props: CategorySelectorProps ) {
-        super( props );
-        this.state = { category: undefined, subcategory: this.props.subcategory, allSubs: [] };
-        this.setCategory = this.setCategory.bind( this );
-        this.setSubCategory = this.setSubCategory.bind( this );
-    }
-	
-	componentDidMount() :void {
-        var self: CategorySelector = this;
-        fetch( "category/suball" )
-            .then( response => response.json() )
-            .then( d => { self.setState( {allSubs: d }) } )
-	}
-    
-    setCategory( e: number ): void {
-        this.setState( { category: e, subcategory: undefined } );
+export class CategorySelector extends React.Component<CategorySelectorProps, IState> {
+
+    lstate: LocalState;
+
+    constructor(props: CategorySelectorProps) {
+        super(props);
+        this.state = { category: undefined, allSubs: [] };
+        this.lstate = { subcategory: this.props.subcategory };
+        this.setCategory = this.setCategory.bind(this);
+        this.setSubCategory = this.setSubCategory.bind(this);
+        this.setCatFromProps = this.setCatFromProps.bind(this);
     }
 
-    setSubCategory( e: number | undefined  ): void {
-        if (this.props.onChange != undefined && this.state.category != undefined  && e != undefined )
-            this.props.onChange( e, this.state.category );
-        this.setState( { subcategory: e} );
-    }
-    
-	findCategory(subCategory:number | undefined ) : number | undefined {
-		if (this.state.allSubs && subCategory != undefined  )
-			return this.state.allSubs.filter( (s) => { return subCategory == s.id;} )[0].category;
-		else
-			return undefined;
-	}
-	
-    componentDidUpdate(prevProps: CategorySelectorProps) :void {
-        if (prevProps.subcategory != this.props.subcategory )
-            this.setState({category: this.findCategory( this.props.subcategory ) });
+    componentDidMount(): void {
+        fetchJson("category/suball", this.setCatFromProps)
     }
 
-    getSubCategory() : number | undefined {
-        return this.state.subcategory;
+    componentDidUpdate(prevProps: CategorySelectorProps): void {
+        if (this.lstate.subcategory == undefined)
+            this.lstate.subcategory = this.props.subcategory;
+    }
+
+    private setCatFromProps(d: SubCategory[]) {
+        if (this.props.subcategory) {
+            var cat = d.filter((s) => { return this.props.subcategory == s.id; })[0].category;
+            this.setState({ allSubs: d, category: cat });
+        } else
+            this.setState({ allSubs: d });
+
+    }
+
+    private setCategory(e: number): void {
+        this.lstate.subcategory = undefined;
+        this.setState({ category: e });
+    }
+
+    private setSubCategory(e: number ): void {
+        if (this.lstate.subcategory != undefined && this.state.category != undefined)
+        {
+            if (this.props.onChange != undefined
+                && this.lstate.subcategory != e)
+                this.props.onChange(e, this.state.category);
+            this.lstate.subcategory = e;
+        }
     }
 
     render(): React.JSX.Element {
-		var caturlextension = this.state.category==undefined?"":this.state.category.toString() + "/true";
-        if ( this.props.horiz ) {
+        if (this.state.allSubs.length == 0)
+            return <></>;
+
+        var caturlextension = this.state.category == undefined ? "" : this.state.category.toString() + "/true";
+        if (this.props.horiz) {
             return (
                 <span>
-                    <DropdownService 
-						value={this.state.category}
+                    <DropdownService
+                        value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum/true'
-						className={css.catselector2} />
-                    <DropdownService 
-						value={this.state.subcategory}
+                        className={css.catselector2} />
+                    <DropdownService
+                        value={this.lstate.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
                         param={caturlextension}
-						className={css.catselector2} />
-                </span> )
+                        className={css.catselector2} />
+                </span>)
         }
         else {
             return (
-                <table style={{width:"100%"}}><tbody>
+                <table style={{ width: "100%" }}><tbody>
                     <tr><td>
-                        <DropdownService className={css.catselector} 
-							value={this.state.category}
+                        <DropdownService className={css.catselector}
+                            value={this.state.category}
                             onChange={this.setCategory}
                             url='category/catenum/true' />
                     </td></tr>
                     <tr><td>
-                        <DropdownService className={css.catselector} 
-							value={this.state.subcategory}
+                        <DropdownService className={css.catselector}
+                            value={this.lstate.subcategory}
                             onChange={this.setSubCategory}
                             url='category/subenum'
                             param={caturlextension} />

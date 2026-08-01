@@ -196,6 +196,26 @@ public class AssignmentControllerTest extends TestContext {
 
     List<Assignment> assignList = assignmentRepository.findByShortDescription("helpme");
     assertEquals(2, assignList.size());
+    assertEquals(subCategory4.getId(), assignList.get(0).getSubCategory().getId());
+    assertEquals(subCategory4.getId(), assignList.get(1).getSubCategory().getId());
+  }
+
+  @Test
+  public void testAssignSubCategoryWithNoComment() throws Exception {
+
+    AccountRecord record2 = createRecord("test7 bleble", LocalDate.now());
+    AccountRecord record1 = createRecord("test8 bleble", LocalDate.now());
+
+    String json = "{ \"subcategory\": " + subCategory5.getId() + ", \"ids\": [ " + record1.getId()
+        + "," + record2.getId() + " ] }";
+
+    mvc.perform(post("/assign/tosubcategory").content(json).contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+
+    List<Assignment> assignList = assignmentRepository.findByShortDescription("sender text");
+    assertEquals(2, assignList.size());
+    assertEquals(subCategory5.getId(), assignList.get(0).getSubCategory().getId());
+    assertEquals(subCategory5.getId(), assignList.get(1).getSubCategory().getId());
   }
 
 
@@ -245,8 +265,8 @@ public class AssignmentControllerTest extends TestContext {
   private AccountRecord createRecord(String description, LocalDate executed) {
     List<String> detlist = new ArrayList<>();
     detlist.add(description);
-    AccountRecord result = new AccountRecord(0, null, LocalDate.now(), executed, null, null, null,
-        0, detlist, null, null, null);
+    AccountRecord result = new AccountRecord(0, null, LocalDate.now(), executed, null, null,
+        "sender text", 0, detlist, null, null, null);
     accountRecordRepository.save(result);
     return result;
   }

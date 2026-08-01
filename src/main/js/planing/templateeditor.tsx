@@ -268,7 +268,10 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 						zIndex={1}
 						intl={this.props.intl}
 						pattern={this.state.template.pattern}
-						sendPattern={(e) => { this.template.pattern = e; this.setTemplateState() }}
+						sendPattern={(e) => { 
+							if (e != undefined )
+								this.template.pattern = e;
+						    this.setTemplateState() }}
 					/>
 					: null
 				}

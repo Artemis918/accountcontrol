@@ -2,6 +2,7 @@ import React from 'react';
 import { myParseJson } from './misc'
 import css from './css/selectlister.css';
 import { ContextMenu, ContextMenuDef } from './contextmenu';
+import { fetchJson } from './dtos';
 
 export type HandleSelectCallback<D> = (shift: boolean, ctrl: boolean, data: D, index: number) => void;
 export type IsSelectedCallback = (index: number) => boolean;
@@ -9,6 +10,7 @@ export type SelectTableCellRender<D> = (cell: CellInfo<D>) => React.JSX.Element;
 export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
 export type HasSelectedCallback = () => boolean;
+export type AnalyzeListCallback<D> = (data: D[]) => D[];
 
 
 export interface ColumnInfo<D> {
@@ -35,6 +37,7 @@ export interface SelectListerProps<D> {
 	createFooter?: CreateFooterCallback<D>;
 	handleSelect: HandleSelectCallback<D>;
 	handleExecute?: HandleSelectCallback<D>;
+	analyzeList?: AnalyzeListCallback<D>;
 	hasSelected?: HasSelectedCallback;
 	isSelected?: IsSelectedCallback;
 	columns: ColumnInfo<D>[];
@@ -48,7 +51,7 @@ class CState<D> {
 	menuY: number;
 }
 
-export class SelectLister<D> extends React.Component<SelectListerProps<D>, CState<D>> {
+export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 'testdata-id'?: string }, CState<D>> {
 
 	static defaultProps = {
 		lines: 10
@@ -96,15 +99,20 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 		var lo: number = start > end ? end : start;
 		var hi: number = start > end ? start : end;
 		return Array.from(Array(hi - lo + 1).keys())
-			.map((i: number): D => this.state.data[i + start]);
+			.map((i: number): D => this.state.data[i + lo]);
 	}
 
 	reload(): void {
 		if (this.props.ext != undefined) {
 			var self = this;
-			fetch(this.props.url + this.props.ext)
-				.then((response: Response) => response.text())
-				.then((text) => { self.setState({ data: myParseJson(text) }) })
+			fetchJson(this.props.url + this.props.ext,
+				(r) => {
+					if (self.props.analyzeList != undefined)
+					 	self.setState({ data: self.props.analyzeList(r) })
+					else
+					 	self.setState({ data: r }) 
+				}
+			)
 		}
 	}
 
@@ -204,7 +212,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D>, CStat
 
 	render(): React.JSX.Element {
 		return (
-			<div>
+			<div testdata-id={this.props['testdata-id']} style={{ position: 'relative', display: 'inline-block' }} >
 				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >
 					<thead>
 						<tr>

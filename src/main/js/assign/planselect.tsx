@@ -1,25 +1,24 @@
 import * as React from 'react'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils/monthselect'
-import { Plan, Pattern, Template, postRequest, AccountRecord } from '../utils/dtos'
+import { Plan, Pattern, Template, postRequest, AccountRecord, fetchJson } from '../utils/dtos'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
-import { myParseJson } from '../utils/misc'
 
 import css from '../css/index.css'
-
+import pcss from './css/planselect.css'
 
 
 type Create = (props: PlanSelectProps) => React.JSX.Element;
 export const PlanSelect: Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()} />); }
 
-export type AssignPlanCallback = (plan: Plan | undefined) => void;
+export type OnPlanChange = (plan: Plan) => void;
 
 export interface PlanSelectProps {
-	onAssign: AssignPlanCallback;
+	onChange: OnPlanChange;
 	record: AccountRecord;
-	plan?: Plan;
+	planId?: number;
 }
 
 interface IState {
@@ -30,7 +29,7 @@ interface IState {
 	template: Template | null;
 	currentPlan: Plan | undefined;
 	month: number;
-	year: number;
+	year: number
 }
 
 export class _PlanSelect extends React.Component<PlanSelectProps & WrappedComponentProps, IState> {
@@ -42,10 +41,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		super(props);
 
 		var date: Date = new Date();
-		if (this.props.plan != undefined) {
-			date = this.props.plan.plandate;
-		}
-		else if (this.props.record != undefined) {
+		if (this.props.record != undefined) {
 			date = this.props.record.executed;
 		}
 
@@ -55,15 +51,14 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			patterneditor: false,
 			timerangeeditor: false,
 			template: null,
-			currentPlan: this.props.plan,
+			currentPlan: undefined,
 			year: date.getFullYear(),
-			month: date.getMonth() + 1
+			month: date.getMonth() + 1,
 		};
 
 		this.lister = null;
 		this.setFilter = this.setFilter.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		this.assign = this.assign.bind(this);
 		this.setPattern = this.setPattern.bind(this);
 		this.settimerange = this.settimerange.bind(this);
 
@@ -89,8 +84,19 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	componentDidMount(): void {
-		if (this.props.plan != undefined) {
-			this.handleChange(this.props.plan);
+		var date: Date = new Date();
+		if (this.props.planId != undefined) {
+			var self = this;
+			fetchJson('plans/id/' + this.props.planId,
+				(plan: Plan) => {
+					var date = plan.plandate
+					self.setState({
+						year: date.getFullYear(),
+						month: date.getMonth() + 1
+					});
+					this.handleChange(plan);
+				}
+			)
 		}
 	}
 
@@ -102,7 +108,8 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	setAnaylzeData(template: Template): void {
 		this.setState({
-			timerangefailed: template.additional[1] == '1',
+			// TODO implemtn backend	timerangefailed: template.additional[1] == '1',
+			timerangefailed: false,
 			patternfailed: template.additional[0] == '1',
 			template: template
 		})
@@ -111,43 +118,54 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	handleChange(plan: Plan): void {
 		var self: _PlanSelect = this;
 		this.setState({ timerangefailed: false, patternfailed: false, currentPlan: plan });
+		if (this.props.onChange)
+			this.props.onChange(plan);
 
-		fetch("assign/analyze/" + this.props.record.id + "/" + plan.id)
-			.then((response: Response) => response.text())
-			.then((text) => { self.setAnaylzeData(myParseJson(text)) })
-	}
-
-	assign(): void {
-		this.props.onAssign(this.state.currentPlan);
+		fetchJson("assign/analyze/" + this.props.record.id + "/" + plan.id,
+			(r) => { self.setAnaylzeData(r) })
 	}
 
 	setPattern(p: Pattern): void {
-		if (this.state.currentPlan != undefined)
+		if (this.state.currentPlan != undefined && p != undefined) {
 			this.state.currentPlan.patterndto = p;
-		postRequest('templates/changepattern', this.state.currentPlan, () => { });
+			postRequest('templates/changepattern', this.state.currentPlan, () => { });
+		}
 		this.setState({ patterneditor: false });
 	}
 
 	settimerange(template: Template): void {
-		fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
-		this.setState({ timerangeeditor: false });
+		// TODO implemtn backend
+		// fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
+		// this.setState({ timerangeeditor: false });
 	}
 
 
 	renderAdjustButtons(): React.JSX.Element {
 		return (
-			<p style={{ borderStyle: 'solid' }}>
-				{this.label("assign.adjust")}
-				<button onClick={() => this.setState({ patterneditor: true })}
-					className={css.addonbutton}
-					hidden={!this.state.patternfailed}>
-					{this.label("assign.adjustpattern")}
-				</button>
-				<button onClick={() => this.setState({ timerangeeditor: true })}
-					className={css.addonbutton}
-					hidden={!this.state.timerangefailed}>
-					{this.label("assign.adjusttime")}
-				</button>
+			<p className={pcss.adjustbody}>
+				<table>
+					<tbody>
+						<tr>
+							<td className={pcss.adjustlabel}> {this.label("assign.adjust")}  </td>
+							<td>
+								<button onClick={() => this.setState({ patterneditor: true })}
+									testdata-id={'assign.adjustpattern'}
+									className={css.addonbutton}
+									hidden={!this.state.patternfailed}>
+									{this.label('assign.adjustpattern')}
+								</button>
+							</td>
+							<td>
+								<button onClick={() => this.setState({ timerangeeditor: true })}
+									testdata-id={'assign.adjusttime'}
+									className={css.addonbutton}
+									hidden={!this.state.timerangefailed}>
+									{this.label("assign.adjusttime")}
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</p>
 		);
 	}
@@ -155,7 +173,10 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	renderPatternEditor(): React.JSX.Element {
 		if (this.state.patterneditor && this.state.currentPlan) {
-			return (<PatternEditor intl={this.props.intl} pattern={this.state.currentPlan.patterndto} sendPattern={(p: Pattern) => this.setPattern(p)} zIndex={4} />);
+			return (<PatternEditor intl={this.props.intl}
+				pattern={this.state.currentPlan.patterndto}
+				sendPattern={(p: Pattern) => this.setPattern(p)}
+				zIndex={4} />);
 		}
 		else {
 			return <></>;
@@ -179,27 +200,20 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	render(): React.JSX.Element {
 		return (
-			<div>
+			<div testdata-id={"planselect"}>
 				<MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
-				<div style={{ padding: '10px' }}>
+				<div className={pcss.planselectbody}>
 					<SingleSelectLister<Plan>
 						ext={this.state.year + '/' + this.state.month}
+						testdata-id={'planlister'}
 						url='plans/unassigned/'
 						lines={12}
 						handleChange={this.handleChange}
 						columns={this.columns}
+						value={this.state.currentPlan}
+						isEqualValue={(p1: Plan, p2: Plan) => { return p1.id == p2.id }}
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}
-					<p>
-						<button onClick={() => this.assign()}
-							className={css.addonbutton}>
-							{this.label("assign.assign")}
-						</button>
-						<button onClick={() => this.props.onAssign(undefined)}
-							className={css.addonbutton}>
-							{this.label("cancel")}
-						</button>
-					</p>
 				</div>
 				{this.renderPatternEditor()}
 				{this.renderTimRangeEditor()}
