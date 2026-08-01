@@ -1,0 +1,34 @@
+.contextmenubody {
+    padding: 3px;
+    border: 1px solid darkblue;
+    background: lightblue;
+    font-size: 14px;
+    color: blue;
+}
+
+
+.contextmenuhead {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    color: black
+}
+
+.entryactive {
+    background-color: lightblue;
+    color: blue;
+}
+
+.entryactivehighlight {
+    background-color: white;
+    color: blue;
+}
+
+.entryinactive {
+    background-color: lightblue;
+    color: gray;
+}
+
+.entryinactivehighlight {
+    background-color: lightblue;
+    color: gray;
+}

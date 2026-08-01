@@ -2,7 +2,6 @@ import React from 'react'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 
-import css from '../css/index.css'
 import acss from './css/assign.css'
 
 
@@ -12,84 +11,66 @@ export const CategorySelect: Create = (p) => { return (<_CategorySelect {...p} i
 
 export default CategorySelect;
 
-export type AssignCategoryCallback = (subCategory: number | undefined, text: string) => void;
+export type OnCatChange = (subCategory: number , text?: string ) => void;
 
 export interface CategorySelectProps {
-    assignCategory: AssignCategoryCallback;
-    text: string;
-    subcategory?: number;
+    onChange: OnCatChange;
+    text?: string;
+    subCatId?: number;
 }
 
-interface IState {
-    category?: number;
-    subcategory?: number;
-    comment: string;
-}
+class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps,{}> {
 
-
-class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps, IState> {
-
-        comment: React.RefObject<HTMLInputElement |null>;
+    comment_obj: React.RefObject<HTMLInputElement | null>;
+    cur_subcategory: number | undefined;
+    cur_comment?: string;
 
     constructor(props: CategorySelectProps & WrappedComponentProps) {
         super(props);
-        this.state = { category: undefined, subcategory: this.props.subcategory, comment: "" };
-        this.comment = React.createRef<HTMLInputElement |null >();
-        this.assign = this.assign.bind(this);
-        this.cancel = this.cancel.bind(this);
-        this.setCategory = this.setCategory.bind(this); 
+        this.cur_comment = props.text;
+        this.cur_subcategory = props.subCatId;
+
+        this.comment_obj = React.createRef<HTMLInputElement | null>();
+        this.setCategory = this.setCategory.bind(this);
     }
 
     label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
     componentDidMount(): void {
-        if (this.comment.current !== null)
-            this.comment.current.focus();
+        if (this.comment_obj.current !== null)
+            this.comment_obj.current.focus();
     }
 
-    assign(): void {
-        this.props.assignCategory(this.state.subcategory, this.state.comment);
+    setCategory(subcategory: number, category: number) {
+        this.cur_subcategory =subcategory;
+        if (this.props.onChange && this.cur_subcategory != undefined)
+            this.props.onChange(this.cur_subcategory,this.cur_comment);
     }
 
-    cancel(): void {
-        this.props.assignCategory(undefined, this.state.comment); 
-    }
-
-    setCategory(category? : number, subcategory?: number) {
-        this.setState({ category: category, subcategory: subcategory });    
+    setComment(comment: string) {
+        this.cur_comment = comment;
+        if (this.props.onChange && this.cur_subcategory != undefined)
+            this.props.onChange(this.cur_subcategory,this.cur_comment)
     }
 
     render() {
         return (
-            <div>
-                <div> {this.label("assign.categoryassign")} </div>
+            <div testdata-id={'categoryselect'}>
                 <div>
                     <CategorySelector
-                        subcategory={this.props.subcategory}
+                        subcategory={this.cur_subcategory}
                         horiz={false}
                         onChange={this.setCategory}
                     />
                 </div>
-                <div><input className={acss.descinput}
-                    type='text'
-                    defaultValue={this.props.text}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            this.assign();
-                        }
-                    }}
-                    onChange={(e)=>{this.setState({comment: e.currentTarget.value});}}
-                    placeholder={this.label("assign.description")}  
-                    ref={this.comment} />
-                </div>
-                <div><button onClick={this.assign} className={css.addonbutton} >
-                    {this.label("assign.assign")}
-                </button>
-                    <button onClick={this.cancel}
-                        style={{ float: "right" }}
-                        className={css.addonbutton}>
-                        {this.label("cancel")}
-                    </button>
+                <div>
+                    <input className={acss.descinput}
+                        type='text'
+                        defaultValue={this.cur_comment}
+                        onChange={(e) => { this.setComment(e.currentTarget.value); }}
+                        placeholder={this.label("assign.description")}
+                        ref={this.comment_obj}
+                    />
                 </div>
             </div>
         );

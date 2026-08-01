@@ -1,0 +1,48 @@
+
+    [
+        {
+            "id":71,
+            "received":"2025-09-12",
+            "created":"2025-08-01",
+            "executed":"2025-08-01",
+            "type":"CARD",
+            "sender":"",
+            "receiver":"Home Owner",
+            "value":-10000,
+            "details":"Rent for 08-2025",
+            "submitter":"DE24ZZZ00002094640",
+            "mandate":"176627",
+            "reference":"54511263585956310725153309",
+            "partner":"Home Owner"
+        },
+        {
+            "id":72,
+            "received":"2025-09-12",
+            "created":"2025-08-02",
+            "executed":"2025-08-02",
+            "type":"TRANSFER",
+            "sender":"Me",
+            "receiver":"Grocery Store",
+            "value":-2571,
+            "details":"Grocery Store says Thank you",
+            "submitter":"",
+            "mandate":"",
+            "reference":"",
+            "partner":"Grocery Store"
+        },
+        {
+            "id":73,
+            "received":"2025-09-12",
+            "created":"2025-08-03",
+            "executed":"2025-08-03",
+            "type":"TRANSFER",
+            "sender":"MyCompany",
+            "receiver":"Me",
+            "value":200000,
+            "details":"Salary for 08-2025",
+            "submitter":"",
+            "mandate":"",
+            "reference":"",
+            "partner":"MyCompany"
+        }
+    ]

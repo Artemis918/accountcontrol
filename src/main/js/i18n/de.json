@@ -1,5 +1,6 @@
 {
 	"create": "Anlegen",
+	"edit": "Bearbeiten",
 	"cancel": "Abbrechen",
 	"save": "Speichern",
 	"new": "Neu",	
@@ -15,7 +16,7 @@
 	"description": "Beschreibung",
 	"assingments": "Zuordnungen",
 	"details": "Details",
-	"refid": "ReferenzID",
+	"referenceID": "ReferenzID",
 	"mandate": "Mandat",
 	"submitter": "Einreicher", 
 	"value": "Wert",
@@ -68,13 +69,13 @@
 	"category.active": "Aktiv",
 	"category.favorite": "Favorit",
 	
-    "assign.assignplan": "Plan zuweisen",
-    "assign.catassign": "Kat. zuweisen",
-    "assign.categoryassign": "Zuweisen an Kategorie",
+    "assign.plan": "Plan zuweisen",
+    "assign.cat": "Kat. zuweisen",
+    "assign.to": "Zuweisen an",
     "assign.assign": "Zuweisen",
 	"assign.split": "Verteilen",
 	"assign.auto": "Automatisch",
-	"assign.plan": "Neu planen",
+	"assign.template": "Neue Vorlage",
 	"assign.selectplan": "Plan auswählen",
 	"assign.onevalue": "es muss genau ein Beleg selektiert sein",
 	"assign.atleastonevalue": "es muss mindestens ein Beleg selektiert sein",
@@ -116,6 +117,7 @@
 	"plan.plansfor": "Pläne für ",
 	"plan.planscreated": "Pläne erstellt",
 	
+	"check.check": "Prüfen",
 	"check.plan": "Planwert",
 	"check.real": "Istwert",
 	"check.sum": "Summe",
@@ -123,6 +125,7 @@
 	"check.commitall": "Alles bestätigen",
 	"check.removeassign": "Zuordnung lösen",
 	"check.acceptvalue": "Wert übernehmen",
+	"check.noassignment" : "Keine Zuweisung zum Bearbeiten",
 	
 	"pattern.patterndata": "Musterdaten",
 

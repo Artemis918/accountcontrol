@@ -1,0 +1,15 @@
+{
+    "id": 72,
+    "received": "2025-09-12",
+    "created": "2025-08-02",
+    "executed": "2025-08-02",
+    "type": "TRANSFER",
+    "sender": "Me",
+    "receiver": "Grocery Store",
+    "value": -2571,
+    "details": "Grocery Store says Thank you",
+    "submitter": "",
+    "mandate": "",
+    "reference": "",
+    "partner": "Grocery Store"
+}

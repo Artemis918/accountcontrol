@@ -17,9 +17,11 @@ export class InitialPage extends React.Component<InitialProps, {}> {
 
     renderButton(idx: number, id: string): React.JSX.Element {
         return (
-            <button id={id} className={css.acbutton} onClick={() => this.props.setPage(idx)}>
-                <FormattedMessage id={"page." + id} defaultMessage={id} />
-            </button>
+            <td className={css.buttonfield}>
+                <button testdata-id={id} className={css.acbutton} onClick={() => this.props.setPage(idx)}>
+                    <FormattedMessage id={"page." + id} defaultMessage={id} />
+                </button>
+            </td>
         );
     }
 
@@ -31,14 +33,14 @@ export class InitialPage extends React.Component<InitialProps, {}> {
                 <table className={css.maintable}>
                     <tbody>
                         <tr>
-                            <td className={css.buttonfield}> {this.renderButton(0, 'plan')} </td>
-                            <td className={css.buttonfield}> {this.renderButton(1, 'accountRecords')} </td>
-                            <td className={css.buttonfield}> {this.renderButton(2, 'assign')} </td>
+                            {this.renderButton(0, 'plan')}
+                            {this.renderButton(1, 'accountRecords')}
+                            {this.renderButton(2, 'assign')}
                         </tr>
                         <tr>
-                            <td className={css.buttonfield}> {this.renderButton(3, 'check')} </td>
-                            <td className={css.buttonfield}> {this.renderButton(4, 'overview')} </td>
-                            <td className={css.buttonfield}> {this.renderButton(5, 'configuration')} </td>
+                            {this.renderButton(3, 'check')}
+                            {this.renderButton(4, 'overview')}
+                            {this.renderButton(5, 'configuration')}
                         </tr>
                     </tbody>
                 </table>

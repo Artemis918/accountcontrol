@@ -1,3 +1,4 @@
+import { myParseJson } from "./misc";
 
 export type handleJsonAnswer = (answer: any) => void;
 
@@ -12,6 +13,12 @@ export function postRequest(url:string, data:any, answer:handleJsonAnswer): void
 		if (answer != undefined )
             answer( response.json() );
     } );
+}
+
+export function fetchJson(url:string, handleAnswer:handleJsonAnswer): void {
+    fetch( url ) 
+         .then( response => response.text() )
+         .then( text => handleAnswer( myParseJson(text) ));
 }
 
 
@@ -64,20 +71,19 @@ export class Pattern {
         this.details = '';
         this.mandate = '';
     }
-
 }
 
 //=====================================================
 export class Plan {
-    id: number;
+    id?: number;
     startdate: Date;
     plandate: Date;
     enddate: Date;
     position: number;
     description: string;
     shortdescription: string;
-    category: number;
-    subcategory: number;
+    category?: number;
+    subcategory?: number;
     categoryname: string;
     subcategoryname: string;
     value: number;
@@ -107,22 +113,22 @@ export class Plan {
 export class Template {
     id?: number;
     validFrom: Date;
-    validUntil: Date;
+    validUntil?: Date;
     start: Date;
     variance: number;
     repeatcount: number;
     repeatunit: number;
     description: string;
-    category: number;
-    subcategory: number;
-    categoryname: string;
-    subcategoryname: string;
+    category?: number;
+    subcategory?: number;
+    categoryname?: string;
+    subcategoryname?: string;
     position: number;
     value: number;
     pattern: Pattern;
     shortdescription: string;
     matchstyle: number;
-    previous: number;
+    previous?: number;
 	additional: string;
 
     constructor() {
@@ -150,20 +156,20 @@ export class Template {
 }
 //=====================================================
 
-export class StatsDTO {
+export interface StatsDTO {
     max: number;
     min: number;
     data: StatsMonthDTO[];
 }
 
-export class StatsMonthDTO {
+export interface StatsMonthDTO {
     day: Date;
     value: number;
     planvalue: number;
     forecast: number;
 }
 
-export class CatStatsDTO {
+export interface CatStatsDTO {
   estimated: number[];
   real: number[];
   catID: number;
@@ -171,7 +177,7 @@ export class CatStatsDTO {
 }
 
 //=====================================================
-export class  Assignment {
+export interface  Assignment {
     id?: number;
     detail: string;
     description: string;

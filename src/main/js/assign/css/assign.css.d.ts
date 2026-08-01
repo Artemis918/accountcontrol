@@ -7,5 +7,9 @@ declare const css: {
   readonly recordinfoframe: string;
   readonly recordinfolabel: string;
   readonly recordinfofield: string;
+  readonly plansize: string;
+  readonly catsize: string;
+  readonly planexpsize: string;
+  readonly catexpsize: string;
 };
 export = css;
