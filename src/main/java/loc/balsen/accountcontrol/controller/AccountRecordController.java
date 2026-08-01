@@ -55,7 +55,7 @@ public class AccountRecordController {
   }
 
   @GetMapping("/id/{id}")
-  RecordDTO findTemplate(@PathVariable Integer id) {
+  RecordDTO findRecord(@PathVariable Integer id) {
     Optional<AccountRecord> record = recordRepository.findById(id);
     if (record.isPresent()) {
       return (new RecordDTO(record.get()));
@@ -65,7 +65,7 @@ public class AccountRecordController {
   }
 
   @GetMapping("/delete/{id}")
-  MessageID deleteTemplate(@PathVariable Integer id) {
+  MessageID deleteRecord(@PathVariable Integer id) {
     Optional<AccountRecord> record = recordRepository.findById(id);
     if (record.isPresent() && record.get().getType() == AccountRecord.Type.MANUEL)
       recordRepository.deleteById(id);
