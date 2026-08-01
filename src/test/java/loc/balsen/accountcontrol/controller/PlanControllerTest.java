@@ -31,14 +31,27 @@ import loc.balsen.accountcontrol.testutil.TestContext;
 @WebAppConfiguration
 public class PlanControllerTest extends TestContext {
 
-  static private String planjson = "{  " + "\"id\": null, " + "\"creationdate\": \"1797-12-03\", "
-      + "\"startdate\": \"1797-10-03\", " + "\"plandate\": \"1797-10-31\", "
-      + "\"enddate\": \"1797-10-03\", " + "\"subcategory\": SUBCATEGORY, "
-      + "\"description\": \"Beschreibung\", " + "\"shortdescription\": \"Kurz\", "
-      + "\"position\": 5, " + "\"value\": 100, " + "\"matchstyle\": 1, " + "\"patterndto\": { "
-      + "  \"sender\": \"sender\", " + "  \"receiver\": \"Receiver\", "
-      + "  \"referenceID\": \"Reference\", " + "  \"details\": \"*pups*\", "
-      + "  \"mandate\":  \"\" " + "}" + "}";
+  // @formatter:off
+  static private String planjson = "{  "
+      + "\"creationdate\": \"1797-12-03\", "
+      + "\"startdate\": \"1797-10-03\", " 
+      + "\"plandate\": \"1797-10-31\", "
+      + "\"enddate\": \"1797-10-03\", " 
+      + "\"subcategory\": SUBCATEGORY, "
+      + "\"description\": \"Beschreibung\", " 
+      + "\"shortdescription\": \"Kurz\", "
+      + "\"position\": 5, " 
+      + "\"value\": 100, " 
+      + "\"matchstyle\": 1, " 
+      + "\"patterndto\": { "
+      + "  \"sender\": \"sender\", " 
+      + "  \"receiver\": \"Receiver\", "
+      + "  \"referenceID\": \"Reference\", " 
+      + "  \"details\": \"*pups*\", "
+      + "  \"mandate\":  \"\" " 
+      + "} " 
+      + "}";
+  // @formatter:on
 
   @Autowired
   MockMvc mvc;
@@ -78,8 +91,10 @@ public class PlanControllerTest extends TestContext {
 
 
     // change plan
-    String planjsonk1 =
-        planjsonk.replace("null", Integer.toString(plan.getId())).replace("Kurz", "Short");
+    String planjsonk1 = planjsonk
+        .replace("\"creationdate\"",
+            "\"id\": " + Integer.toString(plan.getId()) + ",\"creationdate\"")
+        .replace("Kurz", "Short");
     mvc.perform(post("/plans/save").content(planjsonk1).contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
