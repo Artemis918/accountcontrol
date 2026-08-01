@@ -234,14 +234,18 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     createFooter(z: Assignment[]): Assignment {
-        var footer: Assignment = new Assignment();
         var real: number = 0;
         var planed: number = 0;
         z.map((assignment: Assignment) => { real += assignment.real; if (assignment.planed != undefined) planed += assignment.planed; })
-        footer.detail = this.label("check.sum");
-        footer.real = real;
-        footer.planed = planed;
-        return footer;
+        return {
+            detail: this.label("check.sum"),
+            real: real,
+            planed: planed,
+            description:  this.label("check.sum"),
+            committed: false,
+            accountrecord: 0,
+            subcategory: 0
+        };
     }
 
     render(): React.JSX.Element {
