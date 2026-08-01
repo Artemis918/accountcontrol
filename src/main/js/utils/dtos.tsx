@@ -113,22 +113,22 @@ export class Plan {
 export class Template {
     id?: number;
     validFrom: Date;
-    validUntil: Date;
+    validUntil?: Date;
     start: Date;
     variance: number;
     repeatcount: number;
     repeatunit: number;
     description: string;
-    category: number;
-    subcategory: number;
-    categoryname: string;
-    subcategoryname: string;
+    category?: number;
+    subcategory?: number;
+    categoryname?: string;
+    subcategoryname?: string;
     position: number;
     value: number;
     pattern: Pattern;
     shortdescription: string;
     matchstyle: number;
-    previous: number;
+    previous?: number;
 	additional: string;
 
     constructor() {
@@ -156,20 +156,20 @@ export class Template {
 }
 //=====================================================
 
-export class StatsDTO {
+export interface StatsDTO {
     max: number;
     min: number;
     data: StatsMonthDTO[];
 }
 
-export class StatsMonthDTO {
+export interface StatsMonthDTO {
     day: Date;
     value: number;
     planvalue: number;
     forecast: number;
 }
 
-export class CatStatsDTO {
+export interface CatStatsDTO {
   estimated: number[];
   real: number[];
   catID: number;
@@ -177,7 +177,7 @@ export class CatStatsDTO {
 }
 
 //=====================================================
-export class  Assignment {
+export interface  Assignment {
     id?: number;
     detail: string;
     description: string;
