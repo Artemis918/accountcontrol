@@ -17,3 +17,4 @@ cypress/screenshots/
 assignment-ki/assignments.csv
 assignment-ai/assignments.csv
 assignment-ai/__pycache__
+package-lock.json

@@ -45,12 +45,18 @@ interface IState {
 interface LocalState {
 	comment: string;
 	subcat: number | undefined;
+	planid: number | undefined;
 	plan: Plan | undefined;
 }
 
 class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProps, IState> {
 
-	lstate: LocalState | undefined = undefined;
+	localstate: LocalState = {
+		comment: "",
+		subcat: undefined,
+		planid: undefined,
+		plan: undefined
+	}
 
 	constructor(props: AssignEditProps & WrappedComponentProps) {
 		super(props)
@@ -59,12 +65,13 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			record: undefined,
 			planassign: props.recordId != undefined
 				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
-					|| (props.assignment != undefined && this.props.assignment.plan != 0))
+					|| (props.assignment != undefined && props.assignment.plan != 0))
 		}
 
-		this.lstate = {
-			comment: undefined,
-			subcat: undefined,
+		this.localstate = { 
+			comment: props.assignment?.detail ?? "",
+			subcat: props.assignment?.subcategory,
+			planid: props.assignment?.plan,
 			plan: undefined
 		}
 
@@ -91,19 +98,22 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	private assign() {
-		if (this.state.planassign)
+		if (this.state.planassign && this.localstate.planid != this.props.assignment?.plan)
 			this.assignPlanCallBack();
-		else
+		else if (!this.state.planassign && (this.localstate.subcat != this.props.assignment?.subcategory || this.localstate.comment != this.props.assignment?.detail))	
 			this.assignCatCallBack()
+		else
+			this.cancel();
 	}
 
 	private onPlanChange(plan: Plan) {
-		this.lstate.plan = plan;
+		this.localstate.planid = plan.id;
+		this.localstate.plan = plan;
 	}
 
-	private onCatChange(subcat: number, comment: string) {
-		this.lstate.subcat = subcat;
-		this.lstate.comment = comment;
+	private onCatChange(subcat: number, comment?: string) {
+		this.localstate.subcat = subcat;
+		this.localstate.comment = comment ?? "";
 	}
 
 	private changeMode(): void {
@@ -111,13 +121,13 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	private assignCatCallBack(): void {
-		this.lstate.subcat, this.lstate.comment
+		this.localstate.subcat, this.localstate.comment
 		if (this.props.recordId == undefined) {
-			if (this.props.onAssignNewCats != undefined)
-				this.props.onAssignNewCats(this.lstate.subcat, this.lstate.comment);
+			if (this.props.onAssignNewCats != undefined && this.localstate.subcat != undefined && this.localstate.comment != undefined )
+				this.props.onAssignNewCats(this.localstate.subcat, this.localstate.comment);
 		}
 		else {
-			var request = { text: this.lstate.comment, subcategory: this.lstate.subcat, ids: [this.state.record.id] };
+			var request = { text: this.localstate.comment, subcategory: this.localstate.subcat, ids: [this.props.recordId] };
 			var self = this;
 			var jsonbody = JSON.stringify(request);
 			fetch('assign/tosubcategory', {
@@ -136,12 +146,12 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	};
 
 	private assignPlanCallBack(): void {
-		if (this.props.onAssignPlan != undefined)
-			this.props.onAssignPlan(this.lstate.plan);
+		if (this.props.onAssignPlan != undefined && this.localstate.plan != undefined)
+			this.props.onAssignPlan(this.localstate.plan);
 		else {
 			// default behavior: assign to plan and remove previous assignment	
 			var self = this;
-			fetch('assign/toplan/' + this.lstate.plan.id + '/' + this.props.recordId)
+			fetch('assign/toplan/' + this.localstate.planid + '/' + this.props.recordId)
 				.then(() => { if (self.props.onAssign) self.props.onAssign(true); });
 		}
 	};
@@ -164,19 +174,18 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	private renderSelector(): React.JSX.Element {
-		if (this.state.planassign) {
-			var planId: number = this.props.assignment ? this.props.assignment.plan! : undefined;
+		if (this.state.planassign && this.state.record != undefined) {
 			return <PlanSelect
 				record={this.state.record}
-				planId={this.lstate.plan == undefined ? undefined : this.lstate.plan.id}
+				planId={this.localstate.planid}
 				onChange={this.onPlanChange}
 			/>;
 		}
 		else {
 			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
 			return <CategorySelect
-				text={this.lstate.comment}
-				subCatId={this.lstate.subcat}
+				text={this.localstate.comment}
+				subCatId={this.localstate.subcat}
 				onChange={this.onCatChange}
 			/>
 		}

@@ -26,8 +26,7 @@ interface IState {
 	timerangefailed: boolean;
 	patterneditor: boolean;
 	timerangeeditor: boolean;
-	template: Template | null;
-	currentPlan: Plan | undefined;
+	propsPlan: Plan | undefined;
 	month: number;
 	year: number
 }
@@ -36,10 +35,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	columns: ColumnInfo<Plan>[];
 	lister: SingleSelectLister<Plan> | null;
+	currentPlan: Plan | undefined = undefined;
+	currentTemplate: Template | undefined = undefined;
 
 	constructor(props: PlanSelectProps & WrappedComponentProps) {
 		super(props);
 
+		
 		var date: Date = new Date();
 		if (this.props.record != undefined) {
 			date = this.props.record.executed;
@@ -50,8 +52,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			timerangefailed: false,
 			patterneditor: false,
 			timerangeeditor: false,
-			template: null,
-			currentPlan: undefined,
+			propsPlan: undefined,
 			year: date.getFullYear(),
 			month: date.getMonth() + 1,
 		};
@@ -61,6 +62,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		this.handleChange = this.handleChange.bind(this);
 		this.setPattern = this.setPattern.bind(this);
 		this.settimerange = this.settimerange.bind(this);
+		this.getPropsPlanArray = this.getPropsPlanArray.bind(this);
 
 		this.columns = [{
 			header: this.label("date"),
@@ -89,10 +91,12 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 			var self = this;
 			fetchJson('plans/id/' + this.props.planId,
 				(plan: Plan) => {
+					console.log("planselect propsplan arrived: " + plan.id);
 					var date = plan.plandate
 					self.setState({
 						year: date.getFullYear(),
-						month: date.getMonth() + 1
+						month: date.getMonth() + 1,
+						propsPlan: plan
 					});
 					this.handleChange(plan);
 				}
@@ -107,17 +111,19 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	setAnaylzeData(template: Template): void {
+		this.currentTemplate = template;
+		console.log("planselect analyze: " + (template?.additional[0] == '1'));
 		this.setState({
 			// TODO implemtn backend	timerangefailed: template.additional[1] == '1',
 			timerangefailed: false,
 			patternfailed: template.additional[0] == '1',
-			template: template
 		})
 	}
 
 	handleChange(plan: Plan): void {
 		var self: _PlanSelect = this;
-		this.setState({ timerangefailed: false, patternfailed: false, currentPlan: plan });
+		console.log("planselect handlechange: " + plan.id);
+		this.currentPlan = plan;
 		if (this.props.onChange)
 			this.props.onChange(plan);
 
@@ -126,11 +132,24 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	setPattern(p: Pattern): void {
-		if (this.state.currentPlan != undefined && p != undefined) {
-			this.state.currentPlan.patterndto = p;
-			postRequest('templates/changepattern', this.state.currentPlan, () => { });
+		if (this.currentPlan != undefined && p != undefined) {
+			this.currentPlan.patterndto = p;
+			postRequest('templates/changepattern', this.currentPlan, () => { });
 		}
 		this.setState({ patterneditor: false });
+	}
+
+	getPropsPlanArray() : Plan[] {
+		console.log("planselect getPropsPlanArray: " + this.state.propsPlan?.id);
+		if (this.state.propsPlan == undefined) 
+			return [];
+
+		var curdate: Date = this.state.propsPlan.plandate;
+		if (curdate.getFullYear() != this.state.year || curdate.getMonth() + 1 != this.state.month) {
+			return [];
+		}
+		console.log("planselect getPropsPlanArray delivered: " + this.state.propsPlan?.id);
+		return [this.state.propsPlan];
 	}
 
 	settimerange(template: Template): void {
@@ -172,9 +191,9 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 
 	renderPatternEditor(): React.JSX.Element {
-		if (this.state.patterneditor && this.state.currentPlan) {
+		if (this.state.patterneditor && this.currentPlan) {
 			return (<PatternEditor intl={this.props.intl}
-				pattern={this.state.currentPlan.patterndto}
+				pattern={this.currentPlan.patterndto}
 				sendPattern={(p: Pattern) => this.setPattern(p)}
 				zIndex={4} />);
 		}
@@ -184,11 +203,11 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	renderTimRangeEditor(): React.JSX.Element {
-		if (this.state.timerangeeditor && this.state.template && this.state.currentPlan) {
+		if (this.state.timerangeeditor && this.currentTemplate && this.currentPlan) {
 			return (<TimeRangeEditor
-				recorddate={this.state.template.start}
-				plandate={this.state.currentPlan.plandate}
-				template={this.state.template}
+				recorddate={this.currentTemplate.start}
+				plandate={this.currentPlan.plandate}
+				template={this.currentTemplate}
 				sendResult={this.settimerange}
 				intl={this.props.intl}
 				zIndex={4} />);
@@ -199,6 +218,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	render(): React.JSX.Element {
+		console.log("planselect render: " + this.currentPlan?.id);
 		return (
 			<div testdata-id={"planselect"}>
 				<MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
@@ -207,10 +227,11 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 						ext={this.state.year + '/' + this.state.month}
 						testdata-id={'planlister'}
 						url='plans/unassigned/'
+						extendedData= {this.getPropsPlanArray().length > 0 ? this.getPropsPlanArray : undefined}
 						lines={12}
 						handleChange={this.handleChange}
 						columns={this.columns}
-						value={this.state.currentPlan}
+						value={this.state.propsPlan}
 						isEqualValue={(p1: Plan, p2: Plan) => { return p1.id == p2.id }}
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}

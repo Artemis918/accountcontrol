@@ -60,13 +60,11 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     private setSubCategory(e: number ): void {
-        if (this.lstate.subcategory != undefined && this.state.category != undefined)
-        {
             if (this.props.onChange != undefined
-                && this.lstate.subcategory != e)
+                && this.lstate.subcategory != e 
+                && this.state.category != undefined)
                 this.props.onChange(e, this.state.category);
             this.lstate.subcategory = e;
-        }
     }
 
     render(): React.JSX.Element {

@@ -11,6 +11,7 @@ export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
 export type HasSelectedCallback = () => boolean;
 export type AnalyzeListCallback<D> = (data: D[]) => D[];
+export type GetExtendedData<D> = () => D[];
 
 
 export interface ColumnInfo<D> {
@@ -33,18 +34,19 @@ export interface CellInfo<D> {
 export interface SelectListerProps<D> {
 	ext?: string;
 	url: string;
-	lines?: number;
+	extendedData?: GetExtendedData<D>;
+	lines: number;
 	createFooter?: CreateFooterCallback<D>;
 	handleSelect: HandleSelectCallback<D>;
 	handleExecute?: HandleSelectCallback<D>;
 	analyzeList?: AnalyzeListCallback<D>;
 	hasSelected?: HasSelectedCallback;
-	isSelected?: IsSelectedCallback;
+	isSelected: IsSelectedCallback;
 	columns: ColumnInfo<D>[];
 	menu?: ContextMenuDef<D>;
 }
 
-class CState<D> {
+interface CState<D> {
 	data: D[];
 	menuOn: boolean;
 	menuX: number;
@@ -60,7 +62,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 	constructor(props: SelectListerProps<D>) {
 		super(props);
 		this.state = {
-			data: undefined,
+			data: [],
 			menuOn: false,
 			menuX: 0,
 			menuY: 0
@@ -77,8 +79,8 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 	}
 
 	componentDidUpdate(prevProps: SelectListerProps<D>): void {
-		if (prevProps.ext !== this.props.ext) {
-			this.setState({ data: undefined })
+		if (prevProps.ext !== this.props.ext || prevProps.extendedData !== this.props.extendedData) {
+			this.setState({ data: [] })
 			this.reload();
 		}
 	}
@@ -107,10 +109,12 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 			var self = this;
 			fetchJson(this.props.url + this.props.ext,
 				(r) => {
+					var ext: D[] = this.props.extendedData ? this.props.extendedData() : [];
+
 					if (self.props.analyzeList != undefined)
-					 	self.setState({ data: self.props.analyzeList(r) })
+					 	self.setState({ data: self.props.analyzeList(r.concat(ext)) })
 					else
-					 	self.setState({ data: r }) 
+					 	self.setState({ data: r.concat(ext) }) 
 				}
 			)
 		}
@@ -182,7 +186,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 			return (<td> </td>);
 	}
 
-	renderFooter(): React.JSX.Element {
+	renderFooter(): React.JSX.Element | undefined{
 		if (this.props.createFooter != undefined && this.state.data != undefined) {
 			var data: D = this.props.createFooter(this.state.data);
 			return (
@@ -194,7 +198,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 			)
 		}
 		else
-			return null;
+			return undefined;
 	}
 
 	renderData(): React.JSX.Element {
@@ -210,7 +214,18 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 		}
 	}
 
+	renderContextMenu(): React.JSX.Element | undefined {
+		if (this.props.menu != undefined) {
+			return (
+				<ContextMenu<D> menudef={this.props.menu} menuOn={this.state.menuOn} menuX={this.state.menuX} menuY={this.state.menuY} />
+			)
+		}
+		else
+			return undefined;
+	}
+
 	render(): React.JSX.Element {
+		console.log("SelectLister render: " + this.state.data.length);
 		return (
 			<div testdata-id={this.props['testdata-id']} style={{ position: 'relative', display: 'inline-block' }} >
 				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >
@@ -222,7 +237,7 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 					{this.renderData()}
 					{this.renderFooter()}
 				</table>
-				<ContextMenu<D> menudef={this.props.menu} menuOn={this.state.menuOn} menuX={this.state.menuX} menuY={this.state.menuY} />
+				{this.renderContextMenu()}
 			</div>
 		);
 	}

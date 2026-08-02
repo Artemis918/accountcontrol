@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectLister, ColumnInfo, CreateFooterCallback } from './selectlister'
+import { SelectLister, ColumnInfo, CreateFooterCallback, GetExtendedData } from './selectlister'
 
 export { ColumnInfo, CellInfo } from './selectlister'
 
@@ -9,6 +9,7 @@ export type IsEqualValue<D> = (val1: D, val2: D) => boolean;
 export interface SingleSelectlisterProps<D> {
     ext?: string;
     url: string;
+    extendedData?: GetExtendedData<D>;
     value?: D;
     handleChange?: HandleSingleSelectCallback<D>;
     handleSelect?: HandleSingleSelectCallback<D>;
@@ -37,41 +38,39 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
     }
 
     componentDidUpdate(prevProps: SingleSelectlisterProps<D>): void {
-        if (prevProps.ext !== this.props.ext) {
+        console.log("SingleSelectLister componentDidUpdate:" + (prevProps.value !== this.props.value) + " " + (prevProps.ext !== this.props.ext));
+        if (prevProps.ext !== this.props.ext || prevProps.value !== this.props.value) {
+            console.log("SingleSelectLister componentDidUpdate: reset state" );
             this.setState({ selectedData: undefined, selectedRow: undefined })
         }
     }
-
 
     clearSelection(): void {
         this.setState({ selectedData: undefined, selectedRow: undefined })
     }
 
     changeSelected(data: D, index: number): void {
+        console.log("SingleSelectLister changeSelected: " + index);
         this.setState({ selectedData: data, selectedRow: index })
-        if (this.props.handleChange != undefined)
+        if (this.props.handleChange != undefined )
             this.props.handleChange(data);
     }
 
     searchSelected(data: D[]): D[] {
+        console.log("SingleSelectLister searchSelected: " + data.length);
         if (this.props.value == undefined || this.props.isEqualValue == undefined)
             return data;
 
-        var row: number = undefined;
+        var row: number | undefined= undefined;
         for (row = 0; row < data.length; row++) 
             if (this.props.isEqualValue(this.props.value, data[row]) )
                 break;
         
         if ( row < data.length ) {
             this.setState({selectedRow:row, selectedData: data[row]});
-            return data;
         }
-        else {
-            data.push(this.props.value);
-            this.setState({selectedRow:data.length, selectedData: this.props.value});
-            return data;
-        }
-    }
+        return data;
+    }    
 
     executeSelected(data: D, index: number): void {
         this.setState({ selectedData: data, selectedRow: index })
@@ -80,6 +79,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
     }
 
     reload(): void {
+        console.log("SingleSelectLister reload");
         this.setState({ selectedData: undefined, selectedRow: undefined })
         if (this.lister)
             this.lister.reload();
@@ -100,13 +100,16 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
     }
 
     render(): React.JSX.Element {
+        console.log("SingleSelectLister render: " + this.state.selectedData);
         return (
+            <div>
             <SelectLister<D>
                 testdata-id={this.props['testdata-id']}
                 columns={this.props.columns}
                 createFooter={this.props.createFooter}
                 ext={this.props.ext}
                 url={this.props.url}
+                extendedData={this.props.extendedData}
                 lines={this.props.lines}
                 handleSelect={(_s, _c, d, i) => this.changeSelected(d, i)}
                 handleExecute={(_s, _c, d, i) => this.executeSelected(d, i)}
@@ -114,6 +117,7 @@ export class SingleSelectLister<D> extends React.Component<SingleSelectlisterPro
                 hasSelected={() => this.state.selectedRow != undefined}
                 analyzeList={this.searchSelected}
                 ref={(r) => { this.lister = r; }} />
+            </div>
         );
     }
 }
