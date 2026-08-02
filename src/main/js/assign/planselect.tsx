@@ -6,8 +6,8 @@ import { useIntl, WrappedComponentProps } from 'react-intl'
 import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
 
-import css from '../css/index.css'
-import pcss from './css/planselect.css'
+import * as css from '../css/index.css'
+import * as pcss from './css/planselect.css'
 
 
 type Create = (props: PlanSelectProps) => React.JSX.Element;

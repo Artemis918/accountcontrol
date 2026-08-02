@@ -7,7 +7,7 @@ import { Plan } from '../utils/dtos'
 import { PatternPlanEditor } from './patternplaneditor'
 import { SendMessage } from '../utils/messageid'
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type Create = (props:PatternPlaningProps) => React.JSX.Element;
 export const PatternPlaning:Create = (p) => {return (<_PatternPlaning {...p} intl={useIntl()}/>);}

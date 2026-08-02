@@ -7,7 +7,7 @@ import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
 import { useIntl, WrappedComponentProps } from 'react-intl';
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 import { myParseJson } from '../utils/misc';
 import { AssignEdit } from './assignedit';
 

@@ -4,7 +4,7 @@ import { MonthSelect } from '../utils/monthselect';
 import { StatsDTO } from '../utils/dtos';
 import { CatStatsDTO } from '../utils/dtos';
 import { myParseJson } from '../utils/misc'
-import mcss from './css/overviewtab.css'
+import * as mcss from './css/overviewtab.css'
 
 type Create = (props:OverviewTabProps) => React.JSX.Element;
 export const OverviewTab:Create = (p) => {return (<_OverviewTab {...p} intl={useIntl()}/>); }

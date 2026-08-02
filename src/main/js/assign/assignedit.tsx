@@ -7,8 +7,8 @@ import { PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
 import { myParseJson } from "../utils/misc";
 
-import css from './css/assign.css';
-import gcss from '../css/index.css';
+import * as css from './css/assign.css';
+import * as gcss from '../css/index.css';
 
 
 type Create = (props: AssignEditProps) => React.JSX.Element;

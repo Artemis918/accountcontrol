@@ -4,7 +4,7 @@ import { IntlShape } from 'react-intl'
 import { PatternEditor } from './patterneditor'
 import { CategorySelector } from '../utils/categoryselector'
 import { Plan, postRequest } from '../utils/dtos'
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type OnChangeCallback = () => void;
 

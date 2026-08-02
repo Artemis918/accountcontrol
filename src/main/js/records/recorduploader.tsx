@@ -2,7 +2,7 @@ import React from 'react'
 import * as Dropzone from 'react-dropzone'
 import {useIntl, WrappedComponentProps} from 'react-intl'
 import * as axios from 'axios'
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 import { SendMessage } from '../utils/messageid'
 

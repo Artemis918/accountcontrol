@@ -6,7 +6,7 @@ import { CategorySelector } from '../utils/categoryselector'
 import { Plan } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 
 type OnChangeCallback = () => void;

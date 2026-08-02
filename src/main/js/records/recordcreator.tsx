@@ -5,7 +5,7 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { RecordEditor } from './recordeditor'
 import { AccountRecord } from '../utils/dtos'
 import { SendMessage } from '../utils/messageid'
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type Create = (props:RecordCreatorProps) => React.JSX.Element;
 export const RecordCreator:Create = (p) => {return (<_RecordCreator {...p} intl={useIntl()}/>);}

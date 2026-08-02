@@ -1,5 +1,5 @@
 import React from 'react'
-import mcss from './css/monthselect.css'
+import * as mcss from './css/monthselect.css'
 
 export type OnMonthSelectCallback = ( month: number, year: number ) => void;
 

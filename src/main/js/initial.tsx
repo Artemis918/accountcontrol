@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import css from './css/initial.css';
+import * as css from './css/initial.css';
 
 type SetPage = (page: number) => void;
 

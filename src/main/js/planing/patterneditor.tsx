@@ -2,7 +2,7 @@ import React from 'react'
 import { IntlShape } from 'react-intl'
 
 import { Pattern } from '../utils/dtos'
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type SendPatternCallback = (pattern: Pattern) => void
 

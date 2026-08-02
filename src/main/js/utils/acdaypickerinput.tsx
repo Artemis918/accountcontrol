@@ -3,8 +3,8 @@ import { DayPicker, ClassNames } from 'react-day-picker';
 import Popup from 'reactjs-popup';
 import { parse, format, Locale } from 'date-fns';
 import { enGB, de } from 'date-fns/locale'
-import css from '../css/index.css';
-import dpcss from './css/acdaypicker.css'
+import * as css from '../css/index.css';
+import * as dpcss from './css/acdaypicker.css'
 import { PopupActions } from 'reactjs-popup/dist/types';
 
 

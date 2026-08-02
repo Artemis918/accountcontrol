@@ -1,6 +1,6 @@
 import React from 'react';
 import { myParseJson } from './misc'
-import css from './css/selectlister.css';
+import * as css from './css/selectlister.css';
 import { ContextMenu, ContextMenuDef } from './contextmenu';
 import { fetchJson } from './dtos';
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
 
-import acss from './css/assign.css'
+import * as acss from './css/assign.css'
 
 
 type Create = (props: CategorySelectProps) => React.JSX.Element;

@@ -8,7 +8,7 @@ import { DropdownService } from '../utils/dropdownservice'
 import { SendMessage, MessageID } from '../utils/messageid'
 
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type Create = (props: TemplateProps) => React.JSX.Element;
 export const Templates: Create = (p) => { return (<_Templates {...p} intl={useIntl()} />); }

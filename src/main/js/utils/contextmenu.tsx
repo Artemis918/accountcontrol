@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react';
-import css from './css/contextmenu.css';
+import * as css from './css/contextmenu.css';
 
 export type HandleMenu<D> = (index: number, entry: ContextMenuEntry<D>) => void;
 

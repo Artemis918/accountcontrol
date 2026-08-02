@@ -5,7 +5,7 @@ import { TimeUnitSelector } from '../utils/timeunitselector'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { Template } from '../utils/dtos'
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 type SendCallback = (template: Template) => void;
 

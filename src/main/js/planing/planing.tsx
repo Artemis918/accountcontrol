@@ -7,8 +7,8 @@ import { MonthSelect } from '../utils//monthselect'
 import { Plan } from '../utils/dtos'
 import { SendMessage, MessageID } from '../utils/messageid'
 
-import pcss from './css/planing.css'
-import css from '../css/index.css'
+import * as pcss from './css/planing.css'
+import * as css from '../css/index.css'
 
 type Create = (props:PlaningProps) => React.JSX.Element;
 export const Planing:Create = (p) => {return (<_Planing {...p} intl={useIntl()}/>);}

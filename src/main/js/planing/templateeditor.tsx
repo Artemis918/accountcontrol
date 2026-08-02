@@ -7,7 +7,7 @@ import { Template } from '../utils/dtos'
 import { TimeUnitSelector } from '../utils/timeunitselector'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { myParseJson } from '../utils/misc'
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 
 
 

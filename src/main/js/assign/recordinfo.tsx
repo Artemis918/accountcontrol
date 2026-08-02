@@ -1,6 +1,6 @@
 import { useIntl, WrappedComponentProps } from "react-intl";
 import { AccountRecord } from "../utils/dtos";
-import acss from './css/assign.css'
+import * as acss from './css/assign.css'
 import React from "react";
 
 type Create = (props: RecordInfoProps) => React.JSX.Element;

@@ -1,7 +1,7 @@
 import React from 'react'
 import { DropdownService } from './dropdownservice'
 
-import css from '../css/index.css'
+import * as css from '../css/index.css'
 import { fetchJson, SubCategory } from './dtos';
 import { lastDayOfQuarter } from 'date-fns';
 
