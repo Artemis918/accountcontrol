@@ -18,8 +18,8 @@ interface CategoriesProps {
 }
 
 interface IState {
-    selectedSubCategory: number;
-    selectedCategory: number;
+    selectedSubCategory?: number;
+    selectedCategory?: number;
     month: number;
     year: number;
     assignEdit: boolean;
@@ -29,7 +29,7 @@ interface IState {
 export class _Categories extends React.Component<CategoriesProps & WrappedComponentProps, IState> {
 
     columns: ColumnInfo<Assignment>[];
-    lister: React.RefObject<MultiSelectLister<Assignment>>;
+    lister: React.RefObject<MultiSelectLister<Assignment>> | null = null;
 
     constructor(props: CategoriesProps & WrappedComponentProps) {
         super(props);
@@ -43,6 +43,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             selectedAssignments: []
         };
         this.lister = React.createRef();
+        this.columns= this.createColumns();
 
         this.handleSelected = this.handleSelected.bind(this);
         this.commitAssignment = this.commitAssignment.bind(this);
@@ -57,8 +58,8 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
-    createColumns(): void {
-        this.columns = [
+    createColumns(): ColumnInfo<Assignment>[] {
+        return [
             {
                 header: this.label("shortdescription"),
                 getdata: (z: Assignment) => { return z.detail }
@@ -249,7 +250,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     render(): React.JSX.Element {
-        this.createColumns();
+
 
         let singleline: boolean = this.lister.current != null && this.state.selectedAssignments.length == 1;
         let hasPlan: boolean = singleline && this.state.selectedAssignments[0].plan != 0 

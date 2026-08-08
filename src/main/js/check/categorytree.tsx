@@ -23,19 +23,14 @@ interface Category {
 }
 
 
-interface IState {
-    data : Category[];  
-}
+interface IState {}
 
 
 export class CategoryTree extends React.Component<CategoryTreeProps, IState> {
 
-    data: Category[];
-    
     constructor (props: CategoryTreeProps) {
         super (props);
-        this.data = undefined;
-        this.state = { data: this.data };
+        this.state = {};
         this.handleSelect = this.handleSelect.bind(this);
     }
     
@@ -52,13 +47,10 @@ export class CategoryTree extends React.Component<CategoryTreeProps, IState> {
     }
 
     getURL( level: number, id: number) :string {
-        if (level == 0) {
-            return 'category/catenum/true';
-        } 
-        else if (level == 1 ) {
+        if (level == 1 ) {
             return 'category/subenum/' + id + "/true";
         }
-        else return undefined;
+        return 'category/catenum/true';
     }
     
     render () {

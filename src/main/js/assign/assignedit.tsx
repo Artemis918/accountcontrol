@@ -5,7 +5,6 @@ import { useIntl, WrappedComponentProps } from "react-intl";
 import { CategorySelect } from "./categoryselect";
 import { PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
-import { myParseJson } from "../utils/misc";
 
 import * as css from './css/assign.css';
 import * as gcss from '../css/index.css';
