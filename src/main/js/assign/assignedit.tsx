@@ -64,7 +64,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			expanded: props.assignment != undefined,
 			record: undefined,
 			planassign: props.recordId != undefined
-				&& ((props.assignment == undefined && this.props.onAssignNewCats == undefined)
+				&& ((props.assignment == undefined && props.onAssignNewCats == undefined)
 					|| (props.assignment != undefined && props.assignment.plan != 0))
 		}
 
@@ -121,7 +121,9 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	}
 
 	private assignCatCallBack(): void {
-		this.localstate.subcat, this.localstate.comment
+		if (this.localstate.subcat == undefined) {
+			return; // should not happen, but just in case
+		} 
 		if (this.props.recordId == undefined) {
 			if (this.props.onAssignNewCats != undefined && this.localstate.subcat != undefined && this.localstate.comment != undefined )
 				this.props.onAssignNewCats(this.localstate.subcat, this.localstate.comment);
@@ -146,7 +148,10 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 	};
 
 	private assignPlanCallBack(): void {
-		if (this.props.onAssignPlan != undefined && this.localstate.plan != undefined)
+		if (this.localstate.plan == undefined) {
+			return; // should not happen, but just in case
+		}
+		if (this.props.onAssignPlan != undefined)
 			this.props.onAssignPlan(this.localstate.plan);
 		else {
 			// default behavior: assign to plan and remove previous assignment	
