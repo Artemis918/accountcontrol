@@ -243,7 +243,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             planed: planed,
             description:  this.label("check.sum"),
             committed: false,
-            accountrecord: 0,
+            accountrecord: -1,
             subcategory: 0
         };
     }
