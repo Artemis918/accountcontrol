@@ -1,9 +1,9 @@
 package loc.balsen.accountcontrol.data;
 
 import java.io.IOException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 public class Pattern {
 
@@ -45,7 +45,7 @@ public class Pattern {
         this.mandate = getField(p, "mandat");
       }
 
-    } catch (IOException e) {
+    } catch (JacksonException e) {
       // TODO generate some log
       sender = "";
       receiver = "";
@@ -78,7 +78,7 @@ public class Pattern {
   public String toJson() {
     try {
       return mapper.writeValueAsString(this);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       // TODO create some log
       e.printStackTrace();
     }
