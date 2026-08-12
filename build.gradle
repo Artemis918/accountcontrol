@@ -40,6 +40,7 @@ test {
 node {
   distBaseUrl = 'https://nodejs.org/dist'
   download = true
+  version = "26.7.0"
 }
 
 bootRun {
