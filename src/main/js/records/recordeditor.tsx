@@ -1,14 +1,13 @@
 import React from 'react'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { AccountRecord } from '../utils/dtos'
-import { IntlShape } from 'react-intl' 
+import { label } from '../utils/misc' 
 import * as css from '../css/index.css'
 
 type OnChangeCallback = () => void;
 
 interface RecordEditorProps {
     onChange: OnChangeCallback;
-	intl: IntlShape;
 }
 
 interface IState {
@@ -31,13 +30,11 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
         this.setAnswer = this.setAnswer.bind( this );
     }
 
-    label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
-
     createEmptyRecord(): AccountRecord {
         return new AccountRecord();
     }
     
-    setRecord( record: AccountRecord ): void {
+    setRecord( record: AccountRecord | undefined ): void {
         if ( record == undefined )
             this.record = this.createEmptyRecord();
         else
@@ -90,28 +87,28 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                 <table>
                     <tbody>x
                         <tr>
-                            <td>{this.label("sender")}</td>
+                            <td>{label("sender")}</td>
                             <td>
                                 <input className={css.stringinput} value={this.state.record.sender}
                                     onChange={( e ) => { this.record.sender = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("receiver")}</td>
+                            <td>{label("receiver")}</td>
                             <td>
                                 <input className={css.stringinput} value={this.state.record.receiver}
                                     onChange={( e ) => { this.record.receiver = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("details")}</td>
+                            <td>{label("details")}</td>
                             <td>
                                 <input className={css.stringinput} value={this.state.record.details}
                                     onChange={( e ) => { this.record.details = e.target.value; this.setState( { record: this.record } ) }} />
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("value")}</td>
+                            <td>{label("value")}</td>
                             <td>
                                 <input className={css.numberinput}
                                     step="0.01" value={this.state.record.value / 100}
@@ -120,9 +117,8 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("date")}</td>
+                            <td>{label("date")}</td>
                             <td className={css.stringinput}><ACDayPickerInput
-                                locale={this.props.intl.locale}
                                 onChange={( d ) => { this.record.executed = d; this.setState( { record: this.record } ) }}
                                 startdate={this.state.record.executed} />
                             </td>
@@ -130,10 +126,10 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                     </tbody>
                 </table>
                 <div>
-                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
-                    <button className={css.addonbutton} onClick={this.cleanup}>{this.label("new")}</button>
-                    <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
-                    <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
+                    <button className={css.addonbutton} onClick={this.save}>{label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.cleanup}>{label("new")}</button>
+                    <button className={css.addonbutton} onClick={this.copy}>{label("copy")}</button>
+                    <button className={css.addonbutton} onClick={this.delete}>{label("delete")}</button>
                 </div>
             </div>
         );

@@ -1,13 +1,10 @@
 import React from 'react'
-import { useIntl, WrappedComponentProps } from 'react-intl';
+
 import { MonthSelect } from '../utils/monthselect';
 import { StatsDTO } from '../utils/dtos';
 import { CatStatsDTO } from '../utils/dtos';
-import { myParseJson } from '../utils/misc'
+import { myParseJson, label, getIntl } from '../utils/misc'
 import * as mcss from './css/overviewtab.css'
-
-type Create = (props:OverviewTabProps) => React.JSX.Element;
-export const OverviewTab:Create = (p) => {return (<_OverviewTab {...p} intl={useIntl()}/>); }
 
 export interface OverviewTabProps {
 }
@@ -33,8 +30,8 @@ interface IState {
 }
 	
 
-class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentProps, IState> {
-	constructor(props: OverviewTabProps & WrappedComponentProps) {
+export class OverviewTab extends React.Component<OverviewTabProps, IState> {
+	constructor(props: OverviewTabProps) {
 		super(props);
 			var today: Date = new Date();
 		this.state = {
@@ -51,8 +48,7 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		this.changeEnd = this.changeEnd.bind(this);
 		this.changeStart = this.changeStart.bind(this);
 	}
-	
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
+
 	
     public componentDidMount(): void {
 		this.reload(this.state.startYear, this.state.startMonth, this.state.endYear, this.state.endMonth);
@@ -64,13 +60,13 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 			<table >
 				<tbody>
 					<tr>
-						<td>{this.label("overview.firstmonth")}</td>
+						<td>{label("overview.firstmonth")}</td>
 						<td>
 							<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
 						</td>
 					</tr>
 					<tr>
-						<td> {this.label("overview.lastmonth")} </td>
+						<td> {label("overview.lastmonth")} </td>
 						<td>
 							<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
 						</td>
@@ -80,12 +76,12 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 			<table>
 			<thead>
 				<tr>
-					{this.renderHeader(this.state.startMonth,this.state.startYear, this.state.endMonth,this.state.endYear,this.props.intl.locale)}
+					{this.renderHeader(this.state.startMonth,this.state.startYear, this.state.endMonth,this.state.endYear)}
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					{this.renderValues(this.label("overview.overall"),this.state.sumdata)}
+					{this.renderValues(label("overview.overall"),this.state.sumdata)}
 				</tr>
 				{this.renderCatValues(this.state.catdata)}
 			</tbody>
@@ -94,12 +90,14 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 		)
 	}
 	
-	private renderHeader(startmonth: number, startyear: number, endmonth: number, endyear: number, locale: string): React.JSX.Element[] {
+	private renderHeader(startmonth: number, startyear: number, endmonth: number, endyear: number): React.JSX.Element[] {
 		var header: React.JSX.Element[]= [];
 		var curmonth = startmonth;
 		var curyear = startyear;
+		const locale = getIntl().locale;
+
 		header.push(
-			<th>{this.label("category")}</th>
+			<th>{label("category")}</th>
 		)
 			
 		while ( curyear < endyear || (curyear == endyear && curmonth <= endmonth)) {
@@ -150,7 +148,7 @@ class _OverviewTab extends React.Component<OverviewTabProps & WrappedComponentPr
 	private reload(startYear: number, startMonth: number, endYear: number, endMonth: number): void {
 
 		this.setState({ endYear: endYear, endMonth: endMonth, startYear: startYear, startMonth: startMonth });
-		var self: _OverviewTab = this;
+		var self: OverviewTab = this;
 		var time: string = startYear + "/" + startMonth + "/" + endYear + "/" + endMonth;
 
 		fetch("stats/real/" + time + "/false")

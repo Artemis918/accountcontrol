@@ -1,15 +1,9 @@
 import React from 'react'
-import { useIntl, WrappedComponentProps } from 'react-intl'
 import { CategorySelector } from '../utils/categoryselector'
+import { label } from '../utils/misc';
 
 import * as acss from './css/assign.css'
 
-
-type Create = (props: CategorySelectProps) => React.JSX.Element;
-export const CategorySelect: Create = (p) => { return (<_CategorySelect {...p} intl={useIntl()} />); }
-
-
-export default CategorySelect;
 
 export type OnCatChange = (subCategory: number , text?: string ) => void;
 
@@ -19,13 +13,13 @@ export interface CategorySelectProps {
     subCatId?: number;
 }
 
-class _CategorySelect extends React.Component<CategorySelectProps & WrappedComponentProps,{}> {
+export class CategorySelect extends React.Component<CategorySelectProps, {}> {
 
     comment_obj: React.RefObject<HTMLInputElement | null>;
     cur_subcategory: number | undefined;
     cur_comment?: string;
 
-    constructor(props: CategorySelectProps & WrappedComponentProps) {
+    constructor(props: CategorySelectProps) {
         super(props);
         this.cur_comment = props.text;
         this.cur_subcategory = props.subCatId;
@@ -33,8 +27,6 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
         this.comment_obj = React.createRef<HTMLInputElement | null>();
         this.setCategory = this.setCategory.bind(this);
     }
-
-    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
     componentDidMount(): void {
         if (this.comment_obj.current !== null)
@@ -68,7 +60,7 @@ class _CategorySelect extends React.Component<CategorySelectProps & WrappedCompo
                         type='text'
                         defaultValue={this.cur_comment}
                         onChange={(e) => { this.setComment(e.currentTarget.value); }}
-                        placeholder={this.label("assign.description")}
+                        placeholder={label("assign.description")}
                         ref={this.comment_obj}
                     />
                 </div>

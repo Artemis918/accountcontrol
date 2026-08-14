@@ -24,7 +24,7 @@ export function fetchJson(url:string, handleAnswer:handleJsonAnswer): void {
 
 // =====================================================
 export class AccountRecord {
-    id: number;
+    id: number | undefined;
     received: Date;
     created: Date;
     executed: Date;

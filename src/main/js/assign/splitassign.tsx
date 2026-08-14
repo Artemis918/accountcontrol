@@ -1,14 +1,12 @@
 import * as React from 'react'
-import { useIntl, WrappedComponentProps } from 'react-intl'
+
 import { CategorySelector } from '../utils/categoryselector'
 import { AccountRecord, Plan, Assignment } from '../utils/dtos'
 import { AssignEdit } from './assignedit'
 import * as mcss from './css/assign.css'
 import * as css from '../css/index.css'
 import { SendMessage } from '../utils/messageid'
-
-type Create = (props: SplitAssignProps) => React.JSX.Element;
-export const SplitAssign: Create = (p) => { return (<_SplitAssign {...p} intl={useIntl()} />); }
+import { label } from '../utils/misc'
 
 
 type onCommitCallback = () => void;
@@ -60,9 +58,9 @@ class AssignPart {
 }
 
 
-export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComponentProps, IState> {
+export class SplitAssign extends React.Component<SplitAssignProps , IState> {
 
-    constructor(props: SplitAssignProps & WrappedComponentProps) {
+    constructor(props: SplitAssignProps ) {
         super(props)
         var initial: AssignPart = new AssignPart(props.accountRecord.details, props.accountRecord.value, 1, 1);
         this.state = { data: [initial], planselect: false };
@@ -76,13 +74,11 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
         this.save = this.save.bind(this);
     }
 
-    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
     save(): void {
         var assignments: Assignment[] = this.state.data.map((t: AssignPart) => { return t.getAssignment(this.props.accountRecord) });
         assignments.forEach((z: Assignment) => { z.committed = true });
 
-        var self: _SplitAssign = this;
+        var self: SplitAssign = this;
         fetch('assign/parts', {
             method: 'post',
             body: JSON.stringify(assignments),
@@ -237,9 +233,9 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
                 <table>
                     <thead>
                         <tr>
-                            <th>{this.label("details")}</th>
-                            <th>{this.label("categories")}</th>
-                            <th>{this.label("value")}</th>
+                            <th>{label("details")}</th>
+                            <th>{label("categories")}</th>
+                            <th>{label("value")}</th>
                             <th>-</th>
                         </tr>
                     </thead>
@@ -249,13 +245,13 @@ export class _SplitAssign extends React.Component<SplitAssignProps & WrappedComp
                 </table>
                 <button className={css.addonbutton}
                     onClick={() => this.setState({ planselect: true })} >
-                    {this.label("assign.selectplan")}
+                    {label("assign.selectplan")}
                 </button>
                 <button className={css.addonbutton} onClick={this.props.onCommit} >
-                    {this.label("cancel")}
+                    {label("cancel")}
                 </button>
                 <button className={css.addonbutton} onClick={this.save} >
-                    {this.label("save")}
+                    {label("save")}
                 </button>
                 {this.renderPlanSelect()}
             </div>

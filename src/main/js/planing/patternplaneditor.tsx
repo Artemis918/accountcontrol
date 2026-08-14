@@ -1,16 +1,16 @@
 import React from 'react'
-import { IntlShape } from 'react-intl'
 
 import { PatternEditor } from './patterneditor'
 import { CategorySelector } from '../utils/categoryselector'
 import { Plan, postRequest } from '../utils/dtos'
+import { label } from '../utils/misc'
+
 import * as css from '../css/index.css'
 
 type OnChangeCallback = () => void;
 
 interface PlanEditorProps {
     onChange: OnChangeCallback;
-	intl: IntlShape;
 }
 
 interface IState {
@@ -21,11 +21,10 @@ interface IState {
 
 export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> {
 
-    plan: Plan;
+    plan: Plan = this.createNewPlan();
 
     constructor( props: PlanEditorProps ) {
         super( props );
-        this.createNewPlan();
         this.state = { plan: this.plan, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.save = this.save.bind( this );
@@ -35,19 +34,18 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
         this.setPlan = this.setPlan.bind( this );
     }
 
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
-
     resetEditor(): void {
         this.createNewPlan();
         this.setState( { plan: this.plan } );
     }
 
 
-    createNewPlan(): void {
-        this.plan = new Plan();
-		this.plan.plandate = undefined;
-		this.plan.description=this.label("plan.newdescription");
-		this.plan.shortdescription=this.label("plan.newshortdescription");
+    createNewPlan(): Plan {
+        var plan: Plan = new Plan();
+		plan.plandate = new Date();
+		plan.description=label("plan.newdescription");
+		plan.shortdescription=label("plan.newshortdescription");
+        return plan
     }
 
     setPlan( plan: Plan ) {
@@ -106,10 +104,10 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
     renderButton(): React.JSX.Element {
         return (
                 <div>
-                    <button className={css.addonbutton} onClick={this.save}>{this.label("save")}</button>
-                    <button className={css.addonbutton} onClick={this.clear}>{this.label("new")}</button>
-                    <button className={css.addonbutton} onClick={this.copy}>{this.label("copy")}</button>
-                    <button className={css.addonbutton} onClick={this.delete}>{this.label("delete")}</button>
+                    <button className={css.addonbutton} onClick={this.save}>{label("save")}</button>
+                    <button className={css.addonbutton} onClick={this.clear}>{label("new")}</button>
+                    <button className={css.addonbutton} onClick={this.copy}>{label("copy")}</button>
+                    <button className={css.addonbutton} onClick={this.delete}>{label("delete")}</button>
                 </div>
         );
     }
@@ -121,7 +119,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                 <table>
                     <tbody style={{ verticalAlign: 'top' }} >
                         <tr style={{ background: 'darkgray' }}>
-                            <td>{this.label("shortdescription")}</td>
+                            <td>{label("shortdescription")}</td>
                             <td><input className={css.stringinput} 
                                 value={this.state.plan.shortdescription} 
                                 type='text'
@@ -129,7 +127,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>{this.label("plan.position")}</td>
+                            <td>{label("plan.position")}</td>
                             <td><input className={css.numbersmallinput} 
                                 value={this.state.plan.position}
                                 type='number'
@@ -137,7 +135,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("category")}</td>
+                            <td>{label("category")}</td>
                             <td><CategorySelector
 								horiz={false}
                                 onChange={( s, c ) => this.setSubCategory( s, c )}
@@ -145,7 +143,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr style={{ background: 'darkgray' }}>
-                            <td>{this.label("description")}</td>
+                            <td>{label("description")}</td>
                             <td><textarea className={css.stringinput}
                                 cols={20} rows={3}
                                 value={this.state.plan.description}
@@ -153,10 +151,10 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                             </td>
                         </tr>
                         <tr>
-                            <td>{this.label("plan.pattern")}</td>
+                            <td>{label("plan.pattern")}</td>
                             <td><button className={css.addonbutton} 
 								onClick={() => this.setState( { patternEdit: true } )}>
-								{this.label("plan.edit")}
+								{label("plan.edit")}
 								</button>
 							</td>
                         </tr>
@@ -167,7 +165,6 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                 {this.state.patternEdit ?
                     <PatternEditor
                         zIndex={1}
-						intl={this.props.intl}
                         pattern={this.state.plan.patterndto}
                         sendPattern={( e ) => { 
                             if ( e != undefined ) {

@@ -1,20 +1,19 @@
 import * as React from 'react'
-import { IntlShape } from 'react-intl'
 
 import { TimeUnitSelector } from '../utils/timeunitselector'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { Template } from '../utils/dtos'
+import { label, getIntl } from '../utils/misc'
 
 import * as css from '../css/index.css'
 
-type SendCallback = (template: Template) => void;
+type SendCallback = (template: Template | undefined) => void;
 
 interface TimeRangeEditorProps {
 	recorddate: Date;
 	plandate: Date;
 	template: Template;
 	sendResult: SendCallback;
-	intl: IntlShape;
 	zIndex: number;
 }
 
@@ -23,8 +22,8 @@ interface IState {
 	variance: number;
 	count: number;
 	unit: number;
-	hovertext: string;
-	hoverleft: number;
+	hovertext?: string;
+	hoverleft?: number;
 	hovertop: number;
 }
 
@@ -46,8 +45,6 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 		this.copyDate = this.copyDate.bind(this);
 	}
 
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
 	send(): void {
 		var template: Template = new Template();
 		template.start = this.state.plandate;
@@ -62,7 +59,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 	}
 
 	setHovertext(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, date: Date): void {
-		var text: string = this.props.intl.formatDate(date);
+		var text: string = getIntl().formatDate(date);
 		this.setState({
 			hovertext: text,
 			hoverleft: e.clientX + 5,
@@ -70,7 +67,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 		})
 	}
 
-	renderHovertext(): React.JSX.Element {
+	renderHovertext(): React.JSX.Element | null {
 		if (this.state.hovertext != undefined) {
 			return (
 				<div className={css.hoverbox}
@@ -101,7 +98,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 					}}>
 					<table>
 						<tbody>
-							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.repetition")}</td>
+							<tr style={{ background: 'darkgray' }}><td>{label("templates.repetition")}</td>
 								<td>
 									<span style={{ width: '20%' }}>
 										<input className={css.numbersmallinput}
@@ -118,18 +115,17 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 									</span>
 								</td>
 							</tr>
-							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.firstday")}</td>
+							<tr style={{ background: 'darkgray' }}><td>{label("templates.firstday")}</td>
 								<td><ACDayPickerInput
 									onChange={(d) => { this.setState({ plandate: d }) }}
-									startdate={this.state.plandate}
-									locale={this.props.intl.locale} />
+									startdate={this.state.plandate} />
 									<button className={css.charbutton}
 										onMouseEnter={(e) => this.setHovertext(e, this.props.template.start)}
 										onMouseLeave={() => this.setState({ hovertext: undefined })}
 										onSelect={() => this.copyDate()}>?</button>
 								</td>
 							</tr>
-							<tr style={{ background: 'darkgray' }}><td>{this.label("templates.variance")}</td>
+							<tr style={{ background: 'darkgray' }}><td>{label("templates.variance")}</td>
 								<td><input value={this.state.variance}
 									className={css.numbersmallinput}
 									type='number'
@@ -141,12 +137,12 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 					<span>
 						<button style={{ width: '47%' }} className={css.addonbutton}
 							onClick={this.send}>
-							{this.label("save")}
+							{label("save")}
 						</button>
 						<button style={{ width: '47%' }}
 							className={css.addonbutton}
 							onClick={() => this.props.sendResult(undefined)}>
-							{this.label("cancel")}
+							{label("cancel")}
 						</button>
 					</span>
 				</div>

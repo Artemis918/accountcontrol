@@ -2,11 +2,7 @@ import React from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, } from 'recharts';
 import { MonthSelect } from '../utils/monthselect'
 import { StatsDTO, StatsMonthDTO } from '../utils/dtos'
-import { myParseJson } from '../utils/misc'
-import { useIntl, WrappedComponentProps } from 'react-intl';
-
-type Create = (props: OverviewGFXProps) => React.JSX.Element;
-export const OverviewGFX: Create = (p) => { return (<_OverviewGFX {...p} intl={useIntl()} />); }
+import { myParseJson, label } from '../utils/misc'
 
 export interface OverviewGFXProps { }
 
@@ -31,9 +27,9 @@ interface IState {
 	graphdata: GraphSeries[];
 }
 
-export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComponentProps, IState> {
+export class OverviewGFX extends React.Component<OverviewGFXProps , IState> {
 
-	constructor(props: OverviewGFXProps & WrappedComponentProps) {
+	constructor(props: OverviewGFXProps) {
 		super(props);
 		var today: Date = new Date();
 		this.state = {
@@ -51,8 +47,6 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 		this.changeStart = this.changeStart.bind(this);
 	}
 
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
 	public componentDidMount(): void {
 		this.reload(this.state.startYear, this.state.startMonth, this.state.endYear, this.state.endMonth);
 	}
@@ -66,13 +60,13 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 							<table >
 								<tbody>
 									<tr>
-										<td>{this.label("overview.firstmonth")}</td>
+										<td>{label("overview.firstmonth")}</td>
 										<td>
 											<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
 										</td>
 									</tr>
 									<tr>
-										<td> {this.label("overview.lastmonth")} </td>
+										<td> {label("overview.lastmonth")} </td>
 										<td>
 											<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
 										</td>
@@ -106,7 +100,7 @@ export class _OverviewGFX extends React.Component<OverviewGFXProps & WrappedComp
 	private reload(startYear: number, startMonth: number, endYear: number, endMonth: number): void {
 
 		this.setState({ endYear: endYear, endMonth: endMonth, startYear: startYear, startMonth: startMonth });
-		var self: _OverviewGFX = this;
+		var self: OverviewGFX = this;
 		var url: string = "stats/real/" + startYear + "/" + startMonth + "/" + endYear + "/" + endMonth + "/true";
 
 		fetch(url)

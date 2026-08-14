@@ -1,11 +1,10 @@
 import React from 'react';
-import { FormattedMessage, IntlShape } from 'react-intl';
 import { InfoBox } from './utils/infobox';
 import { MessageID } from './utils/messageid';
+import { getIntl } from './utils/misc';
+import { FormattedMessage } from 'react-intl';
 
-interface FooterProps {
-	intl: IntlShape;
-};
+
 
 interface CState {
     message: string;
@@ -13,9 +12,9 @@ interface CState {
 };
 
 
-export class Footer extends React.PureComponent<FooterProps, CState> {
+export class Footer extends React.PureComponent<{}, CState> {
 
-  private infobox: InfoBox
+  private infobox: InfoBox | null = null; 
 
   constructor(p: any) {
     super(p);
@@ -26,9 +25,9 @@ export class Footer extends React.PureComponent<FooterProps, CState> {
   setmessage(m: string, e: MessageID) : void {
 	  var msg: string = m;
 	  if (!m) {
-  		  msg = this.props.intl.formatMessage({id: "returncode_" + e})
+  		  msg =getIntl().formatMessage({id: "returncode_" + e})
 	  }
-      this.infobox.setInfo( {info: [
+      this.infobox?.setInfo( {info: [
 	     msg,
 	     `Errorcode: ${e}`
       ]});

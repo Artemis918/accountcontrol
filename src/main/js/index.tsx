@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import * as React from 'react';
-import { IntlProvider } from 'react-intl'
+import { IntlProvider, IntlShape } from 'react-intl'
 import { InitialPage } from './initial'
 import { TabbedPages } from './tabbedPages'
 
@@ -8,6 +8,7 @@ import * as css from './css/index.css'
 
 import messages_de from "./i18n/de.json";
 import messages_en from "./i18n/en.json";
+import { IntlStore } from './utils/misc';
 
 interface IState {
 	production: boolean;
@@ -58,7 +59,9 @@ class Main extends React.Component<{}, IState> {
 	}
 
 	render(): React.JSX.Element {
+
 		return (<IntlProvider locale={this.state.locale} messages={messages[this.state.locale]} >
+			<IntlStore />
 			{this.renderContent()}
 		</IntlProvider>
 		)
