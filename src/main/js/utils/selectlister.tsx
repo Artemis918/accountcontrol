@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { DO_NOT_USE_OR_YOU_WILL_BE_FIRED_CALLBACK_REF_RETURN_VALUES } from 'react';
 import { myParseJson } from './misc'
 import * as css from './css/selectlister.css';
 import { ContextMenu, ContextMenuDef } from './contextmenu';
@@ -6,7 +6,7 @@ import { fetchJson } from './dtos';
 
 export type HandleSelectCallback<D> = (shift: boolean, ctrl: boolean, data: D, index: number) => void;
 export type IsSelectedCallback = (index: number) => boolean;
-export type SelectTableCellRender<D> = (cell: CellInfo<D>) => React.JSX.Element;
+export type SelectTableCellRender<D> = (cell: CellInfo<D>) => React.JSX.Element | null;
 export type SelectTableGetter<D> = (data: D) => string;
 export type CreateFooterCallback<D> = (data: D[]) => D;
 export type HasSelectedCallback = () => boolean;

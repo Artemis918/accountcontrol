@@ -191,9 +191,9 @@ export interface  Assignment {
 }
 
 export interface SubCategory {
-    id: number;
-    shortdescription: string;
-    description: string;
+    id?: number;
+    shortdescription?: string;
+    description?: string;
     art: number;
     category: number;
     categoryName: string;

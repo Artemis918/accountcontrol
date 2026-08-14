@@ -79,4 +79,8 @@ class Main extends React.Component<{}, IState> {
 	}
 }
 
-createRoot(document.getElementById('react')).render(<Main />);
+const domNode = document.getElementById('react');
+if (!domNode) {
+	throw new Error("No react root found");
+}	
+createRoot(domNode).render(<Main />);

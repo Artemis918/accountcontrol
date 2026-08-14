@@ -25,8 +25,8 @@ interface IState {
 
 export class CategoriesConfig extends React.Component<CategoryConfigProps, IState> {
 
-	catlister: React.RefObject<SingleSelectLister<Category | null>> = React.createRef();
-	sublister: React.RefObject<SingleSelectLister<SubCategory | null>> = React.createRef();
+	catlister: React.RefObject<SingleSelectLister<Category | null> |null > = React.createRef<SingleSelectLister<Category | null>>();
+	sublister: React.RefObject<SingleSelectLister<SubCategory | null> |null > = React.createRef<SingleSelectLister<SubCategory | null>>();
 
 	constructor(props: CategoryConfigProps ) {
 		super(props);
@@ -52,7 +52,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 
 	setCategory(category: Category): void {
 		this.setState({ category: category });
-		this.sublister.current.clearSelection();
+		this.sublister.current?.clearSelection();
 	}
 
 	setSubCategory(subcategory: SubCategory): void {
@@ -65,7 +65,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			fetch('category/delsub/' + this.state.subcategory?.id)
 				.then(function(response) {
 					self.setState({ delsub: false, subcategory: undefined });
-					self.sublister.current.reload();
+					self.sublister.current?.reload();
 				}
 				);
 		}
@@ -80,7 +80,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			fetch('category/delcat/' + this.state.category?.id)
 				.then(function(response) {
 					self.setState({ delcat: false, subcategory: undefined, category: undefined });
-					self.catlister.current.reload();
+					self.catlister.current?.reload();
 				}
 				);
 		}
@@ -92,13 +92,13 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 
 	saveSub(short: string, desc: string): void {
 		var self = this;
-		if (short != undefined && short != '') {
+		if (short != undefined && short != '' && this.state.category?.id != undefined) {
 			var subCategory: SubCategory =
 			{
 				id: 0,
 				shortdescription: short,
 				description: desc,
-				category: this.state.category?.id,
+				category: this.state.category.id,
 				art: 0,
 				active: true,
 				favorite: false,
@@ -113,7 +113,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			).then(
 				() => {
 					self.setState({ addsub: false });
-					self.sublister.current.reload();
+					self.sublister.current?.reload();
 				}
 			);
 		}
@@ -141,7 +141,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			).then(
 				function(response) {
 					self.setState({ addcat: false });
-					self.catlister.current.reload();
+					self.catlister.current?.reload();
 				}
 			);
 		}
@@ -159,13 +159,13 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			return (<AddTool save={this.saveCat} createlabel={create} cancellabel={cancel} />)
 		}
 		else if (this.state.addsub) {
-			return (<AddTool save={this.saveSub} createlabel={create} cancellabel={cancel} category={this.state.category.shortdescription} />)
+			return (<AddTool save={this.saveSub} createlabel={create} cancellabel={cancel} category={this.state.category?.shortdescription} />)
 		}
 		else if (this.state.delcat) {
 			var infotext: string[] = [];
 			infotext[0] = label("category.woulddelete");
 			infotext[1] = label("categories") + ": 1";
-			infotext[2] = label("subcategories") + ": " + this.sublister.current.getData().length;
+			infotext[2] = label("subcategories") + ": " + this.sublister.current?.getData().length;
 			infotext[3] = label("assingments") + ": " + this.state.numassigns;
 			return (<YesNo answer={this.delCat}
 				yeslabel={dellabel}
@@ -190,7 +190,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			var self: CategoriesConfig = this;
 			fetch('assign/countsubcategory', {
 				method: 'post',
-				body: JSON.stringify(this.sublister.current.getData().map((s: SubCategory) => { return (s.id) })),
+				body: JSON.stringify(this.sublister.current?.getData().map((s: SubCategory | null ) => { return (s?.id) })),
 				headers: {
 					"Content-Type": "application/json"
 				}
@@ -201,7 +201,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 	}
 
 	fetchSubInfo(): void {
-		if (this.state.subcategory != undefined) {
+		if (this.state.subcategory?.id != undefined) {
 			var self: CategoriesConfig = this;
 			var list: number[] = [this.state.subcategory.id];
 			fetch('assign/countsubcategory', {
@@ -220,7 +220,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 		var self: CategoriesConfig = this;
 		fetch('category/invertfavorite/' + data.id)
 			.then(
-				() => { self.sublister.current.reload(); }
+				() => { self.sublister.current?.reload(); }
 			);
 	}
 
@@ -228,7 +228,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 		var self: CategoriesConfig = this;
 		fetch('category/invertactivecat/' + data.id)
 			.then(
-				() => { self.catlister.current.reload(); }
+				() => { self.catlister.current?.reload(); }
 			);
 	}
 
@@ -236,7 +236,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 		var self: CategoriesConfig = this;
 		fetch('category/invertactivesub/' + data.id)
 			.then(
-				() => { self.sublister.current.reload(); }
+				() => { self.sublister.current?.reload(); }
 			);
 	}
 

@@ -63,13 +63,14 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             {
                 header: label("check.plan"),
                 cellrender: (cell: CellInfo<Assignment>) => {
-                    if (cell.data.planed == 0) {
+                    var planned = (cell.data == undefined || cell.data.planed == undefined) ? 0 : cell.data.planed;
+                    if (planned == 0) {
                         return null;
                     }
                     else {
                         return (
                             <div style={{ textAlign: 'right' }}>
-                                {(cell.data.planed / 100).toFixed(2)}
+                                {(planned / 100).toFixed(2)}
                             </div>
                         )
                     }
@@ -77,7 +78,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             },
             {
                 header: label("check.real"),
-                cellrender: (cell: CellInfo<Assignment>) => {
+                cellrender: (cell: CellInfo<Assignment>) :React.JSX.Element => {
+                    var real = (cell.data == undefined || cell.data.real == undefined) ? 0 : cell.data.real;
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor(cell.data) }}>
                             {(cell.data.accountrecord == 0) ? '--' : (cell.data.real / 100).toFixed(2)}
@@ -87,20 +89,22 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             },
             {
                 header: 'ok',
-                cellrender: (cell: CellInfo<Assignment>) => {
+                cellrender: (cell: CellInfo<Assignment>):React.JSX.Element|null => {
                     if (cell.data.accountrecord != 0 && cell.rownum != -1)
                         return (
                             <input type='checkbox'
                                 checked={cell.data.committed}
                                 onClick={() => this.commitAssignment(cell.data)} />
                         )
+                    else
+                        return null;
                 },
             }
         ];
     }
 
     getColor(a: Assignment): string {
-        if (a.accountrecord == 0 || a.plan == 0)
+        if (a.accountrecord == 0 || a.plan == 0 || a.planed == undefined || a.real == undefined )
             return 'lightgrey';
         else if (a.planed > a.real)
             return 'red';
@@ -109,7 +113,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
     }
 
     commit(alist: Assignment[]): void {
-        var ids: number[] = alist.map((a: Assignment) => { return a.id; });
+        var ids: (number|undefined)[] = alist.map((a: Assignment) => { return a.id; });
         var self: Categories = this;
         fetch('assign/commit', {
             method: 'post',
@@ -118,7 +122,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 "Content-Type": "application/json"
             }
         }).then(function () {
-            self.lister.current.reload();
+            self.lister.current?.reload();
         });
     }
 
@@ -126,19 +130,22 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         var self: Categories = this;
         fetch('assign/invertcommit/' + a.id)
             .then(function () {
-                self.lister.current.reload();
+                self.lister.current?.reload();
             });
     }
 
     commitSelected(): void {
         this.commit(this.state.selectedAssignments);
         this.setState({selectedAssignments: []});
-        this.lister.current.reload();
+        this.lister.current?.reload();
     }
 
     commitAll(): void {
+        if (this.lister.current == null) {
+            return;
+        }
         this.commit(this.lister.current.getDataAll());
-        this.lister.current.reload();
+        this.lister.current?.reload();
     }
 
     editAssignment(): void {
@@ -161,7 +168,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
             this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
         }
         else {
-            var id: number = assignments[0].id;
+            var id: number | undefined = assignments[0].id;
             var url: string = 'assign/newvalue/';
 
             if (id == 0 || id == undefined) {
@@ -173,7 +180,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 var self: Categories = this;
                 fetch(url + id, { headers: { "Content-Type": "application/json" } })
                     .then((response: Response) => response.text())
-                    .then(() => self.lister.current.reload());
+                    .then(() => self.lister.current?.reload());
             }
         }
     }
@@ -188,14 +195,14 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 "Content-Type": "application/json"
             }
         }).then(function () {
-            self.lister.current.reload();
+            self.lister.current?.reload();
         });
     }
 
     onAssign(changed: boolean): void {
         this.setState({ assignEdit: false });
         if (changed) {
-            this.lister.current.reload();
+            this.lister.current?.reload();
         }
     }
 
