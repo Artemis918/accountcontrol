@@ -1,23 +1,23 @@
-import React, { createRef, RefObject, useRef } from 'react'
-import { DayPicker, ClassNames } from 'react-day-picker';
+import React, { createRef } from 'react'
+import { DayPicker } from 'react-day-picker';
 import Popup from 'reactjs-popup';
 import { parse, format, Locale } from 'date-fns';
 import { enGB, de } from 'date-fns/locale'
 import * as css from '../css/index.css';
 import * as dpcss from './css/acdaypicker.css'
 import { PopupActions } from 'reactjs-popup/dist/types';
+import { getIntl } from './misc';
 
 
 export type OnACDayPickerCallback = (date: Date) => void;
 
 export interface ACDayPickerProps {
-    startdate: Date;
+    startdate?: Date;
     onChange: OnACDayPickerCallback;
-	locale: string;
 }
 
 interface IState {
-	date: Date;
+	date?: Date;
 	dateString: string;
 
 }
@@ -25,11 +25,11 @@ interface IState {
 export class ACDayPickerInput extends React.Component<ACDayPickerProps,IState> {
 
 	locale: Locale;
-	popupRef: React.RefObject<PopupActions> = createRef<PopupActions>()
+	popupRef: React.RefObject<PopupActions|null> = createRef<PopupActions>()
 	
     constructor( props : ACDayPickerProps ) {
         super( props );
-        this.locale = this.props.locale == 'de' ? de : enGB;
+        this.locale = getIntl().locale == 'de' ? de : enGB;
         
         this.state = {
 			date: this.props.startdate, 
@@ -54,7 +54,7 @@ export class ACDayPickerInput extends React.Component<ACDayPickerProps,IState> {
     }
     
     
-    formatDate(d: Date): string {
+    formatDate(d: Date | undefined): string {
 		if (d == undefined) {
 			return "--.--.----";
 		}
@@ -77,7 +77,8 @@ export class ACDayPickerInput extends React.Component<ACDayPickerProps,IState> {
 			  <div className={dpcss.overlay}>
 			  <DayPicker
               	mode='single'
-                onSelect={( d:Date ) => { this.setNewDate(d); this.popupRef.current.close()}}
+				required={true}
+                onSelect={( d:Date ) => { this.setNewDate(d); this.popupRef.current?.close()}}
                 selected={this.state.date}
               />
               </div>)

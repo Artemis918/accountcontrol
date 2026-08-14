@@ -1,17 +1,14 @@
 import React from "react";
 import { AccountRecord, Assignment, fetchJson, Plan } from "../utils/dtos";
 import { SendMessage } from "../utils/messageid";
-import { useIntl, WrappedComponentProps } from "react-intl";
 import { CategorySelect } from "./categoryselect";
 import { PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
+import { label } from "../utils/misc";
 
 import * as css from './css/assign.css';
 import * as gcss from '../css/index.css';
 
-
-type Create = (props: AssignEditProps) => React.JSX.Element;
-export const AssignEdit: Create = (props: AssignEditProps) => { return (<_AssignEdit {...props} intl={useIntl()} />); }
 
 export type OnAssign = (changed: boolean) => void
 export type OnAssignNewCats = (newSubCat: number, comment: string) => void
@@ -48,7 +45,7 @@ interface LocalState {
 	plan: Plan | undefined;
 }
 
-class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProps, IState> {
+export class AssignEdit extends React.Component<AssignEditProps, IState> {
 
 	localstate: LocalState = {
 		comment: "",
@@ -57,7 +54,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		plan: undefined
 	}
 
-	constructor(props: AssignEditProps & WrappedComponentProps) {
+	constructor(props: AssignEditProps) {
 		super(props)
 		this.state = {
 			expanded: props.assignment != undefined,
@@ -80,8 +77,6 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 		this.onCatChange = this.onCatChange.bind(this);
 		this.changeMode = this.changeMode.bind(this);
 	}
-
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
 	componentDidMount(): void {
 		if (this.props.recordId != undefined) {
@@ -201,13 +196,13 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 				{this.renderSelector()}
 				<div>
 					<button onClick={this.assign} className={gcss.addonbutton} testdata-id={'assign.assign'}>
-						{this.label("assign.assign")}
+						{label("assign.assign")}
 					</button>
 					<button onClick={this.cancel}
 						testdata-id={'assign.cancel'}
 						style={{ float: "right" }}
 						className={gcss.addonbutton}>
-						{this.label("cancel")}
+						{label("cancel")}
 					</button>
 				</div>
 			</div>
@@ -222,7 +217,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 			(this.state.planassign ? css.planexpsize : css.catexpsize)
 			: (this.state.planassign ? css.plansize : css.catsize)
 		var boxstyle: string = css.assignselectbox + " " + boxsize;
-		var title: string = this.label(this.state.planassign ? "plan" : "category");
+		var title: string = label(this.state.planassign ? "plan" : "category");
 
 
 		return (
@@ -241,7 +236,7 @@ class _AssignEdit extends React.Component<AssignEditProps & WrappedComponentProp
 					}}
 				>
 					<div style={{ textAlign: 'center' }}>
-						{this.label("assign.to")} &nbsp;
+						{label("assign.to")} &nbsp;
 						<button className={gcss.addonbutton}
 							onClick={this.changeMode}
 							testdata-id={'typebutton'} >

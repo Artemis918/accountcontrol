@@ -1,5 +1,5 @@
 import React from 'react'
-import { IntlShape } from 'react-intl'
+import { label } from '../utils/misc'
 
 import { Pattern } from '../utils/dtos'
 import * as css from '../css/index.css'
@@ -9,7 +9,6 @@ type SendPatternCallback = (pattern: Pattern) => void
 interface PatternEditorProps {
     pattern: Pattern;
     sendPattern: SendPatternCallback;
-    intl: IntlShape;
     zIndex: number;
 }
 
@@ -37,8 +36,6 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
         this.sendPattern = this.sendPattern.bind(this);
     }
 
-    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
     sendPattern(): void {
         if (this.state.details != this.props.pattern.details
             || this.state.mandate != this.props.pattern.mandate
@@ -58,7 +55,7 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
         }
         else {
             this.props.sendPattern(undefined);
-            console.log('paatern not send');
+            console.log('pattern not send');
         }
     }
 
@@ -74,7 +71,7 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
 
     renderInput(patid: string): React.JSX.Element {
         return <tr>
-            <td> {this.label(patid)}</td>
+            <td> {label(patid)}</td>
             <td>
                 <input className={css.stringinput}
                     value={this.getState(patid)}

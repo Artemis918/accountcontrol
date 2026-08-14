@@ -1,5 +1,4 @@
 import React from 'react';
-import {useIntl, WrappedComponentProps } from 'react-intl';
 
 import { Header, Page as HeaderPage } from './header'
 import { Footer } from './footer'
@@ -15,10 +14,7 @@ import { OverviewGFX } from './stats/overviewgfx'
 import { OverviewTab } from './stats/overviewtab'
 import { CategoriesConfig } from './configuration/categoriesconfig'
 import { MessageID } from './utils/messageid';
-
-
-type Create = (props:TabbedPagesProps) => React.JSX.Element;
-export const TabbedPages:Create = (p) => {return (<_TabbedPages {...p} intl={useIntl()}/>); }
+import { label } from './utils/misc';
 
 type ChangeValue = ( index: number ) => void;
 
@@ -36,16 +32,15 @@ interface Page {
 }
 
 
-class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentProps, IState> {
+export class TabbedPages extends React.Component<TabbedPagesProps, IState> {
 
-    footer: React.RefObject<Footer>;
-    pages: Page[];
-    headerpages: HeaderPage[];
+    footer: React.RefObject<Footer|null> = React.createRef();
+    pages: Page[] = [];
+    headerpages: HeaderPage[] = [];
 
-    constructor( props: TabbedPagesProps &  WrappedComponentProps) {
+    constructor( props: TabbedPagesProps) {
         super( props );
         this.state = { curpage: props.page };
-        this.footer = React.createRef();
         this.setPage = this.setPage.bind( this );
         this.sendMessage = this.sendMessage.bind( this );
         this.createPages();
@@ -54,7 +49,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
     
 
     sendMessage( msg: string, error: MessageID ): void {
-        this.footer.current.setmessage( msg, error );
+        this.footer.current?.setmessage( msg, error );
     }
     
     setPage( page: number ): void {
@@ -67,51 +62,47 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
         })
     }
     
-    label(id: string) : string {
-        return this.props.intl.formatMessage({id: id});
-    }
-    
     createPages(): void {
 
         this.pages = [
         {
-            title: this.label("page.plan"), tasks:
+            title: label("page.plan"), tasks:
                 [
-                    { name: this.label("task.template"), comp: ( <Templates sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.plan"), comp: ( <Planing sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.pattern"), comp: ( <PatternPlaning sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.template"), comp: ( <Templates sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.plan"), comp: ( <Planing sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.pattern"), comp: ( <PatternPlaning sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.label("page.accountRecords"), tasks:
+            title: label("page.accountRecords"), tasks:
                 [
-                    { name: this.label("task.upload"), comp: ( <RecordUploader sendmessage={this.sendMessage} /> ) },
-                    { name: this.label("task.create"), comp: ( <RecordCreator sendmessage={this.sendMessage} /> ) }
+                    { name: label("task.upload"), comp: ( <RecordUploader sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.create"), comp: ( <RecordCreator sendmessage={this.sendMessage} /> ) }
                 ]
         },
         {
-            title: this.label("page.assign"), tasks:
+            title: label("page.assign"), tasks:
                 [
-                    { name: this.label("task.recordlist"), comp: ( <Assign sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.recordlist"), comp: ( <Assign sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.label("page.check"), tasks:
+            title: label("page.check"), tasks:
                 [
-                    { name: this.label("task.categories"), comp: ( <Categories sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.categories"), comp: ( <Categories sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {
-            title: this.label("page.overview"), tasks: 
+            title: label("page.overview"), tasks: 
                 [
-                    { name: this.label("task.graph"), comp: ( <OverviewGFX /> ) },
-                    { name: this.label("task.table"), comp: ( <OverviewTab /> ) }
+                    { name: label("task.graph"), comp: ( <OverviewGFX /> ) },
+                    { name: label("task.table"), comp: ( <OverviewTab /> ) }
                 ]
         },
         {
-            title: this.label("page.configuration"), tasks: 
+            title: label("page.configuration"), tasks: 
                 [
-                    { name: this.label("task.catconfig"), comp: ( <CategoriesConfig sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.catconfig"), comp: ( <CategoriesConfig sendmessage={this.sendMessage} /> ) },
                 ]
         }
     ];
@@ -132,7 +123,7 @@ class _TabbedPages extends React.Component<TabbedPagesProps & WrappedComponentPr
                         pages = {this.headerpages}
                 />
                 {this.renderPage(this.pages[this.state.curpage],this.state.curpage)}
-                <Footer intl={this.props.intl} ref={this.footer} />
+                <Footer ref={this.footer} />
               </div>
         )
     }

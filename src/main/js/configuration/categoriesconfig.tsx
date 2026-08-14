@@ -1,22 +1,20 @@
 import React from 'react'
-import { useIntl, WrappedComponentProps } from 'react-intl'
 
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Category, SubCategory } from '../utils/dtos'
 import { AddTool } from './addtool'
 import { YesNo } from '../utils/yesno'
 import { SendMessage } from '../utils/messageid'
+import { label } from '../utils/misc'
 
-type Creator = (props: CategoryConfigProps) => React.JSX.Element;
-export const CategoriesConfig: Creator = (p) => { return (<_CategoriesConfig {...p} intl={useIntl()} />); }
 
 interface CategoryConfigProps {
 	sendmessage: SendMessage;
 }
 
 interface IState {
-	category: Category;
-	subcategory: SubCategory;
+	category?: Category;
+	subcategory?: SubCategory;
 	numassigns: number;
 	addcat: boolean;
 	addsub: boolean;
@@ -25,12 +23,12 @@ interface IState {
 
 }
 
-export class _CategoriesConfig extends React.Component<CategoryConfigProps & WrappedComponentProps, IState> {
+export class CategoriesConfig extends React.Component<CategoryConfigProps, IState> {
 
-	catlister: React.RefObject<SingleSelectLister<Category>>;
-	sublister: React.RefObject<SingleSelectLister<SubCategory>>;
+	catlister: React.RefObject<SingleSelectLister<Category | null>> = React.createRef();
+	sublister: React.RefObject<SingleSelectLister<SubCategory | null>> = React.createRef();
 
-	constructor(props: CategoryConfigProps & WrappedComponentProps) {
+	constructor(props: CategoryConfigProps ) {
 		super(props);
 		this.state = {
 			category: undefined,
@@ -49,13 +47,8 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		this.delSub = this.delSub.bind(this);
 		this.fetchCatInfo = this.fetchCatInfo.bind(this);
 		this.fetchSubInfo = this.fetchSubInfo.bind(this);
-		this.catlister = React.createRef();
-		this.sublister = React.createRef();
 	}
 
-	label(id: string): string {
-		return this.props.intl.formatMessage({ id: id });
-	}
 
 	setCategory(category: Category): void {
 		this.setState({ category: category });
@@ -69,7 +62,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	delSub(b: boolean): void {
 		var self = this;
 		if (b) {
-			fetch('category/delsub/' + this.state.subcategory.id)
+			fetch('category/delsub/' + this.state.subcategory?.id)
 				.then(function(response) {
 					self.setState({ delsub: false, subcategory: undefined });
 					self.sublister.current.reload();
@@ -84,7 +77,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	delCat(b: boolean): void {
 		var self = this;
 		if (b) {
-			fetch('category/delcat/' + this.state.category.id)
+			fetch('category/delcat/' + this.state.category?.id)
 				.then(function(response) {
 					self.setState({ delcat: false, subcategory: undefined, category: undefined });
 					self.catlister.current.reload();
@@ -105,11 +98,11 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 				id: 0,
 				shortdescription: short,
 				description: desc,
-				category: this.state.category.id,
+				category: this.state.category?.id,
 				art: 0,
 				active: true,
 				favorite: false,
-				categoryName: this.state.category.description
+				categoryName: this.state.category?.description
 			};
 			var jsonbody = JSON.stringify(subCategory);
 			fetch('category/savesub', {
@@ -157,10 +150,10 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		}
 	}
 
-	renderAdd(): React.JSX.Element {
-		var create: string = this.label("create");
-		var cancel: string = this.label("cancel");
-		var dellabel: string = this.label("delete");
+	renderAdd(): React.JSX.Element | null {
+		var create: string = label("create");
+		var cancel: string = label("cancel");
+		var dellabel: string = label("delete");
 
 		if (this.state.addcat) {
 			return (<AddTool save={this.saveCat} createlabel={create} cancellabel={cancel} />)
@@ -170,10 +163,10 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		}
 		else if (this.state.delcat) {
 			var infotext: string[] = [];
-			infotext[0] = this.label("category.woulddelete");
-			infotext[1] = this.label("categories") + ": 1";
-			infotext[2] = this.label("subcategories") + ": " + this.sublister.current.getData().length;
-			infotext[3] = this.label("assingments") + ": " + this.state.numassigns;
+			infotext[0] = label("category.woulddelete");
+			infotext[1] = label("categories") + ": 1";
+			infotext[2] = label("subcategories") + ": " + this.sublister.current.getData().length;
+			infotext[3] = label("assingments") + ": " + this.state.numassigns;
 			return (<YesNo answer={this.delCat}
 				yeslabel={dellabel}
 				nolabel={cancel}
@@ -181,19 +174,20 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		}
 		else if (this.state.delsub) {
 			var infotext: string[] = [];
-			infotext[0] = this.label("category.woulddelete");
-			infotext[1] = this.label("subcategories") + ": 1";
-			infotext[2] = this.label("assingments") + ": " + this.state.numassigns;
+			infotext[0] = label("category.woulddelete");
+			infotext[1] = label("subcategories") + ": 1";
+			infotext[2] = label("assingments") + ": " + this.state.numassigns;
 			return (<YesNo answer={this.delSub}
 				yeslabel={dellabel}
 				nolabel={cancel}
 				request={infotext} />);
 		}
+		return null
 	}
 
 	fetchCatInfo(): void {
 		if (this.state.category != undefined) {
-			var self: _CategoriesConfig = this;
+			var self: CategoriesConfig = this;
 			fetch('assign/countsubcategory', {
 				method: 'post',
 				body: JSON.stringify(this.sublister.current.getData().map((s: SubCategory) => { return (s.id) })),
@@ -208,7 +202,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 
 	fetchSubInfo(): void {
 		if (this.state.subcategory != undefined) {
-			var self: _CategoriesConfig = this;
+			var self: CategoriesConfig = this;
 			var list: number[] = [this.state.subcategory.id];
 			fetch('assign/countsubcategory', {
 				method: 'post',
@@ -223,7 +217,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	}
 
 	invertFavorite(data: SubCategory): void {
-		var self: _CategoriesConfig = this;
+		var self: CategoriesConfig = this;
 		fetch('category/invertfavorite/' + data.id)
 			.then(
 				() => { self.sublister.current.reload(); }
@@ -231,7 +225,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	}
 
 	invertActiveCat(data: Category): void {
-		var self: _CategoriesConfig = this;
+		var self: CategoriesConfig = this;
 		fetch('category/invertactivecat/' + data.id)
 			.then(
 				() => { self.catlister.current.reload(); }
@@ -239,7 +233,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 	}
 
 	invertActiveSub(data: SubCategory): void {
-		var self: _CategoriesConfig = this;
+		var self: CategoriesConfig = this;
 		fetch('category/invertactivesub/' + data.id)
 			.then(
 				() => { self.sublister.current.reload(); }
@@ -248,12 +242,12 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 
 
 	render(): React.JSX.Element {
-		var activelabel: string = this.label("category.active");
-		var favoritelabel: string = this.label("category.favorite");
+		var activelabel: string = label("category.active");
+		var favoritelabel: string = label("category.favorite");
 		var columnsCat: ColumnInfo<Category>[] =
 			[
 				{
-					header: this.label("config.category"),
+					header: label("config.category"),
 					getdata: (c: Category) => { return c.shortdescription; }
 				},
 				{
@@ -273,7 +267,7 @@ export class _CategoriesConfig extends React.Component<CategoryConfigProps & Wra
 		var columnsSub: ColumnInfo<SubCategory>[] =
 			[
 				{
-					header: this.label("config.subcategory"),
+					header: label("config.subcategory"),
 					getdata: (c: SubCategory) => { return c.shortdescription; }
 				},
 				{

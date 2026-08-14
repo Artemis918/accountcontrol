@@ -1,14 +1,11 @@
 import React from 'react'
 import * as Dropzone from 'react-dropzone'
-import {useIntl, WrappedComponentProps} from 'react-intl'
 import * as axios from 'axios'
 import * as css from '../css/index.css'
 
 import { SendMessage } from '../utils/messageid'
+import { label } from '../utils/misc'
 
-
-type Create = (props:RecordUploaderProps) => React.JSX.Element;
-export const RecordUploader:Create = (p) => {return (<_RecordUploader {...p} intl={useIntl()}/>);}
 
 const accept: Dropzone.Accept = {
 	'text/csv' : [],
@@ -27,9 +24,9 @@ interface IState {
     fileerr: string[];
 }
 
-class _RecordUploader extends React.Component<RecordUploaderProps & WrappedComponentProps, IState> {
+export class RecordUploader extends React.Component<RecordUploaderProps, IState> {
 
-    constructor( props: RecordUploaderProps & WrappedComponentProps) {
+    constructor( props: RecordUploaderProps) {
         super( props );
         this.uploadit = this.uploadit.bind( this );
         this.buttonClear = this.buttonClear.bind( this );
@@ -43,8 +40,6 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
             fileerr: []
         }
     }
-
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     buttonClear(): void {
         this.setState( { accepted: [] } );
@@ -98,7 +93,7 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                     <tr>
                         <td>
                             <div style={{ textAlign: 'center' }}>
-								{this.label("records.filelist")}
+								{label("records.filelist")}
                                 <ul style={{borderStyle: 'solid'}}>
                                     {
                                         this.state.accepted.map( f => <li key={f.name}>{f.name} - {f.size} bytes</li> )
@@ -119,9 +114,9 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                                     {( { getRootProps, getInputProps, open } ) => (
                                         <div {...getRootProps()}>
                                             <input {...getInputProps()} />
-                                            <p style={{textAlign: 'center'}}>{this.label("records.drophere")}</p>
+                                            <p style={{textAlign: 'center'}}>{label("records.drophere")}</p>
                                             <button className={css.addonbutton} type="button" onClick={() => open()}>
-                                                {this.label("records.opendialog")}
+                                                {label("records.opendialog")}
                                             </button>
                                         </div>
                                     )}
@@ -134,12 +129,12 @@ class _RecordUploader extends React.Component<RecordUploaderProps & WrappedCompo
                             <button 
                                  className= {css.addonbutton} 
                                  onClick={( _e ) => this.uploadit()}>
-                                {this.label("records.upload")}
+                                {label("records.upload")}
                             </button>
                             <button 
                                  className= {css.addonbutton} 
                                  onClick={( _e ) => this.buttonClear()}>
-                                {this.label("reset")}
+                                {label("reset")}
                             </button>
 
                         </td>

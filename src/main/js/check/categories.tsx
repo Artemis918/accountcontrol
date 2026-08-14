@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { useIntl, WrappedComponentProps } from 'react-intl'
 import { MultiSelectLister, ColumnInfo, CellInfo } from '../utils/multiselectlister'
 import { CategoryTree } from './categorytree'
 import { MonthSelect } from '../utils/monthselect'
@@ -9,9 +8,8 @@ import * as css from '../css/index.css'
 import { SendMessage, MessageID } from '../utils/messageid'
 import { AssignEdit } from '../assign/assignedit'
 import { ContextMenuDef, ContextMenuEntry } from '../utils/contextmenu'
+import { label } from '../utils/misc'
 
-type Create = (props: CategoriesProps) => React.JSX.Element;
-export const Categories: Create = (p) => { return (<_Categories {...p} intl={useIntl()} />); }
 
 interface CategoriesProps {
     sendmessage: SendMessage;
@@ -26,12 +24,12 @@ interface IState {
     selectedAssignments: Assignment[];
 }
 
-export class _Categories extends React.Component<CategoriesProps & WrappedComponentProps, IState> {
+export class Categories extends React.Component<CategoriesProps, IState> {
 
     columns: ColumnInfo<Assignment>[];
-    lister: React.RefObject<MultiSelectLister<Assignment>> | null = null;
+    lister: React.RefObject<MultiSelectLister<Assignment>|null> = React.createRef();
 
-    constructor(props: CategoriesProps & WrappedComponentProps) {
+    constructor(props: CategoriesProps) {
         super(props);
         var currentTime = new Date();
         this.state = {
@@ -56,16 +54,14 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         this.onAssign = this.onAssign.bind(this);
     }
 
-    label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
-
     createColumns(): ColumnInfo<Assignment>[] {
         return [
             {
-                header: this.label("shortdescription"),
+                header: label("shortdescription"),
                 getdata: (z: Assignment) => { return z.detail }
             },
             {
-                header: this.label("check.plan"),
+                header: label("check.plan"),
                 cellrender: (cell: CellInfo<Assignment>) => {
                     if (cell.data.planed == 0) {
                         return null;
@@ -80,7 +76,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                 }
             },
             {
-                header: this.label("check.real"),
+                header: label("check.real"),
                 cellrender: (cell: CellInfo<Assignment>) => {
                     return (
                         <div style={{ textAlign: 'right', backgroundColor: this.getColor(cell.data) }}>
@@ -114,7 +110,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     commit(alist: Assignment[]): void {
         var ids: number[] = alist.map((a: Assignment) => { return a.id; });
-        var self: _Categories = this;
+        var self: Categories = this;
         fetch('assign/commit', {
             method: 'post',
             body: JSON.stringify(ids),
@@ -127,7 +123,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     }
 
     commitAssignment(a: Assignment): void {
-        var self: _Categories = this;
+        var self: Categories = this;
         fetch('assign/invertcommit/' + a.id)
             .then(function () {
                 self.lister.current.reload();
@@ -147,12 +143,12 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     editAssignment(): void {
         if (this.state.selectedAssignments.length != 1) {
-            this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+            this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
             return;
         }
 
         if (this.state.selectedAssignments[0].accountrecord == 0 ) {
-            this.props.sendmessage(this.label("check.noassignment"), MessageID.INVALID_DATA);
+            this.props.sendmessage(label("check.noassignment"), MessageID.INVALID_DATA);
             return;
         }
 
@@ -162,7 +158,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
     acceptValueAssignment(): void {
         var assignments: Assignment[] = this.state.selectedAssignments;
         if (assignments.length != 1) {
-            this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+            this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
         }
         else {
             var id: number = assignments[0].id;
@@ -174,7 +170,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
             }
 
             if (id != undefined) {
-                var self: _Categories = this;
+                var self: Categories = this;
                 fetch(url + id, { headers: { "Content-Type": "application/json" } })
                     .then((response: Response) => response.text())
                     .then(() => self.lister.current.reload());
@@ -184,7 +180,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
     removeAssignment(): void {
         var ids: number[] = this.state.selectedAssignments.map((assign: Assignment) => { return assign.accountrecord; });
-        var self: _Categories = this;
+        var self: Categories = this;
         fetch('assign/remove', {
             method: 'post',
             body: JSON.stringify(ids),
@@ -239,10 +235,10 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
         var planed: number = 0;
         z.map((assignment: Assignment) => { real += assignment.real; if (assignment.planed != undefined) planed += assignment.planed; })
         return {
-            detail: this.label("check.sum"),
+            detail: label("check.sum"),
             real: real,
             planed: planed,
-            description:  this.label("check.sum"),
+            description:  label("check.sum"),
             committed: false,
             accountrecord: -1,
             subcategory: 0
@@ -257,14 +253,14 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                                           && this.state.selectedAssignments[0].planed != this.state.selectedAssignments[0].real;
 
         let mainentries: ContextMenuEntry<AccountRecord>[] = [
-            { name: this.label("check.removeassign"), func: this.removeAssignment, active: true },
-            { name: this.label("check.acceptvalue"), func: this.acceptValueAssignment, active: hasPlan },
-            { name: this.label("edit"), func: this.editAssignment, active: singleline},
+            { name: label("check.removeassign"), func: this.removeAssignment, active: true },
+            { name: label("check.acceptvalue"), func: this.acceptValueAssignment, active: hasPlan },
+            { name: label("edit"), func: this.editAssignment, active: singleline},
         ];
 
         var contextMenu: ContextMenuDef<AccountRecord> = {
             entries: mainentries,
-            title: this.label("check.check")
+            title: label("check.check")
         }
 
         return (
@@ -273,24 +269,24 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
 
                     <button className={css.actionbutton}
                         onClick={() => this.commitSelected()}>
-                        {this.label("check.commitselected")}
+                        {label("check.commitselected")}
                     </button>
                     <button className={css.actionbutton}
                         onClick={() => this.commitAll()}>
-                        {this.label("check.commitall")}
+                        {label("check.commitall")}
                     </button>
 
                     <button className={css.actionbutton}
                         onClick={() => this.acceptValueAssignment()}>
-                        {this.label("check.acceptvalue")}
+                        {label("check.acceptvalue")}
                     </button>
                     <button className={css.actionbutton}
                         onClick={() => this.editAssignment()}>
-                        {this.label("edit")}
+                        {label("edit")}
                     </button>
                     <button className={css.actionbutton}
                         onClick={() => this.removeAssignment()}>
-                        {this.label("check.removeassign")}
+                        {label("check.removeassign")}
                     </button>
                 </div>
                 <table>
@@ -298,7 +294,7 @@ export class _Categories extends React.Component<CategoriesProps & WrappedCompon
                         <tr>
                             <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                                 <div className={acss.monthselect}>
-                                    <MonthSelect label={this.label("month")}
+                                    <MonthSelect label={label("month")}
                                         onChange={(m: number, y: number) => this.setState({ month: m, year: y })}
                                         month={this.state.month}
                                         year={this.state.year} />

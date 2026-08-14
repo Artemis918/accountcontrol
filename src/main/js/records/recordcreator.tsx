@@ -1,14 +1,11 @@
 import React from 'react';
-import { useIntl, WrappedComponentProps } from'react-intl'
+import { label } from '../utils/misc'
 import { MonthSelect } from '../utils/monthselect'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { RecordEditor } from './recordeditor'
 import { AccountRecord } from '../utils/dtos'
 import { SendMessage } from '../utils/messageid'
 import * as css from '../css/index.css'
-
-type Create = (props:RecordCreatorProps) => React.JSX.Element;
-export const RecordCreator:Create = (p) => {return (<_RecordCreator {...p} intl={useIntl()}/>);}
 
 interface RecordCreatorProps {
     sendmessage: SendMessage;
@@ -20,24 +17,25 @@ interface IState {
 }
 
 
-class _RecordCreator extends React.Component<RecordCreatorProps & WrappedComponentProps, IState> {
+export class RecordCreator extends React.Component<RecordCreatorProps, IState> {
 
-    lister: SingleSelectLister<AccountRecord>;
-    editor: RecordEditor;
+    lister: SingleSelectLister<AccountRecord> | null = null;
+    editor: RecordEditor | null = null;
+
     columns: ColumnInfo<AccountRecord>[] = [{
-        header: this.label("date"),
+        header: label("date"),
         getdata: ( data: AccountRecord ): string => { return data.executed.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
     }, {
-        header: this.label("sender"),
+        header: label("sender"),
         getdata: ( data: AccountRecord ): string => { return data.sender },
     }, {
-        header: this.label("receiver"),
+        header: label("receiver"),
         getdata: ( data: AccountRecord ): string => { return data.receiver },
     }, {
-        header: this.label("details"),
+        header: label("details"),
         getdata: ( data: AccountRecord ): string => { return data.details },
     }, {
-        header: this.label("value"),
+        header: label("value"),
         cellrender: ( cellinfo: CellInfo<AccountRecord> ) => (
 
             <div style={{
@@ -50,30 +48,26 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
         )
     }];
 
-    constructor( props: RecordCreatorProps & WrappedComponentProps) {
+    constructor( props: RecordCreatorProps) {
         super( props);
         var currentTime = new Date();
         this.state = { month: currentTime.getMonth() + 1, year: currentTime.getFullYear() };
         this.refreshlist = this.refreshlist.bind( this );
         this.refresheditor = this.refresheditor.bind( this );
         this.setFilter = this.setFilter.bind( this );
-        this.lister = undefined;
-        this.editor = undefined;
     }
-
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 
     setFilter( m: number, y: number ): void {
         this.setState( { year: y, month: m } )
-        this.editor.setRecord( undefined );
+        this.editor?.setRecord( undefined );
     }
 
     refreshlist(): void {
-        this.lister.reload();
+        this.lister?.reload();
     }
 
     refresheditor( record: AccountRecord ): void {
-        this.editor.setRecord( record );
+        this.editor?.setRecord( record );
     }
 
     render(): React.JSX.Element {
@@ -83,15 +77,14 @@ class _RecordCreator extends React.Component<RecordCreatorProps & WrappedCompone
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div className={css.editortitle}> 
-								{this.label("records.recorddata")}
+								{label("records.recorddata")}
 						    </div>
                             <RecordEditor ref={( ref ) => { this.editor = ref; }} 
-                                          onChange={this.refreshlist}
-                                          intl={this.props.intl} />
+                                          onChange={this.refreshlist} />
                         </td>
                         <td >
                             <div style={{ borderBottom: '1px solid black', padding: '3px' }} >
-                                <MonthSelect label={this.label("month")+":"}
+                                <MonthSelect label={label("month")+":"}
                                     year={this.state.year}
                                     month={this.state.month}
                                     onChange={this.setFilter} />

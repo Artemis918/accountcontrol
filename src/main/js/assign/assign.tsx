@@ -5,14 +5,11 @@ import { TemplateEditor } from '../planing/templateeditor';
 import { SplitAssign } from './splitassign';
 import { AccountRecord, EnumDTO, Plan } from '../utils/dtos';
 import { SendMessage, MessageID } from '../utils/messageid';
-import { useIntl, WrappedComponentProps } from 'react-intl';
 
 import * as css from '../css/index.css'
-import { myParseJson } from '../utils/misc';
+import { myParseJson, label } from '../utils/misc';
 import { AssignEdit } from './assignedit';
 
-type Create = (props: AssignProps) => React.JSX.Element;
-export const Assign: Create = (props: AssignProps) => { return (<_Assign {...props} intl={useIntl()} />); }
 
 enum AssignAction {
 	NONE,
@@ -35,24 +32,24 @@ interface IState {
 
 const assignmenu: string = "assignmenu";
 
-class _Assign extends React.Component<AssignProps & WrappedComponentProps, IState> {
+export class Assign extends React.Component<AssignProps, IState> {
 
 	columns: ColumnInfo<AccountRecord>[] = [
 		{
-			header: this.label("date"),
+			header: label("date"),
 			getdata: (data: AccountRecord): string => { return data.executed.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) }
 		}, {
-			header: this.label("assign.otherparty"),
+			header: label("assign.otherparty"),
 			cellrender: (cellinfo: CellInfo<AccountRecord>) => (
 				<div>
 					{(cellinfo.data.value > 0) ? cellinfo.data.sender : cellinfo.data.receiver}
 				</div>
 			)
 		}, {
-			header: this.label("details"),
+			header: label("details"),
 			getdata: (data: AccountRecord) => { return data.details },
 		}, {
-			header: this.label("value"),
+			header: label("value"),
 			cellrender: (cellinfo: CellInfo<AccountRecord>) => (
 
 				<div style={{
@@ -66,7 +63,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}];
 	recordLister: MultiSelectLister<AccountRecord> | null = null;
 
-	constructor(props: AssignProps & WrappedComponentProps) {
+	constructor(props: AssignProps ) {
 		super(props)
 		this.state = {
 			plan: undefined,
@@ -92,8 +89,6 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	componentDidMount(): void {
 		this.loadFav();
 	}
-
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }) }
 
 	loadFav(): void {
 		var self = this;
@@ -122,7 +117,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		if (this.state.accountRecords.length == 1)
 			this.setState({ action: AssignAction.SPLIT });
 		else {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
 		}
 	}
 
@@ -130,7 +125,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		if (this.state.accountRecords.length == 1)
 			this.setState({ action: AssignAction.TEMPLATE });
 		else {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
 		}
 	}
 
@@ -138,7 +133,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		if (this.state.accountRecords.length > 0)
 			this.setState({ action: AssignAction.CATEGORY });
 		else
-			this.props.sendmessage(this.label("assign.atleastonevalue"), MessageID.INVALID_DATA);
+			this.props.sendmessage(label("assign.atleastonevalue"), MessageID.INVALID_DATA);
 	}
 
 
@@ -146,7 +141,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		if (this.state.accountRecords.length == 1)
 			this.setState({ action: AssignAction.PLAN });
 		else {
-			this.props.sendmessage(this.label("assign.onevalue"), MessageID.INVALID_DATA);
+			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
 		}
 	}
 
@@ -202,7 +197,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 			onClick={func}
 			testdata-id={labelid}
 			>
-				{this.label(labelid)}
+				{label(labelid)}
 			</button>
 		)
 	}
@@ -210,7 +205,7 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 	render(): React.JSX.Element {
 
 		if (this.state.action == AssignAction.TEMPLATE) {
-			return <TemplateEditor intl={this.props.intl} accountRecordId={this.state.accountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
+			return <TemplateEditor accountRecordId={this.state.accountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
 		}
 
 		if (this.state.action == AssignAction.SPLIT) {
@@ -218,16 +213,16 @@ class _Assign extends React.Component<AssignProps & WrappedComponentProps, IStat
 		}
 
 		let mainentries: ContextMenuEntry<AccountRecord>[] = [
-			{ name: this.label("category"), func: this.assignCategory, active: true },
-			{ name: this.label("plan"), func: this.assignPlan, active: true },
-			{ name: this.label("assign.split"), func: this.assignSplit, active: true },
+			{ name: label("category"), func: this.assignCategory, active: true },
+			{ name: label("plan"), func: this.assignPlan, active: true },
+			{ name: label("assign.split"), func: this.assignSplit, active: true },
 			{ name: "------------", func: () => { }, active: true }
 		];
 		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
 
 		var contextMenu: ContextMenuDef<AccountRecord> = {
 			entries: mainentries.concat(faventries),
-			title: this.label("assign.assign")
+			title: label("assign.assign")
 		}
 
 		return (

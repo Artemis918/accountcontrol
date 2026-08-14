@@ -1,17 +1,14 @@
 import React from 'react'
-import { useIntl, WrappedComponentProps} from 'react-intl'
 
 import { PlanEditor } from './planeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils//monthselect'
 import { Plan } from '../utils/dtos'
 import { SendMessage, MessageID } from '../utils/messageid'
-
+import { label } from '../utils/misc'
 import * as pcss from './css/planing.css'
 import * as css from '../css/index.css'
 
-type Create = (props:PlaningProps) => React.JSX.Element;
-export const Planing:Create = (p) => {return (<_Planing {...p} intl={useIntl()}/>);}
 
 interface PlaningProps {
     sendmessage: SendMessage;
@@ -25,12 +22,12 @@ interface IState {
     creationPopup: boolean;
 }
 
-export class _Planing extends React.Component<PlaningProps & WrappedComponentProps, IState> {
+export class Planing extends React.Component<PlaningProps, IState> {
 
-    lister: SingleSelectLister<Plan>;
-    editor: PlanEditor;
+    lister: SingleSelectLister<Plan> | null = null;
+    editor: PlanEditor | null = null;
 
-    constructor( props: PlaningProps & WrappedComponentProps ) {
+    constructor( props: PlaningProps) {
         super( props );
         var currentTime = new Date();
 
@@ -47,21 +44,19 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
         this.openCreatePopup = this.openCreatePopup.bind( this );
 
     }
-
-	label(labelid:string):string {return this.props.intl.formatMessage({id: labelid}) }
 	
 	createColums():ColumnInfo<Plan>[] {
 	    return [{
-            header: this.label("date"),
+            header: label("date"),
             getdata: ( data: Plan ): string => { return data.plandate.toLocaleDateString( 'de-DE', { day: '2-digit', month: '2-digit' } ) }
         }, {
-            header: this.label("shortdescription"),
+            header: label("shortdescription"),
             getdata: ( data: Plan ): string => { return data.shortdescription }
         }, {
-            header: this.label("category"),
+            header: label("category"),
             getdata: ( data: Plan ): string => { return data.categoryname + "/" + data.subcategoryname }
         }, {
-            header: this.label("value"),
+            header: label("value"),
             cellrender: ( cell: CellInfo<Plan> ): React.JSX.Element => (
 
                 <div style={{
@@ -79,27 +74,27 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
     }
 
     refreshlist() {
-        this.lister.reload();
+        this.lister?.reload();
     }
 
     refresheditor( data: Plan ): void {
-        this.editor.setPlan( data );
+        this.editor?.setPlan( data );
     }
 
     createPlans() {
-        var self: _Planing = this;
+        var self: Planing = this;
         fetch( "plans/createFromTemplates/" + this.state.creationMonth + "/" + this.state.creationYear )
             .then( ( response: Response ) => response.text() )
             .then( () => { self.openCreatePopup( false ); 
-                           self.props.sendmessage( this.label("plan.planscreated"),  MessageID.OK);  } );
+                           self.props.sendmessage( label("plan.planscreated"),  MessageID.OK);  } );
     }
 
-    renderCreation(): React.JSX.Element {
+    renderCreation(): React.JSX.Element | null {
         if ( this.state.creationPopup ) {
             return (
                 <div className={pcss.creationFrame}>
                     <div className={pcss.creationPopup}>
-                        <div>{this.label("plan.createplans")}</div>
+                        <div>{label("plan.createplans")}</div>
                         <div className={pcss.creationPopupMonthSelect}>
                             <MonthSelect label=''
                                 year={this.state.creationYear}
@@ -108,10 +103,10 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
                         </div>
                         <span style={{ margin: '5px' }} >
                             <button className={pcss.creationButton} onClick={() => this.openCreatePopup( false )}>
-								{this.label("cancel")}
+								{label("cancel")}
 							</button>
                             <button className={pcss.creationButton} onClick={this.createPlans}>
-								{this.label("create")}</button>
+								{label("create")}</button>
                         </span>
                     </div >
                 </div >
@@ -137,17 +132,17 @@ export class _Planing extends React.Component<PlaningProps & WrappedComponentPro
                         <tr>
                             <td style={{ verticalAlign: 'top'}} >
                                 <div style={{ border: '1px solid black', verticalAlign: 'top', paddingBottom: '160px'}}>
-                                    <div className={css.editortitle}> {this.label("plan.plandata")} </div>
-                                    <PlanEditor intl={this.props.intl} ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
+                                    <div className={css.editortitle}> {label("plan.plandata")} </div>
+                                    <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                                 </div>
                                 <div style={{ border: '1px solid black', marginTop: '5px', padding: '30px', textAlign: 'center'}}>
                                     <button onClick={() => this.openCreatePopup( true )} className={css.addonbutton} >
-										{this.label("plan.fromtemplates")}</button>
+										{label("plan.fromtemplates")}</button>
                                 </div>
                             </td>
                             <td style={{ verticalAlign: 'top' }}>
                                 <div style={{ padding: '3px', borderBottom: '1px solid black' }}>
-                                    <MonthSelect label={this.label("plan.plansfor")} year={this.state.year} month={this.state.month} onChange={this.setFilter} />
+                                    <MonthSelect label={label("plan.plansfor")} year={this.state.year} month={this.state.month} onChange={this.setFilter} />
                                 </div>
                                 <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                     lines={28}

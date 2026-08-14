@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIntl, IntlShape } from 'react-intl'
+import { label } from '../utils/misc'
 
 type HandleChange = ( id: number ) => void;
 
@@ -10,16 +10,15 @@ export interface MatchStyleProps {
 }
 
 export function MatchStyleSelector( props: MatchStyleProps) :React.JSX.Element {
-	const intl: IntlShape = useIntl();
 	return (
             <select className={props.className}
                     value={ props.curvalue } 
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => 
                                     props.onChange(parseInt( e.target.value ))}>
-                <option key={0} value={0}> {intl.formatMessage({id: "exact"})} </option> 
-                <option key={1} value={1}> {intl.formatMessage({id: "maxvalue"})} </option> 
-                <option key={2} value={2}> {intl.formatMessage({id: "maxsum"})} </option> 
-                <option key={3} value={3}> {intl.formatMessage({id: "pattern"})} </option> 
+                <option key={0} value={0}> {label("exact")} </option> 
+                <option key={1} value={1}> {label("maxvalue")} </option> 
+                <option key={2} value={2}> {label("maxsum")} </option> 
+                <option key={3} value={3}> {label("pattern")} </option> 
             </select>
 	)
 }

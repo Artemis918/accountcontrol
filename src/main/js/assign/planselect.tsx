@@ -2,16 +2,12 @@ import * as React from 'react'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { MonthSelect } from '../utils/monthselect'
 import { Plan, Pattern, Template, postRequest, AccountRecord, fetchJson } from '../utils/dtos'
-import { useIntl, WrappedComponentProps } from 'react-intl'
 import { PatternEditor } from '../planing/patterneditor'
 import { TimeRangeEditor } from './timerangeeditor'
+import { label } from '../utils/misc'
 
 import * as css from '../css/index.css'
 import * as pcss from './css/planselect.css'
-
-
-type Create = (props: PlanSelectProps) => React.JSX.Element;
-export const PlanSelect: Create = (p) => { return (<_PlanSelect {...p} intl={useIntl()} />); }
 
 export type OnPlanChange = (plan: Plan) => void;
 
@@ -31,14 +27,14 @@ interface IState {
 	year: number
 }
 
-export class _PlanSelect extends React.Component<PlanSelectProps & WrappedComponentProps, IState> {
+export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 
 	columns: ColumnInfo<Plan>[];
 	lister: SingleSelectLister<Plan> | null;
 	currentPlan: Plan | undefined = undefined;
 	currentTemplate: Template | undefined = undefined;
 
-	constructor(props: PlanSelectProps & WrappedComponentProps) {
+	constructor(props: PlanSelectProps) {
 		super(props);
 
 		
@@ -65,13 +61,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		this.getPropsPlanArray = this.getPropsPlanArray.bind(this);
 
 		this.columns = [{
-			header: this.label("date"),
+			header: label("date"),
 			getdata: (p: Plan): string => { return p.plandate.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) }
 		}, {
-			header: this.label("details"),
+			header: label("details"),
 			getdata: (p: Plan): string => { return p.shortdescription }
 		}, {
-			header: this.label("value"),
+			header: label("value"),
 			cellrender: (cell: CellInfo<Plan>): React.JSX.Element => {
 				return (
 					<div style={{
@@ -104,8 +100,6 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 		}
 	}
 
-	label(labelid: string): string { return this.props.intl.formatMessage({ id: labelid }); }
-
 	setFilter(m: number, y: number): void {
 		this.setState({ year: y, month: m })
 	}
@@ -121,7 +115,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 	}
 
 	handleChange(plan: Plan): void {
-		var self: _PlanSelect = this;
+		var self: PlanSelect = this;
 		console.log("planselect handlechange: " + plan.id);
 		this.currentPlan = plan;
 		if (this.props.onChange)
@@ -165,13 +159,13 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 				<table>
 					<tbody>
 						<tr>
-							<td className={pcss.adjustlabel}> {this.label("assign.adjust")}  </td>
+							<td className={pcss.adjustlabel}> {label("assign.adjust")}  </td>
 							<td>
 								<button onClick={() => this.setState({ patterneditor: true })}
 									testdata-id={'assign.adjustpattern'}
 									className={css.addonbutton}
 									hidden={!this.state.patternfailed}>
-									{this.label('assign.adjustpattern')}
+									{label('assign.adjustpattern')}
 								</button>
 							</td>
 							<td>
@@ -179,7 +173,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 									testdata-id={'assign.adjusttime'}
 									className={css.addonbutton}
 									hidden={!this.state.timerangefailed}>
-									{this.label("assign.adjusttime")}
+									{label("assign.adjusttime")}
 								</button>
 							</td>
 						</tr>
@@ -192,7 +186,7 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 
 	renderPatternEditor(): React.JSX.Element {
 		if (this.state.patterneditor && this.currentPlan) {
-			return (<PatternEditor intl={this.props.intl}
+			return (<PatternEditor
 				pattern={this.currentPlan.patterndto}
 				sendPattern={(p: Pattern) => this.setPattern(p)}
 				zIndex={4} />);
@@ -209,7 +203,6 @@ export class _PlanSelect extends React.Component<PlanSelectProps & WrappedCompon
 				plandate={this.currentPlan.plandate}
 				template={this.currentTemplate}
 				sendResult={this.settimerange}
-				intl={this.props.intl}
 				zIndex={4} />);
 		}
 		else {
