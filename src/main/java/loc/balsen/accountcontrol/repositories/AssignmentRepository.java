@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.repositories;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,6 +32,9 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
       + "inner join a.plan p where p.planDate between ?1 and ?2 "
       + "  and a.committed = true order by p.planDate")
   public List<Assignment> findAllPlannedByPeriod(LocalDate start, LocalDate end);
+
+  @Query(value = "select max(ar.executed) from Assignment a inner join a.accountrecord ar")
+  public Date findYoungestAssignmentDate();
 
   public int countBySubCategoryId(int subCategory);
 

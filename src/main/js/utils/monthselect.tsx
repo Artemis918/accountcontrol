@@ -23,6 +23,11 @@ export class MonthSelect extends React.Component<MonthSelectProps, CState> {
         this.state = { month: this.props.month, year: this.props.year };
     }
     
+    componentDidUpdate(prevProps:MonthSelectProps) {
+        if(this.props.month != prevProps.month || this.props.year != prevProps.year) {
+            this.setState({ month: this.props.month, year: this.props.year });
+        }
+    } 
     handleChange( m: number, y: number ): void {
 
         this.setState( { month: m, year: y } );

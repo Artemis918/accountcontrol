@@ -54,6 +54,23 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         this.onAssign = this.onAssign.bind(this);
     }
 
+    componentDidMount(): void {
+		var self: Categories = this;
+        fetch('assign/youngestassignment')
+        .then((response: Response) => response.text())
+        .then((data: string) => {
+            if (data != "") {
+                var mstring = data.substring(6, 8);
+                var ystring = data.substring(1, 5);
+                var month: number = parseInt(mstring);
+                var year: number = parseInt(ystring);
+                self.setState({ month: month, year: year });
+            }
+        }
+     ); 
+    }
+
+
     createColumns(): ColumnInfo<Assignment>[] {
         return [
             {

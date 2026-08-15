@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.controller;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -228,4 +229,10 @@ public class AssignmentController {
       return new TemplateDTO(null, "", null);
     }
   }
+
+  @GetMapping("/youngestassignment")
+  public Date youngestAssignment() {
+    return assignRepository.findYoungestAssignmentDate();
+  }
+
 }
