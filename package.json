@@ -7,9 +7,13 @@
     "serve": "webpack serve --open",
     "build": "webpack --mode production"
   },
+  "allowScripts": {
+    "core-js@3.45.1": true,
+    "cypress@15.3.0": true
+  },
   "dependencies": {
     "axios": "^1.12.0",
-    "babel-runtime": "^6.26.0",
+    "@babel/runtime": "^8.0.0",
     "core-js": "^3.45.1",
     "date-fns": "^4.1.0",
     "react": "^19.1.1",
