@@ -1,24 +1,38 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
-const webpack = require('webpack');
-const ROOT = path.resolve(__dirname, 'src/main');
-const SRC = path.resolve(ROOT, 'js');
-const DEST = path.resolve(__dirname, 'build/js');
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import "webpack-dev-server";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
+const __root = path.resolve(__dirname, 'src/main');
+const __src = './js';
+const __srcpath = path.resolve(__dirname, __root + '/' + __src);
+const __dest = path.resolve(__dirname, 'build/js');
 
-module.exports = {
+
+export default {
+  context: __root,
+  mode: 'development',
+  entry: {
+    app: __src + '/index.tsx',
+  },
+  output: {
+    filename: "bundle.js",
+    path: __dest
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      favicon: './favicon.png',
-      template: './src/main/resources/templates/index.html'
+      favicon: __dirname + '/favicon.png',
+      template: __src + '/index.html'
     })
   ],
   devtool: 'source-map',
-  mode: 'development',
   devServer: {
     static: {
-      directory: DEST,
+      directory: __dest,
     },
     compress: true,
     port: 9000,
@@ -29,16 +43,6 @@ module.exports = {
       }
     ]
   },
-  entry: {
-    app: SRC + '/index.tsx',
-  },
-  resolve: {
-    extensions: [".ts", ".tsx", ".js"]
-  },
-  output: {
-    path: DEST,
-    filename: 'dist/bundle.js',
-  },
   module: {
     rules: [
       {
@@ -47,7 +51,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: [SRC],
+        include: [__srcpath],
         use: [
           'style-loader',
           {
@@ -60,7 +64,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: [SRC],
+        exclude: [__srcpath],
         use: [
           'style-loader',
           {
@@ -72,5 +76,8 @@ module.exports = {
         ]
       }
     ]
-  }
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js"]
+  },
 };
