@@ -44,6 +44,7 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         this.columns= this.createColumns();
 
         this.handleSelected = this.handleSelected.bind(this);
+        this.handleCategorySelect = this.handleCategorySelect.bind(this);
         this.commitAssignment = this.commitAssignment.bind(this);
         this.commitSelected = this.commitSelected.bind(this);
         this.commitAll = this.commitAll.bind(this);
@@ -60,10 +61,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         .then((response: Response) => response.text())
         .then((data: string) => {
             if (data != "") {
-                var mstring = data.substring(6, 8);
-                var ystring = data.substring(1, 5);
-                var month: number = parseInt(mstring);
-                var year: number = parseInt(ystring);
+                var month: number = parseInt(data.substring(6, 8));
+                var year: number = parseInt(data.substring(1, 5));
                 self.setState({ month: month, year: year });
             }
         }
@@ -240,6 +239,11 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         this.setState({selectedAssignments: data});
     }
 
+    handleCategorySelect(kg?: number,sub?:number ): void {
+        this.setState({ selectedCategory: kg, selectedSubCategory: sub,  selectedAssignments: [] });
+    }
+
+
     renderAssignEdit(): React.JSX.Element {
         if (this.state.assignEdit) {
             var assignment: Assignment = this.state.selectedAssignments[0]
@@ -292,7 +296,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                 <div style={{ border: '1px solid black' }}>
 
                     <button className={css.actionbutton}
-                        onClick={() => this.commitSelected()}>
+                        onClick={() => this.commitSelected()}
+                        disabled={this.state.selectedAssignments.length == 0}>
                         {label("check.commitselected")}
                     </button>
                     <button className={css.actionbutton}
@@ -301,15 +306,18 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                     </button>
 
                     <button className={css.actionbutton}
-                        onClick={() => this.acceptValueAssignment()}>
+                        onClick={() => this.acceptValueAssignment()}
+                        disabled={this.state.selectedAssignments.length != 1 || !hasPlan}>
                         {label("check.acceptvalue")}
                     </button>
                     <button className={css.actionbutton}
-                        onClick={() => this.editAssignment()}>
+                        onClick={() => this.editAssignment()}
+                        disabled={this.state.selectedAssignments.length != 1}>
                         {label("edit")}
                     </button>
                     <button className={css.actionbutton}
-                        onClick={() => this.removeAssignment()}>
+                        onClick={() => this.removeAssignment()}
+                        disabled={this.state.selectedAssignments.length == 0}>
                         {label("check.removeassign")}
                     </button>
                 </div>
@@ -324,8 +332,8 @@ export class Categories extends React.Component<CategoriesProps, IState> {
                                         year={this.state.year} />
                                 </div>
                                 <CategoryTree
-                                    handleCatSelect={(kg: number) => this.setState({ selectedCategory: kg, selectedSubCategory: undefined })}
-                                    handleSubSelect={(k: number) => this.setState({ selectedCategory: undefined, selectedSubCategory: k })}
+                                    handleCatSelect={(cat: number) => this.handleCategorySelect( cat, undefined )}
+                                    handleSubSelect={(sub: number) => this.handleCategorySelect( undefined, sub)}
                                 />
                             </td>
                             <td style={{ border: '1px solid black' }}>

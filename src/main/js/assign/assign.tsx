@@ -25,7 +25,7 @@ interface AssignProps {
 
 interface IState {
 	plan: number | undefined;
-	accountRecords: AccountRecord[];
+	seletedAccountRecords: AccountRecord[];
 	favcategory: EnumDTO[];
 	action: AssignAction;
 }
@@ -67,7 +67,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 		super(props)
 		this.state = {
 			plan: undefined,
-			accountRecords: [],
+			seletedAccountRecords: [],
 			favcategory: [],
 			action: AssignAction.NONE
 		}
@@ -104,7 +104,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	}
 
 	clearAction(): void {
-		this.setState({ action: AssignAction.NONE, accountRecords: [] });
+		this.setState({ action: AssignAction.NONE, seletedAccountRecords: [] });
 		this.reload();
 	};
 
@@ -114,7 +114,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	}
 
 	assignSplit(): void {
-		if (this.state.accountRecords.length == 1)
+		if (this.state.seletedAccountRecords.length == 1)
 			this.setState({ action: AssignAction.SPLIT });
 		else {
 			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
@@ -122,7 +122,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	}
 
 	createTemplate(): void {
-		if (this.state.accountRecords.length == 1)
+		if (this.state.seletedAccountRecords.length == 1)
 			this.setState({ action: AssignAction.TEMPLATE });
 		else {
 			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
@@ -130,7 +130,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	}
 
 	assignCategory(): void {
-		if (this.state.accountRecords.length > 0)
+		if (this.state.seletedAccountRecords.length > 0)
 			this.setState({ action: AssignAction.CATEGORY });
 		else
 			this.props.sendmessage(label("assign.atleastonevalue"), MessageID.INVALID_DATA);
@@ -138,7 +138,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 
 
 	assignPlan(): void {
-		if (this.state.accountRecords.length == 1)
+		if (this.state.seletedAccountRecords.length == 1)
 			this.setState({ action: AssignAction.PLAN });
 		else {
 			this.props.sendmessage(label("assign.onevalue"), MessageID.INVALID_DATA);
@@ -153,7 +153,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	executeAssignCategory(sub: number, comment: string): void {
 		var self = this;
 		if (sub != undefined) {
-			var request = { text: comment, subcategory: sub, ids: this.state.accountRecords.map(d => d.id) };
+			var request = { text: comment, subcategory: sub, ids: this.state.seletedAccountRecords.map(d => d.id) };
 			var self = this;
 			var jsonbody = JSON.stringify(request);
 			fetch('assign/tosubcategory', {
@@ -178,7 +178,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 	}
 	
 	renderAssignEditor(): React.JSX.Element {
-		var recordId: number | undefined = this.state.accountRecords.length == 1 ? this.state.accountRecords[0].id : undefined;
+		var recordId: number | undefined = this.state.seletedAccountRecords.length == 1 ? this.state.seletedAccountRecords[0].id : undefined;
 
 		if (this.state.action == AssignAction.CATEGORY) {
 			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory}/>;
@@ -191,10 +191,11 @@ export class Assign extends React.Component<AssignProps, IState> {
 		}
 	}
 
-	renderActionButton(func: () => void, labelid: string): React.JSX.Element {
+	renderActionButton(func: () => void, disabled: boolean, labelid: string): React.JSX.Element {
 		return (
 			<button className={css.actionbutton} 
 			onClick={func}
+			disabled={disabled}	
 			testdata-id={labelid}
 			>
 				{label(labelid)}
@@ -205,17 +206,17 @@ export class Assign extends React.Component<AssignProps, IState> {
 	render(): React.JSX.Element {
 
 		if (this.state.action == AssignAction.TEMPLATE) {
-			return <TemplateEditor accountRecordId={this.state.accountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
+			return <TemplateEditor accountRecordId={this.state.seletedAccountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
 		}
 
 		if (this.state.action == AssignAction.SPLIT) {
-			return <SplitAssign accountRecord={this.state.accountRecords[0]} onCommit={() => this.clearAction()} sendMessage = {this.props.sendmessage} />
+			return <SplitAssign accountRecord={this.state.seletedAccountRecords[0]} onCommit={() => this.clearAction()} sendMessage = {this.props.sendmessage} />
 		}
 
 		let mainentries: ContextMenuEntry<AccountRecord>[] = [
-			{ name: label("category"), func: this.assignCategory, active: true },
-			{ name: label("plan"), func: this.assignPlan, active: true },
-			{ name: label("assign.split"), func: this.assignSplit, active: true },
+			{ name: label("category"), func: this.assignCategory, active: this.state.seletedAccountRecords.length > 0 },
+			{ name: label("plan"), func: this.assignPlan, active: this.state.seletedAccountRecords.length === 1 },
+			{ name: label("assign.split"), func: this.assignSplit, active: this.state.seletedAccountRecords.length === 1 },
 			{ name: "------------", func: () => { }, active: true }
 		];
 		let faventries: ContextMenuEntry<AccountRecord>[] = this.state.favcategory.map((e) => { return { name: e.text, func: this.assignDirect, data: e, active: true }; });
@@ -228,11 +229,11 @@ export class Assign extends React.Component<AssignProps, IState> {
 		return (
 			<div>
 				<div className={css.actionbar}>
-					{this.renderActionButton(this.assignAuto, "assign.auto")}
-					{this.renderActionButton(this.assignCategory, "assign.cat")}
-					{this.renderActionButton(this.assignSplit, "assign.split")}
-					{this.renderActionButton(this.assignPlan, "assign.plan")}
-					{this.renderActionButton(this.createTemplate, "assign.template")}
+					{this.renderActionButton(this.assignAuto, false, "assign.auto")}
+					{this.renderActionButton(this.assignCategory, this.state.seletedAccountRecords.length === 0, "assign.cat")}
+					{this.renderActionButton(this.assignSplit, this.state.seletedAccountRecords.length !== 1, "assign.split")}
+					{this.renderActionButton(this.assignPlan, this.state.seletedAccountRecords.length !== 1, "assign.plan")}
+					{this.renderActionButton(this.createTemplate, this.state.seletedAccountRecords.length !== 1, "assign.template")}
 				</div>
 				<MultiSelectLister<AccountRecord> columns={this.columns}
 					testdata-id={"assignlister"}
@@ -241,7 +242,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 					lines={28}
 					ext=''
 					ref={(ref) => { this.recordLister = ref }}
-					handleselect={(data: AccountRecord[]) => { this.setState({ accountRecords: data }); }} />
+					handleselect={(data: AccountRecord[]) => { this.setState({ seletedAccountRecords: data }); }} />
 				{this.renderAssignEditor()}
 			</div>
 		)

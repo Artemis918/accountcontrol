@@ -11,8 +11,8 @@ export interface MonthSelectProps {
 }
 
 class CState {
-    year: number;
-    month: number;
+    year: number =0;
+    month: number =0;
 }
 
 export class MonthSelect extends React.Component<MonthSelectProps, CState> {
@@ -38,27 +38,19 @@ export class MonthSelect extends React.Component<MonthSelectProps, CState> {
 
     increaseMonth(): void {
         if ( this.state.month == 12 ) {
-            var y: number = this.state.year;
-            y++;
-            this.handleChange( 1, y );
+            this.handleChange( 1, this.state.year+1);
         }
         else {
-            var m: number = this.state.month;
-            m++;
-            this.handleChange( m, this.state.year );
+            this.handleChange( this.state.month+1, this.state.year );
         }
     }
 
     decreaseMonth(): void {
         if ( this.state.month == 1 ) {
-            var y: number = this.state.year;
-            y--;
-            this.handleChange( 12, y );
+            this.handleChange( 12, this.state.year-1 );
         }
         else {
-            var m: number = this.state.month;
-            m--;
-            this.handleChange( m, this.state.year );
+            this.handleChange( this.state.month-1, this.state.year );
         }
     }
 
