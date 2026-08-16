@@ -273,8 +273,19 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         };
     }
 
-    render(): React.JSX.Element {
+    renderActionButton(func: () => void, disabled: boolean, labelid: string): React.JSX.Element {
+		return (
+			<button className={css.actionbutton} 
+			    onClick={func}
+			    disabled={disabled}	
+			    testdata-id={labelid}
+			    >
+			    {label(labelid)}
+			</button>
+		)
+	}
 
+    render(): React.JSX.Element {
 
         let singleline: boolean = this.lister.current != null && this.state.selectedAssignments.length == 1;
         let hasPlan: boolean = singleline && this.state.selectedAssignments[0].plan != 0 
@@ -294,32 +305,11 @@ export class Categories extends React.Component<CategoriesProps, IState> {
         return (
             <div>
                 <div style={{ border: '1px solid black' }}>
-
-                    <button className={css.actionbutton}
-                        onClick={() => this.commitSelected()}
-                        disabled={this.state.selectedAssignments.length == 0}>
-                        {label("check.commitselected")}
-                    </button>
-                    <button className={css.actionbutton}
-                        onClick={() => this.commitAll()}>
-                        {label("check.commitall")}
-                    </button>
-
-                    <button className={css.actionbutton}
-                        onClick={() => this.acceptValueAssignment()}
-                        disabled={this.state.selectedAssignments.length != 1 || !hasPlan}>
-                        {label("check.acceptvalue")}
-                    </button>
-                    <button className={css.actionbutton}
-                        onClick={() => this.editAssignment()}
-                        disabled={this.state.selectedAssignments.length != 1}>
-                        {label("edit")}
-                    </button>
-                    <button className={css.actionbutton}
-                        onClick={() => this.removeAssignment()}
-                        disabled={this.state.selectedAssignments.length == 0}>
-                        {label("check.removeassign")}
-                    </button>
+                    {this.renderActionButton(this.commitSelected, this.state.selectedAssignments.length == 0, "check.commitselected")}
+                    {this.renderActionButton(this.commitAll, false, "check.commitall")}
+                    {this.renderActionButton(this.acceptValueAssignment, !hasPlan, "check.acceptvalue")}
+                    {this.renderActionButton(this.editAssignment, !singleline, "edit")}
+                    {this.renderActionButton(this.removeAssignment, this.state.selectedAssignments.length == 0, "check.removeassign")}
                 </div>
                 <table>
                     <tbody>

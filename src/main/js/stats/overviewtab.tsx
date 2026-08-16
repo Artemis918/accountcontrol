@@ -55,24 +55,13 @@ export class OverviewTab extends React.Component<OverviewTabProps, IState> {
 	}
 
 	render(): React.JSX.Element {
-		return (
+		return ( 
 		<div>
-			<table >
-				<tbody>
-					<tr>
-						<td>{label("overview.firstmonth")}</td>
-						<td>
-							<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
-						</td>
-					</tr>
-					<tr>
-						<td> {label("overview.lastmonth")} </td>
-						<td>
-							<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			{label("overview.firstmonth")}
+			<MonthSelect label="" onChange={this.changeStart} year={this.state.startYear} month={this.state.startMonth} />
+			{label("overview.lastmonth")}
+			<MonthSelect label="" onChange={this.changeEnd} year={this.state.endYear} month={this.state.endMonth} />
+						
 			<table>
 			<thead>
 				<tr>
