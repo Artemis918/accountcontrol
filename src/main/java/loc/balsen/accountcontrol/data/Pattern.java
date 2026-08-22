@@ -1,6 +1,5 @@
 package loc.balsen.accountcontrol.data;
 
-import java.io.IOException;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -27,7 +26,7 @@ public class Pattern {
 
   private String getField(JsonNode p, String fieldname) {
     JsonNode res = p.get(fieldname);
-    return (res == null) ? "" : res.asText();
+    return (res == null) ? "" : res.asString();
   }
 
   public Pattern(String jsonString) {
