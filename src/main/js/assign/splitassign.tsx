@@ -14,6 +14,7 @@ type onCommitCallback = () => void;
 export interface SplitAssignProps {
     sendMessage: SendMessage;
     accountRecord: AccountRecord;
+    accountRecordId: number
     onCommit: onCommitCallback;
 }
 
@@ -43,15 +44,15 @@ class AssignPart {
         this.value = Math.abs(v);
     }
 
-    getAssignment(accountRecord: AccountRecord): Assignment {
+    getAssignment(value: number, recordId: number): Assignment {
         return {
             id: undefined,
             detail: this.details,
             description: this.details,
-            real: accountRecord.value >= 0 ? this.value : this.value * -1,
+            real: value >= 0 ? this.value : this.value * -1,
             committed: false,
             plan: (this.plan == undefined) ? undefined : this.plan.id,
-            accountrecord: accountRecord.id,
+            accountrecord: recordId,
             subcategory: this.subcategory
         }
     }
@@ -75,7 +76,7 @@ export class SplitAssign extends React.Component<SplitAssignProps , IState> {
     }
 
     save(): void {
-        var assignments: Assignment[] = this.state.data.map((t: AssignPart) => { return t.getAssignment(this.props.accountRecord) });
+        var assignments: Assignment[] = this.state.data.map((t: AssignPart) => { return t.getAssignment(this.props.accountRecord.value, this.props.accountRecordId) });
         assignments.forEach((z: Assignment) => { z.committed = true });
 
         var self: SplitAssign = this;

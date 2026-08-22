@@ -125,7 +125,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 			(r) => { self.setAnaylzeData(r) })
 	}
 
-	setPattern(p: Pattern): void {
+	setPattern(p: Pattern | undefined): void {
 		if (this.currentPlan != undefined && p != undefined) {
 			this.currentPlan.patterndto = p;
 			postRequest('templates/changepattern', this.currentPlan, () => { });
@@ -146,7 +146,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 		return [this.state.propsPlan];
 	}
 
-	settimerange(template: Template): void {
+	settimerange(template: Template | undefined ): void {
 		// TODO implemtn backend
 		// fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
 		// this.setState({ timerangeeditor: false });
@@ -188,7 +188,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 		if (this.state.patterneditor && this.currentPlan) {
 			return (<PatternEditor
 				pattern={this.currentPlan.patterndto}
-				sendPattern={(p: Pattern) => this.setPattern(p)}
+				sendPattern={(p: Pattern | undefined ) => this.setPattern(p)}
 				zIndex={4} />);
 		}
 		else {

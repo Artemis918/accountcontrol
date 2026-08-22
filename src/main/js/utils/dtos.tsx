@@ -82,8 +82,8 @@ export class Plan {
     position: number;
     description: string;
     shortdescription: string;
-    category?: number;
-    subcategory?: number;
+    category: number;
+    subcategory: number;
     categoryname: string;
     subcategoryname: string;
     value: number;
@@ -99,8 +99,8 @@ export class Plan {
         this.position = 0;
         this.description = '';
         this.shortdescription = '';
-        this.category = undefined;
-        this.subcategory = undefined;
+        this.category = -1;
+        this.subcategory = -1;
         this.categoryname = '';
         this.subcategoryname = '';
         this.value = 0;
@@ -204,7 +204,7 @@ export interface SubCategory {
 export interface Category {
     id: number;
     shortdescription: string;
-    description: string;
+    description?: string;
     active: boolean;
 }
 

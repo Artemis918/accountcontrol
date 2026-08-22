@@ -4,7 +4,7 @@ import { label } from '../utils/misc'
 import { Pattern } from '../utils/dtos'
 import * as css from '../css/index.css'
 
-type SendPatternCallback = (pattern: Pattern) => void
+type SendPatternCallback = (pattern: Pattern | undefined ) => void
 
 interface PatternEditorProps {
     pattern: Pattern;
@@ -13,12 +13,12 @@ interface PatternEditorProps {
 }
 
 interface IState {
-    details?: string;
-    mandate?: string;
-    receiver?: string;
-    referenceID?: string;
-    sender?: string;
-    submitter?: string;
+    details: string;
+    mandate: string;
+    receiver: string;
+    referenceID: string;
+    sender: string;
+    submitter: string;
 }
 
 export class PatternEditor extends React.Component<PatternEditorProps, IState> {
@@ -66,7 +66,9 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
 
     changeState(stateKey: string, newValue: string): void {
         var key: keyof IState = stateKey as keyof IState;
-        this.setState({ [key]: newValue });
+        var newState: IState = this.state;
+        newState[key] = newValue;
+        this.setState( newState );
     }
 
     renderInput(patid: string): React.JSX.Element {

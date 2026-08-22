@@ -34,24 +34,24 @@ class Range {
 
 }
 
-class CState {
-	selectedRows: number[];
-	range: Range;
+interface CState {
+	selectedRows: number[] | undefined;
+	range: Range | undefined;
 }
 
 export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps<D> & { 'testdata-id'?: string }, CState> {
-	lister: SelectLister<D>;
+	lister: SelectLister<D> |null;
 
 	constructor(props: MultiSelectlisterProps<D>) {
 		super(props);
-		this.lister = undefined;
+		this.lister = null;
 		this.state = { range: undefined, selectedRows: undefined};
 		this.handleSelect = this.handleSelect.bind(this);
 		this.isSelected = this.isSelected.bind(this);
 	}
 
 	handleSelect(shift: boolean, ctrl: boolean, index: number): void {
-		var selectedData: D[];
+		var selectedData: D[] | undefined;
 		if (index == undefined) {
 			selectedData = undefined;
 			this.setState({ selectedRows: undefined, range: undefined });
@@ -64,7 +64,7 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 			else {
 				f = this.state.range.first
 			}
-			selectedData = this.lister.getDataRange(f, index);
+			selectedData = this.lister?.getDataRange(f, index);
 			this.setState({ selectedRows: undefined, range: new Range(f, index) });
 		}
 		else if (ctrl) {
@@ -81,15 +81,15 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 				rows = [];
 			}
 			rows.push(index);
-			selectedData = this.lister.getData(rows);
+			selectedData = this.lister?.getData(rows);
 			this.setState({ selectedRows: rows, range: undefined });
 		}
 		else {
-			selectedData = this.lister.getDataRange(index, index);
+			selectedData = this.lister?.getDataRange(index, index);
 			this.setState({ selectedRows: undefined, range: new Range(index, index) });
 		}
 
-		if (this.props.handleselect != undefined)
+		if (this.props.handleselect != undefined && selectedData != undefined)
 			this.props.handleselect(selectedData);
 	}
 
@@ -98,6 +98,8 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 	}
 
 	getSelectedData(): D[] {
+		if ( this.lister == undefined ) 
+			return [];
 		if (this.state.range != undefined)
 			return this.lister.getDataRange(this.state.range.getLo(), this.state.range.getHi());
 		else if (this.state.selectedRows != undefined)
@@ -107,13 +109,14 @@ export class MultiSelectLister<D> extends React.Component<MultiSelectlisterProps
 	}
 
 	getDataAll(): D[] {
-		return this.lister.getDataAll();
+		return this.lister ? this.lister.getDataAll() : [];
 	}
 
 	reload(): void {
 		this.setState({ range: undefined, selectedRows: undefined });
-		this.props.handleselect([]);
-		this.lister.reload();
+		if (this.props.handleselect) 
+			this.props.handleselect([]);
+		this.lister?.reload();
 	}
 
 	isSelected(index: number): boolean {

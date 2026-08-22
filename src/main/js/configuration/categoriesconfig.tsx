@@ -25,8 +25,8 @@ interface IState {
 
 export class CategoriesConfig extends React.Component<CategoryConfigProps, IState> {
 
-	catlister: React.RefObject<SingleSelectLister<Category | null> |null > = React.createRef<SingleSelectLister<Category | null>>();
-	sublister: React.RefObject<SingleSelectLister<SubCategory | null> |null > = React.createRef<SingleSelectLister<SubCategory | null>>();
+	catlister: React.RefObject<SingleSelectLister<Category> |null > = React.createRef<SingleSelectLister<Category>>();
+	sublister: React.RefObject<SingleSelectLister<SubCategory> |null > = React.createRef<SingleSelectLister<SubCategory>>();
 
 	constructor(props: CategoryConfigProps ) {
 		super(props);
@@ -90,7 +90,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 	}
 
 
-	saveSub(short: string, desc: string): void {
+	saveSub(short: string | undefined, desc: string | undefined): void {
 		var self = this;
 		if (short != undefined && short != '' && this.state.category?.id != undefined) {
 			var subCategory: SubCategory =
@@ -102,7 +102,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 				art: 0,
 				active: true,
 				favorite: false,
-				categoryName: this.state.category?.description
+				categoryName: "" // ignored during sub writing
 			};
 			var jsonbody = JSON.stringify(subCategory);
 			fetch('category/savesub', {
@@ -122,7 +122,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 		}
 	}
 
-	saveCat(short: string, desc: string): void {
+	saveCat(short: string | undefined, desc: string | undefined): void {
 		var self = this;
 		if (short != undefined && short != '') {
 			var category: Category =
@@ -261,6 +261,8 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 										onChange={() => this.invertActiveCat(cell.data)} />
 								</div>
 							)
+						else
+							return null;
 					}
 				}
 			];
@@ -268,7 +270,7 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 			[
 				{
 					header: label("config.subcategory"),
-					getdata: (c: SubCategory) => { return c.shortdescription; }
+					getdata: (c: SubCategory) => { return c.shortdescription ? c.shortdescription :""; }
 				},
 				{
 					header: favoritelabel,
@@ -281,6 +283,8 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 										onChange={() => this.invertFavorite(cell.data)} />
 								</div>
 							)
+						else
+							return null;
 					}
 				},
 				{
@@ -294,6 +298,8 @@ export class CategoriesConfig extends React.Component<CategoryConfigProps, IStat
 										onClick={() => this.invertActiveSub(cell.data)} />
 								</div>
 							)
+						else
+							return null;
 					}
 				}
 
