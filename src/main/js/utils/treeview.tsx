@@ -4,17 +4,17 @@ import * as tcss from './css/treeview.css'
 export type GetURLCallback = ( level: number, id: number ) => string;
 export type HandleSelectCallback = ( level: number, id: number ) => void;
 
-class Enum {
+interface Enum {
     text: string;
     value: number;
 }
 
-class CState {
+interface CState {
     root: Node;
-    selected: Node;
+    selected: Node | undefined;
 }
 
-class Node {
+interface Node {
     id: number;
     level: number;
     name: string;
@@ -59,8 +59,9 @@ export class TreeView extends React.Component<TreeViewProperties, CState> {
         node.children = data.map( ( e ) => this.createNode( e, node.level + 1 ) )
         node.expanded = true;
         this.setState( { root: this.root } );
-        if ( this.state.selected == undefined ) {
-            this.treeSelect(this.root.children[0]);
+        const firstChild = this.root.children?.[0];
+        if ( this.state.selected == undefined && firstChild != undefined ) {
+            this.treeSelect( firstChild );
         }
     }
 

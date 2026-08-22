@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormattedMessage } from 'react-intl';
 
-type SaveData = ( short: string, descripition:string ) => void;
+type SaveData = ( short: string | undefined, descripition:string | undefined ) => void;
 
 export interface AddToolProps {
     save: SaveData;
@@ -13,14 +13,13 @@ export interface AddToolProps {
 
 export class AddTool extends React.Component<AddToolProps, {}> {
 
-    short: React.RefObject<HTMLInputElement>;
-    description: React.RefObject<HTMLInputElement>;
+    short: React.RefObject<HTMLInputElement | null> = React.createRef<HTMLInputElement | null>();
+    description: React.RefObject<HTMLInputElement | null> = React.createRef<HTMLInputElement | null>();
 
     constructor( props: AddToolProps ) {
         super( props );
         this.state = {};
-        this.short = React.createRef();
-        this.description = React.createRef();
+ 
         this.createcat = this.createcat.bind( this );
         this.cancel = this.cancel.bind( this );
         this.handleKeyPress = this.handleKeyPress.bind( this );
@@ -42,7 +41,7 @@ export class AddTool extends React.Component<AddToolProps, {}> {
     }
 
     createcat() :void {
-        this.props.save( this.short.current.value, this.description.current.value );
+        this.props.save( this.short.current?.value, this.description.current?.value );
     }
 
     cancel() : void {

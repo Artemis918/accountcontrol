@@ -9,8 +9,8 @@ export interface ContextMenuEntry<D> {
 }
 
 export interface ContextMenuDef<D> {
-	entries?: ContextMenuEntry<D>[];
-	title?: string;
+	entries: ContextMenuEntry<D>[];
+	title: string;
 }
 
 export interface ContextMenuEntry<D> {
@@ -68,7 +68,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 		</tr>
 	}
 
-	renderHead(title: string): React.JSX.Element {
+	renderHead(title: string): React.JSX.Element | null {
 		if (title != null) {
 			return (
 				<tr key={"head"}>
@@ -78,9 +78,11 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 				</tr>
 			)
 		}
+		else
+			return null;
 	}
 
-	render(): React.JSX.Element {
+	render(): React.JSX.Element | null {
 		if (this.props.menuOn && this.props.menudef != null) {
 			return (
 				<div style={{
@@ -101,7 +103,7 @@ export class ContextMenu<D> extends React.Component<ContextMenuProps<D>, CState>
 				</div>);
 		}
 		else {
-			return null
+			return null;
 		}
 	}
 }

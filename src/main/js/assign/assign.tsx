@@ -63,7 +63,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 		}];
 	recordLister: MultiSelectLister<AccountRecord> | null = null;
 
-	constructor(props: AssignProps ) {
+	constructor(props: AssignProps) {
 		super(props)
 		this.state = {
 			plan: undefined,
@@ -78,7 +78,7 @@ export class Assign extends React.Component<AssignProps, IState> {
 		this.assignAuto = this.assignAuto.bind(this);
 		this.assignSplit = this.assignSplit.bind(this);
 		this.createTemplate = this.createTemplate.bind(this);
-		
+
 		this.assignCategory = this.assignCategory.bind(this);
 		this.assignDirect = this.assignDirect.bind(this);
 		this.executeAssignCategory = this.executeAssignCategory.bind(this);
@@ -176,12 +176,12 @@ export class Assign extends React.Component<AssignProps, IState> {
 		else
 			this.setState({ action: AssignAction.NONE });
 	}
-	
+
 	renderAssignEditor(): React.JSX.Element {
 		var recordId: number | undefined = this.state.seletedAccountRecords.length == 1 ? this.state.seletedAccountRecords[0].id : undefined;
 
 		if (this.state.action == AssignAction.CATEGORY) {
-			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory}/>;
+			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} onAssignNewCats={this.executeAssignCategory} />;
 		}
 		else if (this.state.action == AssignAction.PLAN) {
 			return <AssignEdit sendMessage={this.props.sendmessage} recordId={recordId} onAssign={this.onAssign} />;
@@ -193,10 +193,10 @@ export class Assign extends React.Component<AssignProps, IState> {
 
 	renderActionButton(func: () => void, disabled: boolean, labelid: string): React.JSX.Element {
 		return (
-			<button className={css.actionbutton} 
-			onClick={func}
-			disabled={disabled}	
-			testdata-id={labelid}
+			<button className={css.actionbutton}
+				onClick={func}
+				disabled={disabled}
+				testdata-id={labelid}
 			>
 				{label(labelid)}
 			</button>
@@ -209,8 +209,13 @@ export class Assign extends React.Component<AssignProps, IState> {
 			return <TemplateEditor accountRecordId={this.state.seletedAccountRecords[0].id} onDetach={() => this.setState({ action: AssignAction.NONE })} />
 		}
 
-		if (this.state.action == AssignAction.SPLIT) {
-			return <SplitAssign accountRecord={this.state.seletedAccountRecords[0]} onCommit={() => this.clearAction()} sendMessage = {this.props.sendmessage} />
+
+		if (this.state.action == AssignAction.SPLIT && this.state.seletedAccountRecords[0].id != undefined) {
+
+			return <SplitAssign accountRecord={this.state.seletedAccountRecords[0]}
+				accountRecordId={this.state.seletedAccountRecords[0].id}
+				onCommit={() => this.clearAction()}
+				sendMessage={this.props.sendmessage} />
 		}
 
 		let mainentries: ContextMenuEntry<AccountRecord>[] = [
