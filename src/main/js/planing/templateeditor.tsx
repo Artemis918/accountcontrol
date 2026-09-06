@@ -175,6 +175,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 		return (
 			<div>
+				<label>{this.state.message}</label>
 				<div className={css.boxborder} >
 					<div className={css.boxinnerpart} >
 						<label className={css.boxlabel} > {label("templates.templatedata")}</label>
@@ -188,7 +189,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 									</td>
 								</tr>
 								<tr><td>{label("description")}</td>
-									<td colSpan={3} ><textarea cols={40} rows={3}
+									<td colSpan={3} ><textarea cols={38} rows={3}
 										className={css.stringinput}
 										value={this.state.template.description}
 										onChange={(e) => { this.template.description = e.target.value; this.setTemplateState() }} />
@@ -243,9 +244,11 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 									<td colSpan={3}><CategorySelector
 										horiz={true}
 										onChange={(s, c) => this.setSubCategory(s, c)}
-										subcategory={this.state.template.subcategory} /></td>
+										subcategory={this.state.template.subcategory} />
+									</td>
 								</tr>
-								<tr><td>{label("value")}</td>
+								<tr>
+									<td>{label("value")}</td>
 									<td><input step="0.01" value={this.state.template.value / 100}
 										type='number'
 										className={css.numbersmallinput}
@@ -265,7 +268,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				</div>
 				<div style={{ textAlign: 'center' }}>
 					{this.renderButton()}
-					<label>{this.state.message}</label>
 					{
 						this.state.patternEdit ?
 							<PatternEditor

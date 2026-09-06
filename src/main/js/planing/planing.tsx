@@ -132,7 +132,6 @@ export class Planing extends React.Component<PlaningProps, IState> {
                         <tr>
                             <td style={{ verticalAlign: 'top'}} >
                                 <div style={{ border: '1px solid black', verticalAlign: 'top', paddingBottom: '160px'}}>
-                                    <div className={css.editortitle}> {label("plan.plandata")} </div>
                                     <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
                                 </div>
                                 <div style={{ border: '1px solid black', marginTop: '5px', padding: '30px', textAlign: 'center'}}>

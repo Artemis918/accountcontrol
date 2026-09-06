@@ -57,7 +57,8 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeR
         return (
             <table>
                 <tbody style={{ verticalAlign: 'top' }}>
-                    <tr style={{ background: 'darkgray' }}><td>{label("templates.repetition")}</td>
+                    <tr>
+                        <td>{label("templates.repetition")}</td>
                         <td>
                             <span style={{ width: '20%' }}>
                                 <input className={css.numbersmallinput} value={this.state.repeatcount}
@@ -73,13 +74,15 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeR
                             </span>
                         </td>
                     </tr>
-                    <tr style={{ background: 'darkgray' }}><td>{label("templates.firstday")}</td>
+                    <tr>
+                        <td>{label("templates.firstday")}</td>
                         <td><ACDayPickerInput
                             onChange={(d) => { this.setState({startdate: d}); this.sendTimeRange() }}
                             startdate={this.state.startdate} />
                         </td>
                     </tr>
-                    <tr style={{ background: 'darkgray' }}><td>{label("templates.variance")}</td>
+                    <tr>
+                        <td>{label("templates.variance")}</td>
                         <td><input value={this.state.variance}
                             className={css.numbersmallinput}
                             type='number'

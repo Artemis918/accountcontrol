@@ -25,13 +25,16 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 
     constructor( props: PlanEditorProps ) {
         super( props );
-        this.state = { plan: this.plan, message: '', patternEdit: false };
         this.clear = this.clear.bind( this );
         this.save = this.save.bind( this );
         this.delete = this.delete.bind( this );
         this.copy = this.copy.bind( this );
         this.setAnswer = this.setAnswer.bind( this );
         this.setPlan = this.setPlan.bind( this );
+        this.createNewPlan = this.createNewPlan.bind( this );
+
+        this.plan = this.createNewPlan();
+        this.state = { plan: this.plan, message: '', patternEdit: false };
     }
 
     resetEditor(): void {
@@ -45,6 +48,7 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
 		plan.plandate = new Date();
 		plan.description=label("plan.newdescription");
 		plan.shortdescription=label("plan.newshortdescription");
+        plan.subcategory = 0;
         return plan
     }
 
