@@ -94,6 +94,7 @@ export class ACDayPickerInput extends React.Component<ACDayPickerProps, IState> 
 					value={this.state.dateString}
 					onChange={(e) => this.parseNewDate(e.target.value)}
 					className={css.stringinput}
+					size={11}
 				/>
 				<Popup
 					trigger={<button>

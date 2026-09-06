@@ -92,6 +92,7 @@
 	"records.filelist": "file list",
 
 	"templates.templatedata": "Template data",
+	"templates.timerange": "Timerange",
 	"templates.validfrom": "Valid from",
 	"templates.validuntil": "Valid until",
 	"templates.repetition": "Repetition",
@@ -99,6 +100,7 @@
 	"templates.variance": "Max. variance",
 	"templates.newshortdescription": "New",
 	"templates.newdescription": "New Template",
+	"templates.rating": "Rating",
 	"templates.copyof": "Copy of ",
 	"templates.saved": "template saved",
 				

@@ -5,8 +5,8 @@ import { CategorySelector } from '../utils/categoryselector'
 import { Template } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { myParseJson, label } from '../utils/misc'
-import * as css from '../css/index.css'
 import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
+import * as css from '../css/index.css'
 
 
 
@@ -158,109 +158,128 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
-	saveRange(timerangedata: TimeRangeData ): void {
-			this.template.repeatcount = timerangedata.repeatcount;
-			this.template.repeatunit = timerangedata.repeatunit;
-			this.template.variance = timerangedata.variance;
-			this.template.start = timerangedata.startdate;
+	saveRange(timerangedata: TimeRangeData): void {
+		this.template.repeatcount = timerangedata.repeatcount;
+		this.template.repeatunit = timerangedata.repeatunit;
+		this.template.variance = timerangedata.variance;
+		this.template.start = timerangedata.startdate;
 	}
 
 	render(): React.JSX.Element {
 
-		var timerange:TimeRangeData = {
+		var timerange: TimeRangeData = {
 			repeatcount: this.template.repeatcount,
 			repeatunit: this.template.repeatunit,
 			variance: this.template.variance,
 			startdate: this.template.start
 		}
-
 		return (
 			<div>
-				<table>
-					<tbody style={{ verticalAlign: 'top' }} >
-						<tr><td>{label("shortdescription")}</td>
-							<td><input className={css.stringinput}
-								value={this.state.template.shortdescription} type='text'
-								onChange={(e) => { this.template.shortdescription = e.target.value; this.setTemplateState() }} />
-							</td>
-						</tr>
-						<tr><td>{label("templates.validfrom")}</td>
-							<td><ACDayPickerInput
-								onChange={(d) => { this.template.validFrom = d; this.setTemplateState() }}
-								startdate={this.state.template.validFrom} />
-							</td>
-						</tr>
-						<tr><td>{label("templates.validuntil")}</td>
-							<td><ACDayPickerInput
-								onChange={(d) => { this.template.validUntil = d; this.setTemplateState() }}
-								startdate={this.state.template.validUntil} />
-							</td>
-						</tr>
-						<tr>
-							<td colSpan={2}>
-							<TimeRangeEditor rangedata={timerange} 
-						        sendRange={this.saveRange}
+				<div className={css.boxborder} >
+					<div className={css.boxinnerpart} >
+						<label className={css.boxlabel} > {label("templates.templatedata")}</label>
+						<table>
+							<tbody style={{ verticalAlign: 'top' }} >
+								<tr><td>{label("shortdescription")}</td>
+									<td colSpan={3} >
+										<input className={css.stringinput}
+											value={this.state.template.shortdescription} type='text'
+											onChange={(e) => { this.template.shortdescription = e.target.value; this.setTemplateState() }} />
+									</td>
+								</tr>
+								<tr><td>{label("description")}</td>
+									<td colSpan={3} ><textarea cols={40} rows={3}
+										className={css.stringinput}
+										value={this.state.template.description}
+										onChange={(e) => { this.template.description = e.target.value; this.setTemplateState() }} />
+									</td>
+								</tr>
+								<tr><td>{label("templates.validfrom")}</td>
+									<td><ACDayPickerInput
+										onChange={(d) => { this.template.validFrom = d; this.setTemplateState() }}
+										startdate={this.state.template.validFrom} />
+									</td>
+									<td>{label("templates.validuntil")}</td>
+									<td><ACDayPickerInput
+										onChange={(d) => { this.template.validUntil = d; this.setTemplateState() }}
+										startdate={this.state.template.validUntil} />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div className={css.boxborder} >
+					<div className={css.boxinnerpart} >
+						<label className={css.boxlabel} > {label("templates.timerange")}</label>
+						<TimeRangeEditor rangedata={timerange}
+							sendRange={this.saveRange}
+						/>
+					</div>
+				</div >
+				<div className={css.boxborder} >
+					<div className={css.boxinnerpart} >
+						<label className={css.boxlabel} > {label("plan.pattern")}</label>
+						<br />
+						<button
+							onClick={() => this.setState({ patternEdit: true })}
+							className={css.addonbutton}>
+							{label("plan.edit")}</button>
+					</div>
+				</div >
+				<div className={css.boxborder} >
+					<div className={css.boxinnerpart} >
+						<label className={css.boxlabel} > {label("templates.rating")}</label>
+						<table>
+							<tbody>
+								<tr><td>{label("plan.position")}</td>
+									<td><input value={this.state.template.position}
+										type='number'
+										className={css.numbersmallinput}
+										onChange={(e) => { this.template.position = e.target.valueAsNumber; this.setTemplateState() }} />
+									</td>
+								</tr>
+								<tr><td>{label("category")}</td>
+									<td colSpan={3}><CategorySelector
+										horiz={true}
+										onChange={(s, c) => this.setSubCategory(s, c)}
+										subcategory={this.state.template.subcategory} /></td>
+								</tr>
+								<tr><td>{label("value")}</td>
+									<td><input step="0.01" value={this.state.template.value / 100}
+										type='number'
+										className={css.numbersmallinput}
+										onChange={(e) => { this.template.value = e.target.valueAsNumber * 100; this.setTemplateState() }} />
+									</td>
+									<td>{label("plan.matchstyle")}</td>
+									<td>
+										<MatchStyleSelector
+											curvalue={this.state.template.matchstyle}
+											className={css.catselector3}
+											onChange={(e) => { this.template.matchstyle = e; this.setTemplateState() }} />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div style={{ textAlign: 'center' }}>
+					{this.renderButton()}
+					<label>{this.state.message}</label>
+					{
+						this.state.patternEdit ?
+							<PatternEditor
+								zIndex={1}
+								pattern={this.state.template.pattern}
+								sendPattern={(e) => {
+									if (e != undefined)
+										this.template.pattern = e;
+									this.setTemplateState()
+								}}
 							/>
-							</td>
-						</tr>
-						<tr><td>{label("plan.position")}</td>
-							<td><input value={this.state.template.position}
-								type='number'
-								className={css.numbersmallinput}
-								onChange={(e) => { this.template.position = e.target.valueAsNumber; this.setTemplateState() }} />
-							</td>
-						</tr>
-						<tr><td>{label("category")}</td>
-							<td><CategorySelector
-								horiz={false}
-								onChange={(s, c) => this.setSubCategory(s, c)}
-								subcategory={this.state.template.subcategory} /></td>
-						</tr>
-						<tr><td>{label("plan.matchstyle")}</td>
-							<td>
-								<MatchStyleSelector
-									curvalue={this.state.template.matchstyle}
-									className={css.catselector3}
-									onChange={(e) => { this.template.matchstyle = e; this.setTemplateState() }} />
-							</td>
-						</tr>
-						<tr><td>{label("value")}</td>
-							<td><input step="0.01" value={this.state.template.value / 100}
-								type='number'
-								className={css.numbersmallinput}
-								onChange={(e) => { this.template.value = e.target.valueAsNumber * 100; this.setTemplateState() }} />
-							</td>
-						</tr>
-						<tr><td>{label("description")}</td>
-							<td><textarea cols={20} rows={3}
-								className={css.stringinput}
-								value={this.state.template.description}
-								onChange={(e) => { this.template.description = e.target.value; this.setTemplateState() }} />
-							</td>
-						</tr>
-						<tr><td>{label("plan.pattern")}</td>
-							<td><button
-								onClick={() => this.setState({ patternEdit: true })}
-								className={css.addonbutton}>
-								{label("plan.edit")}</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				{this.renderButton()}
-				<label>{this.state.message}</label>
-				{this.state.patternEdit ?
-					<PatternEditor
-						zIndex={1}
-						pattern={this.state.template.pattern}
-						sendPattern={(e) => {
-							if (e != undefined)
-								this.template.pattern = e;
-							this.setTemplateState()
-						}}
-					/>
-					: null
-				}
+							: null
+					}
+				</div >
 			</div >
 		);
 	}

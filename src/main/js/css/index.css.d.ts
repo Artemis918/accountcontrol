@@ -22,5 +22,9 @@ declare const css: {
   readonly numberinput: string;
   readonly numbersmallinput: string;
   readonly stringinput: string;
+
+  readonly boxborder: string;
+  readonly boxinnerpart: string;
+  readonly boxlabel: string;
 };
 export = css;

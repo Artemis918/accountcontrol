@@ -159,3 +159,31 @@
 	border: 2px solid black;
 	background: lightyellow
 }
+
+.boxborder {
+    border: 2px solid gray;
+    padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+    margin: 10px;
+	border-radius: 5px;
+}
+
+.boxinnerpart  {
+position: relative;
+	top: -5px;
+}
+
+.boxlabel {
+	position: relative;
+    top: -5px;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    margin-right: 20px;
+	background-color: lightgray;
+	border :solid 1px gray;
+	padding: 0% 2px;
+	border-radius: 5px;
+	display: inline-block;
+}

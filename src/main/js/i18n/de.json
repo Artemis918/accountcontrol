@@ -92,6 +92,7 @@
 	"records.filelist": "Dateiliste",
 	
 	"templates.templatedata": "VorlageDaten",
+	"templates.timerange": "Zeitraum",
 	"templates.validfrom": "gültig ab",
 	"templates.validuntil": "gültig bis",
 	"templates.repetition": "Wiederholung",
@@ -99,6 +100,7 @@
 	"templates.variance": "Max. Abweichung",
 	"templates.newshortdescription": "Neu",
 	"templates.newdescription": "Neue Vorlage",
+	"templates.rating": "Bewertung",
 	"templates.copyof": "Kopie von ",
 	"templates.saved": "Vorlage gespeichert",
 	

@@ -79,7 +79,6 @@ export class Templates extends React.Component<TemplateProps, IState> {
 				<tbody>
 					<tr>
 						<td style={{ border: '1px solid black', verticalAlign: 'top' }}>
-							<div className={css.editortitle}> {label("records.recorddata")} </div>
 							<TemplateEditor ref={(ref) => { this.editor = ref; }}  onDetach={this.refreshlist} />
 						</td>
 						<td style={{ verticalAlign: 'top' }} >
