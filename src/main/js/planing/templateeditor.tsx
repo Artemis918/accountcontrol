@@ -3,10 +3,10 @@ import { PatternEditor } from './patterneditor'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { CategorySelector } from '../utils/categoryselector'
 import { Template } from '../utils/dtos'
-import { TimeUnitSelector } from '../utils/timeunitselector'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { myParseJson, label } from '../utils/misc'
 import * as css from '../css/index.css'
+import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
 
 
 
@@ -38,6 +38,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.copy = this.copy.bind(this);
 		this.setAnswer = this.setAnswer.bind(this);
 		this.setTemplate = this.setTemplate.bind(this);
+		this.saveRange = this.saveRange.bind(this);
 	}
 
 	componentDidMount() {
@@ -46,12 +47,12 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 			fetch('templates/accountrecord/' + this.props.accountRecordId)
 				.then(response => response.text())
 				.then(t => {
-				    if (t) {
-					    let template:Template = myParseJson(t);
-			 			self.createDesc(template);
-						self.setTemplate(template) 
+					if (t) {
+						let template: Template = myParseJson(t);
+						self.createDesc(template);
+						self.setTemplate(template)
 					}
-		   		});
+				});
 		}
 	}
 
@@ -60,8 +61,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.createDesc(template);
 		return template;
 	}
-	
-	createDesc(template: Template) : void {
+
+	createDesc(template: Template): void {
 		template.description = label("templates.newdescription");
 		template.shortdescription = label("templates.newshortdescription");
 	}
@@ -90,7 +91,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 			headers: {
 				"Content-Type": "application/json"
 			}
-		}).then(function(response) {
+		}).then(function (response) {
 			self.setAnswer(response.json());
 		});
 	}
@@ -113,7 +114,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		if (this.state.template.id != undefined && this.state.template.id != 0) {
 			var self = this;
 			fetch('templates/delete/' + this.state.template.id, { method: 'get' })
-				.then(function(response) { self.setAnswer(response.json()); });
+				.then(function (response) { self.setAnswer(response.json()); });
 		}
 	}
 
@@ -157,10 +158,24 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		}
 	}
 
+	saveRange(timerangedata: TimeRangeData ): void {
+			this.template.repeatcount = timerangedata.repeatcount;
+			this.template.repeatunit = timerangedata.repeatunit;
+			this.template.variance = timerangedata.variance;
+			this.template.start = timerangedata.startdate;
+	}
+
 	render(): React.JSX.Element {
+
+		var timerange:TimeRangeData = {
+			repeatcount: this.template.repeatcount,
+			repeatunit: this.template.repeatunit,
+			variance: this.template.variance,
+			startdate: this.template.start
+		}
+
 		return (
 			<div>
-
 				<table>
 					<tbody style={{ verticalAlign: 'top' }} >
 						<tr><td>{label("shortdescription")}</td>
@@ -172,42 +187,20 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 						<tr><td>{label("templates.validfrom")}</td>
 							<td><ACDayPickerInput
 								onChange={(d) => { this.template.validFrom = d; this.setTemplateState() }}
-								startdate={this.state.template.validFrom}/>
+								startdate={this.state.template.validFrom} />
 							</td>
 						</tr>
 						<tr><td>{label("templates.validuntil")}</td>
 							<td><ACDayPickerInput
 								onChange={(d) => { this.template.validUntil = d; this.setTemplateState() }}
-								startdate={this.state.template.validUntil}/>
+								startdate={this.state.template.validUntil} />
 							</td>
 						</tr>
-						<tr style={{ background: 'darkgray' }}><td>{label("templates.repetition")}</td>
-							<td>
-								<span style={{ width: '20%' }}>
-									<input className={css.numbersmallinput} value={this.state.template.repeatcount}
-										type='number'
-										onChange={(e) => { this.template.repeatcount = e.target.valueAsNumber; this.setTemplateState() }} />
-								</span>
-								<span style={{ width: '20%' }}>
-									<TimeUnitSelector
-										className={css.catselector3}
-										curvalue={this.state.template.repeatunit}
-										onChange={(e) => { this.template.repeatunit = e; this.setTemplateState() }}
-									/>
-								</span>
-							</td>
-						</tr>
-						<tr style={{ background: 'darkgray' }}><td>{label("templates.firstday")}</td>
-							<td><ACDayPickerInput
-								onChange={(d) => { this.template.start = d; this.setTemplateState() }}
-								startdate={this.state.template.start} />
-							</td>
-						</tr>
-						<tr style={{ background: 'darkgray' }}><td>{label("templates.variance")}</td>
-							<td><input value={this.state.template.variance}
-								className={css.numbersmallinput}
-								type='number'
-								onChange={(e) => { this.template.variance = e.target.valueAsNumber; this.setTemplateState() }} />
+						<tr>
+							<td colSpan={2}>
+							<TimeRangeEditor rangedata={timerange} 
+						        sendRange={this.saveRange}
+							/>
 							</td>
 						</tr>
 						<tr><td>{label("plan.position")}</td>
@@ -260,10 +253,11 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 					<PatternEditor
 						zIndex={1}
 						pattern={this.state.template.pattern}
-						sendPattern={(e) => { 
-							if (e != undefined )
+						sendPattern={(e) => {
+							if (e != undefined)
 								this.template.pattern = e;
-						    this.setTemplateState() }}
+							this.setTemplateState()
+						}}
 					/>
 					: null
 				}
