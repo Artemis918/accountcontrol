@@ -3,7 +3,7 @@ import React from 'react'
 import { TemplateEditor } from './templateeditor'
 import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectlister'
 import { Template } from '../utils/dtos'
-import { DropdownService } from '../utils/dropdownservice'
+import { Dropdown } from '../utils/dropdown'
 import { SendMessage } from '../utils/messageid'
 import { label, getIntl } from '../utils/misc'
 
@@ -15,16 +15,13 @@ interface TemplateProps {
 
 interface IState {
 	category?: number;
+	template?: Template;
 }
-
-
-
 
 export class Templates extends React.Component<TemplateProps, IState> {
 
 
 	lister: SingleSelectLister<Template> | null = null;
-	editor: TemplateEditor | null = null	;
 
 	unitNames: string[] = [];
 
@@ -32,15 +29,10 @@ export class Templates extends React.Component<TemplateProps, IState> {
 		super(props);
 		this.state = { category: undefined };
 		this.refreshlist = this.refreshlist.bind(this);
-		this.refresheditor = this.refresheditor.bind(this);
 	}
 
 	refreshlist(): void {
 		this.lister?.reload();
-	}
-
-	refresheditor(template: Template): void {
-		this.editor?.setTemplate(template);
 	}
 
 	createColums(): ColumnInfo<Template>[] {
@@ -75,23 +67,26 @@ export class Templates extends React.Component<TemplateProps, IState> {
 
 	render(): React.JSX.Element {
 		return (
-			<table style={{ border: '1px solid black' }}>
+			<table style={{ border: '1px solid black' }} testdata-id={"templates"}>
 				<tbody>
 					<tr>
 						<td style={{ border: '1px solid black', verticalAlign: 'top' }}>
-							<TemplateEditor ref={(ref) => { this.editor = ref; }}  onDetach={this.refreshlist} />
+							<TemplateEditor 
+							template={this.state.template} 
+							onDetach={this.refreshlist} />
 						</td>
 						<td style={{ verticalAlign: 'top' }} >
 							<p style={{ padding: '1px', margin: '5px', borderBottom: '1px solid black' }}>
-								<DropdownService className={css.catselector3}
+								<Dropdown className={css.catselector3}
 									onChange={(val: number): void => this.setState({ category: val })}
 									url='category/catenum/true'
+									selectDef={true}
 									value={this.state.category}
 								/>
 							</p>
 							<SingleSelectLister<Template> ref={(ref) => { this.lister = ref; }}
 								lines={28}
-								handleChange={this.refresheditor}
+								handleChange={(t) => this.setState({ template: t })}
 								url='templates/listcategory/'
 								ext={this.state.category == undefined ? undefined : this.state.category.toString(10)}
 								columns={this.createColums()} />
