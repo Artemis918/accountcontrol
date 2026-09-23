@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { SingleSelectLister, ColumnInfo } from '../utils/singleselectlister'
-import { DropdownService } from '../utils/dropdownservice'
+import { Dropdown } from '../utils/dropdown'
 import { Plan } from '../utils/dtos'
 import { PatternPlanEditor } from './patternplaneditor'
 import { SendMessage } from '../utils/messageid'
@@ -62,7 +62,7 @@ export class PatternPlaning extends React.Component<PatternPlaningProps, IState>
                         </td>
                         <td style={{ verticalAlign: 'top' }}>
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
-                            <DropdownService onChange={( val: number ): void => this.setState( { category: val } )}
+                            <Dropdown onChange={( val: number ): void => this.setState( { category: val } )}
                                 className={css.catselector3}
 								url='category/catenum/true'
                                 value={this.state.category}

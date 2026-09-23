@@ -103,10 +103,10 @@ export class SplitAssign extends React.Component<SplitAssignProps , IState> {
             this.setState({ planselect: false });
     }
 
-    setSubCategory(index: number, subcategory: number, group: number): void {
+    setSubCategory(index: number, subcategory: number |undefined): void {
         const data: AssignPart[] = this.state.data;
-        data[index].subcategory = subcategory;
-        data[index].category = group;
+        data[index].subcategory = subcategory ? subcategory : 0; // TODO handle undefined correctly
+        data[index].category = 0; //TODO find category
         this.setState({ data: data });
     }
 
@@ -171,7 +171,7 @@ export class SplitAssign extends React.Component<SplitAssignProps , IState> {
         return (
             <CategorySelector horiz={true}
                 subcategory={subcategory}
-                onChange={(subcategory, category) => this.setSubCategory(index, subcategory, category)} />
+                onChange={(subcategory) => this.setSubCategory(index, subcategory)} />
         )
     }
 

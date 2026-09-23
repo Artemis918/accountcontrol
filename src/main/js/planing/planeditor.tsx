@@ -110,10 +110,11 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         this.setState({ plan: this.plan, message: '' });
     }
 
-    setSubCategory(sub: number, cat: number): void {
-        this.plan.category = cat;
-        this.plan.subcategory = sub;
-        this.setState({ plan: this.plan, message: '' });
+    setSubCategory(sub: number | undefined): void {
+        if (this.plan.subcategory != sub) {
+            this.plan.subcategory = sub ? sub : 0; /// TODO handle undefined correctly
+            this.setState({ plan: this.plan, message: '' });
+        }
     }
 
     renderButton(): React.JSX.Element {
@@ -134,29 +135,27 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                 <div className={css.boxborder} >
                     <div className={css.boxinnerpart} >
                         <label className={css.boxlabel} > {label("plan.plandata")}</label>
-                        <div>
-                            <table>
-                                <tbody style={{ verticalAlign: 'top' }} >
-                                    <tr>
-                                        <td>{label("shortdescription")}</td>
-                                        <td><input className={css.stringinput}
-                                            value={this.state.plan.shortdescription}
-                                            type='text'
-                                            onChange={(e) => { this.plan.shortdescription = e.target.value; this.setPlanState() }} />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{label("description")}</td>
-                                        <td><textarea className={css.stringinput}
-                                            cols={38
-                                            } rows={3}
-                                            value={this.state.plan.description}
-                                            onChange={(e) => { this.plan.description = e.target.value; this.setPlanState() }} />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table>
+                            <tbody style={{ verticalAlign: 'top' }} >
+                                <tr>
+                                    <td>{label("shortdescription")}</td>
+                                    <td><input className={css.stringinput}
+                                        value={this.state.plan.shortdescription}
+                                        type='text'
+                                        onChange={(e) => { this.plan.shortdescription = e.target.value; this.setPlanState() }} />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{label("description")}</td>
+                                    <td><textarea className={css.stringinput}
+                                        cols={38
+                                        } rows={3}
+                                        value={this.state.plan.description}
+                                        onChange={(e) => { this.plan.description = e.target.value; this.setPlanState() }} />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div className={css.boxborder} >
@@ -217,7 +216,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                                     <td colSpan={3}>
                                         <CategorySelector
                                             horiz={true}
-                                            onChange={(k, g) => this.setSubCategory(k, g)}
+                                            onChange={(sub) => this.setSubCategory(sub)}
                                             subcategory={this.state.plan.subcategory} />
                                     </td>
                                 </tr>

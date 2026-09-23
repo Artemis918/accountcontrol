@@ -1,7 +1,7 @@
 import React from "react";
 import { AccountRecord, Assignment, fetchJson, Plan } from "../utils/dtos";
 import { SendMessage } from "../utils/messageid";
-import { CategorySelect } from "./categoryselect";
+import { AssignCategory } from "./assigncategory";
 import { PlanSelect } from "./planselect";
 import { RecordInfo } from "./recordinfo";
 import { label } from "../utils/misc";
@@ -105,7 +105,7 @@ export class AssignEdit extends React.Component<AssignEditProps, IState> {
 		this.localstate.plan = plan;
 	}
 
-	private onCatChange(subcat: number, comment?: string) {
+	private onCatChange(subcat: number | undefined , comment: string | undefined) {
 		this.localstate.subcat = subcat;
 		this.localstate.comment = comment ?? "";
 	}
@@ -182,7 +182,7 @@ export class AssignEdit extends React.Component<AssignEditProps, IState> {
 		}
 		else {
 			var subCatId = this.props.assignment ? this.props.assignment.subcategory : undefined;
-			return <CategorySelect
+			return <AssignCategory
 				text={this.localstate.comment}
 				subCatId={this.localstate.subcat}
 				onChange={this.onCatChange}
