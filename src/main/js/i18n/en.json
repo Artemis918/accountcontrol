@@ -91,7 +91,6 @@
 	"records.drophere": "drop file here",
 	"records.filelist": "file list",
 
-	"templates.templatedata": "Template data",
 	"templates.timerange": "Timerange",
 	"templates.validfrom": "Valid from",
 	"templates.validuntil": "Valid until",
@@ -115,7 +114,7 @@
 	"plan.edit": "Edit",
 	"plan.createplans": "Create plans until:",
 	"plan.fromtemplates": "Create from templates",
-	"plan.plandata": "Planing data",
+	"plan.plandata": "Description",
 	"plan.plansfor": "Plan for ",
 	"plan.planscreated": "Plans created",
 	

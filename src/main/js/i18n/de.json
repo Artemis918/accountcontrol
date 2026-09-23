@@ -91,7 +91,6 @@
 	"records.drophere": "Datei hierhin ziehen",
 	"records.filelist": "Dateiliste",
 	
-	"templates.templatedata": "VorlageDaten",
 	"templates.timerange": "Zeitraum",
 	"templates.validfrom": "gültig ab",
 	"templates.validuntil": "gültig bis",
@@ -115,7 +114,7 @@
 	"plan.edit": "Bearbeiten",
 	"plan.createplans": "Pläne erstellen bis:",
 	"plan.fromtemplates": "Aus Vorlagen erstellen",
-	"plan.plandata": "Plandaten",
+	"plan.plandata": "Beschreibung",
 	"plan.plansfor": "Pläne für ",
 	"plan.planscreated": "Pläne erstellt",
 	

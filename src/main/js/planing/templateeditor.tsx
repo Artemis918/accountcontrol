@@ -2,11 +2,12 @@ import React from 'react'
 import { PatternEditor } from './patterneditor'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { CategorySelector } from '../utils/categoryselector'
-import { Template } from '../utils/dtos'
+import { Pattern, Template } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { myParseJson, label } from '../utils/misc'
 import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
 import * as css from '../css/index.css'
+import { DescData, DescEditor } from './desceditor'
 
 
 
@@ -14,31 +15,46 @@ type OnChangeCallback = () => void;
 
 
 interface TemplateEditorProps {
+	template?: Template;
 	onDetach: OnChangeCallback;
 	accountRecordId?: number;
 }
 
 interface IState {
-	template: Template;
 	message: string;
 	patternEdit: boolean;
+	position: number;
+	subCategory: number | undefined;
+	matchstyle: number;
+	pattern: Pattern;
+	value: number;
 }
 
 
 export class TemplateEditor extends React.Component<TemplateEditorProps, IState> {
 
-	template: Template = this.createNewTemplate();
+	template: Template;
+	canSave: boolean = false;
+	changed: boolean = true;
 
 	constructor(props: TemplateEditorProps) {
 		super(props);
-		this.state = { template: this.template, message: '', patternEdit: false };
+
 		this.clear = this.clear.bind(this);
 		this.save = this.save.bind(this);
 		this.delete = this.delete.bind(this);
 		this.copy = this.copy.bind(this);
 		this.setAnswer = this.setAnswer.bind(this);
-		this.setTemplate = this.setTemplate.bind(this);
 		this.saveRange = this.saveRange.bind(this);
+		this.createStateFromTemplate = this.createStateFromTemplate.bind(this);
+		this.changeDescData = this.changeDescData.bind(this);
+		this.createNewTemplate = this.createNewTemplate.bind(this);
+		this.createDesc = this.createDesc.bind(this);
+		this.resetEditor = this.resetEditor.bind(this);
+		this.checkCanSave = this.checkCanSave.bind(this);
+
+		this.template = props.template || this.createNewTemplate();
+		this.state = this.createStateFromTemplate();
 	}
 
 	componentDidMount() {
@@ -48,11 +64,22 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				.then(response => response.text())
 				.then(t => {
 					if (t) {
-						let template: Template = myParseJson(t);
-						self.createDesc(template);
-						self.setTemplate(template)
+						self.template = myParseJson(t);
+						self.setState(self.createStateFromTemplate());
 					}
 				});
+		}
+	}
+
+	componentDidUpdate(prevProps: Readonly<TemplateEditorProps>, prevState: Readonly<{}>, snapshot?: any): void {
+		if (prevProps.template != this.props.template) {
+			if (this.props.template != undefined) {
+				this.template = this.props.template;
+				this.setState(this.createStateFromTemplate());
+			}
+			else {
+				this.resetEditor();
+			}
 		}
 	}
 
@@ -62,6 +89,19 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		return template;
 	}
 
+
+	createStateFromTemplate(): IState {
+		return {
+			patternEdit: false,
+			position: this.template.position,
+			subCategory: this.template.subcategory,
+			matchstyle: this.template.matchstyle ? this.template.matchstyle : 0,
+			value: this.template.value,
+			pattern: this.template.pattern,
+			message: ''
+		};
+	}
+
 	createDesc(template: Template): void {
 		template.description = label("templates.newdescription");
 		template.shortdescription = label("templates.newshortdescription");
@@ -69,40 +109,35 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	resetEditor(): void {
 		this.template = this.createNewTemplate();
-		this.setState({ template: this.template });
+		this.setState(this.createStateFromTemplate());
 	}
 
-	setTemplate(template: Template): void {
-		if (template == undefined) {
-			this.resetEditor();
-		}
-		else {
-			this.template = template;
-			this.setState({ template: this.template });
-		}
-	}
+
 
 	save(): void {
-		var self = this;
-		var jsonbody = JSON.stringify(self.state.template);
-		fetch('templates/save', {
-			method: 'post',
-			body: jsonbody,
-			headers: {
-				"Content-Type": "application/json"
-			}
-		}).then(function (response) {
-			self.setAnswer(response.json());
-		});
+		if (this.canSave) {
+			var self = this;
+			var jsonbody = JSON.stringify(this.template);
+			fetch('templates/save', {
+				method: 'post',
+				body: jsonbody,
+				headers: {
+					"Content-Type": "application/json"
+				}
+			}).then(function (response) {
+				self.setAnswer(response.json());
+			});
+		}
 	}
 
 	setAnswer(data: any): void {
-		var msg: string = label("templates.saved");
-		this.setState({ message: msg });
+		var msg: string = data.error;;
 		if (!data.error) {
 			this.clear();
+			this.props.onDetach();
+			var msg: string = label("templates.saved");
 		}
-		this.props.onDetach();
+		this.setState({ message: msg });
 	}
 
 	clear(): void {
@@ -111,9 +146,9 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	}
 
 	delete(): void {
-		if (this.state.template.id != undefined && this.state.template.id != 0) {
+		if (this.template.id != undefined && this.template.id != 0) {
 			var self = this;
-			fetch('templates/delete/' + this.state.template.id, { method: 'get' })
+			fetch('templates/delete/' + this.template.id, { method: 'get' })
 				.then(function (response) { self.setAnswer(response.json()); });
 		}
 	}
@@ -121,40 +156,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	copy(): void {
 		this.template.id = undefined;
 		this.template.shortdescription = "copy of " + this.template.shortdescription;
-		this.setTemplateState();
+		this.createStateFromTemplate();
+		this.checkCanSave()
 		this.props.onDetach();
 	}
 
-	setTemplateState(): void {
-		this.setState({ patternEdit: false, template: this.template, message: '' });
-	}
-
-	setSubCategory(sub: number, cat: number) {
-		if (this.template.category != cat || this.template.subcategory != sub) {
-			this.template.category = cat;
+	setSubCategory(sub: number | undefined) {
+		if (this.template.subcategory != sub) {
 			this.template.subcategory = sub;
-			this.setTemplateState();
-		}
-	}
-
-	renderButton(): React.JSX.Element {
-		if (this.props.accountRecordId == undefined) {
-			return (
-				<div>
-					<button className={css.addonbutton} onClick={this.save}>{label("save")}</button>
-					<button className={css.addonbutton} onClick={this.clear}>{label("new")}</button>
-					<button className={css.addonbutton} onClick={this.copy}>{label("copy")}</button>
-					<button className={css.addonbutton} onClick={this.delete}>{label("delete")}</button>
-				</div>
-			);
-		}
-		else {
-			return (
-				<div>
-					<button className={css.addonbutton} onClick={this.save}>{label("save")}</button>
-					<button className={css.addonbutton} onClick={this.clear}>{label("back")}</button>
-				</div>
-			);
+			this.checkCanSave()
 		}
 	}
 
@@ -163,6 +173,60 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.template.repeatunit = timerangedata.repeatunit;
 		this.template.variance = timerangedata.variance;
 		this.template.start = timerangedata.startdate;
+		this.checkCanSave()
+	}
+
+	changeDescData(descdata: DescData): void {
+		this.template.shortdescription = descdata.short;
+		this.template.description = descdata.desc;
+		this.template.validUntil = descdata.validUntil;
+		if (descdata.validFrom != undefined) {
+			this.template.validFrom = descdata.validFrom;
+		}
+		else {
+			this.template.validFrom = new Date();
+		}
+		this.checkCanSave()
+	}
+
+	private checkCanSave() {
+		this.changed = true;
+		this.canSave =
+			this.template.subcategory == undefined;
+	}
+
+	renderButton(name: string, dataid: string, func: () => void, disabled: boolean): React.JSX.Element {
+		return (
+			<button testdata-id={dataid}
+				className={css.addonbutton}
+				onClick={func}
+				disabled={disabled}>
+				{label(name)}
+			</button>
+		);
+	}
+
+	renderButtons(): React.JSX.Element {
+		if (this.props.accountRecordId == undefined) {
+			return (
+				<div>
+					{this.renderButton("save", "savebutton", this.save, !this.canSave || !this.changed)}
+					{this.renderButton("new", "newbutton", this.clear, false)}
+					{this.renderButton("copy", "copybutton", this.copy, this.template.id == undefined)}
+					{this.renderButton("delete", "deletebutton", this.delete,
+						this.template.id == undefined || this.template.id != 0)}
+				</div>
+			);
+		}
+		else {
+			return (
+				<div>
+					{this.renderButton("save", "savebutton",
+						this.save, !this.canSave || !this.changed)}
+					{this.renderButton("new", "newbutton", this.clear, false)}
+				</div>
+			);
+		}
 	}
 
 	render(): React.JSX.Element {
@@ -173,51 +237,18 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 			variance: this.template.variance,
 			startdate: this.template.start
 		}
+		var descData: DescData = {
+			short: this.template.shortdescription,
+			desc: this.template.description,
+			validFrom: this.template.validFrom,
+			validUntil: this.template.validUntil
+		};
 		return (
-			<div>
+			<div testdata-id={"templateeditor"}>
 				<label>{this.state.message}</label>
-				<div className={css.boxborder} >
-					<div className={css.boxinnerpart} >
-						<label className={css.boxlabel} > {label("templates.templatedata")}</label>
-						<table>
-							<tbody style={{ verticalAlign: 'top' }} >
-								<tr><td>{label("shortdescription")}</td>
-									<td colSpan={3} >
-										<input className={css.stringinput}
-											value={this.state.template.shortdescription} type='text'
-											onChange={(e) => { this.template.shortdescription = e.target.value; this.setTemplateState() }} />
-									</td>
-								</tr>
-								<tr><td>{label("description")}</td>
-									<td colSpan={3} ><textarea cols={38} rows={3}
-										className={css.stringinput}
-										value={this.state.template.description}
-										onChange={(e) => { this.template.description = e.target.value; this.setTemplateState() }} />
-									</td>
-								</tr>
-								<tr><td>{label("templates.validfrom")}</td>
-									<td><ACDayPickerInput
-										onChange={(d) => { this.template.validFrom = d; this.setTemplateState() }}
-										startdate={this.state.template.validFrom} />
-									</td>
-									<td>{label("templates.validuntil")}</td>
-									<td><ACDayPickerInput
-										onChange={(d) => { this.template.validUntil = d; this.setTemplateState() }}
-										startdate={this.state.template.validUntil} />
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div className={css.boxborder} >
-					<div className={css.boxinnerpart} >
-						<label className={css.boxlabel} > {label("templates.timerange")}</label>
-						<TimeRangeEditor rangedata={timerange}
-							sendRange={this.saveRange}
-						/>
-					</div>
-				</div >
+				<DescEditor data={descData} sendData={this.changeDescData} />
+				<TimeRangeEditor rangedata={timerange} sendRange={this.saveRange} />
+
 				<div className={css.boxborder} >
 					<div className={css.boxinnerpart} >
 						<label className={css.boxlabel} > {label("plan.pattern")}</label>
@@ -234,32 +265,41 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 						<table>
 							<tbody>
 								<tr><td>{label("plan.position")}</td>
-									<td><input value={this.state.template.position}
+									<td><input value={this.state.position}
 										type='number'
 										className={css.numbersmallinput}
-										onChange={(e) => { this.template.position = e.target.valueAsNumber; this.setTemplateState() }} />
+										onChange={(e) => {
+											this.template.position = e.target.valueAsNumber;
+											this.setState(this.createStateFromTemplate())
+										}} />
 									</td>
 								</tr>
 								<tr><td>{label("category")}</td>
 									<td colSpan={3}><CategorySelector
 										horiz={true}
-										onChange={(s, c) => this.setSubCategory(s, c)}
-										subcategory={this.state.template.subcategory} />
+										onChange={(sub) => this.setSubCategory(sub)}
+										subcategory={this.template.subcategory} />
 									</td>
 								</tr>
 								<tr>
 									<td>{label("value")}</td>
-									<td><input step="0.01" value={this.state.template.value / 100}
+									<td><input step="0.01" value={this.state.value / 100}
 										type='number'
 										className={css.numbersmallinput}
-										onChange={(e) => { this.template.value = e.target.valueAsNumber * 100; this.setTemplateState() }} />
+										onChange={(e) => {
+											this.template.value = e.target.valueAsNumber * 100;
+											this.setState(this.createStateFromTemplate())
+										}} />
 									</td>
 									<td>{label("plan.matchstyle")}</td>
 									<td>
 										<MatchStyleSelector
-											curvalue={this.state.template.matchstyle}
+											curvalue={this.state.matchstyle}
 											className={css.catselector3}
-											onChange={(e) => { this.template.matchstyle = e; this.setTemplateState() }} />
+											onChange={(e) => {
+												this.template.matchstyle = e;
+												this.setState(this.createStateFromTemplate())
+											}} />
 									</td>
 								</tr>
 							</tbody>
@@ -267,16 +307,16 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 					</div>
 				</div>
 				<div style={{ textAlign: 'center' }}>
-					{this.renderButton()}
+					{this.renderButtons()}
 					{
 						this.state.patternEdit ?
 							<PatternEditor
 								zIndex={1}
-								pattern={this.state.template.pattern}
+								pattern={this.state.pattern}
 								sendPattern={(e) => {
 									if (e != undefined)
 										this.template.pattern = e;
-									this.setTemplateState()
+									this.setState(this.createStateFromTemplate())
 								}}
 							/>
 							: null
