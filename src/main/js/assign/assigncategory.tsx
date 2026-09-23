@@ -5,7 +5,7 @@ import { label } from '../utils/misc';
 import * as acss from './css/assign.css'
 
 
-export type OnCatChange = (subCategory: number , text?: string ) => void;
+export type OnCatChange = (subCategory: number | undefined , text?: string ) => void;
 
 export interface CategorySelectProps {
     onChange: OnCatChange;
@@ -33,16 +33,18 @@ export class CategorySelect extends React.Component<CategorySelectProps, {}> {
             this.comment_obj.current.focus();
     }
 
-    setCategory(subcategory: number, category: number) {
-        this.cur_subcategory =subcategory;
-        if (this.props.onChange && this.cur_subcategory != undefined)
+    setCategory(subcategory: number | undefined, category: number) {
+        if (this.cur_subcategory != subcategory ) {
+            this.cur_subcategory = subcategory;
             this.props.onChange(this.cur_subcategory,this.cur_comment);
+        }
     }
 
     setComment(comment: string) {
-        this.cur_comment = comment;
-        if (this.props.onChange && this.cur_subcategory != undefined)
+        if (this.cur_comment != comment ) {
+            this.cur_comment = comment;
             this.props.onChange(this.cur_subcategory,this.cur_comment)
+        }
     }
 
     render() {
