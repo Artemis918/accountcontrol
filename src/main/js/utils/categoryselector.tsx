@@ -1,16 +1,17 @@
 import React from 'react'
-import { DropdownService } from './dropdownservice'
+import { Dropdown } from './dropdown'
 
 import * as css from '../css/index.css'
 import { fetchJson, SubCategory } from './dtos';
 import { lastDayOfQuarter } from 'date-fns';
 
 
-export type HandleCategoryChange = (subCategory: number, category: number) => void;
+export type HandleSubCategoryChange = (subCategory?: number) => void;
 
 export interface CategorySelectorProps {
-    onChange?: HandleCategoryChange;
+    onChange: HandleSubCategoryChange;
     subcategory?: number;
+    clearCategory?: boolean;
     horiz: boolean;
 }
 
@@ -19,52 +20,40 @@ interface IState {
     allSubs: SubCategory[]
 }
 
-interface LocalState {
-    subcategory?: number
-}
-
 export class CategorySelector extends React.Component<CategorySelectorProps, IState> {
-
-    lstate: LocalState;
 
     constructor(props: CategorySelectorProps) {
         super(props);
         this.state = { category: undefined, allSubs: [] };
-        this.lstate = { subcategory: this.props.subcategory };
         this.setCategory = this.setCategory.bind(this);
         this.setSubCategory = this.setSubCategory.bind(this);
         this.setCatFromProps = this.setCatFromProps.bind(this);
     }
 
     componentDidMount(): void {
-        fetchJson("category/suball", this.setCatFromProps)
+        fetchJson("category/suball", (d) => { this.setState({ allSubs: d }); this.setCatFromProps(d); })
     }
 
     componentDidUpdate(prevProps: CategorySelectorProps): void {
-        if (this.lstate.subcategory == undefined)
-            this.lstate.subcategory = this.props.subcategory;
+        this.setCatFromProps(this.state.allSubs);
+        if (!this.props.subcategory && this.props.clearCategory)
+            this.setState({category: undefined});
     }
 
     private setCatFromProps(d: SubCategory[]) {
         if (this.props.subcategory) {
             var cat = d.filter((s) => { return this.props.subcategory == s.id; })[0].category;
-            this.setState({ allSubs: d, category: cat });
-        } else
-            this.setState({ allSubs: d });
-
+            this.setState({ category: cat });
+        }
     }
 
     private setCategory(e: number): void {
-        this.lstate.subcategory = undefined;
         this.setState({ category: e });
     }
 
-    private setSubCategory(e: number ): void {
-        if (this.props.onChange != undefined
-                && this.lstate.subcategory != e
-                && this.state.category != undefined )
-            this.props.onChange(e, this.state.category);
-        this.lstate.subcategory = e;
+    private setSubCategory(e: number): void {
+        if (this.props.subcategory != e)
+            this.props.onChange(e);
     }
 
     render(): React.JSX.Element {
@@ -75,13 +64,13 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
         if (this.props.horiz) {
             return (
                 <span>
-                    <DropdownService
+                    <Dropdown
                         value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum/true'
                         className={css.catselector2} />
-                    <DropdownService
-                        value={this.lstate.subcategory}
+                    <Dropdown
+                        value={this.props.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
                         param={caturlextension}
@@ -92,14 +81,14 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
             return (
                 <table style={{ width: "100%" }}><tbody>
                     <tr><td>
-                        <DropdownService className={css.catselector}
+                        <Dropdown className={css.catselector}
                             value={this.state.category}
                             onChange={this.setCategory}
                             url='category/catenum/true' />
                     </td></tr>
                     <tr><td>
-                        <DropdownService className={css.catselector}
-                            value={this.lstate.subcategory}
+                        <Dropdown className={css.catselector}
+                            value={this.props.subcategory}
                             onChange={this.setSubCategory}
                             url='category/subenum'
                             param={caturlextension} />
