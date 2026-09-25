@@ -35,23 +35,26 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     componentDidUpdate(prevProps: CategorySelectorProps): void {
-        this.setCatFromProps(this.state.allSubs);
+        if (this.state.allSubs.length > 0)
+            this.setCatFromProps(this.state.allSubs);
         if (!this.props.subcategory && this.props.clearCategory)
-            this.setState({category: undefined});
+            this.setState({ category: undefined });
     }
 
     private setCatFromProps(d: SubCategory[]) {
         if (this.props.subcategory) {
             var cat = d.filter((s) => { return this.props.subcategory == s.id; })[0].category;
-            this.setState({ category: cat });
+            if (this.state.category != cat)
+                this.setState({ category: cat });
         }
     }
 
-    private setCategory(e: number): void {
-        this.setState({ category: e });
+    private setCategory(e: number | undefined): void {
+        if (this.state.category != e)
+            this.setState({ category: e });
     }
 
-    private setSubCategory(e: number): void {
+    private setSubCategory(e: number | undefined): void {
         if (this.props.subcategory != e)
             this.props.onChange(e);
     }
@@ -68,11 +71,13 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                         value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum/true'
+                        selectDef={true}
                         className={css.catselector2} />
                     <Dropdown
                         value={this.props.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
+                        selectDef={true}
                         param={caturlextension}
                         className={css.catselector2} />
                 </span>)
@@ -84,12 +89,14 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                         <Dropdown className={css.catselector}
                             value={this.state.category}
                             onChange={this.setCategory}
+                            selectDef={true}
                             url='category/catenum/true' />
                     </td></tr>
                     <tr><td>
                         <Dropdown className={css.catselector}
                             value={this.props.subcategory}
                             onChange={this.setSubCategory}
+                            selectDef={true}
                             url='category/subenum'
                             param={caturlextension} />
                     </td></tr>

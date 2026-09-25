@@ -2,7 +2,7 @@ import React from 'react'
 import { EnumDTO, fetchJson } from './dtos'
 
 
-type HandleChange = (id: number) => void;
+type HandleChange = (id: number | undefined ) => void;
 
 export interface DropdownProps {
     onChange: HandleChange;
@@ -40,30 +40,6 @@ export class Dropdown extends React.Component<DropdownProps, IState> {
         this.fetchData();
     }
 
-    setOptions(data: EnumDTO[]): void {
-        this.options = data;
-        if (this.props.value == undefined) {
-            if (this.props.selectDef && this.options.length > 0)
-                this.props.onChange(this.options[0].value);
-            else
-                this.options.unshift({ value: -1, text: 'Select...' });
-        }
-        else if (this.props.value != undefined && this.options.length == 0 )
-            this.options.unshift({ value: this.props.value, text: 'Select...' });
-    }
-
-    handleChange(value: string) {
-        var v: number = parseInt(value);
-        if (this.props.value != v) {
-            this.props.onChange(v);
-        }
-    }
-
-    setData(data: EnumDTO[]): void {
-        this.setState({ options: data });
-        this.setOptions(data);
-    }
-
     fetchData(): void {
         if (this.props.param == '') {
             this.setData([]);
@@ -76,6 +52,33 @@ export class Dropdown extends React.Component<DropdownProps, IState> {
             }
             var self: Dropdown = this;
             fetchJson(url, d => { self.setData(d as EnumDTO[]) });
+        }
+    }
+
+    setData(data: EnumDTO[]): void {
+        this.setState({ options: data });
+        this.setOptions(data);
+    }
+
+    setOptions(data: EnumDTO[]): void {
+        this.options = data;
+        if (this.props.value == undefined) {
+            if (this.props.selectDef && this.options.length > 0) {
+                var def = this.options[0].value;
+                this.props.onChange(def == -1 ? undefined: def);
+            }
+            else
+                this.options.unshift({ value: -1, text: 'Select...' });
+        }
+        else if (this.props.value != undefined && this.options.length == 0 )
+            this.options.unshift({ value: this.props.value, text: 'Select...' });
+    }
+
+    handleChange(value: string) {
+        var v: number | undefined = parseInt(value);
+        v = v==-1 ? undefined : v;
+        if (this.props.value != v) {
+            this.props.onChange(v);
         }
     }
 
