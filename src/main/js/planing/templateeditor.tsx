@@ -8,6 +8,7 @@ import { myParseJson, label } from '../utils/misc'
 import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
 import * as css from '../css/index.css'
 import { DescData, DescEditor } from './desceditor'
+import { PatternEditorButton } from './patterneditorpopup'
 
 
 
@@ -44,8 +45,10 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.save = this.save.bind(this);
 		this.delete = this.delete.bind(this);
 		this.copy = this.copy.bind(this);
+		this.fetchAccountRecord= this.fetchAccountRecord.bind(this);
 		this.setAnswer = this.setAnswer.bind(this);
 		this.saveRange = this.saveRange.bind(this);
+		this.savePattern = this.savePattern.bind(this);
 		this.createStateFromTemplate = this.createStateFromTemplate.bind(this);
 		this.changeDescData = this.changeDescData.bind(this);
 		this.createNewTemplate = this.createNewTemplate.bind(this);
@@ -54,10 +57,31 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.checkCanSave = this.checkCanSave.bind(this);
 
 		this.template = props.template || this.createNewTemplate();
+		this.canSave = props.template == undefined;
 		this.state = this.createStateFromTemplate();
 	}
 
 	componentDidMount() {
+		this.fetchAccountRecord();
+	}
+
+
+
+	componentDidUpdate(prevProps: Readonly<TemplateEditorProps>, prevState: Readonly<{}>, snapshot?: any): void {
+		if (prevProps.template != this.props.template) {
+			if (this.props.template != undefined) {
+				this.template = this.props.template;
+				this.canSave = false;
+				this.fetchAccountRecord();
+				this.setState(this.createStateFromTemplate());
+			}
+			else {
+				this.resetEditor();
+			}
+		}
+	}
+
+	fetchAccountRecord() :void {
 		if (this.props.accountRecordId != undefined) {
 			var self = this;
 			fetch('templates/accountrecord/' + this.props.accountRecordId)
@@ -65,21 +89,10 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				.then(t => {
 					if (t) {
 						self.template = myParseJson(t);
+						this.changed = false;
 						self.setState(self.createStateFromTemplate());
 					}
 				});
-		}
-	}
-
-	componentDidUpdate(prevProps: Readonly<TemplateEditorProps>, prevState: Readonly<{}>, snapshot?: any): void {
-		if (prevProps.template != this.props.template) {
-			if (this.props.template != undefined) {
-				this.template = this.props.template;
-				this.setState(this.createStateFromTemplate());
-			}
-			else {
-				this.resetEditor();
-			}
 		}
 	}
 
@@ -109,10 +122,9 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	resetEditor(): void {
 		this.template = this.createNewTemplate();
+		this.canSave = true;
 		this.setState(this.createStateFromTemplate());
 	}
-
-
 
 	save(): void {
 		if (this.canSave) {
@@ -189,10 +201,17 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.checkCanSave()
 	}
 
+	savePattern(p: Pattern | undefined): void {
+		if (p != undefined)
+			this.template.pattern = p;
+		this.setState(this.createStateFromTemplate())
+	}
+
 	private checkCanSave() {
 		this.changed = true;
+		this.setState(this.createStateFromTemplate())
 		this.canSave =
-			this.template.subcategory == undefined;
+			this.template.subcategory != undefined;
 	}
 
 	renderButton(name: string, dataid: string, func: () => void, disabled: boolean): React.JSX.Element {
@@ -248,17 +267,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				<label>{this.state.message}</label>
 				<DescEditor data={descData} sendData={this.changeDescData} />
 				<TimeRangeEditor rangedata={timerange} sendRange={this.saveRange} />
+				<PatternEditorButton pattern={this.state.pattern} sendPattern={this.savePattern } />
 
-				<div className={css.boxborder} >
-					<div className={css.boxinnerpart} >
-						<label className={css.boxlabel} > {label("plan.pattern")}</label>
-						<br />
-						<button
-							onClick={() => this.setState({ patternEdit: true })}
-							className={css.addonbutton}>
-							{label("plan.edit")}</button>
-					</div>
-				</div >
 				<div className={css.boxborder} >
 					<div className={css.boxinnerpart} >
 						<label className={css.boxlabel} > {label("templates.rating")}</label>
@@ -308,19 +318,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				</div>
 				<div style={{ textAlign: 'center' }}>
 					{this.renderButtons()}
-					{
-						this.state.patternEdit ?
-							<PatternEditor
-								zIndex={1}
-								pattern={this.state.pattern}
-								sendPattern={(e) => {
-									if (e != undefined)
-										this.template.pattern = e;
-									this.setState(this.createStateFromTemplate())
-								}}
-							/>
-							: null
-					}
 				</div >
 			</div >
 		);

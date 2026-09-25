@@ -4,7 +4,7 @@ import { label } from '../utils/misc'
 import { Pattern } from '../utils/dtos'
 import * as css from '../css/index.css'
 
-type SendPatternCallback = (pattern: Pattern | undefined ) => void
+export type SendPatternCallback = (pattern: Pattern | undefined ) => void
 
 interface PatternEditorProps {
     pattern: Pattern;
