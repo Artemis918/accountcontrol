@@ -77,6 +77,7 @@ export class DescEditor extends React.Component<DescEditorProps, DescData> {
                             <tr><td>{label("shortdescription")}</td>
                                 <td colSpan={3} >
                                     <input className={css.stringinput}
+                                        testdata-id={'shortdescription'}
                                         value={this.state.short} type='text'
                                         onChange={(e) => { this.setState({ short: e.target.value }, this.sendData ); }} />
                                 </td>
@@ -84,6 +85,7 @@ export class DescEditor extends React.Component<DescEditorProps, DescData> {
                             <tr><td>{label("description")}</td>
                                 <td colSpan={3} ><textarea cols={38} rows={3}
                                     className={css.stringinput}
+                                    testdata-id={'description'}
                                     value={this.state.desc}
                                     onChange={(e) => { this.setState({ desc: e.target.value }, this.sendData ); }} />
                                 </td>

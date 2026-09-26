@@ -6,7 +6,8 @@
   "private": "true",
   "scripts": {
     "serve": "webpack serve --open",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "cypress": "cypress open --browser chromium --e2e"
   },
   "allowScripts": {
     "core-js@3.45.1": true,

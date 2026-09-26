@@ -13,7 +13,7 @@ interface PatternPlaningProps {
 }
 
 interface IState {
-    category: number;
+    category: number | undefined;
 }
 
 export class PatternPlaning extends React.Component<PatternPlaningProps, IState> {
@@ -21,32 +21,32 @@ export class PatternPlaning extends React.Component<PatternPlaningProps, IState>
     lister: SingleSelectLister<Plan> | null = null;
     editor: PatternPlanEditor | null = null;
 
-    constructor( props: PatternPlaningProps) {
-        super( props );
-        this.refreshlist = this.refreshlist.bind( this );
-        this.refresheditor = this.refresheditor.bind( this );
-        this.state= {category: 1};
+    constructor(props: PatternPlaningProps) {
+        super(props);
+        this.refreshlist = this.refreshlist.bind(this);
+        this.refresheditor = this.refresheditor.bind(this);
+        this.state = { category: 1 };
     }
 
-	createColumns(): ColumnInfo<Plan>[] {
+    createColumns(): ColumnInfo<Plan>[] {
         return [{
             header: label("shortdescription"),
-            getdata: ( data: Plan ): string => { return data.shortdescription }
+            getdata: (data: Plan): string => { return data.shortdescription }
         }, {
             header: label("category"),
-            getdata: ( data: Plan ): string => { return data.categoryname }
+            getdata: (data: Plan): string => { return data.categoryname }
         }, {
             header: label("subcategory"),
-            getdata: ( data: Plan ): string => { return data.subcategoryname }
+            getdata: (data: Plan): string => { return data.subcategoryname }
         }]
-	}
+    }
 
     refreshlist() {
         this.lister?.reload();
     }
 
-    refresheditor( data: Plan ): void {
-        this.editor?.setPlan( data );
+    refresheditor(data: Plan): void {
+        this.editor?.setPlan(data);
     }
 
     render(): React.JSX.Element {
@@ -57,22 +57,23 @@ export class PatternPlaning extends React.Component<PatternPlaningProps, IState>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div className={css.editortitle}> {label("pattern.patterndata")} </div>
                             <PatternPlanEditor
-								ref={( ref ) => { this.editor = ref }} 
-								onChange={this.refreshlist} />
+                                ref={(ref) => { this.editor = ref }}
+                                onChange={this.refreshlist} />
                         </td>
                         <td style={{ verticalAlign: 'top' }}>
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
-                            <Dropdown onChange={( val: number ): void => this.setState( { category: val } )}
-                                className={css.catselector3}
-								url='category/catenum/true'
-                                value={this.state.category}
-                            />
-                        </div>
-                            <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
+                                <Dropdown onChange={(val: number | undefined): void => this.setState({ category: val })}
+                                    className={css.catselector3}
+                                    testdataid='catselector'
+                                    url='category/catenum/true'
+                                    value={this.state.category}
+                                />
+                            </div>
+                            <SingleSelectLister ref={(ref) => { this.lister = ref; }}
                                 lines={30}
-                                handleChange={( data: Plan ) => this.refresheditor( data )}
+                                handleChange={(data: Plan) => this.refresheditor(data)}
                                 columns={this.createColumns()}
-                                ext={this.state.category.toString( 10 )}
+                                ext={this.state.category?.toString(10)}
                                 url='plans/patternplans/' />
                         </td>
                     </tr>

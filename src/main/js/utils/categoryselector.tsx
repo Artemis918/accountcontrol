@@ -22,6 +22,8 @@ interface IState {
 
 export class CategorySelector extends React.Component<CategorySelectorProps, IState> {
 
+    catcleared: boolean = false;
+
     constructor(props: CategorySelectorProps) {
         super(props);
         this.state = { category: undefined, allSubs: [] };
@@ -35,10 +37,11 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     componentDidUpdate(prevProps: CategorySelectorProps): void {
-        if (this.state.allSubs.length > 0 && prevProps.subcategory != this.props.subcategory)
+        if (this.state.allSubs.length > 0 && prevProps.subcategory != this.props.subcategory) {
             this.setCatFromProps(this.state.allSubs);
-        if (!this.props.subcategory && this.props.clearCategory)
-            this.setState({ category: undefined });
+            if (this.props.subcategory)
+                this.catcleared = false; // remove flag, because finally everything is in default state
+        }
     }
 
     private setCatFromProps(d: SubCategory[]) {
@@ -51,27 +54,35 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
 
     private setCategory(e: number | undefined): void {
         if (this.state.category != e) {
+            if (e)
+                this.catcleared = true;
             this.setState({ category: e });
             this.props.onChange(undefined);
         }
     }
 
     private setSubCategory(e: number | undefined): void {
-        if (this.props.subcategory != e)
+        if (this.props.subcategory != e) {
             this.props.onChange(e);
+        }
     }
 
     render(): React.JSX.Element {
         if (this.state.allSubs.length == 0)
             return <></>;
 
-        var caturlextension = this.state.category == undefined ? "" : this.state.category.toString() + "/true";
+        var cat = this.state.category;
+        if (this.props.clearCategory && !this.catcleared) {
+            cat = undefined;
+        }
+
+        var caturlextension = cat == undefined ? "" : cat.toString() + "/true";
         if (this.props.horiz) {
             return (
                 <span>
                     <Dropdown
                         testdataid={"catselector"}
-                        value={this.state.category}
+                        value={cat}
                         onChange={this.setCategory}
                         url='category/catenum/true'
                         selectDef={true}
@@ -92,7 +103,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                     <tr><td>
                         <Dropdown className={css.catselector}
                             testdataid={"catselector"}
-                            value={this.state.category}
+                            value={cat}
                             onChange={this.setCategory}
                             selectDef={true}
                             url='category/catenum/true' />

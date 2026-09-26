@@ -78,7 +78,8 @@ export class Templates extends React.Component<TemplateProps, IState> {
 						<td style={{ verticalAlign: 'top' }} >
 							<p style={{ padding: '1px', margin: '5px', borderBottom: '1px solid black' }}>
 								<Dropdown className={css.catselector3}
-									onChange={(val: number): void => this.setState({ category: val })}
+									testdataid='catselector'
+									onChange={(val: number | undefined ): void => this.setState({ category: val })}
 									url='category/catenum/true'
 									selectDef={true}
 									value={this.state.category}
