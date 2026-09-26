@@ -35,7 +35,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     componentDidUpdate(prevProps: CategorySelectorProps): void {
-        if (this.state.allSubs.length > 0)
+        if (this.state.allSubs.length > 0 && prevProps.subcategory != this.props.subcategory)
             this.setCatFromProps(this.state.allSubs);
         if (!this.props.subcategory && this.props.clearCategory)
             this.setState({ category: undefined });
@@ -50,8 +50,10 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
     }
 
     private setCategory(e: number | undefined): void {
-        if (this.state.category != e)
+        if (this.state.category != e) {
             this.setState({ category: e });
+            this.props.onChange(undefined);
+        }
     }
 
     private setSubCategory(e: number | undefined): void {
@@ -68,12 +70,14 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
             return (
                 <span>
                     <Dropdown
+                        testdataid={"catselector"}
                         value={this.state.category}
                         onChange={this.setCategory}
                         url='category/catenum/true'
                         selectDef={true}
                         className={css.catselector2} />
                     <Dropdown
+                        testdataid={"subselector"}
                         value={this.props.subcategory}
                         onChange={this.setSubCategory}
                         url='category/subenum'
@@ -87,6 +91,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                 <table style={{ width: "100%" }}><tbody>
                     <tr><td>
                         <Dropdown className={css.catselector}
+                            testdataid={"catselector"}
                             value={this.state.category}
                             onChange={this.setCategory}
                             selectDef={true}
@@ -94,6 +99,7 @@ export class CategorySelector extends React.Component<CategorySelectorProps, ISt
                     </td></tr>
                     <tr><td>
                         <Dropdown className={css.catselector}
+                            testdataid={"subselector"}
                             value={this.props.subcategory}
                             onChange={this.setSubCategory}
                             selectDef={true}

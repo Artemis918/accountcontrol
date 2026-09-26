@@ -11,6 +11,7 @@ export interface DropdownProps {
     value?: number;
     className?: string;
     selectDef?: boolean;
+    testdataid: string;
 }
 
 interface IState {
@@ -31,9 +32,10 @@ export class Dropdown extends React.Component<DropdownProps, IState> {
     }
 
     componentDidUpdate(prevProps: DropdownProps): void {
-        this.setOptions(this.state.options);
         if (this.props.param != prevProps.param)
             this.fetchData();
+        else
+            this.setOptions(this.state.options);
     }
 
     componentDidMount(): void {
@@ -86,6 +88,7 @@ export class Dropdown extends React.Component<DropdownProps, IState> {
 
         return (
             <select className={this.props.className}
+                testdata-id={this.props.testdataid}
                 value={this.props.value != undefined ? this.props.value : -1}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => this.handleChange(e.target.value)}>
                 {this.options.map((t, _) => <option key={t.value} value={t.value}>{t.text}</option>)}
