@@ -19,13 +19,6 @@ interface TimeRangeEditorProps {
     sendRange: SendTimeRangeCallback;
 }
 
-interface IState {
-    repeatcount: number,
-    repeatunit: number,
-    variance: number,
-    startdate: Date,
-}
-
 export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeRangeData> {
 
     constructor(props: TimeRangeEditorProps) {
@@ -48,8 +41,11 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeR
         }
     }
 
-    sendTimeRange() {
-        this.props.sendRange(this.state);
+
+    sendData(newdata: Partial<TimeRangeData>): void {
+        const newstate = { ...this.state, ...newdata };
+        this.setState(newstate);
+        this.props.sendRange(newstate);
     }
 
     render(): React.JSX.Element {
@@ -64,14 +60,16 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeR
                                 <td>
                                     <span style={{ width: '20%' }}>
                                         <input className={css.numbersmallinput} value={this.state.repeatcount}
+                                            testdata-id="repeatcount"
                                             type='number'
-                                            onChange={(e) => { this.setState({ repeatcount: e.target.valueAsNumber }); this.sendTimeRange() }} />
+                                            onChange={(e) => { this.setState({ repeatcount: e.target.valueAsNumber }); }}
+                                            onBlur={()=>this.sendData({})} />
                                     </span>
                                     <span style={{ width: '20%' }}>
                                         <TimeUnitSelector
                                             className={css.catselector3}
                                             curvalue={this.state.repeatunit}
-                                            onChange={(e) => { this.setState({ repeatunit: e }); this.sendTimeRange() }}
+                                            onChange={(e) => { this.sendData({ repeatunit: e }); }}
                                         />
                                     </span>
                                 </td>
@@ -79,16 +77,19 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, TimeR
                             <tr>
                                 <td>{label("templates.firstday")}</td>
                                 <td><ACDayPickerInput
-                                    onChange={(d) => { this.setState({ startdate: d }); this.sendTimeRange() }}
+                                    testdataid="firstday"
+                                    onChange={(d) => { this.sendData({ startdate: d }); }}
                                     startdate={this.state.startdate} />
                                 </td>
                             </tr>
                             <tr>
                                 <td>{label("templates.variance")}</td>
                                 <td><input value={this.state.variance}
+                                    testdata-id="variance"
                                     className={css.numbersmallinput}
                                     type='number'
-                                    onChange={(e) => { this.setState({ variance: e.target.valueAsNumber }); this.sendTimeRange() }} />
+                                    onChange={(e) => { this.setState({ variance: e.target.valueAsNumber }); }}
+                                    onBlur={()=>this.sendData({})} />
                                 </td>
                             </tr>
                         </tbody>

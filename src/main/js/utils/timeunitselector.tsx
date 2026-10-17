@@ -13,6 +13,7 @@ export function TimeUnitSelector( props: TimeUnitProps) :React.JSX.Element
 {
 	return (
             <select className={props.className}
+                    testdata-id={"timeunit"}
                     value={ props.curvalue } 
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => 
                                     props.onChange(parseInt( e.target.value ))}>

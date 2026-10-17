@@ -20,6 +20,7 @@ interface IState {
     creationMonth: number;
     creationYear: number;
     creationPopup: boolean;
+    plan: Plan | undefined;
 }
 
 export class Planing extends React.Component<PlaningProps, IState> {
@@ -32,13 +33,13 @@ export class Planing extends React.Component<PlaningProps, IState> {
         var currentTime = new Date();
 
         this.state = {
+            plan: undefined,
             month: currentTime.getMonth() + 1, year: currentTime.getFullYear(),
             creationMonth: currentTime.getMonth() + 1, creationYear: currentTime.getFullYear(),
             creationPopup: false
         };
         this.refreshlist = this.refreshlist.bind( this );
         this.setFilter = this.setFilter.bind( this );
-        this.refresheditor = this.refresheditor.bind( this );
         this.changeCreationDate = this.changeCreationDate.bind( this );
         this.createPlans = this.createPlans.bind( this );
         this.openCreatePopup = this.openCreatePopup.bind( this );
@@ -75,10 +76,6 @@ export class Planing extends React.Component<PlaningProps, IState> {
 
     refreshlist() {
         this.lister?.reload();
-    }
-
-    refresheditor( data: Plan ): void {
-        this.editor?.setPlan( data );
     }
 
     createPlans() {
@@ -132,7 +129,7 @@ export class Planing extends React.Component<PlaningProps, IState> {
                         <tr>
                             <td style={{ verticalAlign: 'top'}} >
                                 <div style={{ border: '1px solid black', verticalAlign: 'top', paddingBottom: '160px'}}>
-                                    <PlanEditor ref={( ref ) => { this.editor = ref }} onChange={this.refreshlist} />
+                                    <PlanEditor onDetach={this.refreshlist} plan={this.state.plan} />
                                 </div>
                                 <div style={{ border: '1px solid black', marginTop: '5px', padding: '30px', textAlign: 'center'}}>
                                     <button onClick={() => this.openCreatePopup( true )} className={css.addonbutton} >
@@ -146,7 +143,7 @@ export class Planing extends React.Component<PlaningProps, IState> {
                                 <SingleSelectLister ref={( ref ) => { this.lister = ref; }}
                                     lines={28}
                                     ext={this.state.year + '/' + this.state.month}
-                                    handleChange={( data: Plan ) => this.refresheditor( data )}
+                                    handleChange={( data: Plan ) => this.setState( { plan: data } )}
                                     columns={this.createColums()}
                                     url='plans/list/' />
                             </td>

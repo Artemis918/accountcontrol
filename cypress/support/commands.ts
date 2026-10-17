@@ -36,12 +36,34 @@
 //   }
 // }
 
-Cypress.Commands.add('gett' ,(testdataid) => { return cy.get(`[testdata-id="${testdataid}"]`); });
-Cypress.Commands.add('findt' ,  { prevSubject: true }, (subject,testdataid) => { return cy.wrap(subject).find(`[testdata-id="${testdataid}"]`); });
+Cypress.Commands.add("gett", (testdataid) => {
+  return cy.get(`[testdata-id="${testdataid}"]`);
+});
+
+Cypress.Commands.add("findt", { prevSubject: true }, (subject, testdataid) => {
+  return cy.wrap(subject).find(`[testdata-id="${testdataid}"]`);
+});
+
+Cypress.Commands.add(
+  "findline",
+  { prevSubject: true },
+  (subject, testdataid, line) => {
+    return cy
+      .wrap(subject)
+      .find(`[testdata-id="${testdataid}"]`)
+      .find("table")
+      .find("tbody")
+      .find("tr")
+      .eq(line);
+  },
+);
 
 declare global {
-   namespace Cypress {
-     interface Chainable {
-         gett(testdataid: string): Chainable<Element>
-     }
-   }}
+  namespace Cypress {
+    interface Chainable {
+      gett(testdataid: string): Chainable<Element>;
+      findt(testdataid: string): Chainable<Element>;
+      findline(testdataid: string, line: number): Chainable<Element>;
+    }
+  }
+}

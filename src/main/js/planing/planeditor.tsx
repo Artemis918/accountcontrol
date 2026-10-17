@@ -3,161 +3,209 @@ import * as React from 'react'
 import { PatternEditor } from './patterneditor'
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
 import { CategorySelector } from '../utils/categoryselector'
-import { Plan } from '../utils/dtos'
+import { Pattern, Plan } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { label } from '../utils/misc'
 import * as css from '../css/index.css'
+import { DescData, DescEditor } from './desceditor'
+import { PatternEditorButton } from './patterneditorpopup'
 
 
 type OnChangeCallback = () => void;
 
 interface PlanEditorProps {
-    onChange: OnChangeCallback;
+    onDetach: OnChangeCallback;
+    plan?: Plan;
 }
 
 interface IState {
-    plan: Plan;
     message: string;
-    patternEdit: boolean;
+    position: number;
+    subCategory: number | undefined;
+    matchstyle: number;
+    pattern: Pattern;
+    value: number;
 }
 
 export class PlanEditor extends React.Component<PlanEditorProps, IState> {
 
     plan: Plan;
+    subcategory: number | undefined
+    canSave: boolean = false;
+    changed: boolean = true;
+    resetcat: boolean = true;
 
     constructor(props: PlanEditorProps) {
         super(props);
-
 
         this.clear = this.clear.bind(this);
         this.save = this.save.bind(this);
         this.delete = this.delete.bind(this);
         this.copy = this.copy.bind(this);
         this.setAnswer = this.setAnswer.bind(this);
-        this.setPlan = this.setPlan.bind(this);
         this.createNewPlan = this.createNewPlan.bind(this);
+        this.changeDescData = this.changeDescData.bind(this);
+        this.createStateFromPlan = this.createStateFromPlan.bind(this);
+        this.setPlan = this.setPlan.bind(this);
 
         this.plan = this.createNewPlan();
-        this.state = { plan: this.plan, message: '', patternEdit: false };
+        this.setPlan(props.plan || this.plan);
+        this.canSave = props.plan == undefined;
     }
 
-    createNewPlan(): Plan {
+
+
+    componentDidUpdate(prevProps: Readonly<PlanEditorProps>): void {
+        if (prevProps.plan != this.props.plan) {
+            if (this.props.plan != undefined) {
+                this.canSave = false;
+                this.setPlan(this.props.plan);
+            }
+            else {
+                this.resetEditor();
+            }
+        }
+    }
+
+    private createNewPlan(): Plan {
         var plan: Plan = new Plan();
         plan.description = label("plan.newdescription");
         plan.shortdescription = label("plan.newshortdescription");
-        plan.subcategory = 0;
+        this.subcategory = undefined;
         return plan;
     }
 
-    resetEditor(): void {
-        this.plan = this.createNewPlan();
-        this.setState({ plan: this.plan });
+    private setPlan(plan: Plan) {
+        this.plan = plan;
+        this.subcategory = this.plan.subcategory==-1 ? undefined : this.plan.subcategory;
+        this.state = this.createStateFromPlan();
     }
 
-    setPlan(plan: Plan) {
-        if (plan == undefined) {
-            this.resetEditor();
-        }
-        else {
-            this.plan = plan;
-            this.setState({ plan: this.plan });
-        }
+    private createStateFromPlan(): IState {
+        return {
+            position: this.plan.position,
+            subCategory: this.subcategory,
+            matchstyle: this.plan.matchstyle ? this.plan.matchstyle : 0,
+            value: this.plan.value,
+            pattern: this.plan.pattern,
+            message: ''
+        };
+    }
+    private setStateFromPlan(): void {
+        this.setState(this.createStateFromPlan());
     }
 
-    save() {
-        var self = this;
-        var jsonbody = JSON.stringify(self.state.plan);
-        fetch('plans/save', {
-            method: 'post',
-            body: jsonbody,
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (response) {
-            self.setAnswer(response.json());
-        });
+    private resetEditor(): void {
+        this.canSave = true;
+        this.resetcat = true;
+        this.setPlan(this.createNewPlan());
+    }
+
+    private save() {
+        if (this.canSave) {
+            var self = this;
+            var jsonbody = JSON.stringify(this.plan);
+            fetch('plans/save', {
+                method: 'post',
+                body: jsonbody,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (response) {
+                self.setAnswer(response.json());
+            });
+        }
     }
 
     setAnswer(data: any): void {
-        this.setState({ message: data.message });
+        var msg: string = data.error;
         if (!data.error) {
             this.clear();
+            this.props.onDetach();
+            var msg: string = label("plan.saved");
         }
-        this.props.onChange();
+        this.setState({ message: msg });
+
     }
 
     clear(): void {
-        this.props.onChange();
+        this.props.onDetach();
         this.resetEditor();
     }
 
     delete(): void {
-        if (this.state.plan.id !== undefined) {
+        if (this.plan.id !== undefined && this.plan.id != 0) {
             var self = this;
-            fetch('plans/delete/' + this.state.plan.id, { method: 'get' })
+            fetch('plans/delete/' + this.plan.id, { method: 'get' })
                 .then(function (response) { self.setAnswer(response.json()); });
         }
     }
 
     copy(): void {
         this.plan.id = undefined;
-        this.plan.shortdescription = "copy of " + this.state.plan.shortdescription;
-        this.setState({ plan: this.plan });
-        this.props.onChange();
+        this.plan.shortdescription = "copy of " + this.plan.shortdescription;
+        this.checkCanSave();
+        this.props.onDetach();
     }
 
-    setPlanState(): void {
-        this.setState({ plan: this.plan, message: '' });
-    }
-
-    setSubCategory(sub: number | undefined): void {
-        if (this.plan.subcategory != sub) {
-            this.plan.subcategory = sub ? sub : 0; /// TODO handle undefined correctly
-            this.setState({ plan: this.plan, message: '' });
+    changeSubCategory(sub: number | undefined): void {
+        this.resetcat = false;
+        if (this.subcategory != sub) {
+            this.subcategory = sub;
+            this.checkCanSave()
         }
     }
 
-    renderButton(): React.JSX.Element {
+    private changeDescData(descdata: DescData): void {
+        this.plan.shortdescription = descdata.short;
+        this.plan.description = descdata.desc;
+        this.checkCanSave()
+    }
+
+    private changePattern(p: Pattern | undefined): void {
+        if (p != undefined)
+            this.plan.pattern = p;
+        this.setStateFromPlan();
+    }
+
+    private checkCanSave() {
+        this.changed = true;
+        this.setStateFromPlan();
+        this.canSave =
+            this.plan.subcategory != undefined;
+    }
+
+    private renderButton(name: string, func: () => void, disabled: boolean): React.JSX.Element {
+        return (
+            <button testdata-id={name + "button"}
+                className={css.addonbutton}
+                onClick={func}
+                disabled={disabled}>
+                {label(name)}
+            </button>
+        );
+    }
+    renderButtons(): React.JSX.Element {
         return (
             <div>
-                <button className={css.addonbutton} onClick={this.save}>{label("save")}</button>
-                <button className={css.addonbutton} onClick={this.clear}>{label("new")}</button>
-                <button className={css.addonbutton} onClick={this.copy}>{label("copy")}</button>
-                <button className={css.addonbutton} onClick={this.delete}>{label("delete")}</button>
+                {this.renderButton("save", this.save, !this.canSave || !this.changed)}
+                {this.renderButton("new", this.clear, false)}
+                {this.renderButton("copy", this.copy, this.plan.id == undefined)}
+                {this.renderButton("delete", this.delete, this.plan.id == undefined || this.plan.id != 0)}
             </div>
         );
     }
 
     render(): React.JSX.Element {
+
+        var descData: DescData = {
+            short: this.plan.shortdescription,
+            desc: this.plan.description,
+        };
         return (
-            <div>
+            <div testdata-id={"planeditor"}>
                 <label>{this.state.message}</label>
-                <div className={css.boxborder} >
-                    <div className={css.boxinnerpart} >
-                        <label className={css.boxlabel} > {label("plan.plandata")}</label>
-                        <table>
-                            <tbody style={{ verticalAlign: 'top' }} >
-                                <tr>
-                                    <td>{label("shortdescription")}</td>
-                                    <td><input className={css.stringinput}
-                                        value={this.state.plan.shortdescription}
-                                        type='text'
-                                        onChange={(e) => { this.plan.shortdescription = e.target.value; this.setPlanState() }} />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>{label("description")}</td>
-                                    <td><textarea className={css.stringinput}
-                                        cols={38
-                                        } rows={3}
-                                        value={this.state.plan.description}
-                                        onChange={(e) => { this.plan.description = e.target.value; this.setPlanState() }} />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <DescEditor data={descData} sendData={this.changeDescData} />
                 <div className={css.boxborder} >
                     <div className={css.boxinnerpart} >
                         <label className={css.boxlabel} > {label("templates.timerange")}</label>
@@ -166,38 +214,32 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                                 <tr>
                                     <td>{label("plan.firstday")}</td>
                                     <td><ACDayPickerInput
-                                        onChange={(d) => { this.plan.startdate = d; this.setPlanState() }}
-                                        startdate={this.state.plan.startdate} />
+                                        testdataid="firstday"
+                                        onChange={(d) => { this.plan.startdate = d; this.setStateFromPlan() }}
+                                        startdate={this.plan.startdate} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>{label("plan.planedday")}</td>
                                     <td><ACDayPickerInput
-                                        onChange={(d) => { this.plan.plandate = d; this.setPlanState() }}
-                                        startdate={this.state.plan.plandate} />
+                                        testdataid="planday"
+                                        onChange={(d) => { this.plan.plandate = d; this.setStateFromPlan() }}
+                                        startdate={this.plan.plandate} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>{label("plan.endday")}</td>
                                     <td><ACDayPickerInput
-                                        onChange={(d) => { this.plan.enddate = d; this.setPlanState() }}
-                                        startdate={this.state.plan.enddate} />
+                                        testdataid="endday"
+                                        onChange={(d) => { this.plan.enddate = d; this.setStateFromPlan() }}
+                                        startdate={this.plan.enddate} />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div className={css.boxborder} >
-                    <div className={css.boxinnerpart} >
-                        <label className={css.boxlabel} > {label("plan.pattern")}</label>
-                        <br />
-                        <button
-                            onClick={() => this.setState({ patternEdit: true })}
-                            className={css.addonbutton}>
-                            {label("plan.edit")}</button>
-                    </div>
-                </div >
+                <PatternEditorButton pattern={this.state.pattern} sendPattern={this.changePattern} />
                 <div className={css.boxborder} >
                     <div className={css.boxinnerpart} >
                         <label className={css.boxlabel} > {label("templates.rating")}</label>
@@ -206,9 +248,9 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                                 <tr>
                                     <td>{label("plan.position")}</td>
                                     <td><input className={css.numbersmallinput}
-                                        value={this.state.plan.position}
+                                        value={this.plan.position}
                                         type='number'
-                                        onChange={(e) => { this.plan.position = e.target.valueAsNumber; this.setPlanState() }} />
+                                        onChange={(e) => { this.plan.position = e.target.valueAsNumber; this.setStateFromPlan() }} />
                                     </td>
                                 </tr>
                                 <tr>
@@ -216,44 +258,30 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                                     <td colSpan={3}>
                                         <CategorySelector
                                             horiz={true}
-                                            onChange={(sub) => this.setSubCategory(sub)}
-                                            subcategory={this.state.plan.subcategory} />
+                                            clearCategory={this.resetcat}
+                                            onChange={(sub) => this.changeSubCategory(sub)}
+                                            subcategory={this.subcategory} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>{label("value")}</td>
                                     <td><input className={css.numberinput}
-                                        value={this.state.plan.value / 100}
+                                        value={this.state.value / 100}
                                         type='number'
                                         step='0.01'
-                                        onChange={(e) => { this.plan.value = e.target.valueAsNumber * 100; this.setPlanState() }} />
+                                        onChange={(e) => { this.plan.value = e.target.valueAsNumber * 100; this.setStateFromPlan() }} />
                                     </td>
                                     <td>{label("plan.matchstyle")}</td>
                                     <td><MatchStyleSelector
                                         className={css.catselector3}
-                                        curvalue={this.state.plan.matchstyle}
-                                        onChange={(e) => { this.plan.matchstyle = e; this.setPlanState() }} />
+                                        curvalue={this.plan.matchstyle}
+                                        onChange={(e) => { this.plan.matchstyle = e; this.setStateFromPlan() }} />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div style={{ textAlign: 'center' }}>
-                    {this.renderButton()}
-                    {this.state.patternEdit ?
-                        <PatternEditor
-                            zIndex={1}
-                            pattern={this.state.plan.patterndto}
-                            sendPattern={(e) => {
-                                if (e != undefined)
-                                    this.plan.patterndto = e;
-                                this.setState({ patternEdit: false, plan: this.plan, message: "" })
-                            }}
-                        />
-                        : null
-                    }
-                </div >
             </div>
         );
     }

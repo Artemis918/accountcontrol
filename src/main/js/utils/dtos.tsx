@@ -87,7 +87,7 @@ export class Plan {
     categoryname: string;
     subcategoryname: string;
     value: number;
-    patterndto: Pattern;
+    pattern: Pattern;
     matchstyle: number;
 
     constructor() {
@@ -104,7 +104,7 @@ export class Plan {
         this.categoryname = '';
         this.subcategoryname = '';
         this.value = 0;
-        this.patterndto = new Pattern();
+        this.pattern = new Pattern();
         this.matchstyle = 0;
     }
 }

@@ -225,7 +225,6 @@ export class SelectLister<D> extends React.Component<SelectListerProps<D> & { 't
 	}
 
 	render(): React.JSX.Element {
-		console.log("SelectLister render: " + this.state.data.length);
 		return (
 			<div testdata-id={this.props['testdata-id']} style={{ position: 'relative', display: 'inline-block' }} >
 				<table className={css.selectlister} style={{ height: '' + (this.props.lines * 24 + 22) + 'px' }} >

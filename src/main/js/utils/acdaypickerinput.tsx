@@ -14,12 +14,12 @@ export type OnACDayPickerCallback = (date: Date) => void;
 export interface ACDayPickerProps {
 	startdate?: Date;
 	onChange: OnACDayPickerCallback;
+	testdataid?: string;
 }
 
 interface IState {
-	date?: Date;
 	dateString: string;
-
+	date: Date | undefined;
 }
 
 export class ACDayPickerInput extends React.Component<ACDayPickerProps, IState> {
@@ -30,46 +30,42 @@ export class ACDayPickerInput extends React.Component<ACDayPickerProps, IState> 
 	constructor(props: ACDayPickerProps) {
 		super(props);
 		this.locale = getIntl().locale == 'de' ? de : enGB;
-		this.state = { date: props.startdate, dateString: "" };
-		
+		this.state = { dateString: this.formatDate(props.startdate), date: props.startdate };
+
 		this.renderDayPicker = this.renderDayPicker.bind(this);
 		this.parseNewDate = this.parseNewDate.bind(this);
 		this.setNewDate = this.setNewDate.bind(this);
-		this.setStateDate = this.setStateDate.bind(this);
-
-		this.setStateDate(this.props.startdate);
 	}
 
 	componentDidUpdate(prevProps: Readonly<ACDayPickerProps>, prevState: Readonly<IState>): void {
-			this.setStateDate(this.props.startdate);
+		if (prevProps.startdate != this.props.startdate) {
+			this.setState({ dateString: this.formatDate(this.props.startdate), date: this.props.startdate });
+		}
 	}
 
-	parseNewDate(newdate: string): void {
-		const parsed: Date = parse(newdate, 'P', new Date(), { locale: this.locale });
-		if (parsed == undefined || isNaN(parsed.getTime()) || parsed.getFullYear() < 1970) {
-			return undefined;
+    private formatDate(d: Date | undefined): string {
+		if (d == undefined) {
+			return "--.--.----";
 		}
-		if (parsed != this.state.date) {
-			this.setState({ date: parsed })
+		else {
+			return format(d, 'P', { locale: this.locale });
+		}
+	}
+
+	parseNewDate(): void {
+		var parsed: Date | undefined= parse(this.state.dateString, 'P', new Date(), { locale: this.locale });
+		if (parsed == undefined || isNaN(parsed.getTime()) || parsed.getFullYear() < 1970) {
+			this.setState({ dateString: this.formatDate(this.props.startdate), date: this.props.startdate });
+		}
+		else if ( parsed != this.state.date ) {
+			this.setState({ date: parsed });
 			this.props.onChange(parsed);
 		}
 	}
 
-	setStateDate(d: Date | undefined): boolean {
-		var datestring: string = "--.--.----";
-		if (d != undefined) {
-			datestring = format(d, 'P', { locale: this.locale })
-		}
-
-		if (datestring != this.state.dateString) {
-			this.setState({ dateString: datestring });
-			return true;
-		}
-		return false;
-	}
-
-	setNewDate(d: Date): void {
-		if (this.setStateDate(d)) {
+	setNewDate(d: Date ): void {
+		if (d != this.state.date) {
+			this.setState({ dateString: this.formatDate(d), date: d });
 			this.props.onChange(d);
 		}
 	}
@@ -91,8 +87,11 @@ export class ACDayPickerInput extends React.Component<ACDayPickerProps, IState> 
 		return (
 			<div>
 				<input
+					testdata-id={this.props.testdataid}
+					type="text"
 					value={this.state.dateString}
-					onChange={(e) => this.parseNewDate(e.target.value)}
+					onChange={(e) => this.setState({ dateString: e.target.value })}
+					onBlur={() => this.parseNewDate()}
 					className={css.stringinput}
 					size={11}
 				/>

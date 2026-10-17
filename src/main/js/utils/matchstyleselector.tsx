@@ -12,7 +12,8 @@ export interface MatchStyleProps {
 export function MatchStyleSelector( props: MatchStyleProps) :React.JSX.Element {
 	return (
             <select className={props.className}
-                    value={ props.curvalue } 
+                    value={ props.curvalue }
+                    testdata-id='matchstyle'
                     onChange={( e: React.ChangeEvent<HTMLSelectElement> ) => 
                                     props.onChange(parseInt( e.target.value ))}>
                 <option key={0} value={0}> {label("exact")} </option> 

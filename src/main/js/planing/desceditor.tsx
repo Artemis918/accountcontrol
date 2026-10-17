@@ -10,8 +10,8 @@ export type SendDataCallback = (data: DescData) => void
 export interface DescData {
     short: string;
     desc: string;
-    validFrom: Date | undefined;
-    validUntil: Date | undefined;
+    validFrom?: Date;
+    validUntil?: Date;
 }
 
 export interface DescEditorProps {
@@ -44,20 +44,24 @@ export class DescEditor extends React.Component<DescEditorProps, DescData> {
         }
     }
 
-    sendData(): void {
-        this.props.sendData(this.state);
+    sendData(newdata:Partial<DescData>): void {
+        const newstate = { ...this.state, ...newdata };
+        this.setState(newstate);
+        this.props.sendData(newstate);
     }
 
     renderValidity(): React.JSX.Element | null {
         if (this.props.data.validFrom != undefined) {
             return <tr><td>{label("templates.validfrom")}</td>
                 <td><ACDayPickerInput
-                    onChange={(d: Date) => { this.setState({ validFrom: d }); this.sendData() }}
+                    testdataid="validfrom"
+                    onChange={(d: Date) => { this.sendData({ validFrom: d }) }}
                     startdate={this.state.validFrom} />
                 </td>
                 <td>{label("templates.validuntil")}</td>
                 <td><ACDayPickerInput
-                    onChange={(d: Date) => { this.setState({ validUntil: d }); this.sendData(); }}
+                    testdataid="validuntil"
+                    onChange={(d: Date) => { this.sendData({ validUntil: d }) }}
                     startdate={this.state.validUntil} />
                 </td>
             </tr>
@@ -79,7 +83,8 @@ export class DescEditor extends React.Component<DescEditorProps, DescData> {
                                     <input className={css.stringinput}
                                         testdata-id={'shortdescription'}
                                         value={this.state.short} type='text'
-                                        onChange={(e) => { this.setState({ short: e.target.value }, this.sendData ); }} />
+                                        onChange={(e) => { this.setState({ short: e.target.value }) }}
+                                        onBlur={() => this.sendData({})} />
                                 </td>
                             </tr>
                             <tr><td>{label("description")}</td>
@@ -87,7 +92,8 @@ export class DescEditor extends React.Component<DescEditorProps, DescData> {
                                     className={css.stringinput}
                                     testdata-id={'description'}
                                     value={this.state.desc}
-                                    onChange={(e) => { this.setState({ desc: e.target.value }, this.sendData ); }} />
+                                    onChange={(e) => { this.setState({ desc: e.target.value }) }}
+                                    onBlur={() => this.sendData({})} />
                                 </td>
                             </tr>
                             {this.renderValidity()}

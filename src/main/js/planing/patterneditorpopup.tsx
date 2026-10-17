@@ -28,6 +28,7 @@ export class PatternEditorButton extends React.Component<PatternEditorButtonProp
                     <label className={css.boxlabel} > {label("plan.pattern")}</label>
                     <br />
                     <button
+                        testdata-id="patterneditbutton"
                         onClick={() => this.setState({ open: true })}
                         className={css.addonbutton}>
                         {label("plan.edit")}</button>

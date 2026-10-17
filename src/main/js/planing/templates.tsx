@@ -20,7 +20,6 @@ interface IState {
 
 export class Templates extends React.Component<TemplateProps, IState> {
 
-
 	lister: SingleSelectLister<Template> | null = null;
 
 	unitNames: string[] = [];
@@ -86,6 +85,7 @@ export class Templates extends React.Component<TemplateProps, IState> {
 								/>
 							</p>
 							<SingleSelectLister<Template> ref={(ref) => { this.lister = ref; }}
+								testdata-id={"templateslister"}
 								lines={28}
 								handleChange={(t) => this.setState({ template: t })}
 								url='templates/listcategory/'

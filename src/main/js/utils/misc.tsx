@@ -1,10 +1,24 @@
+import { formatISO } from "date-fns";
 import { IntlShape, useIntl } from "react-intl";
 
-export function myParseJson( text: string ): any {
-    return JSON.parse( text, datereviver );
+export function myStringify( object: any ): string {
+    return JSON.stringify( object, dateReplacer );
 }
 
-function datereviver( _key: string, value: string ): any {
+var dateReplacer = function(this:any, key: string, value: any ): any {
+
+   if (this[key] instanceof Date) {
+      return formatISO(value).substring(0, 10);
+   }
+   
+   return value;
+}
+
+export function myParseJson( text: string ): any {
+    return JSON.parse( text, dateReviver );
+}
+
+var dateReviver = function( _key: string, value: string ): any {
     if ( typeof ( value ) === 'string' && value.match( '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' ) != null ) {
         return new Date( value );
     }

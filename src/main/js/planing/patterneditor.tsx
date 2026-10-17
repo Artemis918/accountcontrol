@@ -76,6 +76,7 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
             <td> {label(patid)}</td>
             <td>
                 <input className={css.stringinput}
+                    testdata-id={'pattern_' + patid}
                     value={this.getState(patid)}
                     type='text'
                     onChange={(e) => { this.changeState(patid, e.target.value) }}
@@ -91,7 +92,7 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
                 zIndex: this.props.zIndex,
                 left: '0', top: '0', width: '100%', height: '100%'
             }}>
-                <div testdata-id={'pattern.editor'}
+                <div testdata-id={'patterneditor'}
                     style={{
                         margin: '15% auto',
                         padding: '20px',
@@ -113,7 +114,7 @@ export class PatternEditor extends React.Component<PatternEditorProps, IState> {
                         <button style={{ width: '100%' }}
                             className={css.addonbutton}
                             onClick={() => this.sendPattern()}
-                            testdata-id={'pattern.ok'}> OK</button>
+                            testdata-id={'patternok'}> OK</button>
                     </div>
                 </div>
             </div>

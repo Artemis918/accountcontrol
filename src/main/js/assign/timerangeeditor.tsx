@@ -117,6 +117,7 @@ export class TimeRangeEditor extends React.Component<TimeRangeEditorProps, IStat
 							</tr>
 							<tr style={{ background: 'darkgray' }}><td>{label("templates.firstday")}</td>
 								<td><ACDayPickerInput
+									testdataid="firstday"
 									onChange={(d) => { this.setState({ plandate: d }) }}
 									startdate={this.state.plandate} />
 									<button className={css.charbutton}
