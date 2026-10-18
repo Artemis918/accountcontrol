@@ -42,6 +42,7 @@ export class TaskSelector extends React.Component<TaskSelectorProps,IState> {
                 <div className={css.tsline}>
                     {this.props.tasks.map( ( t, i ) =>
                         <button className={ this.state.currenttask == i ? css.tsbuttonselected : css.tsbutton } 
+                            testdata-id={"tabBut_" + t.name}                            
                             key={"tabBut_" + t.name}
                             onClick={( e ) => this.selectTask( i )} > {t.name}
                         </button>
