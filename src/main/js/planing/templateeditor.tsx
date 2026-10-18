@@ -54,9 +54,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.resetEditor = this.resetEditor.bind(this);
 		this.checkCanSave = this.checkCanSave.bind(this);
 
-		this.template = this.createNewTemplate();
+		this.template = props.template || this.createNewTemplate();
 		this.state = this.createStateFromTemplate();
-		this.setTemplate(props.template || this.template);
 		this.canSave = props.template == undefined;
 	}
 
