@@ -70,7 +70,7 @@ describe("plan creation", () => {
     cy.gett("plans").findt("planeditor").as("editor");
   });
 
-  it.skip("create plan", () => {
+  it("create plan", () => {
     cy.get("@editor").findt("catselector").select("Cat - 2");
     cy.wait("@subenum2");
     interceptDefSave(21);
@@ -80,7 +80,7 @@ describe("plan creation", () => {
     cy.get("@editor").gett("savebutton").click();
   });
 
-  it.skip("plan creation with values", () => {
+  it("plan creation with values", () => {
     cy.get("@editor").findt("catselector").select("Cat - 2");
     cy.wait("@subenum2");
     cy.get("@editor").findt("subselector").select("SubCat - 2.2");
@@ -137,7 +137,7 @@ describe("plan creation", () => {
     cy.get("@editor").findt("savebutton").click();
   });
 
-  it.skip("change plan", () => {
+  it("change plan", () => {
     cy.gett("plans")
       .findt("monthselect-month")
       .type("{selectall}{backspace}07");
@@ -181,7 +181,7 @@ describe("plan creation", () => {
     });
   });
 
-  it.skip("new plan", () => {
+  it("new plan", () => {
     cy.gett("plans").findline("planslister", 0).click();
     cy.get("@editor").findt("newbutton").click();
     cy.intercept("POST", "plans/save", (req) => {
@@ -195,7 +195,7 @@ describe("plan creation", () => {
     cy.get("@editor").findt("savebutton").click();
   });
 
-  it.skip("copy plan", () => {
+  it("copy plan", () => {
     cy.gett("plans").findline("planslister", 0).click();
     cy.get("@editor").findt("copybutton").click();
 
@@ -224,7 +224,7 @@ describe("plan creation", () => {
     cy.get("@editor").findt("savebutton").click();
   });
 
-  it.skip("delete plan", () => {
+  it("delete plan", () => {
     cy.gett("plans").findline("planslister", 0).click();
     cy.intercept("GET", "plans/delete/8", (req) => {
       req.continue((res) => {
