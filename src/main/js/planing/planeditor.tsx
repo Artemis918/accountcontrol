@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { ACDayPickerInput } from '../utils/acdaypickerinput'
-import { Pattern, Plan } from '../utils/dtos'
+import { Pattern, Plan, postRequest } from '../utils/dtos'
 import { label, myStringify } from '../utils/misc'
 import * as css from '../css/index.css'
 import { DescData, DescEditor } from './desceditor'
@@ -89,16 +89,7 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
         if (this.canSave && this.subcategory != undefined) {
             var self = this;
             this.plan.subcategory = this.subcategory;
-            var jsonbody = myStringify(this.plan);
-            fetch('plans/save', {
-                method: 'post',
-                body: jsonbody,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(function (response) {
-                self.setAnswer(response.json());
-            });
+            postRequest('plans/save', self.plan, self.setAnswer);
         }
     }
 

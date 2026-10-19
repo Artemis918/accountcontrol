@@ -1,6 +1,6 @@
 import React from 'react'
 import { CategorySelector } from '../utils/categoryselector'
-import { Pattern, Template } from '../utils/dtos'
+import { Pattern, postRequest, Template } from '../utils/dtos'
 import { MatchStyleSelector } from '../utils/matchstyleselector'
 import { myParseJson, label, myStringify } from '../utils/misc'
 import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
@@ -113,16 +113,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	private save(): void {
 		if (this.canSave) {
 			var self = this;
-			var jsonbody = myStringify(this.template);
-			fetch('templates/save', {
-				method: 'post',
-				body: jsonbody,
-				headers: {
-					"Content-Type": "application/json"
-				}
-			}).then((response) => {
-				self.setAnswer(response.json());
-			});
+			postRequest('templates/save', self.template, self.setAnswer);
 		}
 	}
 

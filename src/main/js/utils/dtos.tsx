@@ -1,11 +1,11 @@
-import { myParseJson } from "./misc";
+import { myParseJson, myStringify } from "./misc";
 
 export type handleJsonAnswer = (answer: any) => void;
 
 export function postRequest(url:string, data:any, answer:handleJsonAnswer): void {
     fetch( url, {
             method: 'post',
-            body: JSON.stringify(data),
+            body: myStringify(data),
             headers: {
                 "Content-Type": "application/json"
             }
