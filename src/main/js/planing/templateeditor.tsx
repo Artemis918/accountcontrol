@@ -7,6 +7,7 @@ import { TimeRangeEditor, TimeRangeData } from './timerangeeditor'
 import * as css from '../css/index.css'
 import { DescData, DescEditor } from './desceditor'
 import { PatternEditorButton } from './patterneditorpopup'
+import { RatingData, RatingEditor } from './ratingeditor'
 
 
 
@@ -21,11 +22,7 @@ interface TemplateEditorProps {
 
 interface IState {
 	message: string;
-	position: number;
-	subCategory: number | undefined;
-	matchstyle: number;
 	pattern: Pattern;
-	value: number;
 }
 
 
@@ -34,7 +31,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	template: Template;
 	canSave: boolean = false;
 	changed: boolean = true;
-	resetcat: boolean = true;
 
 	constructor(props: TemplateEditorProps) {
 		super(props);
@@ -45,7 +41,8 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.copy = this.copy.bind(this);
 		this.fetchAccountRecord = this.fetchAccountRecord.bind(this);
 		this.setAnswer = this.setAnswer.bind(this);
-		this.changeRange = this.changeRange.bind(this);
+		this.changeRangeData = this.changeRangeData.bind(this);
+		this.changeRatingData = this.changeRatingData.bind(this);
 		this.changePattern = this.changePattern.bind(this);
 		this.createStateFromTemplate = this.createStateFromTemplate.bind(this);
 		this.setTemplate = this.setTemplate.bind(this);
@@ -105,10 +102,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	private createStateFromTemplate(): IState {
 		return {
-			position: this.template.position,
-			subCategory: this.template.subcategory,
-			matchstyle: this.template.matchstyle ? this.template.matchstyle : 0,
-			value: this.template.value,
 			pattern: this.template.pattern,
 			message: ''
 		};
@@ -116,7 +109,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	private resetEditor(): void {
 		this.canSave = true;
-		this.resetcat = true;
 		this.setTemplate(this.createNewTemplate());
 	}
 
@@ -166,20 +158,22 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.props.onDetach();
 	}
 
-	private changeSubCategory(sub: number | undefined) {
-		this.resetcat = false;
-		if (this.template.subcategory != sub) {
-			this.template.subcategory = sub;
-			this.checkCanSave()
-		}
-	}
-
-	private changeRange(timerangedata: TimeRangeData): void {
+	private changeRangeData(timerangedata: TimeRangeData): void {
 		this.template.repeatcount = timerangedata.repeatcount;
 		this.template.repeatunit = timerangedata.repeatunit;
 		this.template.variance = timerangedata.variance;
 		this.template.start = timerangedata.startdate;
 		this.checkCanSave()
+	}
+
+	private changeRatingData(data: RatingData): void {
+		this.template.position = data.position;
+		this.template.value = data.value;
+		this.template.matchstyle = data.matchstyle
+		if (this.template.subcategory != data.subCategory) {
+			this.template.subcategory = data.subCategory;
+			this.checkCanSave()
+		}
 	}
 
 	private changeDescData(descdata: DescData): void {
@@ -255,68 +249,20 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 			validFrom: this.template.validFrom,
 			validUntil: this.template.validUntil
 		};
+		var ratingData: RatingData = {
+			position: this.template.position,
+			subCategory: this.template.subcategory,
+			value: this.template.value,
+			matchstyle: this.template.matchstyle
+		}
+
 		return (
 			<div testdata-id={"templateeditor"}>
 				<label>{this.state.message}</label>
 				<DescEditor data={descData} sendData={this.changeDescData} />
-				<TimeRangeEditor rangedata={timerange} sendRange={this.changeRange} />
+				<TimeRangeEditor rangedata={timerange} sendRange={this.changeRangeData} />
 				<PatternEditorButton pattern={this.state.pattern} sendPattern={this.changePattern} />
-
-				<div className={css.boxborder} >
-					<div className={css.boxinnerpart} >
-						<label className={css.boxlabel} > {label("templates.rating")}</label>
-						<table>
-							<tbody>
-								<tr><td>{label("plan.position")}</td>
-									<td><input value={this.state.position}
-										testdata-id='position'
-										type='number'
-										className={css.numbersmallinput}
-										onChange={(e) => {
-											this.template.position = e.target.valueAsNumber;
-											this.setState(this.createStateFromTemplate())
-										}} />
-									</td>
-								</tr>
-								<tr><td>{label("category")}</td>
-									<td colSpan={3}>
-										<CategorySelector
-											horiz={true}
-											clearCategory={this.resetcat}
-											onChange={(sub) => this.changeSubCategory(sub)}
-											subcategory={this.template.subcategory}
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>{label("value")}</td>
-									<td>
-										<input step="0.01" value={this.state.value / 100}
-											type='number'
-											testdata-id='value'
-											className={css.numbersmallinput}
-											onChange={(e) => {
-												this.template.value = e.target.valueAsNumber * 100;
-												this.setState(this.createStateFromTemplate())
-											}}
-										/>
-									</td>
-									<td>{label("plan.matchstyle")}</td>
-									<td>
-										<MatchStyleSelector
-											curvalue={this.state.matchstyle}
-											className={css.catselector3}
-											onChange={(e) => {
-												this.template.matchstyle = e;
-												this.setState(this.createStateFromTemplate())
-											}}
-										/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				<RatingEditor data={ratingData} sendData={this.changeRatingData} />
 				<div style={{ textAlign: 'center' }}>
 					{this.renderButtons()}
 				</div >
