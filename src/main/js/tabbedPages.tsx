@@ -6,7 +6,7 @@ import { TaskSelector, Task } from './utils/taskselector'
 import { RecordUploader } from './records/recorduploader'
 import { RecordCreator } from './records/recordcreator'
 import { Templates } from './planing/templates'
-import { Planing } from './planing/planing'
+import { Planing } from './planing/plans'
 import { PatternPlaning} from './planing/patternplaning'
 import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
@@ -113,8 +113,6 @@ export class TabbedPages extends React.Component<TabbedPagesProps, IState> {
     }
 
     render(): React.JSX.Element {
-        this.createPages();
-        this.createHeaderData();
         return (
               <div>
                 <Header setPage={this.setPage} 

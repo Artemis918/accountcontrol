@@ -43,16 +43,16 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.changeRangeData = this.changeRangeData.bind(this);
 		this.changeRatingData = this.changeRatingData.bind(this);
 		this.changePattern = this.changePattern.bind(this);
-		this.createStateFromTemplate = this.createStateFromTemplate.bind(this);
+		this.setMessage = this.setMessage.bind(this);
 		this.setTemplate = this.setTemplate.bind(this);
 		this.changeDescData = this.changeDescData.bind(this);
 		this.createNewTemplate = this.createNewTemplate.bind(this);
 		this.resetEditor = this.resetEditor.bind(this);
 		this.checkCanSave = this.checkCanSave.bind(this);
 
+		this.state = { message: "" };
 		this.template = props.template || this.createNewTemplate();
-		this.state = this.createStateFromTemplate();
-		this.canSave = props.template == undefined;
+		this.changed = props.template == undefined;
 	}
 
 	componentDidMount() {
@@ -64,6 +64,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 			if (this.props.template != undefined) {
 				this.template = this.props.template;
 				this.canSave = false;
+				this.changed = false;
 				this.fetchAccountRecord();
 				this.setTemplate(this.props.template);
 			}
@@ -96,17 +97,16 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	private setTemplate(template: Template) {
 		this.template = template;
-		this.setState(this.createStateFromTemplate());
+		this.setMessage("");
 	}
 
-	private createStateFromTemplate(): IState {
-		return {
-			message: ''
-		};
+	private setMessage(msg: string): void {
+		this.setState({ message: msg });
 	}
 
 	private resetEditor(): void {
 		this.canSave = true;
+		this.changed = true;
 		this.setTemplate(this.createNewTemplate());
 	}
 
@@ -130,10 +130,9 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		var msg: string = data.error;
 		if (!data.error) {
 			this.clear();
-			this.props.onDetach();
 			var msg: string = label("templates.saved");
 		}
-		this.setState({ message: msg });
+		this.setMessage(msg);
 	}
 
 	private clear(): void {
@@ -168,22 +167,15 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 		this.template.position = data.position;
 		this.template.value = data.value;
 		this.template.matchstyle = data.matchstyle
-		if (this.template.subcategory != data.subCategory) {
-			this.template.subcategory = data.subCategory;
-			this.checkCanSave()
-		}
+		this.template.subcategory = data.subCategory;
+		this.checkCanSave()
 	}
 
 	private changeDescData(descdata: DescData): void {
 		this.template.shortdescription = descdata.short;
 		this.template.description = descdata.desc;
 		this.template.validUntil = descdata.validUntil;
-		if (descdata.validFrom != undefined) {
-			this.template.validFrom = descdata.validFrom;
-		}
-		else {
-			this.template.validFrom = new Date();
-		}
+		this.template.validFrom = descdata.validFrom ?? new Date();
 		this.checkCanSave()
 	}
 
@@ -194,10 +186,12 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	}
 
 	private checkCanSave() {
+		var oldCanSave = this.canSave;
+		this.canSave = this.template.subcategory != undefined;
+		if ( !this.changed || oldCanSave != this.canSave ) {
+			this.setMessage("");
+		}
 		this.changed = true;
-		this.setState(this.createStateFromTemplate())
-		this.canSave =
-			this.template.subcategory != undefined;
 	}
 
 	private renderButton(name: string, func: () => void, disabled: boolean): React.JSX.Element {
