@@ -127,7 +127,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 
 	setPattern(p: Pattern | undefined): void {
 		if (this.currentPlan != undefined && p != undefined) {
-			this.currentPlan.patterndto = p;
+			this.currentPlan.pattern = p;
 			postRequest('templates/changepattern', this.currentPlan, () => { });
 		}
 		this.setState({ patterneditor: false });
@@ -187,7 +187,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 	renderPatternEditor(): React.JSX.Element {
 		if (this.state.patterneditor && this.currentPlan) {
 			return (<PatternEditor
-				pattern={this.currentPlan.patterndto}
+				pattern={this.currentPlan.pattern}
 				sendPattern={(p: Pattern | undefined ) => this.setPattern(p)}
 				zIndex={4} />);
 		}

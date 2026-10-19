@@ -119,6 +119,7 @@ export class RecordEditor extends React.Component<RecordEditorProps, IState> {
                         <tr>
                             <td>{label("date")}</td>
                             <td className={css.stringinput}><ACDayPickerInput
+                                testdataid="date"
                                 onChange={( d ) => { this.record.executed = d; this.setState( { record: this.record } ) }}
                                 startdate={this.state.record.executed} />
                             </td>

@@ -185,10 +185,10 @@ export class PatternPlanEditor extends React.Component<PlanEditorProps, IState> 
                     {this.state.patternEdit ?
                         <PatternEditor
                             zIndex={1}
-                            pattern={this.state.plan.patterndto}
+                            pattern={this.state.plan.pattern}
                             sendPattern={(e) => {
                                 if (e != undefined) {
-                                    this.plan.patterndto = e;
+                                    this.plan.pattern = e;
                                 }
                                 this.setState({ patternEdit: false, plan: this.plan, message: "" })
                             }}
