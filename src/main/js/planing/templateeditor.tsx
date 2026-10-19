@@ -22,7 +22,6 @@ interface TemplateEditorProps {
 
 interface IState {
 	message: string;
-	pattern: Pattern;
 }
 
 
@@ -102,7 +101,6 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 
 	private createStateFromTemplate(): IState {
 		return {
-			pattern: this.template.pattern,
 			message: ''
 		};
 	}
@@ -192,7 +190,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	private changePattern(p: Pattern | undefined): void {
 		if (p != undefined)
 			this.template.pattern = p;
-		this.setState(this.createStateFromTemplate())
+		this.checkCanSave()
 	}
 
 	private checkCanSave() {
@@ -261,7 +259,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				<label>{this.state.message}</label>
 				<DescEditor data={descData} sendData={this.changeDescData} />
 				<TimeRangeEditor rangedata={timerange} sendRange={this.changeRangeData} />
-				<PatternEditorButton pattern={this.state.pattern} sendPattern={this.changePattern} />
+				<PatternEditorButton pattern={this.template.pattern} sendPattern={this.changePattern} />
 				<RatingEditor data={ratingData} sendData={this.changeRatingData} />
 				<div style={{ textAlign: 'center' }}>
 					{this.renderButtons()}
