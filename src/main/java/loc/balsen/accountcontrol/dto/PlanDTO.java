@@ -17,7 +17,7 @@ public class PlanDTO {
   private LocalDate enddate;
   private int position;
   private int value;
-  private PatternDTO patterndto;
+  private PatternDTO pattern;
   private String shortdescription;
   private String description;
   private int matchstyle;
@@ -35,7 +35,7 @@ public class PlanDTO {
     this.enddate = plan.getEndDate();
     this.position = plan.getPosition();
     this.value = plan.getValue();
-    this.patterndto = new PatternDTO(plan.getPatternObject());
+    this.pattern = new PatternDTO(plan.getPatternObject());
     this.shortdescription = plan.getShortDescription();
     this.description = plan.getDescription();
     this.matchstyle = plan.getMatchStyle().ordinal();
@@ -55,7 +55,7 @@ public class PlanDTO {
     SubCategory sub = subCategoryRepository.findById(subcategory).orElseThrow();
     Template temp = templateRepository.findById(template).orElse(null);
     return new Plan(id, creationdate, startdate, plandate, enddate, position, value,
-        patterndto.toPattern(), shortdescription, description, MatchStyle.values()[this.matchstyle],
+        pattern.toPattern(), shortdescription, description, MatchStyle.values()[this.matchstyle],
         sub, temp);
   }
 
@@ -92,8 +92,8 @@ public class PlanDTO {
     return value;
   }
 
-  public PatternDTO getPatterndto() {
-    return patterndto;
+  public PatternDTO getPattern() {
+    return pattern;
   }
 
   public String getShortdescription() {

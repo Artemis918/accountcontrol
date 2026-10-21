@@ -43,7 +43,7 @@ public class PlanControllerTest extends TestContext {
       + "\"position\": 5, " 
       + "\"value\": 100, " 
       + "\"matchstyle\": 1, " 
-      + "\"patterndto\": { "
+      + "\"pattern\": { "
       + "  \"sender\": \"sender\", " 
       + "  \"receiver\": \"Receiver\", "
       + "  \"referenceID\": \"Reference\", " 
