@@ -19,6 +19,7 @@ export interface RatingData {
 export interface RatingEditorProps {
     data: RatingData;
     sendData: SendDataCallback;
+    novalue?: boolean;
 }
 
 export class RatingEditor extends React.Component<RatingEditorProps, RatingData> {
@@ -48,10 +49,36 @@ export class RatingEditor extends React.Component<RatingEditorProps, RatingData>
         }
     }
 
-    sendData(newdata: Partial<RatingData>): void {
+    private sendData(newdata: Partial<RatingData>): void {
         const newstate = { ...this.state, ...newdata };
         this.setState(newstate);
         this.props.sendData(newstate);
+    }
+
+    private renderValueMatcher(): React.JSX.Element | null {
+        if (this.props.novalue == undefined || this.props.novalue == false) {
+            return (<tr>
+                <td>{label("value")}</td>
+                <td>
+                    <input step="0.01" value={this.state.value / 100}
+                        type='number'
+                        testdata-id='value'
+                        className={css.numbersmallinput}
+                        onChange={(e) => { this.sendData({ value: Number(e.target.valueAsNumber * 100) }) }}
+                    />
+                </td>
+                <td>{label("plan.matchstyle")}</td>
+                <td>
+                    <MatchStyleSelector
+                        curvalue={this.state.matchstyle}
+                        className={css.catselector3}
+                        onChange={(e) => { this.sendData({ matchstyle: e }) }}
+                    />
+                </td>
+            </tr>)
+        }
+        else
+            return null;
     }
 
 
@@ -80,25 +107,7 @@ export class RatingEditor extends React.Component<RatingEditorProps, RatingData>
                                     />
                                 </td>
                             </tr>
-                            <tr>
-                                <td>{label("value")}</td>
-                                <td>
-                                    <input step="0.01" value={this.state.value / 100}
-                                        type='number'
-                                        testdata-id='value'
-                                        className={css.numbersmallinput}
-                                        onChange={(e) => { this.sendData({ value: Number(e.target.valueAsNumber * 100) }) }}
-                                    />
-                                </td>
-                                <td>{label("plan.matchstyle")}</td>
-                                <td>
-                                    <MatchStyleSelector
-                                        curvalue={this.state.matchstyle}
-                                        className={css.catselector3}
-                                        onChange={(e) => { this.sendData({ matchstyle: e }) }}
-                                    />
-                                </td>
-                            </tr>
+                            {this.renderValueMatcher()}
                         </tbody>
                     </table>
                 </div>

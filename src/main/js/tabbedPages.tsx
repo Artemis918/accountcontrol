@@ -7,7 +7,7 @@ import { RecordUploader } from './records/recorduploader'
 import { RecordCreator } from './records/recordcreator'
 import { Templates } from './planing/templates'
 import { Planing } from './planing/plans'
-import { PatternPlaning} from './planing/patternplaning'
+import { PatternPlans} from './planing/patternplans'
 import { Assign } from './assign/assign'
 import { Categories } from './check/categories'
 import { OverviewGFX } from './stats/overviewgfx'
@@ -70,7 +70,7 @@ export class TabbedPages extends React.Component<TabbedPagesProps, IState> {
                 [
                     { name: label("task.template"), comp: ( <Templates sendmessage={this.sendMessage} /> ) },
                     { name: label("task.plan"), comp: ( <Planing sendmessage={this.sendMessage} /> ) },
-                    { name: label("task.pattern"), comp: ( <PatternPlaning sendmessage={this.sendMessage} /> ) },
+                    { name: label("task.pattern"), comp: ( <PatternPlans sendmessage={this.sendMessage} /> ) },
                 ]
         },
         {

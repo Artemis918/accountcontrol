@@ -1,0 +1,27 @@
+[
+	{
+		"category": 1,
+		"categoryname": "cat -1",
+		"creationdate": "2026-10-21",
+		"description": "Neuer Plan",
+		"enddate": null,
+		"id": 13,
+		"matchstyle": 3,
+		"pattern": {
+			"details": "",
+			"mandate": "",
+			"receiver": "",
+			"referenceID": "",
+			"sender": "",
+			"senderID": ""
+		},
+		"plandate": "2026-10-21",
+		"position": 0,
+		"shortdescription": "Neu",
+		"startdate": null,
+		"subcategory":11,
+		"subcategoryname": "cat - 1.1",
+		"template": 0,
+		"value": 0
+	}
+]

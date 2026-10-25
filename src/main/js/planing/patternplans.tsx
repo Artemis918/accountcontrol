@@ -8,24 +8,24 @@ import { SendMessage } from '../utils/messageid'
 import { label } from '../utils/misc'
 import * as css from '../css/index.css'
 
-interface PatternPlaningProps {
+interface PatternPlansProps {
     sendmessage: SendMessage;
 }
 
 interface IState {
     category: number | undefined;
+    plan: Plan | undefined;
 }
 
-export class PatternPlaning extends React.Component<PatternPlaningProps, IState> {
+export class PatternPlans extends React.Component<PatternPlansProps, IState> {
 
     lister: SingleSelectLister<Plan> | null = null;
     editor: PatternPlanEditor | null = null;
 
-    constructor(props: PatternPlaningProps) {
+    constructor(props: PatternPlansProps) {
         super(props);
         this.refreshlist = this.refreshlist.bind(this);
-        this.refresheditor = this.refresheditor.bind(this);
-        this.state = { category: 1 };
+        this.state = { category: 1, plan: undefined };
     }
 
     createColumns(): ColumnInfo<Plan>[] {
@@ -45,22 +45,16 @@ export class PatternPlaning extends React.Component<PatternPlaningProps, IState>
         this.lister?.reload();
     }
 
-    refresheditor(data: Plan): void {
-        this.editor?.setPlan(data);
-    }
-
     render(): React.JSX.Element {
         return (
-            <table style={{ border: '1px solid black' }}>
+            <table style={{ border: '1px solid black' }} testdata-id={"pattern"}>
                 <tbody>
                     <tr>
                         <td style={{ border: '1px solid black', verticalAlign: 'top' }}>
                             <div className={css.editortitle}> {label("pattern.patterndata")} </div>
-                            <PatternPlanEditor
-                                ref={(ref) => { this.editor = ref }}
-                                onChange={this.refreshlist} />
+                            <PatternPlanEditor onDetach={this.refreshlist} plan= {this.state.plan} />
                         </td>
-                        <td style={{ verticalAlign: 'top' }}>
+                        <td testdata-id={"patternlist"} style={{ verticalAlign: 'top' }}>
                             <div style={{ padding: '1px', borderBottom: '1px solid black' }}>
                                 <Dropdown onChange={(val: number | undefined): void => this.setState({ category: val })}
                                     className={css.catselector3}
@@ -71,7 +65,8 @@ export class PatternPlaning extends React.Component<PatternPlaningProps, IState>
                             </div>
                             <SingleSelectLister ref={(ref) => { this.lister = ref; }}
                                 lines={30}
-                                handleChange={(data: Plan) => this.refresheditor(data)}
+                                testdata-id={"patternlister"}
+                                handleChange={(data: Plan) => this.setState({plan: data})}
                                 columns={this.createColumns()}
                                 ext={this.state.category?.toString(10)}
                                 url='plans/patternplans/' />

@@ -1,0 +1,52 @@
+[
+	{
+		"category": 2,
+		"categoryname": "cat - 2",
+		"creationdate": "2026-10-21",
+		"description": "Neuer Plan",
+		"enddate": null,
+		"id": 13,
+		"matchstyle": 3,
+		"pattern": {
+			"details": "",
+			"mandate": "",
+			"receiver": "",
+			"referenceID": "",
+			"sender": "",
+			"senderID": ""
+		},
+		"plandate": "2026-10-21",
+		"position": 0,
+		"shortdescription": "Neu",
+		"startdate": null,
+		"subcategory": 21,
+		"subcategoryname": "Cat - 2.1",
+		"template": 0,
+		"value": 0
+	},
+	{
+		"category": 2,
+		"categoryname": "cat -2",
+		"creationdate": "2026-10-16",
+		"description": "long Plan",
+		"enddate": null,
+		"id": 16,
+		"matchstyle": 3,
+		"pattern": {
+			"details": "what",
+			"mandate": "so",
+			"receiver": "ever",
+			"referenceID": "",
+			"sender": "",
+			"senderID": ""
+		},
+		"plandate": "2026-10-16",
+		"position": 0,
+		"shortdescription": "short",
+		"startdate": null,
+		"subcategory": 22,
+		"subcategoryname": "Cat - 2.2",
+		"template": 0,
+		"value": 0
+	}
+]
