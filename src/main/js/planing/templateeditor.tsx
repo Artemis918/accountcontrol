@@ -179,7 +179,7 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 	private checkCanSave() {
 		var oldCanSave = this.canSave;
 		this.canSave = this.template.subcategory != undefined;
-		if ( !this.changed || oldCanSave != this.canSave ) {
+		if (!this.changed || oldCanSave != this.canSave) {
 			this.setMessage("");
 		}
 		this.changed = true;
@@ -244,7 +244,11 @@ export class TemplateEditor extends React.Component<TemplateEditorProps, IState>
 				<label>{this.state.message}</label>
 				<DescEditor data={descData} sendData={this.changeDescData} />
 				<TimeRangeEditor rangedata={timerange} sendRange={this.changeRangeData} />
-				<PatternEditorButton pattern={this.template.pattern} sendPattern={this.changePattern} />
+				<PatternEditorButton
+					pattern={this.template.pattern}
+					sendPattern={this.changePattern}
+					decorateButton={true}
+					label={label("plan.edit")} />
 				<RatingEditor data={ratingData} sendData={this.changeRatingData} />
 				<div style={{ textAlign: 'center' }}>
 					{this.renderButtons()}

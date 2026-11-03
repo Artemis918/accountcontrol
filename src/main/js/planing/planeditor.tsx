@@ -222,7 +222,11 @@ export class PlanEditor extends React.Component<PlanEditorProps, IState> {
                         </table>
                     </div>
                 </div>
-                <PatternEditorButton pattern={this.plan.pattern} sendPattern={this.changePattern} />
+                <PatternEditorButton
+                    pattern={this.plan.pattern}
+                    sendPattern={this.changePattern}
+                    decorateButton={true}
+                    label={label("plan.edit")} />
                 <RatingEditor data={ratingData} sendData={this.changeRatingData} />
                 <div style={{ textAlign: 'center' }}>
                     {this.renderButtons()}

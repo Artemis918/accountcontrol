@@ -191,7 +191,11 @@ export class PatternPlanEditor extends React.Component<PatternPlanEditorProps, I
             <div testdata-id={"patternplaneditor"}>
                 <label>{this.state.message}</label>
                 <DescEditor data={descData} sendData={this.changeDescData} />
-                <PatternEditorButton pattern={this.plan.pattern} sendPattern={this.changePattern} />
+                <PatternEditorButton
+                    pattern={this.plan.pattern}
+                    sendPattern={this.changePattern}
+                    decorateButton={true}
+                    label={label("plan.edit")} />
                 <RatingEditor data={ratingData} sendData={this.changeRatingData} novalue={true} />
                 <div style={{ textAlign: 'center' }}>
                     {this.renderButtons()}
