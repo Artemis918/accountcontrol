@@ -29,8 +29,8 @@ public class StatsService {
 
   public List<Integer> getMonthlyAssigns(LocalDate startDay, LocalDate endDay, boolean cumulated) {
     List<Assignment> list = getAssignments(startDay, endDay);
-    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, Assignment::getStatsDay,
-        Assignment::getValue);
+    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, (Assignment a) -> { return a.getStatsDay(); },
+        (Assignment a) -> { return a.getValue(); });
   }
 
   public List<Integer> getMonthlyAssigns(LocalDate startDay, LocalDate endDay, boolean cumulated,
@@ -40,15 +40,15 @@ public class StatsService {
       return a.getSubCategory().getCategory() == category;
     }).collect(Collectors.toList());
 
-    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, Assignment::getStatsDay,
-        Assignment::getValue);
+    return this.<Assignment>getMonthly(list, startDay, endDay, cumulated, (Assignment a) -> { return a.getStatsDay(); },
+        (Assignment a) -> { return a.getValue(); });
   }
 
 
   public List<Integer> getMonthlyPlan(LocalDate startDay, LocalDate endDay, boolean cumulated) {
     List<Plan> list = planRepository.findByPlanDate(startDay, endDay);
-    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, Plan::getPlanDate,
-        Plan::getValue);
+    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, (Plan p) -> { return p.getPlanDate(); },
+        (Plan p) -> { return p.getValue(); });
   }
 
   public List<Integer> getMonthlyPlan(LocalDate startDay, LocalDate endDay, boolean cumulated,
@@ -58,8 +58,8 @@ public class StatsService {
       return p.getSubCategory().getCategory() == category;
     }).collect(Collectors.toList());
 
-    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, Plan::getPlanDate,
-        Plan::getValue);
+    return this.<Plan>getMonthly(list, startDay, endDay, cumulated, (Plan p) -> { return p.getPlanDate(); },
+        (Plan p) -> { return p.getValue(); });
   }
 
 

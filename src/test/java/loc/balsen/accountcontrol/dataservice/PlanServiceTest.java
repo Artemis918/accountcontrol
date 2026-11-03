@@ -133,7 +133,7 @@ public class PlanServiceTest extends TestContext {
     planService.createPlansfromTemplatesUntil(05, 2000);
 
     List<Plan> plans = planRepository.findByTemplate(template);
-    plans.sort(Comparator.comparing(Plan::getId));
+    plans.sort(Comparator.comparing((Plan p) -> { return p.getId(); }));
 
     LocalDate last = planService.getLastAssignedPlanOf(template);
     assertNull(last);

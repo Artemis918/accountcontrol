@@ -30,7 +30,7 @@ public class CategoryService {
       return categoryRepository.findAllByOrderByShortDescription();
     else
       return categoryRepository.findAllByOrderByShortDescription().stream()
-          .filter(Category::isActive).toList();
+          .filter((c) -> {return c.isActive();}).toList();
   }
 
   public List<SubCategory> getAllSubCategories(boolean activeOnly) {
@@ -38,7 +38,7 @@ public class CategoryService {
       return subCategoryRepository.findAllByOrderByShortDescription();
     else
       return subCategoryRepository.findAllByOrderByShortDescription().stream()
-          .filter(SubCategory::isActive).toList();
+          .filter((s) -> {return s.isActive();}).toList();
   }
 
   public List<SubCategory> getSubCategories(int id, boolean activeonly) {
@@ -46,12 +46,12 @@ public class CategoryService {
       return subCategoryRepository.findByCategoryIdOrderByShortDescription(id);
     else
       return subCategoryRepository.findByCategoryIdOrderByShortDescription(id).stream()
-          .filter(SubCategory::isActive).toList();
+          .filter((s) -> {return s.isActive();}).toList();
   }
 
   public List<SubCategory> getFavoriteSubCategories() {
     return subCategoryRepository.findAllByOrderByShortDescription().stream()
-        .filter(SubCategory::isFavorite).toList();
+        .filter((s) -> {return s.isFavorite();}).toList();
   }
 
   public int saveSubCategory(SubCategory subCategory) {

@@ -59,7 +59,7 @@ describe('assignment', () => {
     selectLine(1);
     cy.gett('assign.plan').click();
     cy.gett('typebutton').should('have.text', 'Plan');
-    cy.gett('planlister').find('tbody').find('tr').should('have.length', 2);
+    cy.gett('planlister').find('tbody').find('tr').should('have.length', 3);
     cy.gett('assign.cancel').click();
   })
 
@@ -72,7 +72,7 @@ describe('assignment', () => {
     cy.gett('planlister').find('tbody').find('tr').eq(1)
       .should('have.css', 'background-color', 'rgb(176, 196, 222)');
     cy.gett('planlister').find('tbody').find('tr')
-      .should('have.length', 2).eq(1).click();
+      .should('have.length', 3).eq(1).click();
     cy.gett('planlister').find('tbody').find('tr').eq(1)
       .should('have.css', 'background-color', 'rgb(240, 240, 240)');
 
