@@ -10,6 +10,8 @@ public interface TemplateRepository extends JpaRepository<Template, Integer> {
 
   Optional<Template> findById(Integer id);
 
+  Optional<Template> findByNext(Integer id);
+
   @Query(value = "select t.* from template t "
       + "where t.valid_until is null or t.valid_until > current_date", nativeQuery = true)
   Collection<Template> findValid();

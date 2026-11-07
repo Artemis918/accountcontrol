@@ -97,4 +97,5 @@ public class TemplateControllerTest extends TestContext {
         .andExpect(jsonPath("$.value").value("200"))
         .andExpect(jsonPath("$.start").value("2000-04-02"));
   }
+
 }

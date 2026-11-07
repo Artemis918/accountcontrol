@@ -1,5 +1,6 @@
 package loc.balsen.accountcontrol.dataservice;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,6 @@ public class TemplateService {
     this.templateRepository = templateRepository;
     this.accountRecordRepository = accountRecordRepository;
     this.subCategoryRepository = subCategoryRepository;
-  }
-
-  public void replaceTimeRange(Template temp, LocalDate from, LocalDate newStartDate,
-      int newVariance) {
-    temp.setTimeRange(newStartDate, newVariance);
-    templateRepository.save(temp);
-    planService.replaceTimeRange(temp, from, newStartDate, newVariance);
   }
 
   public void replacePattern(Template temp, LocalDate from, Pattern newPattern) {
@@ -97,7 +91,13 @@ public class TemplateService {
     templateRepository.delete(template);
   }
 
-  public void replaceTemplate(Template template, Template template2) {
-    // TODO replace template in all newer plans with new dates
+  public void replaceTemplate(Template oldtemplate, Template newtemplate) {
+    newtemplate.setId(0);
+    templateRepository.save(newtemplate);
+    oldtemplate.setValidUntil(newtemplate.getValidFrom().minusDays(1));
+    oldtemplate.setNext(newtemplate.getId());
+    templateRepository.save(oldtemplate);
+
+    planService.replaceTemplate(oldtemplate, newtemplate);
   }
 }

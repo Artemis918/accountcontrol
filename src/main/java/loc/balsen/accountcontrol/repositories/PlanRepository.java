@@ -36,6 +36,10 @@ public interface PlanRepository extends JpaRepository<Plan, Integer> {
 
   List<Plan> findByTemplate(Template template);
 
+  List<Plan> findByTemplateId(int templateId);
+
+  List<Plan> findByTemplateOrderByPlanDate(Template template);
+
   @Query(
       value = "select p.* from Plan p" + " inner join Sub_Category s on p.subcategory = s.id"
           + " where p.match_style = 3" + " and s.category = ?1" + " and deactivate_date is null",

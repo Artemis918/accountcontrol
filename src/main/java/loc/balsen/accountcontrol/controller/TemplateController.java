@@ -91,16 +91,21 @@ public class TemplateController {
       @PathVariable Integer variance) {
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
     Plan plan = planRepository.findById(planId).orElseThrow();
-    LocalDate newDate = null;
-
+    
+    LocalDate newStartDate = null;
     try {
-      newDate = LocalDate.parse(timestring, dateTimeFormatter);
+      newStartDate = LocalDate.parse(timestring, dateTimeFormatter);
     } catch (DateTimeParseException e) {
       return MessageID.invaliddata;
     }
 
+    LocalDate newValidDate = plan.getPlanDate().minusDays(1);
+    if (newValidDate.isAfter(newStartDate)) {
+      newValidDate = newStartDate.minusDays(1);
+    }
+
     if (plan.getTemplate() != null) {
-      Template template = plan.getTemplate().copyWithNewStart(newDate, newDate, variance);
+      Template template = plan.getTemplate().copyWithNewStart(newStartDate, newValidDate, variance);
       templateService.replaceTemplate(plan.getTemplate(), template);
     }
     return MessageID.ok;

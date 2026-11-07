@@ -2,7 +2,9 @@ package loc.balsen.accountcontrol.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -128,7 +130,37 @@ public class PlanControllerTest extends TestContext {
   }
 
 
-  private void createTemplate(int year) {
+  @Test
+  public void testChangeTimeRange() throws Exception {
+    int year = LocalDate.now().getYear() + 1;
+    createCategoryData();
+    createTemplate(year);
+
+    mvc.perform(get("/plans/createFromTemplates/11/" + year)).andExpect(status().isOk());
+
+    List<Plan> plans = planRepository.findByTemplateOrderByPlanDate(template);
+    assertEquals(3, plans.size());
+    int planid = plans.get(1).getId();
+
+    // change timerange for the last two templates
+    mvc.perform(
+        get("/templates/changetimerange/{planId}/{timestring}/{variance}", planid, "0211" + year, 5));
+
+    template = templateRepository.findById(template.getId()).get();
+    int template_copy_id = template.getNext();
+    assertNotEquals(0,template_copy_id);
+    templateRepository.findById(template_copy_id).orElseThrow();
+
+    plans = planRepository.findByTemplateOrderByPlanDate(template);
+    assertEquals(3, plans.size());
+    assertTrue(plans.get(1).getDeactivateDate() != null);
+    assertTrue(plans.get(2).getDeactivateDate() != null);
+
+    plans = planRepository.findByTemplateId(template_copy_id);
+    assertEquals(2, plans.size());
+  }
+
+  private int createTemplate(int year) {
     template = new Template(0, LocalDate.of(year, 9, 1), LocalDate.of(year, 12, 31),
         LocalDate.of(year, 9, 15), 5, 1, TimeUnit.MONTH, "Beschreibung", 4, 100, subCategory1,
         new Pattern(" \"sender\": \"sender\", " + " \"receiver\": \"Receiver\", "
@@ -137,6 +169,7 @@ public class PlanControllerTest extends TestContext {
         "Kurz1234", MatchStyle.EXACT, 0);
 
     templateRepository.save(template);
+    return template.getId();
   }
 
 }
