@@ -23,7 +23,7 @@ public class TemplateDTO {
   private PatternDTO pattern;
   private String shortdescription;
   private int matchstyle;
-  private int previous;
+  private int next;
 
   private int category;
   private String subcategoryname;
@@ -65,7 +65,7 @@ public class TemplateDTO {
     this.pattern = new PatternDTO(template.getPatternObject());
     this.shortdescription = template.getShortDescription();
     this.matchstyle = template.getMatchStyle().ordinal();
-    this.previous = template.getNext();
+    this.next = template.getNext();
     this.additional = "";
   }
 
@@ -79,8 +79,7 @@ public class TemplateDTO {
 
     return new Template(id, validFrom, validUntil, start, variance, repeatcount,
         (TimeUnit.values()[repeatunit]), description, position, value, sub, pattern.toPattern(),
-        shortdescription, Plan.MatchStyle.values()[matchstyle], previous);
-    // TODO why previous is next?
+        shortdescription, Plan.MatchStyle.values()[matchstyle], next);
   }
 
   // for serialization only
@@ -150,8 +149,8 @@ public class TemplateDTO {
     return matchstyle;
   }
 
-  public int getPrevious() {
-    return previous;
+  public int getNext() {
+    return next;
   }
 
   public int getCategory() {

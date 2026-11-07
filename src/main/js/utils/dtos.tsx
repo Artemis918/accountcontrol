@@ -128,8 +128,8 @@ export class Template {
     pattern: Pattern;
     shortdescription: string;
     matchstyle: number;
-    previous?: number;
-	additional: string;
+    next?: number;
+    additional: string;
 
     constructor() {
         var date = new Date();
@@ -150,7 +150,7 @@ export class Template {
         this.pattern = new Pattern();
         this.shortdescription = '';
         this.matchstyle = 0;
-        this.previous = undefined;
+        this.next = undefined;
 		this.additional= "";
     }
 }
