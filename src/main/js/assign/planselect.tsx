@@ -3,11 +3,14 @@ import { SingleSelectLister, ColumnInfo, CellInfo } from '../utils/singleselectl
 import { MonthSelect } from '../utils/monthselect'
 import { Plan, Pattern, Template, postRequest, AccountRecord, fetchJson } from '../utils/dtos'
 import { PatternEditor } from '../planing/patterneditor'
-import { TimeRangeEditor } from './timerangeeditor'
+import { TimeRangePopupEditor } from './timerangepopupeditor'
 import { label } from '../utils/misc'
 
 import * as css from '../css/index.css'
 import * as pcss from './css/planselect.css'
+import { TimeRangeData } from '../planing/timerangeeditor'
+import { PatternEditorButton } from '../planing/patterneditorpopup'
+import { format } from 'date-fns'
 
 export type OnPlanChange = (plan: Plan) => void;
 
@@ -21,13 +24,12 @@ interface IState {
 	patternfailed: boolean;
 	timerangefailed: boolean;
 	patterneditor: boolean;
-	timerangeeditor: boolean;
 	propsPlan: Plan | undefined;
 	month: number;
 	year: number
 }
 
-export class PlanSelect extends React.Component<PlanSelectProps , IState> {
+export class PlanSelect extends React.Component<PlanSelectProps, IState> {
 
 	columns: ColumnInfo<Plan>[];
 	lister: SingleSelectLister<Plan> | null;
@@ -37,7 +39,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 	constructor(props: PlanSelectProps) {
 		super(props);
 
-		
+
 		var date: Date = new Date();
 		if (this.props.record != undefined) {
 			date = this.props.record.executed;
@@ -47,7 +49,6 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 			patternfailed: false,
 			timerangefailed: false,
 			patterneditor: false,
-			timerangeeditor: false,
 			propsPlan: undefined,
 			year: date.getFullYear(),
 			month: date.getMonth() + 1,
@@ -87,7 +88,6 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 			var self = this;
 			fetchJson('plans/id/' + this.props.planId,
 				(plan: Plan) => {
-					console.log("planselect propsplan arrived: " + plan.id);
 					var date = plan.plandate
 					self.setState({
 						year: date.getFullYear(),
@@ -106,17 +106,14 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 
 	setAnaylzeData(template: Template): void {
 		this.currentTemplate = template;
-		console.log("planselect analyze: " + (template?.additional[0] == '1'));
 		this.setState({
-			// TODO implemtn backend	timerangefailed: template.additional[1] == '1',
-			timerangefailed: false,
+			timerangefailed: template.additional[1] == '1',
 			patternfailed: template.additional[0] == '1',
 		})
 	}
 
 	handleChange(plan: Plan): void {
 		var self: PlanSelect = this;
-		console.log("planselect handlechange: " + plan.id);
 		this.currentPlan = plan;
 		if (this.props.onChange)
 			this.props.onChange(plan);
@@ -133,9 +130,9 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 		this.setState({ patterneditor: false });
 	}
 
-	getPropsPlanArray() : Plan[] {
+	getPropsPlanArray(): Plan[] {
 		console.log("planselect getPropsPlanArray: " + this.state.propsPlan?.id);
-		if (this.state.propsPlan == undefined) 
+		if (this.state.propsPlan == undefined)
 			return [];
 
 		var curdate: Date = this.state.propsPlan.plandate;
@@ -146,72 +143,48 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 		return [this.state.propsPlan];
 	}
 
-	settimerange(template: Template | undefined ): void {
-		// TODO implemtn backend
-		// fetch('templates/changetimerange/{planId}/{timestring}/{variance}');
-		// this.setState({ timerangeeditor: false });
+	settimerange(timerangedata: TimeRangeData): void {
+		var timestring: string = format(timerangedata.startdate, "ddMMyyyy");
+		fetch('templates/changetimerange/' + this.currentPlan?.id + '/' + timestring + '/' + timerangedata.variance);
 	}
 
 
-	renderAdjustButtons(): React.JSX.Element {
-		return (
-			<p className={pcss.adjustbody}>
-				<table>
-					<tbody>
-						<tr>
-							<td className={pcss.adjustlabel}> {label("assign.adjust")}  </td>
-							<td>
-								<button onClick={() => this.setState({ patterneditor: true })}
-									testdata-id={'assign.adjustpattern'}
-									className={css.addonbutton}
-									hidden={!this.state.patternfailed}>
-									{label('assign.adjustpattern')}
-								</button>
-							</td>
-							<td>
-								<button onClick={() => this.setState({ timerangeeditor: true })}
-									testdata-id={'assign.adjusttime'}
-									className={css.addonbutton}
-									hidden={!this.state.timerangefailed}>
-									{label("assign.adjusttime")}
-								</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</p>
-		);
-	}
-
-
-	renderPatternEditor(): React.JSX.Element {
-		if (this.state.patterneditor && this.currentPlan) {
-			return (<PatternEditor
-				pattern={this.currentPlan.pattern}
-				sendPattern={(p: Pattern | undefined ) => this.setPattern(p)}
-				zIndex={4} />);
+	renderAdjustButtons(): React.JSX.Element | null {
+		if (this.currentPlan && this.currentTemplate) {
+			return (
+				<p className={pcss.adjustbody}>
+					<table>
+						<tbody>
+							<tr>
+								<td className={pcss.adjustlabel}> {label("assign.adjust")}  </td>
+								<td>
+									<PatternEditorButton 
+										hidden={!this.state.patternfailed}
+										pattern={this.currentPlan.pattern}
+										sendPattern={(p: Pattern | undefined) => this.setPattern(p)}
+										decorateButton={false}
+										label={label("assign.adjustpattern")}/>
+								</td>
+								<td>
+									<TimeRangePopupEditor
+										recorddate={this.currentTemplate.start}
+										plandate={this.currentPlan.plandate}
+										template={this.currentTemplate}
+										sendResult={this.settimerange}
+										hidden={!this.state.timerangefailed} />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</p>
+			)
 		}
-		else {
-			return <></>;
-		}
-	}
-
-	renderTimRangeEditor(): React.JSX.Element {
-		if (this.state.timerangeeditor && this.currentTemplate && this.currentPlan) {
-			return (<TimeRangeEditor
-				recorddate={this.currentTemplate.start}
-				plandate={this.currentPlan.plandate}
-				template={this.currentTemplate}
-				sendResult={this.settimerange}
-				zIndex={4} />);
-		}
-		else {
-			return <></>;
-		}
+		else
+			return null;
 	}
 
 	render(): React.JSX.Element {
-		console.log("planselect render: " + this.currentPlan?.id);
+
 		return (
 			<div testdata-id={"planselect"}>
 				<MonthSelect label='' year={this.state.year} month={this.state.month} onChange={this.setFilter} />
@@ -220,7 +193,7 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 						ext={this.state.year + '/' + this.state.month}
 						testdata-id={'planlister'}
 						url='plans/unassigned/'
-						extendedData= {this.getPropsPlanArray().length > 0 ? this.getPropsPlanArray : undefined}
+						extendedData={this.getPropsPlanArray().length > 0 ? this.getPropsPlanArray : undefined}
 						lines={12}
 						handleChange={this.handleChange}
 						columns={this.columns}
@@ -229,8 +202,6 @@ export class PlanSelect extends React.Component<PlanSelectProps , IState> {
 						ref={(ref) => { this.lister = ref }} />
 					{this.renderAdjustButtons()}
 				</div>
-				{this.renderPatternEditor()}
-				{this.renderTimRangeEditor()}
 			</div>
 		)
 	}

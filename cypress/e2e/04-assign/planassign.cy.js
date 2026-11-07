@@ -68,7 +68,6 @@ describe("assignment", () => {
   it("assign plan adjust button visibility", () => {
     // open assigneditor for line to to assign plan
     selectLine(3);
-    // cy.wait("@plansloaded");
     
     cy.gett("assign.plan").click();
     cy.intercept("GET", "assign/analyze/*/9", { body: { additional: [0, 0] } });
@@ -116,7 +115,6 @@ describe("assignment", () => {
       expect(req.body.pattern.mandate).eq("text3");
       expect(req.body.pattern.senderID).eq("text4");
       expect(req.body.pattern.details).eq("text5");
-      console.log(req.body.pattern);
       req.continue((res) => {
         res.body = "1";
       });
@@ -136,17 +134,24 @@ describe("assignment", () => {
     cy.gett("assign.cancel").click();
   });
 
-  it.skip("change timerange", () => {
-    // TODO implement backend
-    // open assigneditor for line to to assign plan
+  it("change timerange", () => {
     selectLine(3);
     cy.gett("assign.plan").click();
     cy.wait("@plansloaded");
 
     cy.intercept("GET", "assign/analyze/*/9", { body: { additional: [0, 1] } });
     cy.gett("planlister").find("tbody").find("tr").eq(1).click();
-    cy.gett("assign.adjusttime").click();
-    cy.gett("timerange.editor").find("button").eq(3).click();
+    cy.gett("timerangepopup").click();
+    cy.gett("timerange.editor").findt("timerange.cancel").click();
+  
+    cy.gett("timerangepopup").click();
+    cy.gett("timerange.editor").findt("repeatcount").clear().type("5");
+    cy.gett("timerange.editor").findt("firstday").clear().type("01.02.2025");
+    cy.gett("timerange.editor").findt("timeunit").select("Woche");
+    cy.gett("timerange.editor").findt("variance").clear().type("4");
+
+    cy.intercept("templates/changetimerange/10/01022025/4", { body: "1" });
+    cy.gett("timerange.editor").findt("timerange.save").click();
 
     cy.gett("assign.cancel").click();
   });

@@ -154,9 +154,9 @@ describe("plan creation", () => {
       expect(req.body.description).eq(
         "compensation for all the headaches I get in this company :-)",
       );
-      expect(req.body.startdate).eq("2025-09-28");
-      expect(req.body.plandate).eq("2025-10-02");
-      expect(req.body.enddate).eq("2025-10-06");
+      expect(req.body.startdate).eq("2025-10-28");
+      expect(req.body.plandate).eq("2025-11-02");
+      expect(req.body.enddate).eq("2025-11-06");
       expect(req.body.subcategory).eq(22);
       expect(req.body.position).eq(1);
       expect(req.body.value).eq(100000);
